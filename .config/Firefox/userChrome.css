@@ -1,0 +1,22 @@
+@namespace url("http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul");
+
+/* Locations
+ *
+ * ./Library/Application Support/Firefox/Profiles/otiuze75.default/chrome/userChrome.css
+ * ./Library/Application Support/Firefox/Profiles/nh72tw27.dev-edition-default/chrome/userChrome.css
+ *
+ */
+
+#TabsToolbar > * {
+  visibility: collapse;
+}
+
+#TabsToolbar {
+  margin-bottom: -21px !important;
+}
+
+// https://github.com/piroor/treestyletab/wiki/Code-snippets-for-custom-style-rules#for-userchromecss
+#sidebar-box[sidebarcommand="treestyletab_piro_sakura_ne_jp-sidebar-action"]
+  #sidebar-header {
+  display: none;
+}

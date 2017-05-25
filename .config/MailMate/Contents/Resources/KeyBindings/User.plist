@@ -1,0 +1,15 @@
+{
+	"v"	= "moveToMailbox:";
+	//"v"	= "moveThreadToMailbox:";
+	"s" = "toggleReadState:";
+	"j" = "nextMessage:";
+	"k" = "previousMessage:";
+	"h" = "previousThread:";
+	"l" = "nextThread:";
+	"d"   = "deleteMessage:";
+	"c"	= "newMessage:";
+	"/"	= "searchAllMessages:";
+	"r"	= "reply:";
+	"a"	= "replyAll:";
+	"f"	= "forwardMessage:";
+}

@@ -1,0 +1,36 @@
+[user]
+	name = Jesse Claven
+	email = jesse.claven@gmail.com
+[github]
+	user = jesse-c
+[color]
+	ui = true
+[core]
+	editor = nvim
+	excludesfile = /Users/$HOME/.gitignore_global
+	autocrlf = input
+[difftool "sourcetree"]
+	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
+	path = 
+[mergetool "sourcetree"]
+	cmd = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
+	trustExitCode = true
+[difftool "Kaleidoscope"]
+	cmd = ksdiff --partial-changeset --relative-path \"$MERGED\" -- \"$LOCAL\" \"$REMOTE\"
+[mergetool "Kaleidoscope"]
+	cmd = ksdiff --merge --output \"$MERGED\" --base \"$BASE\" -- \"$LOCAL\" --snapshot \"$REMOTE\" --snapshot
+	trustexitcode = true
+[stash]
+	showPatch = true
+[merge]
+	conflictstyle = diff3
+[push]
+	default = upstream
+[commit]
+	verbose = true
+[diff]
+	compactionHeuristic = true
+	indentHeuristic = on
+[alias]
+	ks = difftool -y -t Kaleidoscope
+  st = status
