@@ -21,6 +21,9 @@ chsh -s =zsh
 
 source ${ZDOTDIR:-${HOME}}/.zlogin # TODO Open new shell first
 
+ln -s ~/.config/zsh/themes/mix.zsh-theme ~/.zim/modules/prompt/themes/mix.zsh-theme
+ln -s ~/.zim/modules/prompt/themes/mix.zsh-theme ~/.zim/modules/prompt/functions/prompt_mix_setup
+
 # Homebrew ------------------------------------------------------------------- #
 
 /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
