@@ -50,6 +50,8 @@ asdf plugin-add ruby https://github.com/asdf-vm/asdf-ruby.git
 asdf plugin-add ocaml https://github.com/vic/asdf-ocaml.git
 asdf plugin-add lua https://github.com/Stratus3D/asdf-lua.git
 asdf plugin-add scala https://github.com/mtatheonly/asdf-scala
+asdf plugin-add python https://github.com/tuvistavie/asdf-python.git
+asdf plugin-add java https://github.com/skotchpine/asdf-java
 
 asdf install
 
@@ -128,7 +130,7 @@ ln -s ~/Documents/dots/.mbsyncrc .mbsyncrc
 # Manual --------------------------------------------------------------------- #
 
 echo "X-Fence"
-echo "Gas Mask hosts files ? Or mackup"
+echo "Gas Mask hosts files (Steve Black rmote) ? Or mackup"
 echo "macOS security scripts --- https://github.com/drduh/macOS-Security-and-Privacy-Guide , https://github.com/kristovatlas/osx-config-check"
 echo "TODO Safari extensions"
 echo "^ covered above with security scipt --- Run through Lockdown app --- https://objective-see.com/products/lockdown.html"
@@ -144,5 +146,6 @@ echo "TODO Arq"
 echo "TODO Time Machine"
 echo "TODO Nix"
 echo "Neomutt, mailsync"
+echo "FF Nightly UI"
 # https://spinscale.de/posts/2016-11-08-creating-a-productive-osx-environment-hammerspoon.html
 # https://github.com/diimdeep/dotfiles/tree/master/osx/configure

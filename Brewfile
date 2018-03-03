@@ -3,7 +3,7 @@ tap "caskroom/versions"
 tap "caskroom/fonts"
 tap "homebrew/core"
 tap "homebrew/fuse"
-tap "universal-ctags/universal-ctags"
+#tap "universal-ctags/universal-ctags"
 
 # System
 brew "mas"
@@ -20,7 +20,7 @@ cask "font-roboto-condensed"
 cask "coconutbattery"
 
 # Email
-brew "neomutt/homebrew-neomutt/neomutt", args: ["with-notmuch-patch", "with-gpgme", "HEAD"]
+#brew "neomutt/homebrew-neomutt/neomutt", args: ["with-notmuch-patch", "with-gpgme", "HEAD"]
 brew "isync"
 brew "msmtp"
 brew "notmuch"
@@ -34,8 +34,8 @@ brew "w3m"
 cask "java"
 
 # Python
-brew "python"
-brew "python3"
+#brew "python"
+#brew "python@2"
 
 # Network
 cask "tripmode"
@@ -77,7 +77,7 @@ cask "basictex"
 
 # Docker
 brew "hadolint"
-cask "docker-toolbox"
+#cask "docker-toolbox"
 
 # Vim/Neovim
 brew "neovim"
@@ -106,7 +106,7 @@ brew "privoxy", restart_service: :changed
 #cask "private-internet-access"
 cask "little-snitch"
 cask "oversight"
-brew "gpg2"
+brew "gpg"
 cask "gpg-suite"
 
 # Development
@@ -121,16 +121,14 @@ cask "iterm2-nightly"
 cask "intellij-idea-ce"
 cask "dash"
 brew "valgrind"
-brew "yarn"
 brew "yarn", arsg: ["without-node"]
 brew "git"
 brew "tig"
 brew "mercurial"
 brew "darcs"
 brew "shellcheck"
-brew "ctags", args: ["HEAD universal-ctags"]
+#brew "ctags", args: ["HEAD universal-ctags/universal-ctags/universal-ctags"]
 brew "doctl"
-brew "codequery"
 
 # Clojure
 brew "leiningen"
@@ -144,7 +142,7 @@ cask "slack-beta"
 cask "skype"
 cask "mailmate"
 brew "weechat", args: ["with-aspell", "with-lua", "with-perl", "with-python", "with-ruby"]
-cask "franz"
+#cask "franz"
 cask "vivaldi"
 cask "firefox"
 cask "firefox-developer-edition"

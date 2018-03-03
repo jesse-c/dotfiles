@@ -1,4 +1,14 @@
-# zim
+
+
+#
+# User configuration sourced by interactive shells
+#
+
+# Change default zim location
+export ZIM_HOME=${ZDOTDIR:-${HOME}}/.zim
+
+# Start zim
+[[ -s ${ZIM_HOME}/init.zsh ]] && source ${ZIM_HOME}/init.zsh# zim
 if [[ -s ${ZDOTDIR:-${HOME}}/.zim/init.zsh ]]; then
   source ${ZDOTDIR:-${HOME}}/.zim/init.zsh
 fi
@@ -59,7 +69,7 @@ export RUST_SRC_PATH=$(rustc --print sysroot)/lib/rustlib/src/rust/src
 # Golang
 export PATH="$PATH:$HOME/.asdf/shims/go"
 export GOPATH="$HOME/go"
-export GOROOT="$ASDF_DIR/installs/golang/1.9.2/go"
+export GOROOT="$ASDF_DIR/installs/golang/1.10/go"
 # OR
 # https://github.com/kennyp/asdf-golang/pull/2
 # .asdf/plugins/golang/bin/exec-env
