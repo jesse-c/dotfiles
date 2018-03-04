@@ -6,10 +6,17 @@ fi
 # zsh
 bindkey -v
 
+HISTFILE=$HOME/.zhistory
+setopt APPEND_HISTORY
 setopt HIST_IGNORE_SPACE
+setopt EXTENDED_HISTORY
 HISTSIZE=10000
 SAVEHIST=10000
 bindkey '^R' history-incremental-search-backward
+
+REPORTTIME=30
+
+# setopt clobber
 
 EDITOR=nvim
 VISUAL=nvim
