@@ -10,6 +10,7 @@ HISTFILE=$HOME/.zhistory
 setopt APPEND_HISTORY
 setopt HIST_IGNORE_SPACE
 setopt EXTENDED_HISTORY
+setopt HIST_EXPIRE_DUPS_FIRST
 HISTSIZE=10000
 SAVEHIST=10000
 bindkey '^R' history-incremental-search-backward
@@ -45,10 +46,11 @@ export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow --glob "!.g
 
 # Python
 ## Use homebrew `python` package
-export PATH="/usr/local/opt/python/libexec/bin:$PATH"
+#export PATH="/usr/local/opt/python/libexec/bin:$PATH"
+export PATH="/usr/local/opt/python@2/bin:$PATH"
 
 # JavaScript
-export PATH="$HOME/.asdf/installs/nodejs/8.6.0/.npm/bin:$PATH"
+export PATH="$HOME/.asdf/installs/nodejs/9.7.1/.npm/bin:$PATH"
 
 # Rust
 export PATH="$PATH:$HOME/.cargo/bin"

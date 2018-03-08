@@ -22,6 +22,9 @@ Plug 'mbbill/undotree'
 Plug 'chrisbra/Colorizer'
 Plug 'editorconfig/editorconfig-vim'
 Plug 'henrik/vim-indexed-search'
+Plug 'ryanoasis/vim-devicons'
+Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
+Plug 'Xuyuanp/nerdtree-git-plugin'
 " Colour schemes
 Plug 'ayu-theme/ayu-vim'
 " Sessions
@@ -90,15 +93,22 @@ let g:lightline = {
   \   'colorscheme': 'one',
   \   'active': {
   \   'left': [ [ 'mode', 'paste' ],
-  \             [ 'readonly', 'filename', 'modified', 'gitbranch' ] ],
+  \             [ 'readonly', 'fp', 'modified', 'gitbranch' ] ],
   \   'right': [ [ 'lineinfo' ],
   \              [ 'percent' ],
   \              [ 'fileformat', 'fileencoding', 'filetype', 'charvaluehex' ] ]
   \   },
+  \   'inactive': {
+  \   'left': [ [ 'readonly', 'fp', 'modified', 'gitbranch' ] ],
+  \   'right': [ ]
+  \   },
   \   'component': {
+  \     'fp': '%<%F%<'
   \   },
   \   'component_function': {
   \     'gitbranch': 'fugitive#head',
+  \     'filetype': 'MyFiletype',
+  \     'fileformat': 'MyFileformat',
   \   }
   \ }
 let g:lightline.tabline = {
@@ -251,9 +261,26 @@ let g:go_highlight_function_calls = 1
 let g:go_highlight_methods = 1
 let g:go_highlight_build_constraints = 1
 
+" VimiDevIcons -----------------------------------------------------------------
+let g:webdevicons_enable = 1
+let g:webdevicons_enable_nerdtree = 1
+"let g:webdevicons_conceal_nerdtree_brackets = 1
+
 " NerdTree ---------------------------------------------------------------------
 nmap <silent> <c-S-n> :NERDTreeToggle<CR>
 let g:NERDTreeShowHidden = 1
+
+"set guifont=RobotoMono\ Nerd\ Font\ Mono:h11
+"set guifont=*
+
+" Lightline
+function! MyFiletype()
+  return winwidth(0) > 70 ? (strlen(&filetype) ? &filetype . ' ' . WebDevIconsGetFileTypeSymbol() : 'no ft') : ''
+endfunction
+
+function! MyFileformat()
+  return winwidth(0) > 70 ? (&fileformat . ' ' . WebDevIconsGetFileFormatSymbol()) : ''
+endfunction
 
 " Tagbar -----------------------------------------------------------------------
 nmap <F8> :TagbarToggle<CR>
@@ -304,6 +331,7 @@ let g:vimwiki_list = [{'path': '$HOME/Dropbox/Documents/vimwiki',
 
 syntax on
 set ruler
+set encoding=utf8
 
 set t_8b=^[[48;2;%lu;%lu;%lum
 set t_8f=^[[38;2;%lu;%lu;%lum

@@ -15,19 +15,32 @@ prompt_gitster_git() {
   [[ -n ${git_info} ]] && print -n "${(e)git_info[prompt]}"
 }
 
+# https://adrian-philipp.com/post/shell-show-time-last-command-took
+prompt_gitster_preexec() {
+  timer=${timer:-$SECONDS}
+}
+
 prompt_gitster_precmd() {
   (( ${+functions[git-info]} )) && git-info
+
+  [[ ! -z $timer ]] && timer_show=$(($SECONDS - $timer)); unset timer
 }
 
-funcion current_jobs() {
-  local count=$( (jobs) | wc -l | xargs )
+elapsed_time() {
+  [[ -z $timer_show ]] || return
 
-  [[ "$count" -gt 0 ]] || return
-
-  print -n " %F{188}⌽ ${count}"
+  print -n "%F{245}⥁ \${timer_show}s%{$reset_color%} "
 }
 
-function asdf() {
+current_jobs() {
+  local n=$( (jobs) | wc -l | xargs )
+
+  [[ "$n" -gt 0 ]] || return
+
+  print -n "%F{245}⌽ ${n} "
+}
+
+function asdf_local() {
   [[ "$(pwd)" != "$HOME" ]] || return
 
   local f="$(pwd)/.tool-versions"
@@ -48,7 +61,9 @@ function asdf() {
 prompt_gitster_setup() {
   local prompt_gitster_status='%(?:%F{002}:%F{red}%? )➜ '
 
-  autoload -Uz add-zsh-hook && add-zsh-hook precmd prompt_gitster_precmd
+  autoload -Uz add-zsh-hook \
+    && add-zsh-hook precmd prompt_gitster_precmd \
+    && add-zsh-hook preexec prompt_gitster_preexec
 
   prompt_opts=(cr percent sp subst)
 
@@ -65,8 +80,8 @@ prompt_gitster_setup() {
   local hostname="%F{245}%m"
   local timestamp="%F{245}%*"
 
-  PS1="${hostname}\$(current_jobs) \$(asdf)\$(prompt_gitster_pwd)\$(prompt_gitster_git) ${prompt_gitster_status}%f "
-  RPS1="${timestamp}"
-}
+  PS1="${hostname} \$(asdf_local)\$(prompt_gitster_pwd)\$(prompt_gitster_git) ${prompt_gitster_status}%f "
+  RPS1="$(elapsed_time)\$(current_jobs)${timestamp}"
+ }
 
 prompt_gitster_setup "${@}"
