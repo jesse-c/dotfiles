@@ -29,7 +29,7 @@ prompt_gitster_precmd() {
 elapsed_time() {
   [[ -z $timer_show ]] || return
 
-  print -n "%F{245}⥁ \${timer_show}s%{$reset_color%} "
+  print -n "%F{245}↻ \${timer_show}s%{$reset_color%} "
 }
 
 current_jobs() {
