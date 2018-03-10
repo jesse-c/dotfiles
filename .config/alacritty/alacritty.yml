@@ -85,50 +85,34 @@ render_timer: false
 # and cursor.background colors, otherwise invert the colors of the cursor.
 custom_cursor_colors: false
 
-# Colors (Ayu Darrk)
+# Colors (Ayu Dark)
 colors:
   # Default colors
   primary:
     background: '0x0f1419'
     foreground: '0xe6e1cf'
 
-  # Colors the cursor will use if `custom_cursor_colors` is true
-  cursor:
-    text: '0x000000'
-    cursor: '0xffffff'
-
   # Normal colors
   normal:
     black:   '0x000000'
-    red:     '0xff3333'
-    green:   '0xc2d94c'
+    red:     '0xf34a4a'
+    green:   '0xbae67e'
     yellow:  '0xffee99'
-    blue:    '0x59c2ff'
+    blue:    '0x73d0ff'
     magenta: '0xd4bfff'
-    cyan:    '0x59c2ff'
-    white:   '0xffffff'
+    cyan:    '0x83CEC6'
+    white:   '0xf2f2f2'
 
   # Bright colors
   bright:
-    black:   '0x666666'
-    red:     '0xff3334'
-    green:   '0x9ec400'
+    black:   '0x737d87'
+    red:     '0xff3333'
+    green:   '0xc2d94c'
     yellow:  '0xe7c547'
-    blue:    '0x7aa6da'
+    blue:    '0x59c2ff'
     magenta: '0xb77ee0'
-    cyan:    '0x54ced6'
+    cyan:    '0x5ccfe6'
     white:   '0xffffff'
-
-  # Dim colors (Optional)
-  dim:
-    black:   '0x333333'
-    red:     '0xf2777a'
-    green:   '0x99cc99'
-    yellow:  '0xffcc66'
-    blue:    '0x6699cc'
-    magenta: '0xcc99cc'
-    cyan:    '0x66cccc'
-    white:   '0xdddddd'
 
 # # Colors (Tomorrow Night Bright)
 # colors:
