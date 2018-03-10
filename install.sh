@@ -35,7 +35,7 @@ $(brew --prefix)/opt/fzf/install
 
 # Languages ------------------------------------------------------------------ #
 
-curl https://sh.rustup.rs -sSf | sh
+#curl https://sh.rustup.rs -sSf | sh
 
 git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.4.2
 
@@ -51,6 +51,7 @@ asdf plugin-add ocaml https://github.com/vic/asdf-ocaml.git
 asdf plugin-add lua https://github.com/Stratus3D/asdf-lua.git
 asdf plugin-add scala https://github.com/mtatheonly/asdf-scala
 asdf plugin-add python https://github.com/tuvistavie/asdf-python.git
+asdf plugin-add rust https://github.com/code-lever/asdf-rust.git
 asdf plugin-add java https://github.com/skotchpine/asdf-java
 
 asdf install

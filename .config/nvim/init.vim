@@ -270,7 +270,7 @@ let g:webdevicons_enable_nerdtree = 1
 nmap <silent> <c-S-n> :NERDTreeToggle<CR>
 let g:NERDTreeShowHidden = 1
 
-"set guifont=RobotoMono\ Nerd\ Font\ Mono:h11
+set guifont=RobotoMono\ Nerd\ Font:h11
 "set guifont=*
 
 " Lightline
@@ -338,11 +338,11 @@ set t_8f=^[[38;2;%lu;%lu;%lum
 set background=dark
 let ayucolor="dark"
 colorscheme ayu
-if (empty($TMUX))
+" if (empty($TMUX))
   if (has("termguicolors"))
     set termguicolors
   endif
-endif
+" endif
 
 set number relativenumber
 

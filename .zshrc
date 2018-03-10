@@ -54,13 +54,13 @@ export PATH="/usr/local/opt/python@2/bin:$PATH"
 export PATH="$HOME/.asdf/installs/nodejs/9.7.1/.npm/bin:$PATH"
 
 # Rust
-export PATH="$PATH:$HOME/.cargo/bin"
-export RUST_SRC_PATH=$(rustc --print sysroot)/lib/rustlib/src/rust/src
+#export PATH="$PATH:$HOME/.cargo/bin"
+#export RUST_SRC_PATH=$(rustc --print sysroot)/lib/rustlib/src/rust/src
 
 # Golang
-export PATH="$PATH:$HOME/.asdf/shims/go"
-export GOPATH="$HOME/go"
-export GOROOT="$ASDF_DIR/installs/golang/1.10/go"
+#export PATH="$PATH:$HOME/.asdf/shims/go"
+#export GOPATH="$HOME/go"
+#export GOROOT="$ASDF_DIR/installs/golang/1.10/go"
 # OR
 # https://github.com/kennyp/asdf-golang/pull/2
 # .asdf/plugins/golang/bin/exec-env
