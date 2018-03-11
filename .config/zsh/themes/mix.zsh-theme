@@ -59,7 +59,7 @@ function asdf_local() {
 }
 
 prompt_gitster_setup() {
-  local prompt_gitster_status='%(?:%F{002}:%F{red}%? )➜ '
+  local prompt_gitster_status='%(?:%F{002}:%F{red}%? )→'
 
   autoload -Uz add-zsh-hook \
     && add-zsh-hook precmd prompt_gitster_precmd \
