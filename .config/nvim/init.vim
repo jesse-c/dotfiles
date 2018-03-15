@@ -43,7 +43,7 @@ Plug 'w0rp/ale'
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'Shougo/echodoc.vim'
 " Format
-Plug 'sbdchd/neoformat'
+"Plug 'sbdchd/neoformat'
 Plug 'junegunn/vim-easy-align'
 " Documentation
 Plug 'rizzatti/dash.vim'
@@ -121,36 +121,40 @@ let g:colorizer_auto_filetype='css,scss,html,htm'
 "let g:colorizer_skip_comments = 1
 
 " Neoformat --------------------------------------------------------------------
-augroup fmt
-  autocmd!
-  autocmd BufWritePre * undojoin | Neoformat
-augroup END
+" augroup fmt
+"   autocmd!
+"   autocmd BufWritePre * undojoin | Neoformat
+" augroup END
 
-let g:neoformat_javascript_prettier = {
-  \ 'exe': 'prettier',
-  \ 'args': ['--stdin', '--stdin-filepath', '%:p', '--single-quote', '--no-semi', '--trailing-comma all'],
-  \ 'stdin': 1,
-\ }
+" let g:neoformat_javascript_prettier = {
+"   \ 'exe': 'prettier',
+"   \ 'args': ['--stdin', '--stdin-filepath', '%:p', '--single-quote', '--no-semi', '--trailing-comma all'],
+"   \ 'stdin': 1,
+" \ }
 
-let g:neoformat_javascript_prettiereslint = {
-  \ 'exe': 'prettier-eslint',
-  \ 'args': ['--stdin', '--stdin-filepath', '%:p', '--single-quote true', '--no-semi true', '--trailing-comma all'],
-  \ 'stdin': 1,
-\ }
+" let g:neoformat_javascript_prettiereslint = {
+"   \ 'exe': 'prettier-eslint',
+"   \ 'args': ['--stdin', '--stdin-filepath', '%:p', '--single-quote true', '--no-semi true', '--trailing-comma all'],
+"   \ 'stdin': 1,
+" \ }
+" let g:neoformat_javascript_standard = {
+"   \ 'exe': 'standard',
+"   \ 'stdin': 1,
+" \ }
 
-let g:neoformat_sql_sqlformat = {
-  \ 'exe': 'sqlformat',
-  \ 'args': ['-'],
-  \ 'stdin': 1,
-\ }
+" let g:neoformat_sql_sqlformat = {
+"   \ 'exe': 'sqlformat',
+"   \ 'args': ['-'],
+"   \ 'stdin': 1,
+" \ }
 
-let g:neoformat_enabled_javascript = ['prettiereslint']
-let g:neoformat_enabled_scss = ['prettier']
-let g:neoformat_enabled_go = []
-let g:neoformat_enabled_elm = []
-let g:neoformat_enabled_python = ['yapf', 'isort']
-let g:neoformat_basic_format_trim = 1
-let g:neoformat_basic_format_retab = 1
+" let g:neoformat_enabled_javascript = ['prettiereslint', 'standard']
+" let g:neoformat_enabled_scss = ['prettier']
+" let g:neoformat_enabled_go = []
+" let g:neoformat_enabled_elm = []
+" let g:neoformat_enabled_python = ['yapf', 'isort']
+" let g:neoformat_basic_format_trim = 1
+" let g:neoformat_basic_format_retab = 1
 
 " FZF --------------------------------------------------------------------------
 nmap <Leader>h :Buffers<CR>
@@ -188,6 +192,10 @@ let g:ale_html_tidy_options = '-q -e -language en --tab-size 2 --wrap 80 --break
 nmap <silent> <C-k> <Plug>(ale_previous_wrap)
 nmap <silent> <C-j> <Plug>(ale_next_wrap)
 
+let g:ale_fixers = {'javascript': ['prettier_standard']}
+let g:ale_linters = {'javascript': ['standard']}
+let g:ale_fix_on_save = 1
+
 "let g:ale_open_list = 1
 "let g:ale_lint_delay = 1000
 "let g:ale_sign_error = '⤫'
@@ -195,6 +203,7 @@ nmap <silent> <C-j> <Plug>(ale_next_wrap)
 let g:airline#extensions#ale#enabled = 1
 let g:go_auto_type_info = 1
 "let g:go_auto_sameids = 1
+"let g:ale_fix_on_save = 1
 
 function! LinterStatus() abort
     let l:counts = ale#statusline#Count(bufnr(''))
@@ -315,7 +324,7 @@ let g:tagbar_type_go = {
 
 " Vimwiki ----------------------------------------------------------------------
 let g:vimwiki_folding='expr'
-let g:vimwiki_list = [{'path': '$HOME/Dropbox/Documents/vimwiki',
+let g:vimwiki_list = [{'path': '$HOME/Library/Mobile Documents/com~apple~CloudDocs/Documents/vimwiki',
       \ 'diary_header': 'Plan',
       \ 'diary_index': 'index',
       \ 'diary_rel_path': 'plan/'}]
