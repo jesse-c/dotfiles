@@ -1,0 +1,50 @@
+# https://github.com/gpakosz/.newsbeuter
+
+# -- feeds ---------------------------------------------------------------------
+
+auto-reload no
+reload-time 120
+reload-threads 4
+download-retries 4
+download-timeout 10
+prepopulate-query-feeds yes
+
+# -- display -------------------------------------------------------------------
+
+show-read-feeds yes
+#feed-sort-order unreadarticlecount-asc
+feed-sort-order firsttag
+
+color info default default reverse
+color listnormal_unread yellow default
+color listfocus blue default reverse bold
+color listfocus_unread blue default reverse bold
+
+text-width 80
+
+confirm-exit yes
+
+# -- navigation ----------------------------------------------------------------
+
+goto-next-feed no
+
+# browser "open -g -a 'Google Chrome' %u"
+
+bind-key j down feedlist
+bind-key k up feedlist
+bind-key j next articlelist
+bind-key k prev articlelist
+bind-key J next-feed articlelist
+bind-key K prev-feed articlelist
+bind-key j down article
+bind-key k up article
+bind-key x toggle-article-read
+
+# -- bookmarks -----------------------------------------------------------------
+
+
+# -- misc ----------------------------------------------------------------------
+
+unbind-key C feedlist
+confirm-exit no
+cleanup-on-quit no

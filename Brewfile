@@ -148,6 +148,7 @@ cask "firefox"
 cask "firefox-developer-edition"
 cask "firefox-nightly"
 cask "google-chrome"
+brew "newsboat"
 
 # tmux
 brew "tmux", args: ["with-utf8proc"]
