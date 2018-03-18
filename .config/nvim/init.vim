@@ -58,6 +58,7 @@ Plug 'buoto/gotests-vim'
 Plug 'sebdah/vim-delve'
 " JavaScript
 Plug 'pangloss/vim-javascript'
+Plug 'carlitux/deoplete-ternjs', { 'do': 'npm install -g tern' }
 " Elm
 Plug 'ElmCast/elm-vim'
 Plug 'bitterjug/vim-tagbar-ctags-elm'
