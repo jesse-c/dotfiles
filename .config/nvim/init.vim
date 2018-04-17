@@ -18,10 +18,12 @@ Plug 'kshenoy/vim-signature'
 Plug 'Yggdroot/indentLine'
 Plug 'rbgrouleff/bclose.vim'
 Plug 'itchyny/lightline.vim'
+Plug 'maximbaz/lightline-ale'
 Plug 'mbbill/undotree'
 Plug 'chrisbra/Colorizer'
 Plug 'editorconfig/editorconfig-vim'
-Plug 'henrik/vim-indexed-search'
+"Plug 'henrik/vim-indexed-search'
+Plug 'google/vim-searchindex'
 Plug 'ryanoasis/vim-devicons'
 Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
 Plug 'Xuyuanp/nerdtree-git-plugin'
@@ -40,7 +42,7 @@ Plug 'mhinz/vim-startify'
 " Lint
 Plug 'w0rp/ale'
 " Autocomplete
-Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+" Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'Shougo/echodoc.vim'
 " Format
 "Plug 'sbdchd/neoformat'
@@ -52,21 +54,25 @@ Plug 'majutsushi/tagbar'
 Plug 'tpope/vim-commentary'
 
 " Golang
-Plug 'zchee/deoplete-go', {'do': 'make'}
+" Plug 'zchee/deoplete-go', {'do': 'make'}
 Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries' }
 Plug 'buoto/gotests-vim'
 Plug 'sebdah/vim-delve'
 " JavaScript
 Plug 'pangloss/vim-javascript'
-Plug 'carlitux/deoplete-ternjs', { 'do': 'npm install -g tern' }
+Plug 'othree/jspc.vim'
+" Plug 'carlitux/deoplete-ternjs', { 'do': 'npm install -g tern' }
+" TypeScript
+Plug 'Quramy/tsuquyomi'
+Plug 'leafgarland/typescript-vim'
 " Elm
 Plug 'ElmCast/elm-vim'
 Plug 'bitterjug/vim-tagbar-ctags-elm'
-Plug 'pbogut/deoplete-elm'
+" Plug 'pbogut/deoplete-elm'
 " Rust
 Plug 'rust-lang/rust.vim'
 Plug 'racer-rust/vim-racer'
-Plug 'sebastianmarkow/deoplete-rust'
+" Plug 'sebastianmarkow/deoplete-rust'
 " Racket
 Plug 'wlangstroth/vim-racket'
 Plug 'MicahElliott/vrod'
@@ -76,14 +82,30 @@ Plug 'MicahElliott/vrod'
 Plug 'luochen1990/rainbow'
 Plug 'ds26gte/scmindent'
 " Ruby
-Plug 'Shougo/deoplete-rct'
+" Plug 'Shougo/deoplete-rct'
 Plug 'vim-ruby/vim-ruby'
 " Neomutt
 Plug 'neomutt/neomutt.vim'
 " Nginx
 Plug 'chr4/nginx.vim'
 " Python
-Plug 'zchee/deoplete-jedi'
+" Plug 'zchee/deoplete-jedi'
+" Z3
+Plug 'bohlender/vim-z3-smt2'
+" Scala
+Plug 'derekwyatt/vim-scala'
+
+Plug 'roxma/nvim-completion-manager'
+if !has('nvim')
+    Plug 'roxma/vim-hug-neovim-rpc'
+endif
+Plug 'roxma/nvim-cm-tern',  {'do': 'npm install'}
+Plug 'roxma/ncm-elm-oracle'
+Plug 'roxma/nvim-cm-racer'
+Plug 'roxma/ncm-clang'
+Plug 'roxma/ncm-rct-complete'
+Plug 'calebeby/ncm-css'
+Plug 'sassanh/nvim-cm-eclim'
 
 call plug#end()
 
@@ -97,11 +119,13 @@ let g:lightline = {
   \             [ 'readonly', 'fp', 'modified', 'gitbranch' ] ],
   \   'right': [ [ 'lineinfo' ],
   \              [ 'percent' ],
-  \              [ 'fileformat', 'fileencoding', 'filetype', 'charvaluehex' ] ]
+  \              [ 'fileformat', 'fileencoding', 'filetype', 'charvaluehex' ],
+  \              [ 'linter_checking', 'linter_errors', 'linter_warnings', 'linter_ok' ]
+  \            ]
   \   },
   \   'inactive': {
   \   'left': [ [ 'readonly', 'fp', 'modified', 'gitbranch' ] ],
-  \   'right': [ ]
+  \   'right': [ [ ] ]
   \   },
   \   'component': {
   \     'fp': '%<%F%<'
@@ -110,15 +134,27 @@ let g:lightline = {
   \     'gitbranch': 'fugitive#head',
   \     'filetype': 'MyFiletype',
   \     'fileformat': 'MyFileformat',
+  \   },
+  \   'component_expand': {
+  \     'linter_checking': 'lightline#ale#checking',
+  \     'linter_warnings': 'lightline#ale#warnings',
+  \     'linter_errors': 'lightline#ale#errors',
+  \     'linter_ok': 'lightline#ale#ok',
   \   }
   \ }
+
 let g:lightline.tabline = {
   \   'left': [ ['tabs'] ],
-  \   'right': [ [] ]
+  \   'right': [ [ ] ],
   \ }
 
+let g:lightline#ale#indicator_checking = "\uf110"
+let g:lightline#ale#indicator_warnings = "\uf071"
+let g:lightline#ale#indicator_errors = "\uf05e"
+let g:lightline#ale#indicator_ok = "\uf00c"
+
 " Colorizer --------------------------------------------------------------------
-let g:colorizer_auto_filetype='css,scss,html,htm'
+let g:colorizer_auto_filetype='css,scss,html,htm,elm'
 "let g:colorizer_skip_comments = 1
 
 " Neoformat --------------------------------------------------------------------
@@ -168,19 +204,20 @@ cnoreabbrev aG Ag
 cnoreabbrev AG Ag
 command! -bang -nargs=* Rg
   \ call fzf#vim#grep(
-  \   'rg --column --line-number --no-heading --color=always '.shellescape(<q-args>), 1,
+  \   'rg --smart-case --column --line-number --no-heading --color=always '.shellescape(<q-args>), 1,
   \   <bang>0 ? fzf#vim#with_preview('up:60%')
   \           : fzf#vim#with_preview('right:50%:hidden', '?'),
   \   <bang>0)
 
 " ALE --------------------------------------------------------------------------
-let g:ale_linters = {'go': ['gometalinter', 'gofmt', 'gobuild'], 'rust': ['cargo']}
+"let g:ale_linters = {'go': ['gometalinter', 'gofmt', 'gobuild'], 'rust': ['cargo']}
 "let g:ale_linters = {'go': ['gometalinter', 'gofmt']}
 let g:ale_go_gometalinter_options = '--fast --enable=unused --enable=unparam --enable=goimports --enable=golint'
 "let g:ale_go_gometalinter_executable = '/Users/j/go/bin/gometalinter'
-"let g:ale_linters = {
-"  \ 'go': ['gometalinter', 'gofmt', 'gobuild']
-"\}
+let g:ale_linters = {
+  \ 'go': ['gometalinter', 'gofmt', 'gobuild'],
+  \ 'javascript': ['standard']
+\}
   " 'js': ['eslint'],
   " 'yaml': ['yamllint'],
   " 'docker': ['hadolint'],
@@ -188,14 +225,16 @@ let g:ale_go_gometalinter_options = '--fast --enable=unused --enable=unparam --e
   " 'python': ['flake8'],
   " 'shell': ['shellcheck']
   "
+let g:ale_fixers = {
+  \ 'javascript': ['prettier_standard'],
+  \ 'sass': ['stylelint']
+\}
+let g:ale_fix_on_save = 1
+
 let g:ale_html_tidy_options = '-q -e -language en --tab-size 2 --wrap 80 --break-before-br no --vertical-space no'
 
 nmap <silent> <C-k> <Plug>(ale_previous_wrap)
 nmap <silent> <C-j> <Plug>(ale_next_wrap)
-
-let g:ale_fixers = {'javascript': ['prettier_standard']}
-let g:ale_linters = {'javascript': ['standard']}
-let g:ale_fix_on_save = 1
 
 "let g:ale_open_list = 1
 "let g:ale_lint_delay = 1000
@@ -204,7 +243,6 @@ let g:ale_fix_on_save = 1
 let g:airline#extensions#ale#enabled = 1
 let g:go_auto_type_info = 1
 "let g:go_auto_sameids = 1
-"let g:ale_fix_on_save = 1
 
 function! LinterStatus() abort
     let l:counts = ale#statusline#Count(bufnr(''))
@@ -229,15 +267,15 @@ endif
 nnoremap <F5> :UndotreeToggle<cr>
 
 " Deoplete ---------------------------------------------------------------------
-let g:deoplete#enable_at_startup = 1
-set completeopt+=noselect
+" let g:deoplete#enable_at_startup = 1
+" set completeopt+=noselect
 
 " golang -----------------------------------------------------------------------
-let g:deoplete#sources#go#gocode_binary = $GOPATH.'/bin/gocode'
-let g:deoplete#sources#go#pointer = 1
-let g:deoplete#sources#go#sort_class = ['package', 'func', 'type', 'var', 'const']
-let g:deoplete#sources#go#use_cache = 1
-let g:deoplete#sources#go#json_directory = '~/.cache/deoplete/go/$GOOS_$GOARCH'
+" let g:deoplete#sources#go#gocode_binary = $GOPATH.'/bin/gocode'
+" let g:deoplete#sources#go#pointer = 1
+" let g:deoplete#sources#go#sort_class = ['package', 'func', 'type', 'var', 'const']
+" let g:deoplete#sources#go#use_cache = 1
+" let g:deoplete#sources#go#json_directory = '~/.cache/deoplete/go/$GOOS_$GOARCH'
 "let g:neomake_go_gometalinter_args = ['--disable-all', '--enable=gosimple', '--enable=unused', '--enable=misspell', '--enable=staticcheck', '--enable=interfacer', '--enable=govet', '--enable=errcheck', '--enable=varcheck', '--enable=golint', '--enable=structcheck', '--enable=aligncheck', '--enable=goconst', '--enable=ineffassign']
 map <silent> <c-e> :GoDecls<CR>
 let g:go_fmt_command = "goimports"
@@ -257,8 +295,8 @@ let g:elm_make_show_warnings = 1
 
 " Rust -------------------------------------------------------------------------
 let g:rustfmt_autosave = 1
-let g:deoplete#sources#rust#racer_binary='which racer'
-let g:deoplete#sources#rust#rust_source_path='/Users/jesse/.rustup/toolchains/nightly-x86_64-apple-darwin'
+" let g:deoplete#sources#rust#racer_binary='which racer'
+" let g:deoplete#sources#rust#rust_source_path='/Users/jesse/.rustup/toolchains/nightly-x86_64-apple-darwin'
 
 " IndentLine
 "let g:indentLine_char = ''
@@ -283,7 +321,10 @@ let g:NERDTreeShowHidden = 1
 set guifont=RobotoMono\ Nerd\ Font:h11
 "set guifont=*
 
-" Lightline
+" ctags ------------------------------------------------------------------------
+set tags=tags;/
+
+" Lightline --------------------------------------------------------------------
 function! MyFiletype()
   return winwidth(0) > 70 ? (strlen(&filetype) ? &filetype . ' ' . WebDevIconsGetFileTypeSymbol() : 'no ft') : ''
 endfunction
