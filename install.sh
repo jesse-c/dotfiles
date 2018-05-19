@@ -73,7 +73,7 @@ luarocks install luacheck
 
 # Node ----------------------------------------------------------------------- #
 
-npm install -g eslint prettier tern jsonlint csslint stylelint elm elm-test elm-oracle elm-format neovim
+npm install -g eslint prettier tern jsonlint csslint stylelint elm elm-test elm-oracle elm-format neovim standard prettier-standard prettier prettier-eslinit 
 
 # Golang --------------------------------------------------------------------- #
 
