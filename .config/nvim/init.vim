@@ -50,6 +50,7 @@ Plug 'junegunn/vim-easy-align'
 " Documentation
 Plug 'rizzatti/dash.vim'
 Plug 'majutsushi/tagbar'
+Plug 'ludovicchabant/vim-gutentags'
 " Comments
 Plug 'tpope/vim-commentary'
 
@@ -67,7 +68,7 @@ Plug 'Quramy/tsuquyomi'
 Plug 'leafgarland/typescript-vim'
 " Elm
 Plug 'ElmCast/elm-vim'
-Plug 'bitterjug/vim-tagbar-ctags-elm'
+"Plug 'bitterjug/vim-tagbar-ctags-elm'
 " Plug 'pbogut/deoplete-elm'
 " Rust
 Plug 'rust-lang/rust.vim'
@@ -120,7 +121,7 @@ let g:lightline = {
   \   'right': [ [ 'lineinfo' ],
   \              [ 'percent' ],
   \              [ 'fileformat', 'fileencoding', 'filetype', 'charvaluehex' ],
-  \              [ 'linter_checking', 'linter_errors', 'linter_warnings', 'linter_ok' ]
+  \              [ 'linter_checking', 'linter_errors', 'linter_warnings', 'linter_ok', 'gutentags' ]
   \            ]
   \   },
   \   'inactive': {
@@ -134,6 +135,7 @@ let g:lightline = {
   \     'gitbranch': 'fugitive#head',
   \     'filetype': 'MyFiletype',
   \     'fileformat': 'MyFileformat',
+  \     'gutentags': 'MyGutentagsStatusLineRefresher',
   \   },
   \   'component_expand': {
   \     'linter_checking': 'lightline#ale#checking',
@@ -194,6 +196,7 @@ let g:colorizer_auto_filetype='css,scss,html,htm,elm'
 " let g:neoformat_basic_format_retab = 1
 
 " FZF --------------------------------------------------------------------------
+nmap <Leader>g :Tags<CR>
 nmap <Leader>h :Buffers<CR>
 nmap <Leader>j :Files<CR>
 nmap <Leader>k :Marks<CR>
@@ -212,7 +215,7 @@ command! -bang -nargs=* Rg
 " ALE --------------------------------------------------------------------------
 "let g:ale_linters = {'go': ['gometalinter', 'gofmt', 'gobuild'], 'rust': ['cargo']}
 "let g:ale_linters = {'go': ['gometalinter', 'gofmt']}
-let g:ale_go_gometalinter_options = '--fast --enable=unused --enable=unparam --enable=goimports --enable=golint'
+let g:ale_go_gometalinter_options = '--fast --enable=unused --enable=unparam --enable=goimports --enable=golint --enable=gotype --enable=varcheck --enable=megacheck'
 "let g:ale_go_gometalinter_executable = '/Users/j/go/bin/gometalinter'
 let g:ale_linters = {
   \ 'go': ['gometalinter', 'gofmt', 'gobuild'],
@@ -322,7 +325,16 @@ set guifont=RobotoMono\ Nerd\ Font:h11
 "set guifont=*
 
 " ctags ------------------------------------------------------------------------
-set tags=tags;/
+"set tags=tags;/
+
+" Gutentags
+" Store tags file somewhere else than in the project dir
+let g:gutentags_cache_dir = '~/.gutentags'
+" Only create tags for tracked files
+let g:gutentags_file_list_command = 'git ls-files'
+" Explicitly only create tags for elm files. Change to use '.gutctags' file
+" per project if working on multiple projects
+"let g:gutentags_ctags_extra_args = ['--languages=Elm']
 
 " Lightline --------------------------------------------------------------------
 function! MyFiletype()
@@ -332,6 +344,12 @@ endfunction
 function! MyFileformat()
   return winwidth(0) > 70 ? (&fileformat . ' ' . WebDevIconsGetFileFormatSymbol()) : ''
 endfunction
+
+augroup MyGutentagsStatusLineRefresher
+    autocmd!
+    autocmd User GutentagsUpdating call lightline#update()
+    autocmd User GutentagsUpdated call lightline#update()
+augroup END
 
 " Tagbar -----------------------------------------------------------------------
 nmap <F8> :TagbarToggle<CR>
