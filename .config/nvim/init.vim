@@ -215,8 +215,10 @@ command! -bang -nargs=* Rg
 " ALE --------------------------------------------------------------------------
 "let g:ale_linters = {'go': ['gometalinter', 'gofmt', 'gobuild'], 'rust': ['cargo']}
 "let g:ale_linters = {'go': ['gometalinter', 'gofmt']}
-let g:ale_go_gometalinter_options = '--fast --enable=unused --enable=unparam --enable=goimports --enable=golint --enable=gotype --enable=varcheck --enable=megacheck'
+let g:ale_go_gometalinter_options = '--fast'
+"let g:ale_go_gometalinter_options = '--fast --enable=unused --enable=unparam --enable=goimports --enable=golint --enable=gotype --enable=varcheck --enable=megacheck'
 "let g:ale_go_gometalinter_executable = '/Users/j/go/bin/gometalinter'
+let g:ale_elm_make_executable = '/Users/jesse/.elm/0.18.0/bin/elm-make'
 let g:ale_linters = {
   \ 'go': ['gometalinter', 'gofmt', 'gobuild'],
   \ 'javascript': ['standard']
@@ -230,7 +232,7 @@ let g:ale_linters = {
   "
 let g:ale_fixers = {
   \ 'javascript': ['prettier_standard'],
-  \ 'sass': ['stylelint']
+  \ 'sass': ['stylelint', 'prettier_standard']
 \}
 let g:ale_fix_on_save = 1
 
@@ -246,6 +248,7 @@ nmap <silent> <C-j> <Plug>(ale_next_wrap)
 let g:airline#extensions#ale#enabled = 1
 let g:go_auto_type_info = 1
 "let g:go_auto_sameids = 1
+" let g:go_def_mode = 'godef'
 
 function! LinterStatus() abort
     let l:counts = ale#statusline#Count(bufnr(''))
@@ -282,6 +285,10 @@ nnoremap <F5> :UndotreeToggle<cr>
 "let g:neomake_go_gometalinter_args = ['--disable-all', '--enable=gosimple', '--enable=unused', '--enable=misspell', '--enable=staticcheck', '--enable=interfacer', '--enable=govet', '--enable=errcheck', '--enable=varcheck', '--enable=golint', '--enable=structcheck', '--enable=aligncheck', '--enable=goconst', '--enable=ineffassign']
 map <silent> <c-e> :GoDecls<CR>
 let g:go_fmt_command = "goimports"
+
+" nvim-completion-manager ------------------------------------------------------
+inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 
 " Lisp/Scheme ------------------------------------------------------------------
 let g:rainbow_active = 1
@@ -465,7 +472,8 @@ endif
 
 " EDITOR =======================================================================
 
-let g:python3_host_skip_check = 1
+let g:python_host_prog='/usr/local/opt/python@2/bin/python'
+let g:python3_host_prog='/usr/local/bin/python3'
 
 set hidden
 set nobackup
