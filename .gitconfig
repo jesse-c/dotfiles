@@ -34,3 +34,5 @@
 [alias]
 	ks = difftool -y -t Kaleidoscope
   st = status
+[ghq]
+	root = ~/src
