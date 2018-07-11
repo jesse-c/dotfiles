@@ -4,6 +4,7 @@ tap "caskroom/fonts"
 tap "homebrew/core"
 tap "homebrew/fuse"
 #tap "universal-ctags/universal-ctags"
+tap "buo/cask-upgrade"
 
 # System
 brew "mas"
