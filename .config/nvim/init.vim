@@ -27,6 +27,7 @@ Plug 'google/vim-searchindex'
 Plug 'ryanoasis/vim-devicons'
 Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
 Plug 'Xuyuanp/nerdtree-git-plugin'
+Plug 'wesQ3/vim-windowswap'
 " Colour schemes
 Plug 'ayu-theme/ayu-vim'
 " Sessions
@@ -111,6 +112,10 @@ Plug 'sassanh/nvim-cm-eclim'
 call plug#end()
 
 " PLUGIN CONFIGURATION =========================================================
+
+" WindowSwap
+let g:windowswap_map_keys = 0 "prevent default bindings
+nnoremap <silent> <leader>yy :call WindowSwap#EasyWindowSwap()<CR>
 
 " Lightline --------------------------------------------------------------------
 let g:lightline = {
