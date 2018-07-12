@@ -97,17 +97,36 @@ Plug 'bohlender/vim-z3-smt2'
 " Scala
 Plug 'derekwyatt/vim-scala'
 
-Plug 'roxma/nvim-completion-manager'
-if !has('nvim')
-    Plug 'roxma/vim-hug-neovim-rpc'
-endif
-Plug 'roxma/nvim-cm-tern',  {'do': 'npm install'}
-Plug 'roxma/ncm-elm-oracle'
-Plug 'roxma/nvim-cm-racer'
-Plug 'roxma/ncm-clang'
-Plug 'roxma/ncm-rct-complete'
-Plug 'calebeby/ncm-css'
-Plug 'sassanh/nvim-cm-eclim'
+" Plug 'roxma/nvim-completion-manager'
+" if !has('nvim')
+"     Plug 'roxma/vim-hug-neovim-rpc'
+" endif
+" Plug 'roxma/nvim-cm-tern',  {'do': 'npm install'}
+" Plug 'roxma/ncm-elm-oracle'
+" Plug 'roxma/nvim-cm-racer'
+" Plug 'roxma/ncm-clang'
+" Plug 'roxma/ncm-rct-complete'
+" Plug 'calebeby/ncm-css'
+" Plug 'sassanh/nvim-cm-eclim'
+
+" ncm2
+Plug 'ncm2/ncm2'
+Plug 'roxma/nvim-yarp'
+
+Plug 'ncm2/ncm2-bufword'
+Plug 'ncm2/ncm2-tmux'
+Plug 'ncm2/ncm2-path'
+Plug 'ncm2/ncm2-tagprefix'
+Plug 'ncm2/ncm2-jedi'
+Plug 'ncm2/ncm2-cssomni'
+Plug 'ncm2/ncm2-jedi'
+Plug 'ncm2/ncm2-racer'
+Plug 'ncm2/ncm2-tern',  {'do': 'npm install'}
+
+Plug 'autozimu/LanguageClient-neovim', {
+    \ 'branch': 'next',
+    \ 'do': 'bash install.sh',
+    \ }
 
 call plug#end()
 
@@ -291,7 +310,9 @@ nnoremap <F5> :UndotreeToggle<cr>
 map <silent> <c-e> :GoDecls<CR>
 let g:go_fmt_command = "goimports"
 
-" nvim-completion-manager ------------------------------------------------------
+" ncm2 -------------------------------------------------------------------------
+autocmd BufEnter * call ncm2#enable_for_buffer()
+set completeopt=noinsert,menuone,noselect
 inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 
