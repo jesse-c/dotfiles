@@ -48,10 +48,10 @@ export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow --glob "!.g
 # Python
 ## Use homebrew `python` package
 #export PATH="/usr/local/opt/python/libexec/bin:$PATH"
-export PATH="/usr/local/opt/python@2/bin:$PATH"
+#export PATH="/usr/local/opt/python@2/bin:$PATH"
 
 # JavaScript
-export PATH="$HOME/.asdf/installs/nodejs/9.7.1/.npm/bin:$PATH"
+#export PATH="$HOME/.asdf/installs/nodejs/9.7.1/.npm/bin:$PATH"
 
 # Rust
 #export PATH="$PATH:$HOME/.cargo/bin"
@@ -71,6 +71,7 @@ export PATH="$HOME/.asdf/installs/nodejs/9.7.1/.npm/bin:$PATH"
 #if [ "$GOPATH" = "" ] ; then
 #    export GOPATH=$ASDF_INSTALL_PATH/packages
 #  fi
+export GOPATH=~/
 export PATH=$PATH:$GOPATH:$GOPATH/bin
 
 # terminal
