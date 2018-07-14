@@ -17,15 +17,15 @@ window:
   # Window dimensions in character columns and lines
   # (changes require restart)
   dimensions:
-    columns: 120
-    lines: 35
+    columns: 240
+    lines: 60
 
   # Adds this many blank pixels of padding around the window
   # Units are physical pixels; this is not DPI aware.
   # (change requires restart)
   padding:
-    x: 8
-    y: 8
+    x: 0
+    y: 0
 
   # Window decorations
   # Setting this to false will result in window without borders and title bar.
@@ -41,19 +41,19 @@ draw_bold_text_with_bright_colors: true
 font:
   # The normal (roman) font face to use.
   normal:
-    family: RobotoMono Nerd Font
+    family: RobotoMono Nerd Font Mono
     # Style can be specified to pick a specific face.
     # style: Regular
 
   # The bold font face
   bold:
-    family: RobotoMono Nerd Font
+    family: RobotoMono Nerd Font Mono
     # Style can be specified to pick a specific face.
     # style: Bold
 
   # The italic font face
   italic:
-    family: RobotoMono Nerd Font
+    family: RobotoMono Nerd Font Mono
     # Style can be specified to pick a specific face.
     # style: Italic
 
@@ -63,15 +63,19 @@ font:
   # Offset is the extra space around each character. offset.y can be thought of
   # as modifying the linespacing, and offset.x as modifying the letter spacing.
   offset:
-    x: 1.0
-    y: 4.0
+    x: -2
+    y: -2
 
   # Glyph offset determines the locations of the glyphs within their cells with
   # the default being at the bottom. Increase the x offset to move the glyph to
   # the right, increase the y offset to move the glyph upward.
   glyph_offset:
-    x: 0.0
-    y: 0.0
+    x: 0
+    y: 0
+
+  # Scale the font size based on the monitor's DPI. This will lead to bigger text on HiDPI
+  # screens and make reading text a little easier.
+  scale_with_dpi: true
 
   # OS X only: use thin stroke font rendering. Thin strokes are suitable
   # for retina displays, but for non-retina you probably want this set to
@@ -249,6 +253,11 @@ live_config_reload: true
 # You can set shell.program to the path of your favorite shell, e.g. /bin/fish.
 # Entries in shell.args are passed unmodified as arguments to the shell.
 #
+# shell:
+#   program: /bin/bash
+#   args:
+#     - --login
+
 shell:
   program: /usr/local/bin/zsh
   args:
@@ -292,8 +301,10 @@ shell:
 key_bindings:
   - { key: V,        mods: Command, action: Paste                        }
   - { key: C,        mods: Command, action: Copy                         }
+  - { key: Paste,                   action: Paste                        }
+  - { key: Copy,                    action: Copy                         }
   - { key: Q,        mods: Command, action: Quit                         }
-  - { key: W,        mods: Command, action: Quit                         }
+  # - { key: W,        mods: Command, action: Quit                         }
   - { key: Home,                    chars: "\x1bOH",   mode: AppCursor   }
   - { key: Home,                    chars: "\x1b[H",   mode: ~AppCursor  }
   - { key: End,                     chars: "\x1bOF",   mode: AppCursor   }
@@ -392,3 +403,14 @@ key_bindings:
   - { key: F10,      mods: Command, chars: "\x1b[21;3~"                  }
   - { key: F11,      mods: Command, chars: "\x1b[23;3~"                  }
   - { key: F12,      mods: Command, chars: "\x1b[24;3~"                  }
+  - { key: H,        mods: Command, chars: "\x02\x68"                    } # Move to pane on the left
+  - { key: J,        mods: Command, chars: "\x02\x6a"                    } # Move to pane below
+  - { key: K,        mods: Command, chars: "\x02\x6b"                    } # Move to pane above
+  - { key: L,        mods: Command, chars: "\x02\x6c"                    } # Move to pane on the right
+  - { key: T,        mods: Command, chars: "\x02\x63"                    } # Create new window
+# - { key: W,        mods: Command, chars: "\x02\x26"                    } # Kill window
+  - { key: W,        mods: Command, chars: "\x02\x78"                    } # Kill pane
+  - { key: D,        mods: Command, chars: "\x02\x22"                    } # Vertical split
+  - { key: D,        mods: Command|Shift, chars: "\x02\x25"              } # Horizontal split
+  - { key: Right,    mods: Command, chars: "\x02\x6e"                    } # Move to window to the left
+  - { key: Left,     mods: Command, chars: "\x02\x70"                    } # Move to window to the right
