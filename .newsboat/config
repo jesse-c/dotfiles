@@ -32,7 +32,7 @@ confirm-exit yes
 
 goto-next-feed no
 
-# browser "open -g -a 'Google Chrome' %u"
+browser "open -g %u"
 
 bind-key j down feedlist
 bind-key k up feedlist
