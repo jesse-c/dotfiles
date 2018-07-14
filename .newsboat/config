@@ -20,7 +20,11 @@ color listnormal_unread yellow default
 color listfocus blue default reverse bold
 color listfocus_unread blue default reverse bold
 
-text-width 80
+text-width 120
+
+datetime-format "%F"
+
+# html-renderer "w3m -dump -T text/html"
 
 confirm-exit yes
 
