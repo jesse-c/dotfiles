@@ -42,6 +42,8 @@ bind-key J next-feed articlelist
 bind-key K prev-feed articlelist
 bind-key j down article
 bind-key k up article
+bind-key ^U pageup
+bind-key ^D pagedown
 bind-key x toggle-article-read
 
 # -- bookmarks -----------------------------------------------------------------
