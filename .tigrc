@@ -1,0 +1,17 @@
+# Show commit hashes in main view
+set main-view    = line-number:no,interval=5 id:yes date:default author:full commit-title:yes,graph,refs,overflow=no
+
+# Allow to amend the last commit
+bind status + !git commit --amend
+
+# Fixup to highlighted ID
+bind main - !git commit --fixup %(commit)
+
+# Copy commit ID to clipboard
+bind main 9 !@sh -c "echo %(commit) | pbcopy"
+
+# Rebase onto current commit
+bind main 8 !git rebase -i  %(commit)
+
+# Reload tigrc
+# bind generic x :source ~/.tigrc
