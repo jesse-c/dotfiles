@@ -56,6 +56,7 @@ brew "mitmproxy"
 brew "nmap"
 brew "openssl"
 brew "aria2"
+cask "dropshare"
 
 # File system
 brew "fd"
