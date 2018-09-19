@@ -96,6 +96,8 @@ Plug 'chr4/nginx.vim'
 Plug 'bohlender/vim-z3-smt2'
 " Scala
 Plug 'derekwyatt/vim-scala'
+" HTTP
+Plug 'diepm/vim-rest-console'
 
 " Plug 'roxma/nvim-completion-manager'
 " if !has('nvim')
@@ -131,6 +133,22 @@ Plug 'autozimu/LanguageClient-neovim', {
 call plug#end()
 
 " PLUGIN CONFIGURATION =========================================================
+
+" HTTP
+let g:vrc_horizontal_split = 1
+"let g:vrc_set_default_mapping = 0
+"let g:vrc_show_command = 1
+let g:vrc_trigger = '<Leader>r'
+let s:vrc_auto_format_response_patterns = {
+      \ 'json': 'jq "."',
+      \ 'xml': 'xmllint --format -',
+      \}
+let g:vrc_curl_opts={
+    \'--include': '',
+    \'--location': '',
+    \'--show-error': '',
+    \'--silent': ''
+\}
 
 " WindowSwap
 let g:windowswap_map_keys = 0 "prevent default bindings
@@ -226,6 +244,7 @@ nmap <Leader>j :Files<CR>
 nmap <Leader>k :Marks<CR>
 nmap <Leader>l :History<CR>
 nmap <Leader>; :Rg<Space>
+nmap <Leader>' :History:<CR>
 cnoreabbrev ag Ag
 cnoreabbrev aG Ag
 cnoreabbrev AG Ag
@@ -517,6 +536,8 @@ set pastetoggle=<F10>
 
 " History
 set undolevels=10000
+
+filetype plugin on
 
 " MAPPINGS =====================================================================
 
