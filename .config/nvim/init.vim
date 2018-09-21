@@ -517,8 +517,8 @@ endif
 
 " EDITOR =======================================================================
 
-let g:python_host_prog='/usr/local/opt/python@2/bin/python'
-let g:python3_host_prog='/usr/local/bin/python3'
+let g:python_host_prog='/Users/jesse/.asdf/shims/python2'
+let g:python3_host_prog='/Users/jesse/.asdf/shims/python3'
 
 set hidden
 set nobackup
