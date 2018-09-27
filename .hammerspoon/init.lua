@@ -86,3 +86,21 @@ switcher.ui.showThumbnails = false
 
 hs.hotkey.bind('alt', 'tab', 'Next window', function() switcher:next() end)
 hs.hotkey.bind('alt-shift', 'tab', 'Prev window',function() switcher:previous() end)
+
+-- Mail ------------------------------------------------------------------------
+mail = hs.image.imageFromPath("~/.hammerspoon/bin/mail.png")
+mail:setSize({w=16,h=16})
+mailMenu = hs.menubar.new()
+mailMenu:setIcon(mail)
+
+function setUnreadCount()
+  local succeeded, result, desc = hs.osascript.applescript("tell application \"Mail\" to get the count of messages of inbox")
+
+  if (succeeded and result ~= nil) then
+    local count = tostring(result)
+    mailMenu:setTitle(count)
+  end
+end
+
+setUnreadCount()
+hs.timer.doEvery(5, setUnreadCount)
