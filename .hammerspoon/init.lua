@@ -75,7 +75,7 @@ end
 sleepWatcher = hs.caffeinate.watcher.new(sleepWatch)
 sleepWatcher:start()
 
--- Window management ------------------------------------------------------
+-- Window management -----------------------------------------------------------
 -- TODO Replace Spectacle
 
 -- Window Switcher
