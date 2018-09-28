@@ -94,7 +94,7 @@ mailMenu = hs.menubar.new()
 mailMenu:setIcon(mail)
 
 function setUnreadCount()
-  local succeeded, result, desc = hs.osascript.applescript("tell application \"Mail\" to get the count of messages of inbox")
+  local succeeded, result, desc = hs.osascript.applescript("tell application \"Mail\" to get the unread count of inbox")
 
   if (succeeded and result ~= nil) then
     local count = tostring(result)
