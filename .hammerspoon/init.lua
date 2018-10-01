@@ -135,14 +135,16 @@ function updateMailMenu()
         end
       end
       
-      local succeeded, result, desc = hs.osascript.applescript("tell application \"Mail\" to get subject of (first message of inbox whose id is equal to " .. id .. ")")
+      local succeededSubject, subject, _ = hs.osascript.applescript("tell application \"Mail\" to get subject of (first message of inbox whose id is equal to " .. id .. ")")
+      local succeededSender, sender, _ = hs.osascript.applescript("tell application \"Mail\" to get sender of (first message of inbox whose id is equal to " .. id .. ")")
+      -- TODO Date sent
 
-      if (succeeded and result ~= nil) then
+      if (succeededSubject and subject ~= nil and succeededSender and sender ~= nil) then
         local msgMenu = {}
         table.insert(msgMenu, {title = "Delete", fn = deleteFn(id)})
         table.insert(msgMenu, {title = "Mark as read", fn = readFn(id)})
 
-        table.insert(subjects, {title = result, menu = msgMenu})
+        table.insert(subjects, {title = sender .. " — " .. subject, menu = msgMenu})
       end
     end
 
