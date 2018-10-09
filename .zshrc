@@ -71,8 +71,16 @@ export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow --glob "!.g
 #if [ "$GOPATH" = "" ] ; then
 #    export GOPATH=$ASDF_INSTALL_PATH/packages
 #  fi
-export GOPATH=~/
-export PATH=$PATH:$GOPATH:$GOPATH/bin
+#export GOPATH=~/
+#export PATH=$PATH:$GOPATH:$GOPATH/bin
+# export PATH=$PATH:$HOME/bin
+
+# From `go env`
+# GOPATH="/Users/jesse/.asdf/installs/golang/1.11/packages"
+# GOROOT="/Users/jesse/.asdf/installs/golang/1.11/go"
+export GOPATH=~/src
+
+export PATH=$GOPATH/bin:$GOROOT/bin:$PATH
 
 # terminal
 alias dots='$(which git) --git-dir=$HOME/.dots.git/ --work-tree=$HOME'
@@ -128,8 +136,9 @@ alias rg="rg --smart-case --pretty"
 
 # Lua
 # Generate with luarocks path --bin (https://github.com/luarocks/luarocks/wiki/Using-LuaRocks)
-export LUA_PATH='/Users/jesse/.luarocks/share/lua/5.3/?.lua;/Users/jesse/.luarocks/share/lua/5.3/?/init.lua;/Users/jesse/.asdf/installs/lua/5.3.3/luarocks/share/lua/5.3/?.lua;/Users/jesse/.asdf/installs/lua/5.3.3/luarocks/share/lua/5.3/?/init.lua;/usr/local/share/lua/5.3/?.lua;/usr/local/share/lua/5.3/?/init.lua;/usr/local/lib/lua/5.3/?.lua;/usr/local/lib/lua/5.3/?/init.lua;./?.lua;./?/init.lua;/Users/jesse/.asdf/installs/lua/5.3.3/share/lua/5.3/?.lua;/Users/jesse/.asdf/installs/lua/5.3.3/share/lua/5.3/?/init.lua'
-export LUA_CPATH='/Users/jesse/.luarocks/lib/lua/5.3/?.so;/Users/jesse/.asdf/installs/lua/5.3.3/luarocks/lib/lua/5.3/?.so;/usr/local/lib/lua/5.3/?.so;/usr/local/lib/lua/5.3/loadall.so;./?.so;/Users/jesse/.asdf/installs/lua/5.3.3/lib/lua/5.3/?.so'
-export PATH=$PATH:$HOME/.luarocks/bin:$HOME/.asdf/installs/lua/5.3.3/luarocks/bin
+# export LUA_PATH='/Users/jesse/.luarocks/share/lua/5.3/?.lua;/Users/jesse/.luarocks/share/lua/5.3/?/init.lua;/Users/jesse/.asdf/installs/lua/5.3.3/luarocks/share/lua/5.3/?.lua;/Users/jesse/.asdf/installs/lua/5.3.3/luarocks/share/lua/5.3/?/init.lua;/usr/local/share/lua/5.3/?.lua;/usr/local/share/lua/5.3/?/init.lua;/usr/local/lib/lua/5.3/?.lua;/usr/local/lib/lua/5.3/?/init.lua;./?.lua;./?/init.lua;/Users/jesse/.asdf/installs/lua/5.3.3/share/lua/5.3/?.lua;/Users/jesse/.asdf/installs/lua/5.3.3/share/lua/5.3/?/init.lua'
+# export LUA_CPATH='/Users/jesse/.luarocks/lib/lua/5.3/?.so;/Users/jesse/.asdf/installs/lua/5.3.3/luarocks/lib/lua/5.3/?.so;/usr/local/lib/lua/5.3/?.so;/usr/local/lib/lua/5.3/loadall.so;./?.so;/Users/jesse/.asdf/installs/lua/5.3.3/lib/lua/5.3/?.so'
+# export PATH=$PATH:$HOME/.luarocks/bin:$HOME/.asdf/installs/lua/5.3.3/luarocks/bin
+
 
 # Work
