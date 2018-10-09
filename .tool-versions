@@ -1,13 +1,14 @@
-golang 1.10.3
-ruby 2.5.0
-elm 0.18.0
-elixir 1.5.1
-racket 6.12
-clojure 1.9.0
-lua 5.3.3
-nodejs 10.6.0
-rust 1.25.0
-java 10.0.1
-erlang 20.2.4
-ocaml 4.06.1
-python 3.6.4
+golang 1.11
+# ruby 2.5.0
+# elm 0.18.0
+# elixir 1.5.1
+# racket 6.12
+# clojure 1.9.0
+# lua 5.3.3
+nodejs 10.11.0
+rust 1.29.0
+java openjdk-10.0.2
+# erlang 20.2.4
+# ocaml 4.06.1
+python 3.7.0 2.7.15
+# asdf reshim python
