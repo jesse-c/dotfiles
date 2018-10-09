@@ -112,6 +112,8 @@ brew "gpg"
 cask "gpg-suite"
 
 # Development
+brew "asdf"
+brew "emacs"
 brew "jq"
 mas "Xcode", id: 497799835
 cask "virtualbox"
