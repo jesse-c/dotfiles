@@ -78,7 +78,7 @@ export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow --glob "!.g
 # From `go env`
 # GOPATH="/Users/jesse/.asdf/installs/golang/1.11/packages"
 # GOROOT="/Users/jesse/.asdf/installs/golang/1.11/go"
-export GOPATH=~/src
+export GOPATH=~/
 
 export PATH=$GOPATH/bin:$GOROOT/bin:$PATH
 
@@ -140,5 +140,5 @@ alias rg="rg --smart-case --pretty"
 # export LUA_CPATH='/Users/jesse/.luarocks/lib/lua/5.3/?.so;/Users/jesse/.asdf/installs/lua/5.3.3/luarocks/lib/lua/5.3/?.so;/usr/local/lib/lua/5.3/?.so;/usr/local/lib/lua/5.3/loadall.so;./?.so;/Users/jesse/.asdf/installs/lua/5.3.3/lib/lua/5.3/?.so'
 # export PATH=$PATH:$HOME/.luarocks/bin:$HOME/.asdf/installs/lua/5.3.3/luarocks/bin
 
-
-# Work
+# emacs
+export EMACS_USER_DIRECTORY=~/.emacs.d
