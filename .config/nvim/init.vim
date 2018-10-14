@@ -130,8 +130,15 @@ let g:LanguageClient_serverCommands = {
     \ 'rust': ['rls'],
     \ 'python': ['pyls'],
     \ 'go': ['go-langserver'],
+    \ 'bash': ['bash-language-server'],
+    \ 'ruby': ['solargraph'],
+    \ 'cpp': ['ccls', '--log-file=/tmp/cc.log'],
+    \ 'c': ['ccls', '--log-file=/tmp/cc.log'],
+    \ 'javascript': ['javascript-typescript-stdio'],
     \ }
 nnoremap <c-l> :call LanguageClient_contextMenu()<CR>
+let g:LanguageClient_loadSettings = 1 " Use an absolute configuration path if you want system-wide settings
+let g:LanguageClient_settingsPath = '/home/jesse/.config/nvim/lsp-settings.json'
 
 " NCM2 -------------------------------------------------------------------------
 autocmd BufEnter * call ncm2#enable_for_buffer()
