@@ -48,6 +48,7 @@ Plug 'junegunn/fzf.vim'
 " File system ------------------------------------------------------------------
 Plug 'francoiscabrol/ranger.vim'
 Plug 'tpope/vim-eunuch'
+Plug 'airblade/vim-rooter'
 
 " Development ------------------------------------------------------------------
 Plug 'w0rp/ale'
