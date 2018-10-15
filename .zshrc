@@ -31,7 +31,7 @@ alias cls='clear && printf "\e[3J"'
 
 # Homebrew
 HOMEBREW_NO_ANALYTICS=1
-export PATH="/usr/local/sbin:$PATH"
+# export PATH="/usr/local/sbin:$PATH"
 
 # asdf
 . $HOME/.asdf/asdf.sh
@@ -78,9 +78,9 @@ export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow --glob "!.g
 # From `go env`
 # GOPATH="/Users/jesse/.asdf/installs/golang/1.11/packages"
 # GOROOT="/Users/jesse/.asdf/installs/golang/1.11/go"
-export GOPATH=~/
+# export GOPATH=~/
 
-export PATH=$GOPATH/bin:$GOROOT/bin:$PATH
+# export PATH=$GOPATH/bin:$GOROOT/bin:$PATH
 
 # terminal
 alias dots='$(which git) --git-dir=$HOME/.dots.git/ --work-tree=$HOME'
@@ -133,6 +133,9 @@ stt_title () { setTerminalText 2 $@; }
 
 # ripgrep
 alias rg="rg --smart-case --pretty"
+
+# git
+alias cdg='cd $(git rev-parse --show-toplevel)'
 
 # Lua
 # Generate with luarocks path --bin (https://github.com/luarocks/luarocks/wiki/Using-LuaRocks)
