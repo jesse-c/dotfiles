@@ -58,6 +58,8 @@ Plug 'roxma/nvim-yarp'
 Plug 'ncm2/ncm2-bufword'
 Plug 'ncm2/ncm2-tmux'
 Plug 'ncm2/ncm2-path'
+Plug 'ncm2/ncm2-go'
+Plug 'ncm2/ncm2-racer'
 
 Plug 'autozimu/LanguageClient-neovim', {
     \ 'branch': 'next',
@@ -137,7 +139,7 @@ let g:LanguageClient_serverCommands = {
     \ 'c': ['ccls', '--log-file=/tmp/cc.log'],
     \ 'javascript': ['javascript-typescript-stdio'],
     \ }
-nnoremap <c-l> :call LanguageClient_contextMenu()<CR>
+nnoremap <c-p> :call LanguageClient_contextMenu()<CR>
 let g:LanguageClient_loadSettings = 1 " Use an absolute configuration path if you want system-wide settings
 let g:LanguageClient_settingsPath = '/home/jesse/.config/nvim/lsp-settings.json'
 
@@ -155,6 +157,9 @@ let g:ale_fixers = {
 \   '*': ['remove_trailing_lines', 'trim_whitespace'],
 \   'python': ['black'],
 \}
+let g:ale_elm_format_use_global = 1
+let g:ale_elm_format_options = "--elm-version=0.19"
+let g:ale_elm_make_use_global = 1
 nmap <silent> <C-k> <Plug>(ale_previous_wrap)
 nmap <silent> <C-j> <Plug>(ale_next_wrap)
 
