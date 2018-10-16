@@ -151,3 +151,9 @@ alias cdg='cd $(git rev-parse --show-toplevel)'
 
 # emacs
 export EMACS_USER_DIRECTORY=~/.emacs.d
+
+# local
+if [ -f ~/local.sh ]; then
+  echo "s"
+  source ~/local.sh
+fi
