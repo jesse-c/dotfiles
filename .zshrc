@@ -26,6 +26,9 @@ HOMEBREW_EDITOR=nvim
 
 alias cls='clear && printf "\e[3J"'
 
+alias bash='/usr/local/bin/bash'
+alias zsh='/usr/local/bin/zsh'
+
 . ~/.config/zsh/plugins/vi-mode.plugin.zsh
 . ~/.config/zsh/plugins/colored-man-pages.plugin.zsh
 
