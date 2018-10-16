@@ -91,9 +91,12 @@ alias dots='$(which git) --git-dir=$HOME/.dots.git/ --work-tree=$HOME'
 # Neovim
 #export NVIM_TUI_ENABLE_CURSOR_SHAPE=1
 
+# UUID
+alias uuid='uuidgen | tr -d '\n' | pbcopy'
+
 # Who's listening
 # https://stackoverflow.com/questions/4421633/who-is-listening-on-a-given-tcp-port-on-mac-os-x
-alias ears="sudo lsof -i -n -P | grep TCP"
+alias ears='sudo lsof -i -n -P | grep TCP'
 
 # Prints process with the most open files
 # https://www.reddit.com/r/osx/comments/3ewn93/too_many_open_files_in_system_what_is_causing_this/
