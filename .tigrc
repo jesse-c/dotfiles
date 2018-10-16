@@ -13,5 +13,8 @@ bind main 9 !@sh -c "echo %(commit) | pbcopy"
 # Rebase onto current commit
 bind main 8 !git rebase -i  %(commit)
 
+# Copy file path to clipboard
+bind status 7 !@sh -c "echo %(file) | pbcopy"
+
 # Reload tigrc
 # bind generic x :source ~/.tigrc
