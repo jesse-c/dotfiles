@@ -154,6 +154,5 @@ export EMACS_USER_DIRECTORY=~/.emacs.d
 
 # local
 if [ -f ~/local.sh ]; then
-  echo "s"
   source ~/local.sh
 fi
