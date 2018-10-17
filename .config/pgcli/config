@@ -1,4 +1,3 @@
-# vi: ft=dosini
 [main]
 
 # Enables context sensitive auto-completion. If this is disabled the all
@@ -13,7 +12,7 @@ wider_completion_menu = False
 # this is set to True, then the end of the statements must have a semi-colon.
 # If this is set to False then sql statements can't be split into multiple
 # lines. End of line (return) is considered as the end of the statement.
-multi_line = False
+multi_line = True
 
 # If multi_line_mode is set to "psql", in multi-line mode, [Enter] will execute
 # the current input if the input ends in a semicolon.
@@ -21,6 +20,11 @@ multi_line = False
 # insert a newline, and [Esc] [Enter] or [Alt]-[Enter] must be used to execute
 # a command.
 multi_line_mode = psql
+
+# Destructive warning mode will alert you before executing a sql statement
+# that may cause harm to the database such as "drop table", "drop database"
+# or "shutdown".
+destructive_warning = True
 
 # Enables expand mode, which is similar to `\x` in psql.
 expand = False
@@ -111,10 +115,16 @@ row_limit = 1000
 less_chatty = False
 
 # Postgres prompt
+# \t - Current date and time
 # \u - Username
-# \h - Hostname of the server
+# \h - Short hostname of the server (up to first '.')
+# \H - Hostname of the server
 # \d - Database name
+# \p - Database port
+# \i - Postgres PID
+# \# - "@" sign if logged in as superuser, '>' in other case
 # \n - Newline
+# \dsn_alias - name of dsn alias if -D option is used (empty otherwise)
 prompt = '\u@\h:\d> '
 
 # Number of lines to reserve for the suggestion menu
@@ -125,6 +135,9 @@ multiline_continuation_char = ''
 
 # The string used in place of a null value.
 null_string = '<null>'
+
+# manage pager on startup
+enable_pager = True
 
 # Custom colors for the completion menu, toolbar, etc.
 [colors]
@@ -149,10 +162,16 @@ Token.Toolbar.Arg.Text = 'nobold'
 Token.Toolbar.Transaction.Valid = 'bg:#222222 #00ff5f bold'
 Token.Toolbar.Transaction.Failed = 'bg:#222222 #ff005f bold'
 
+# color of table
+# you can use token or custom colors
+Token.Output.Header = "#00ff5f bold"
+Token.Output.OddRow = ""
+Token.Output.EvenRow = ""
+
 # Named queries are queries you can execute by name.
 [named queries]
 
-# DNS to call by -D option
+# DSN to call by -D option
 [alias_dsn]
 # example_dsn = postgresql://[user[:password]@][netloc][:port][/dbname]
 
