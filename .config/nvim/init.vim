@@ -145,10 +145,10 @@ let g:LanguageClient_settingsPath = '/home/jesse/.config/nvim/lsp-settings.json'
 
 " NCM2 -------------------------------------------------------------------------
 autocmd BufEnter * call ncm2#enable_for_buffer()
-set completeopt=noinsert,menuone,noselect
+au User Ncm2PopupOpen set completeopt=noinsert,menuone,noselect
+au User Ncm2PopupClose set completeopt=menuone
 inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-inoremap <expr> <CR> (pumvisible() ? "\<c-y>\<cr>" : "\<CR>")
 
 " ALE --------------------------------------------------------------------------
 let g:ale_fix_on_save = 1
@@ -158,7 +158,7 @@ let g:ale_fixers = {
 \   'python': ['black'],
 \}
 let g:ale_elm_format_use_global = 1
-let g:ale_elm_format_options = "--elm-version=0.19"
+let g:ale_elm_format_options = '--yes --elm-version=0.19'
 let g:ale_elm_make_use_global = 1
 nmap <silent> <C-k> <Plug>(ale_previous_wrap)
 nmap <silent> <C-j> <Plug>(ale_next_wrap)
