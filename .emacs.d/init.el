@@ -148,9 +148,9 @@
 
 
 ;; We need Emacs kill ring and system clipboard to be independent. Simpleclip is the solution to that.
-(use-package simpleclip
-  :config
-  (simpleclip-mode 1))
+;; (use-package simpleclip
+;;   :config
+;;   (simpleclip-mode 1))
 
 
 ;; Things you'd expect from macOS app.
