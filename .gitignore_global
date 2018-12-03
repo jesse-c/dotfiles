@@ -1,2 +1,6 @@
 # macOS
 .DS_Store
+
+# Elm
+*.elmi
+*.elmo
