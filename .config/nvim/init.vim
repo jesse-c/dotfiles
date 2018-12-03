@@ -24,6 +24,9 @@ Plug 'kshenoy/vim-signature'
 " Buffers
 Plug 'jeetsukumaran/vim-buffergator'
 
+" Registers
+Plug 'junegunn/vim-peekaboo'
+
 " Session
 Plug 'tpope/vim-obsession'
 
@@ -96,6 +99,7 @@ call plug#end()
 
 " UNSORTED ======================================================================
 set encoding=UTF-8
+set inccommand=nosplit
 
 " HTTP -------------------------------------------------------------------------
 let g:vrc_horizontal_split = 1
@@ -356,11 +360,15 @@ let g:go_highlight_build_constraints = 1
 
 " Elm --------------------------------------------------------------------------
 let g:elm_format_autosave = 1
+let g:elm_format_fail_silently = 0
 let g:elm_detailed_complete = 1
 let g:elm_setup_keybindings = 0
 let g:elm_make_show_warnings = 1
 
 " MISC. ========================================================================
+
+command FormatJson :%!jq '.'
+
 " Fix some common typos --------------------------------------------------------
 cnoreabbrev W! w!
 cnoreabbrev Q! q!
