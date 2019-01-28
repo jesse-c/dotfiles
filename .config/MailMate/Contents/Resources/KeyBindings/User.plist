@@ -6,7 +6,7 @@
 	"k" = "previousMessage:";
 	"h" = "previousThread:";
 	"l" = "nextThread:";
-	"d"   = "deleteMessage:";
+	"d" = "deleteMessage:";
 	"c"	= "newMessage:";
 	"/"	= "searchAllMessages:";
 	"r"	= "reply:";
