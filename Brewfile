@@ -145,8 +145,8 @@ mas "Helium", id: 1054607607
 cask "slack-beta"
 cask "skype"
 cask "mailmate"
-brew "weechat", args: ["with-aspell", "with-lua", "with-perl", "with-python", "with-ruby"]
-#cask "franz"
+brew "weechat"
+cask "caprine"
 cask "vivaldi"
 cask "firefox"
 cask "firefox-developer-edition"
