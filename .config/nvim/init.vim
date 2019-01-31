@@ -164,8 +164,8 @@ let g:ale_fixers = {
 let g:ale_elm_format_use_global = 1
 let g:ale_elm_format_options = '--yes --elm-version=0.19'
 let g:ale_elm_make_use_global = 1
-nmap <silent> <C-k> <Plug>(ale_previous_wrap)
-nmap <silent> <C-j> <Plug>(ale_next_wrap)
+nmap <silent> <C-f> <Plug>(ale_previous_wrap)
+nmap <silent> <C-g> <Plug>(ale_next_wrap)
 
 " EDITOR =======================================================================
 " Copy/paste -------------------------------------------------------------------
@@ -261,6 +261,11 @@ if has('mouse')
 endif
 
 let g:rainbow_active = 1
+
+nmap <silent> <C-k> :wincmd k<CR>
+nmap <silent> <C-j> :wincmd j<CR>
+nmap <silent> <C-h> :wincmd h<CR>
+nmap <silent> <C-l> :wincmd l<CR>
 
 " Tags -------------------------------------------------------------------------
 nmap <F8> :TagbarToggle<CR>
