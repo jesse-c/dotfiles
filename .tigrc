@@ -16,5 +16,11 @@ bind main 8 !git rebase -i  %(commit)
 # Copy file path to clipboard
 bind status 7 !@sh -c "echo %(file) | pbcopy"
 
+# Push
+bind main p !git push origin
+
+# Push (force)
+bind main P !git push -f origin
+
 # Reload tigrc
 # bind generic x :source ~/.tigrc
