@@ -17,6 +17,9 @@ Plug 'mbbill/undotree'
 Plug 'luochen1990/rainbow'
 Plug 'editorconfig/editorconfig-vim'
 Plug 'google/vim-searchindex'
+Plug 'gcmt/taboo.vim'
+Plug 'troydm/zoomwintab.vim'
+
 
 " Marks
 Plug 'kshenoy/vim-signature'
@@ -42,6 +45,8 @@ Plug 'tpope/vim-commentary'
 
 " VCS --------------------------------------------------------------------------
 Plug 'tpope/vim-fugitive'
+Plug 'rhysd/git-messenger.vim'
+Plug 'jreybert/vimagit'
 Plug 'mhinz/vim-signify'
 
 " Search -----------------------------------------------------------------------
@@ -136,12 +141,15 @@ filetype plugin on
 let g:LanguageClient_serverCommands = {
     \ 'rust': ['rls'],
     \ 'python': ['pyls'],
-    \ 'go': ['go-langserver'],
+    \ 'go': ['bingo'],
     \ 'bash': ['bash-language-server'],
     \ 'ruby': ['solargraph'],
     \ 'cpp': ['ccls', '--log-file=/tmp/cc.log'],
     \ 'c': ['ccls', '--log-file=/tmp/cc.log'],
     \ 'javascript': ['javascript-typescript-stdio'],
+    \ }
+let g:LanguageClient_rootMarkers = {
+    \ 'go': ['.git', 'go.mod'],
     \ }
 nnoremap <c-p> :call LanguageClient_contextMenu()<CR>
 let g:LanguageClient_loadSettings = 1 " Use an absolute configuration path if you want system-wide settings
@@ -266,6 +274,8 @@ nmap <silent> <C-k> :wincmd k<CR>
 nmap <silent> <C-j> :wincmd j<CR>
 nmap <silent> <C-h> :wincmd h<CR>
 nmap <silent> <C-l> :wincmd l<CR>
+
+nmap <silent> <C-m> :GitMessenger<CR>
 
 " Tags -------------------------------------------------------------------------
 nmap <F8> :TagbarToggle<CR>
