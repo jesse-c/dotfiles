@@ -19,7 +19,7 @@ Plug 'editorconfig/editorconfig-vim'
 Plug 'google/vim-searchindex'
 Plug 'gcmt/taboo.vim'
 Plug 'troydm/zoomwintab.vim'
-
+Plug 'tpope/vim-abolish'
 
 " Marks
 Plug 'kshenoy/vim-signature'
@@ -382,7 +382,13 @@ let g:elm_make_show_warnings = 1
 
 " MISC. ========================================================================
 
-command FormatJson :%!jq '.'
+command! FormatJson :%!jq '.'
+
+nmap <F3> i<C-R>=strftime("%Y-%m-%d")<CR><Esc>
+imap <F3> <C-R>=strftime("%Y-%m-%d")<CR>
+
+nnoremap <leader>ev :vsplit $MYVIMRC<cr> " Edit my vimrc
+nnoremap <leader>sv :source $MYVIMRC<cr> " Source my vimrc
 
 " Fix some common typos --------------------------------------------------------
 cnoreabbrev W! w!
@@ -402,3 +408,4 @@ cnoreabbrev Qall qall
 " \t tab listing
 " \b buffer listing
 " \f ranger
+" \ leader
