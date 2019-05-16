@@ -141,7 +141,7 @@ filetype plugin on
 let g:LanguageClient_serverCommands = {
     \ 'rust': ['rls'],
     \ 'python': ['pyls'],
-    \ 'go': ['bingo'],
+    \ 'go': ['gopls'],
     \ 'bash': ['bash-language-server'],
     \ 'ruby': ['solargraph'],
     \ 'cpp': ['ccls', '--log-file=/tmp/cc.log'],
