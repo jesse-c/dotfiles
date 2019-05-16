@@ -1,10 +1,13 @@
 /* Hide tab bar */
-/* https://www.reddit.com/r/FirefoxCSS/comments/8bmifx/userchromejs_hack_to_hide_tab_bar_if_tree_style/ */
-#TabsToolbar {
-  visibility: collapse !important;
+/* https://github.com/piroor/treestyletab/wiki/Code-snippets-for-custom-style-rules */
+#main-window[tabsintitlebar="true"]:not([extradragspace="true"]) #TabsToolbar > .toolbar-items {
+  opacity: 0;
+  pointer-events: none;
+}
+#main-window:not([tabsintitlebar="true"]) #TabsToolbar {
+    visibility: collapse !important;
 }
 
-/* Hide sidebar header */
 #sidebar-box[sidebarcommand="treestyletab_piro_sakura_ne_jp-sidebar-action"] #sidebar-header {
-  visibility: collapse !important;
+  display: none;
 }
