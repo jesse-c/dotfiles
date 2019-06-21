@@ -1,85 +1,141 @@
-# Change default zim location
-export ZIM_HOME=${ZDOTDIR:-${HOME}}/.zim
+# ------------------------------------------------------------------------------
 
-# Start zim
-[[ -s ${ZIM_HOME}/init.zsh ]] && source ${ZIM_HOME}/init.zsh
+setopt extendedglob
+setopt nomatch # if a pattern for filename generation has no matches, print an error, instead of leaving it unchanged in the argument list
 
-# zsh
-bindkey -v
+setopt no_beep
+setopt notify # report the status of background jobs immediately, rather than waiting until just before printing a prompt.
+zstyle :compinstall filename '/Users/jesse/.zshrc'
+export REPORTTIME=4
+ZSH_COMMAND_TIME_MIN_SECONDS=4
 
-HISTFILE=$HOME/.zhistory
-setopt APPEND_HISTORY
-setopt HIST_IGNORE_SPACE
-setopt EXTENDED_HISTORY
-setopt HIST_EXPIRE_DUPS_FIRST
+# History ----------------------------------------------------------------------
+
+HISTFILE=~/.histfile
 HISTSIZE=10000
 SAVEHIST=10000
-bindkey '^R' history-incremental-search-backward
+setopt hist_ignore_dups             # ignore duplication command history list
+setopt hist_ignore_space            # don't save commands beginning with spaces to history
+setopt append_history               # append to the end of the history file
+setopt inc_append_history           # always be saving history (not just when the shell exits)
+setopt hist_expire_dups_first
+setopt extended_history
 
-REPORTTIME=30
+# Editor -----------------------------------------------------------------------
 
 EDITOR=nvim
 VISUAL=nvim
 HOMEBREW_EDITOR=nvim
 
-alias bash='/usr/local/bin/bash'
-alias zsh='/usr/local/bin/zsh'
+# Completion -------------------------------------------------------------------
 
-. ~/.config/zsh/plugins/vi-mode.plugin.zsh
-. ~/.config/zsh/plugins/colored-man-pages.plugin.zsh
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
 
-# Homebrew
-HOMEBREW_NO_ANALYTICS=1
-
-# asdf
-. $HOME/.asdf/asdf.sh
-. $HOME/.asdf/completions/asdf.bash
-
-# fzf
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow --glob "!.git/*"'
-
-# Config
+# dots -------------------------------------------------------------------------
 alias dots='$(which git) --git-dir=$HOME/.dots.git/ --work-tree=$HOME'
 
-# Utils
+# Visual -----------------------------------------------------------------------
+
 alias cls='clear && printf "\e[3J"'
-alias uuid='uuidgen | tr -d '\n' | pbcopy'
-alias ears='sudo lsof -i -n -P | grep TCP' # https://stackoverflow.com/questions/4421633/who-is-listening-on-a-given-tcp-port-on-mac-os-x
-#alias mostopenfiles="sudo lsof -n | perl -pe '$x = <>; while(<>) { ($cmd, $pid, $rest) = split(/\s+/); $cmds{$pid} = $cmd; $pids{$pid}++;} while( ($key, $val) = each %pids) { if ($val > $max) { $max = $val; $maxpid = $key; } } print "pid: $maxpid ($cmds{$maxpid}) has the most ($max) filedescriptors \n";'" # Prints process with the most open files  - https://www.reddit.com/r/osx/comments/3ewn93/too_many_open_files_in_system_what_is_causing_this/
-# Find/Replace in files
-# https://stackoverflow.com/questions/9704020/recursive-search-and-replace-in-text-files-on-mac-and-linux
-# find . -type f -name '*.elm' -exec sed -i '' s/PNode/PerimeterNode/ {} +
-function far() {
-  find . -name '*.$1' -print0 | xargs -0 sed -i "" "s/$2/$3/g"
-}
 
-# Docker
-alias ds='docker ps'
-alias dk='docker kill $(docker ps -q)'
-alias dr='docker rm -f $(docker ps -q)'
-function di() {
-  docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $1
-}
-
-# Dev
-alias uuidgenlower='uuidgen | tr -d '\n' | tr "[:upper:]" "[:lower:]"'
-
-# Google Chrome
-alias chrome="/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome"
-alias chrome-canary="/Applications/Google\ Chrome\ Canary.app/Contents/MacOS/Google\ Chrome\ Canary"
-alias chromium="/Applications/Chromium.app/Contents/MacOS/Chromium"
+# Applications -----------------------------------------------------------------
 
 # ripgrep
 alias rg="rg --smart-case --pretty"
 
-# git
+# Git
 alias cdg='cd $(git rev-parse --show-toplevel)'
 
-# emacs
+# Emacs
 export EMACS_USER_DIRECTORY=~/.emacs.d
 
-# local
+# Homebrew
+HOMEBREW_NO_ANALYTICS=1
+
+# ASDF
+autoload -Uz compinit && compinit
+. $HOME/.asdf/asdf.sh
+. $HOME/.asdf/completions/asdf.bash
+
+# Bindings ---------------------------------------------------------------------
+
+bindkey -v
+
+bindkey '^r' history-incremental-search-backward
+
+export KEYTIMEOUT=1 # Make Vi mode transitions faster (KEYTIMEOUT is in hundredths of a second)
+
+# Updates editor information when the keymap changes.
+function zle-keymap-select() {
+  zle reset-prompt
+  zle -R
+}
+
+zle -N zle-keymap-select
+
+function vi_mode_prompt_info() {
+  echo "${${KEYMAP/vicmd/[% NORMAL]%}/(main|viins)/[% INSERT]%}"
+}
+
+# Plugins ----------------------------------------------------------------------
+
+### Added by Zplugin's installer
+source '/Users/jesse/.zplugin/bin/zplugin.zsh'
+autoload -Uz _zplugin
+(( ${+_comps} )) && _comps[zplugin]=_zplugin
+### End of Zplugin's installer chunk
+
+zplugin snippet OMZ::plugins/shrink-path/shrink-path.plugin.zsh
+zplugin snippet OMZ::plugins/colored-man-pages/colored-man-pages.plugin.zsh
+zplugin light zsh-users/zsh-autosuggestions
+zplugin light zdharma/fast-syntax-highlighting
+zplugin light softmoth/zsh-vim-mode
+
+zplugin ice pick"gitstatus.prompt.zsh"
+zplugin light romkatv/gitstatus
+
+# Disabled
+# zplugin light popstas/zsh-command-time
+# zplugin snippet OMZ::plugins/colored-man-pages/colored-man-pages.plugin.zsh
+# zplugin snippet OMZ::plugins/timer/timer.plugin.zsh
+
+# FZF --------------------------------------------------------------------------
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow --glob "!.git/*"'
+
+# Prompt -----------------------------------------------------------------------
+
+# shrink-path
+setopt prompt_subst
+
+# user is red if privileged
+local n='%n'
+if [[ "${(%):-%#}" == '#' ]]; then
+  n="%{$fg[red]%}%{$reset_color%}"
+  n+="%{$fg_bold[red]%}%n%{$reset_color%}"
+  n+="%{$fg[red]%}%{$reset_color%}"
+fi
+
+# exit code
+# https://zenbro.github.io/2015/07/23/show-exit-code-of-last-command-in-zsh
+function check_last_exit_code() {
+  local LAST_EXIT_CODE=$?
+  if [[ $LAST_EXIT_CODE -ne 0 ]]; then
+    local EXIT_CODE_PROMPT=' '
+    EXIT_CODE_PROMPT+="%{$fg[red]%}%{$reset_color%}"
+    EXIT_CODE_PROMPT+="%{$fg_bold[red]%}$LAST_EXIT_CODE%{$reset_color%}"
+    EXIT_CODE_PROMPT+="%{$fg[red]%}%{$reset_color%}"
+    echo "$EXIT_CODE_PROMPT"
+  fi
+}
+
+# Prompt symbols: λ ❯
+PROMPT='$(shrink_path -f) $GITSTATUS_PROMPT ❯ '
+RPROMPT='$(check_last_exit_code) $n@%m ∙ %j ∙ %T $(vi_mode_prompt_info)'
+
+# Local ------------------------------------------------------------------------
+
 if [ -f ~/local.sh ]; then
   source ~/local.sh
 fi
