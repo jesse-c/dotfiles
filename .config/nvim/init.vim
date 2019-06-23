@@ -1,182 +1,103 @@
-" PLUGINS ======================================================================
-call plug#begin('~/.local/share/nvim/plugged')
+" For a paranoia.
+" Normally `:set nocp` is not needed, because it is done automatically
+" when .vimrc is found.
+if &compatible
+  " `:set nocp` has many side effects. Therefore this should be done
+  " only when 'compatible' is set.
+  set nocompatible
+endif
 
-" UNSORTED ---------------------------------------------------------------------
-Plug 'vimwiki/vimwiki'
+" Define user commands for updating/cleaning the plugins.
+" Each of them loads minpac, reloads .vimrc to register the
+" anformation of plugins, then performs the task.
+command! PackUpdate packadd minpac | source $MYVIMRC | call minpac#update('', {'do': 'call minpac#status()'})
+command! PackClean  packadd minpac | source $MYVIMRC | call minpac#clean()
+command! PackStatus packadd minpac | source $MYVIMRC | call minpac#status()
 
-" UI ---------------------------------------------------------------------------
-Plug 'ayu-theme/ayu-vim'
-Plug 'ryanoasis/vim-devicons'
-Plug 'scrooloose/nerdtree'
-Plug 'Xuyuanp/nerdtree-git-plugin'
-Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
-Plug 'chrisbra/Colorizer'
-Plug 'mhinz/vim-startify'
-Plug 'Yggdroot/indentLine'
-Plug 'mbbill/undotree'
-Plug 'luochen1990/rainbow'
-Plug 'editorconfig/editorconfig-vim'
-Plug 'google/vim-searchindex'
-Plug 'gcmt/taboo.vim'
-Plug 'troydm/zoomwintab.vim'
-Plug 'tpope/vim-abolish'
+if exists('*minpac#init')
+  call minpac#init()
+  call minpac#add('k-takata/minpac', {'type': 'opt'})
 
-" Marks
-Plug 'kshenoy/vim-signature'
+  " UI -------------------------------------------------------------------------
+  call minpac#add('ayu-theme/ayu-vim')
+  call minpac#add('ryanoasis/vim-devicons')
+  call minpac#add('scrooloose/nerdtree')
+  call minpac#add('Xuyuanp/nerdtree-git-plugin')
+	call minpac#add('tiagofumo/vim-nerdtree-syntax-highlight')
+	call minpac#add('chrisbra/Colorizer')
+	call minpac#add('mhinz/vim-startify')
+	call minpac#add('Yggdroot/indentLine')
+	call minpac#add('mbbill/undotree')
+	call minpac#add('luochen1990/rainbow')
+	call minpac#add('editorconfig/editorconfig-vim')
+	call minpac#add('google/vim-searchindex')
+	call minpac#add('gcmt/taboo.vim')
+	call minpac#add('troydm/zoomwintab.vim')
+	call minpac#add('tpope/vim-abolish')
+	call minpac#add('ludovicchabant/vim-gutentags')
 
-" Buffers
-Plug 'jeetsukumaran/vim-buffergator'
+  " Marks
+	call minpac#add('kshenoy/vim-signature')
 
-" Registers
-Plug 'junegunn/vim-peekaboo'
+  " Registers
+	call minpac#add('junegunn/vim-peekaboo')
 
-" Session
-Plug 'tpope/vim-obsession'
+  " Session
+	call minpac#add('tpope/vim-obsession')
 
-" Statusbar
-Plug 'itchyny/lightline.vim'
-Plug 'maximbaz/lightline-ale'
+  " Statusbar
+	call minpac#add('itchyny/lightline.vim')
 
-" Editor -----------------------------------------------------------------------
-Plug 'tpope/vim-surround'
+  " Buffers
+  call minpac#add('jeetsukumaran/vim-buffergator')
 
-" Comments
-Plug 'tpope/vim-commentary'
+  " Editor ---------------------------------------------------------------------
+	call minpac#add('tpope/vim-surround')
 
-" VCS --------------------------------------------------------------------------
-Plug 'tpope/vim-fugitive'
-Plug 'rhysd/git-messenger.vim'
-Plug 'jreybert/vimagit'
-Plug 'mhinz/vim-signify'
+  " Comments
+	call minpac#add('tpope/vim-commentary')
 
-" Search -----------------------------------------------------------------------
-Plug '/usr/local/opt/fzf'
-Plug 'junegunn/fzf.vim'
+  " Development ----------------------------------------------------------------
+  call minpac#add('sheerun/vim-polyglot')
+  call minpac#add('neoclide/coc.nvim', {'branch': 'release'})
 
-" File system ------------------------------------------------------------------
-Plug 'francoiscabrol/ranger.vim'
-Plug 'tpope/vim-eunuch'
-Plug 'airblade/vim-rooter'
+  " VCS ------------------------------------------------------------------------
+	call minpac#add('tpope/vim-fugitive')
+	call minpac#add('rhysd/git-messenger.vim')
+	call minpac#add('jreybert/vimagit')
+	call minpac#add('mhinz/vim-signify')
 
-" Development ------------------------------------------------------------------
-Plug 'w0rp/ale'
+  " Search ---------------------------------------------------------------------
+	call minpac#add('junegunn/fzf')
+	call minpac#add('junegunn/fzf.vim')
 
-Plug 'ncm2/ncm2'
-Plug 'roxma/nvim-yarp'
-Plug 'ncm2/ncm2-bufword'
-Plug 'ncm2/ncm2-tmux'
-Plug 'ncm2/ncm2-path'
-Plug 'ncm2/ncm2-go'
-Plug 'ncm2/ncm2-racer'
+  " File system ----------------------------------------------------------------
+	call minpac#add('francoiscabrol/ranger.vim')
+	call minpac#add('tpope/vim-eunuch')
+	call minpac#add('airblade/vim-rooter')
 
-Plug 'autozimu/LanguageClient-neovim', {
-    \ 'branch': 'next',
-    \ 'do': 'bash install.sh',
-    \ }
+  " Org ------------------------------------------------------------------------
+  call minpac#add('vimwiki/vimwiki')
+endif
 
-" Documentation
-" Plug 'Shougo/echodoc.vim'
-Plug 'rizzatti/dash.vim'
-Plug 'majutsushi/tagbar'
-Plug 'ludovicchabant/vim-gutentags'
+packloadall
 
-" HTTP
-Plug 'diepm/vim-rest-console'
+" File system -------------------------------------------------------------------
 
-" Neomutt
-Plug 'neomutt/neomutt.vim'
-
-" Elm
-Plug 'ElmCast/elm-vim'
-
-" Go
-Plug 'fatih/vim-go'
-Plug 'buoto/gotests-vim'
-" Plug 'sebdah/vim-delve'
-
-" Rust
-" Racket
-" Lisp/Scheme
-" Ruby
-" Python
-
-call plug#end()
-
-" UNSORTED ======================================================================
-set encoding=UTF-8
-set inccommand=nosplit
-
-" HTTP -------------------------------------------------------------------------
-let g:vrc_horizontal_split = 1
-"let g:vrc_set_default_mapping = 0
-"let g:vrc_show_command = 1
-let g:vrc_trigger = '<Leader>r'
-let s:vrc_auto_format_response_patterns = {
-      \ 'json': 'jq "."',
-      \ 'xml': 'xmllint --format -',
-      \}
-let g:vrc_curl_opts={
-    \'--include': '',
-    \'--location': '',
-    \'--show-error': '',
-    \'--silent': ''
-\}
-
-" Vimwiki ----------------------------------------------------------------------
-let g:vimwiki_folding='expr'
-let g:vimwiki_list = [{'path': '$HOME/Library/Mobile Documents/com~apple~CloudDocs/Documents/vimwiki',
-      \ 'diary_header': 'Plan',
-      \ 'diary_index': 'index',
-      \ 'diary_rel_path': 'plan/'}]
-
-" FILE SYSTEM ===================================================================
 set hidden
 set nobackup
 set nowritebackup
 set noswapfile
 filetype plugin on
 
-" DEVELOPMENT ==================================================================
-" LSP --------------------------------------------------------------------------
-let g:LanguageClient_serverCommands = {
-    \ 'rust': ['rls'],
-    \ 'python': ['pyls'],
-    \ 'go': ['gopls'],
-    \ 'bash': ['bash-language-server'],
-    \ 'ruby': ['solargraph'],
-    \ 'cpp': ['ccls', '--log-file=/tmp/cc.log'],
-    \ 'c': ['ccls', '--log-file=/tmp/cc.log'],
-    \ 'javascript': ['javascript-typescript-stdio'],
-    \ }
-let g:LanguageClient_rootMarkers = {
-    \ 'go': ['.git', 'go.mod'],
-    \ }
-nnoremap <c-p> :call LanguageClient_contextMenu()<CR>
-let g:LanguageClient_loadSettings = 1 " Use an absolute configuration path if you want system-wide settings
-let g:LanguageClient_settingsPath = '/home/jesse/.config/nvim/lsp-settings.json'
+" Editor -----------------------------------------------------------------------
 
-" NCM2 -------------------------------------------------------------------------
-autocmd BufEnter * call ncm2#enable_for_buffer()
-au User Ncm2PopupOpen set completeopt=noinsert,menuone,noselect
-au User Ncm2PopupClose set completeopt=menuone
-inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
-inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+set updatetime=300
+" don't give |ins-completion-menu| messages.
+set shortmess+=c
+set signcolumn=yes
 
-" ALE --------------------------------------------------------------------------
-let g:ale_fix_on_save = 1
-" let g:ale_completion_enabled = 1
-let g:ale_fixers = {
-\   '*': ['remove_trailing_lines', 'trim_whitespace'],
-\   'python': ['black'],
-\}
-let g:ale_elm_format_use_global = 1
-let g:ale_elm_format_options = '--yes --elm-version=0.19'
-let g:ale_elm_make_use_global = 1
-nmap <silent> <C-f> <Plug>(ale_previous_wrap)
-nmap <silent> <C-g> <Plug>(ale_next_wrap)
-
-" EDITOR =======================================================================
-" Copy/paste -------------------------------------------------------------------
+" Copy/paste
 set pastetoggle=<F10>
 set nopaste
 set clipboard=unnamed
@@ -184,14 +105,83 @@ set clipboard=unnamed
 let g:python_host_prog='/Users/jesse/.asdf/shims/python2'
 let g:python3_host_prog='/Users/jesse/.asdf/shims/python3'
 
-" Undo -------------------------------------------------------------------------
+" Undo
 if has("persistent_undo")
   set undodir=~/.undo/
   set undofile
 endif
 nnoremap <F5> :UndotreeToggle<cr>
 
+" LSP --------------------------------------------------------------------------
+
+" Use <c-space> to trigger completion.
+inoremap <silent><expr> <c-space> coc#refresh()
+
+" Use <cr> to confirm completion, `<C-g>u` means break undo chain at current position.
+" Coc only does snippet and additional edit on confirm.
+inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+
+" Use tab for trigger completion with characters ahead and navigate.
+" Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
+autocmd BufWritePre *.go :call CocAction("format")
+
+nmap <silent> <C-f> <Plug>(coc-diagnostic-prev)
+nmap <silent> <C-g> <Plug>(coc-diagnostic-next)
+
+" Remap keys for gotos
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+
+" Use K to show documentation in preview window
+nnoremap <silent> K :call <SID>show_documentation()<CR>
+
+function! s:show_documentation()
+  if (index(['vim','help'], &filetype) >= 0)
+    execute 'h '.expand('<cword>')
+  else
+    call CocAction('doHover')
+  endif
+endfunction
+
+" Remap for rename current word
+nmap <leader>rn <Plug>(coc-rename)
+
+" Use `:Format` to format current buffer
+command! -nargs=0 Format :call CocAction('format')
+
+" Using CocList
+" Show all diagnostics
+nnoremap <silent> <space>a  :<C-u>CocList diagnostics<cr>
+" Manage extensions
+nnoremap <silent> <space>e  :<C-u>CocList extensions<cr>
+" Show commands
+nnoremap <silent> <space>c  :<C-u>CocList commands<cr>
+" Find symbol of current document
+nnoremap <silent> <space>o  :<C-u>CocList outline<cr>
+" Search workspace symbols
+nnoremap <silent> <space>s  :<C-u>CocList -I symbols<cr>
+" Do default action for next item.
+nnoremap <silent> <space>j  :<C-u>CocNext<CR>
+" Do default action for previous item.
+nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
+" Resume latest coc list
+nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
+
 " Search -----------------------------------------------------------------------
+
 " FZF
 nmap <Leader>g :Tags<CR>
 nmap <Leader>h :Buffers<CR>
@@ -211,9 +201,11 @@ command! -bang -nargs=* Rg
   \   <bang>0)
 
 " History ----------------------------------------------------------------------
+
 set undolevels=10000
 
-" UI ===========================================================================
+" UI ---------------------------------------------------------------------------
+
 syntax on
 set ruler
 " set background=dark
@@ -277,24 +269,18 @@ nmap <silent> <C-l> :wincmd l<CR>
 
 nmap <silent> <C-m> :GitMessenger<CR>
 
-" Tags -------------------------------------------------------------------------
-nmap <F8> :TagbarToggle<CR>
-
-" Gutentags
-" Store tags file somewhere else than in the project dir
-let g:gutentags_cache_dir = '~/.gutentags'
-" Only create tags for tracked files
-let g:gutentags_file_list_command = 'git ls-files'
-
-" Lightline --------------------------------------------------------------------
 let g:indentLine_enabled = 1
 "let g:indentLine_showFirstIndentLevel = 1
 let g:indentLine_setColors = 0
 "let g:indentLine_char = '┆'
+
+" Lightline --------------------------------------------------------------------
 let g:lightline#ale#indicator_checking = "\uf110"
 let g:lightline#ale#indicator_warnings = "\uf071"
 let g:lightline#ale#indicator_errors = "\uf05e"
 let g:lightline#ale#indicator_ok = "\uf00c"
+
+set noshowmode " it's in the statusline now
 
 function! MyFiletype()
   return winwidth(0) > 70 ? (strlen(&filetype) ? &filetype . ' ' . WebDevIconsGetFileTypeSymbol() : 'no ft') : ''
@@ -304,12 +290,6 @@ function! MyFileformat()
   return winwidth(0) > 70 ? (&fileformat . ' ' . WebDevIconsGetFileFormatSymbol()) : ''
 endfunction
 
-augroup MyGutentagsStatusLineRefresher
-  autocmd!
-  autocmd User GutentagsUpdating call lightline#update()
-  autocmd User GutentagsUpdated call lightline#update()
-augroup END
-
 let g:lightline = {
   \   'colorscheme': 'one',
   \   'active': {
@@ -317,28 +297,19 @@ let g:lightline = {
   \             [ 'readonly', 'fp', 'modified', 'gitbranch' ] ],
   \   'right': [ [ 'lineinfo' ],
   \              [ 'percent' ],
-  \              [ 'fileformat', 'fileencoding', 'filetype', 'charvaluehex' ],
-  \              [ 'linter_checking', 'linter_errors', 'linter_warnings', 'linter_ok', 'gutentags' ]
+  \              [ 'cocstatus', 'fileformat', 'fileencoding', 'filetype' ]
   \            ]
   \   },
   \   'inactive': {
-  \   'left': [ [ 'readonly', 'fp', 'modified', 'gitbranch' ] ],
-  \   'right': [ [ ] ]
-  \   },
-  \   'component': {
-  \     'fp': '%<%F%<'
+  \     'left': [ [ 'readonly', 'fp', 'modified', 'gitbranch' ] ],
+  \     'right': [ [ ] ]
   \   },
   \   'component_function': {
+  \     'fp': '%<%F%<',
   \     'gitbranch': 'fugitive#head',
   \     'filetype': 'MyFiletype',
   \     'fileformat': 'MyFileformat',
-  \     'gutentags': 'MyGutentagsStatusLineRefresher',
-  \   },
-  \   'component_expand': {
-  \     'linter_checking': 'lightline#ale#checking',
-  \     'linter_warnings': 'lightline#ale#warnings',
-  \     'linter_errors': 'lightline#ale#errors',
-  \     'linter_ok': 'lightline#ale#ok',
+  \     'cocstatus': 'coc#status'
   \   }
   \ }
 
@@ -346,7 +317,6 @@ let g:lightline.tabline = {
   \   'left': [ ['tabs'] ],
   \   'right': [ [ ] ],
   \ }
-
 
 " Colorizer --------------------------------------------------------------------
 let g:colorizer_auto_filetype='css,scss,html,htm,elm'
@@ -364,23 +334,16 @@ let g:NERDTreeShowHidden = 1
 set guifont=RobotoMono\ Nerd\ Font:h11 " TODO
 "set guifont=*
 
-" LANGUAGES ====================================================================
-" Go ---------------------------------------------------------------------------
-map <silent> <c-e> :GoDecls<CR>
-let g:go_fmt_command = "goimports"
-let g:go_highlight_functions = 1
-let g:go_highlight_function_calls = 1
-let g:go_highlight_methods = 1
-let g:go_highlight_build_constraints = 1
+" Org --------------------------------------------------------------------------
 
-" Elm --------------------------------------------------------------------------
-let g:elm_format_autosave = 1
-let g:elm_format_fail_silently = 0
-let g:elm_detailed_complete = 1
-let g:elm_setup_keybindings = 0
-let g:elm_make_show_warnings = 1
+" Vimwiki
+let g:vimwiki_folding='expr'
+let g:vimwiki_list = [{'path': '$HOME/Library/Mobile Documents/com~apple~CloudDocs/Documents/vimwiki',
+      \ 'diary_header': 'Plan',
+      \ 'diary_index': 'index',
+      \ 'diary_rel_path': 'plan/'}]
 
-" MISC. ========================================================================
+" Misc. ------------------------------------------------------------------------
 
 command! FormatJson :%!jq '.'
 
@@ -389,6 +352,9 @@ imap <F3> <C-R>=strftime("%Y-%m-%d")<CR>
 
 nnoremap <leader>ev :vsplit $MYVIMRC<cr> " Edit my vimrc
 nnoremap <leader>sv :source $MYVIMRC<cr> " Source my vimrc
+
+set encoding=UTF-8
+set inccommand=nosplit
 
 " Fix some common typos --------------------------------------------------------
 cnoreabbrev W! w!
@@ -404,7 +370,7 @@ cnoreabbrev Sp sp
 cnoreabbrev sP sp
 cnoreabbrev Qall qall
 
-" TIPS =========================================================================
+" Tips -------------------------------------------------------------------------
 " \t tab listing
 " \b buffer listing
 " \f ranger
