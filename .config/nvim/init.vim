@@ -61,6 +61,11 @@ if exists('*minpac#init')
   call minpac#add('sheerun/vim-polyglot')
   call minpac#add('neoclide/coc.nvim', {'branch': 'release'})
 
+  " Go
+  call minpac#add('fatih/vim-go')
+  call minpac#add('buoto/gotests-vim')
+  call minpac#add('sebdah/vim-delve')
+
   " VCS ------------------------------------------------------------------------
 	call minpac#add('tpope/vim-fugitive')
 	call minpac#add('rhysd/git-messenger.vim')
@@ -111,6 +116,24 @@ if has("persistent_undo")
   set undofile
 endif
 nnoremap <F5> :UndotreeToggle<cr>
+
+" Development ------------------------------------------------------------------
+
+" Polyglot
+let g:polyglot_disabled = ['go']
+
+" Elm 
+let g:elm_jump_to_error = 0
+let g:elm_make_show_warnings = 0
+let g:elm_syntastic_show_warnings = 0
+let g:elm_browser_command = ""
+let g:elm_detailed_complete = 0
+let g:elm_format_autosave = 0
+let g:elm_format_fail_silently = 0
+let g:elm_setup_keybindings = 0
+
+" Go
+let g:go_fmt_command = "goimports"
 
 " LSP --------------------------------------------------------------------------
 
@@ -186,6 +209,7 @@ nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
 nmap <Leader>g :Tags<CR>
 nmap <Leader>h :Buffers<CR>
 nmap <Leader>j :Files<CR>
+" nmap <Leader>j :call Fzf_dev()<CR><Space>
 nmap <Leader>k :Marks<CR>
 nmap <Leader>l :History<CR>
 nmap <Leader>; :Rg<Space>
@@ -193,12 +217,63 @@ nmap <Leader>' :History:<CR>
 cnoreabbrev ag Ag
 cnoreabbrev aG Ag
 cnoreabbrev AG Ag
+
+let g:fzf_action = {
+  \ 'ctrl-t': 'tab split',
+  \ 'ctrl-x': 'split',
+  \ 'ctrl-v': 'vsplit' }
+
 command! -bang -nargs=* Rg
   \ call fzf#vim#grep(
-  \   'rg --smart-case --column --line-number --no-heading --color=always '.shellescape(<q-args>), 1,
+  \   'rg --column --line-number --no-heading --color=always --smart-case '.shellescape(<q-args>), 1,
   \   <bang>0 ? fzf#vim#with_preview('up:60%')
   \           : fzf#vim#with_preview('right:50%:hidden', '?'),
   \   <bang>0)
+
+let $FZF_DEFAULT_COMMAND = 'fd --type f'
+
+let g:fzf_files_options =
+  \ '--preview "(bat --theme="OneHalfDark" --style=numbers,changes --color always {} || cat {}) | head -'.&lines.'"'
+
+" https://www.reddit.com/r/vim/comments/9xpb18/file_preview_with_fzf_rg_bat_and_devicons/ 
+if executable('rg')
+  let $FZF_DEFAULT_COMMAND = 'rg --files --hidden --follow --glob "!.git/*"'
+  set grepprg=rg\ --vimgrep
+  command! -bang -nargs=* Find call fzf#vim#grep('rg --column --line-number --no-heading --fixed-strings --ignore-case --hidden --follow --glob "!.git/*" --color "always" '.shellescape(<q-args>).'| tr -d "\017"', 1, <bang>0)
+endif
+
+Files + devicons
+function! Fzf_dev()
+  let l:fzf_files_options = '--preview "bat --theme="OneHalfDark" --style=numbers,changes --color always {2..-1} | head -'.&lines.'"'
+
+  function! s:files()
+    let l:files = split(system($FZF_DEFAULT_COMMAND), '\n')
+    return s:prepend_icon(l:files)
+  endfunction
+
+  function! s:prepend_icon(candidates)
+    let l:result = []
+    for l:candidate in a:candidates
+      let l:filename = fnamemodify(l:candidate, ':p:t')
+      let l:icon = WebDevIconsGetFileTypeSymbol(l:filename, isdirectory(l:filename))
+      call add(l:result, printf('%s %s', l:icon, l:candidate))
+    endfor
+
+    return l:result
+  endfunction
+
+  function! s:edit_file(item)
+    let l:pos = stridx(a:item, ' ')
+    let l:file_path = a:item[pos+1:-1]
+    execute 'silent e' l:file_path
+  endfunction
+
+  call fzf#run({
+        \ 'source': <sid>files(),
+        \ 'sink':   function('s:edit_file'),
+        \ 'options': '-m ' . l:fzf_files_options,
+        \ 'down':    '40%' })
+endfunction
 
 " History ----------------------------------------------------------------------
 
@@ -320,12 +395,12 @@ let g:lightline.tabline = {
 
 " Colorizer --------------------------------------------------------------------
 let g:colorizer_auto_filetype='css,scss,html,htm,elm'
-"let g:colorizer_skip_comments = 1
+let g:colorizer_skip_comments = 1
 
 " VimiDevIcons -----------------------------------------------------------------
 let g:webdevicons_enable = 1
 let g:webdevicons_enable_nerdtree = 1
-"let g:webdevicons_conceal_nerdtree_brackets = 1
+let g:webdevicons_conceal_nerdtree_brackets = 1
 
 " NerdTree ---------------------------------------------------------------------
 nmap <silent> <c-S-n> :NERDTreeToggle<CR>
@@ -355,6 +430,9 @@ nnoremap <leader>sv :source $MYVIMRC<cr> " Source my vimrc
 
 set encoding=UTF-8
 set inccommand=nosplit
+
+let g:python_host_prog='/usr/local/bin/python'
+let g:python3_host_prog='/usr/local/bin/python3'
 
 " Fix some common typos --------------------------------------------------------
 cnoreabbrev W! w!
