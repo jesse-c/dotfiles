@@ -353,10 +353,6 @@ let g:gutentags_cache_dir = '~/.gutentags'
 let g:gutentags_file_list_command = 'git ls-files'
 
 " Lightline --------------------------------------------------------------------
-let g:lightline#ale#indicator_checking = "\uf110"
-let g:lightline#ale#indicator_warnings = "\uf071"
-let g:lightline#ale#indicator_errors = "\uf05e"
-let g:lightline#ale#indicator_ok = "\uf00c"
 
 set noshowmode " it's in the statusline now
 
@@ -368,11 +364,10 @@ function! MyFileformat()
   return winwidth(0) > 70 ? (&fileformat . ' ' . WebDevIconsGetFileFormatSymbol()) : ''
 endfunction
 
-augroup MyGutentagsStatusLineRefresher
-  autocmd!
-  autocmd User GutentagsUpdating call lightline#update()
-  autocmd User GutentagsUpdated call lightline#update()
-augroup END
+autocmd User GutentagsUpdating call lightline#update()
+autocmd User GutentagsUpdated call lightline#update()
+
+autocmd User CocDiagnosticChange call lightline#update()
 
 let g:lightline = {
       \ 'colorscheme': 'one',
@@ -381,7 +376,7 @@ let g:lightline = {
       \             [ 'gitbranch', 'readonly', 'fp', 'modified' ] ],
       \   'right': [ [ 'lineinfo' ],
       \              [ 'percent' ],
-      \              [ 'cocstatus', 'fileformat', 'fileencoding', 'filetype', 'gutentags'] ]
+      \              [ 'cocstatus', 'fileformat', 'fileencoding', 'filetype'] ]
       \ },
       \ 'inactive': {
       \   'left': [ [ 'readonly', 'fp', 'modified', 'gitbranch' ] ],
@@ -394,8 +389,7 @@ let g:lightline = {
       \   'gitbranch': 'fugitive#head',
       \   'cocstatus': 'coc#status',
       \   'filetype': 'MyFiletype',
-      \   'fileformat': 'MyFileformat',
-      \   'gutentags': 'MyGutentagsStatusLineRefresher'
+      \   'fileformat': 'MyFileformat'
       \ },
       \ }
 
