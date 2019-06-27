@@ -378,10 +378,10 @@ let g:lightline = {
       \ 'colorscheme': 'one',
       \ 'active': {
       \   'left': [ [ 'mode', 'paste' ],
-      \             [ 'gitbranch', 'readonly', 'fp', 'filename', 'modified' ] ],
+      \             [ 'gitbranch', 'readonly', 'fp', 'modified' ] ],
       \   'right': [ [ 'lineinfo' ],
       \              [ 'percent' ],
-      \             [ 'cocstatus', 'fileformat', 'fileencoding', 'filetype', 'gutentags'] ]
+      \              [ 'cocstatus', 'fileformat', 'fileencoding', 'filetype', 'gutentags'] ]
       \ },
       \ 'inactive': {
       \   'left': [ [ 'readonly', 'fp', 'modified', 'gitbranch' ] ],
@@ -441,6 +441,14 @@ nnoremap <leader>sv :source $MYVIMRC<cr> " Source my vimrc
 
 set encoding=UTF-8
 set inccommand=nosplit
+
+" Local per machine settings ---------------------------------------------------
+
+try
+  source ~/.config/nvim/local.vim
+catch
+  " No such file? No problem; just ignore it.
+endtry
 
 " Fix some common typos --------------------------------------------------------
 cnoreabbrev W! w!
