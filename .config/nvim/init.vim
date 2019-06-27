@@ -7,85 +7,75 @@ if &compatible
   set nocompatible
 endif
 
-" Define user commands for updating/cleaning the plugins.
-" Each of them loads minpac, reloads .vimrc to register the
-" anformation of plugins, then performs the task.
-command! PackUpdate packadd minpac | source $MYVIMRC | call minpac#update('', {'do': 'call minpac#status()'})
-command! PackClean  packadd minpac | source $MYVIMRC | call minpac#clean()
-command! PackStatus packadd minpac | source $MYVIMRC | call minpac#status()
+call plug#begin('~/.vim/plugged')
 
-if exists('*minpac#init')
-  call minpac#init()
-  call minpac#add('k-takata/minpac', {'type': 'opt'})
+" UI -------------------------------------------------------------------------
+Plug 'ayu-theme/ayu-vim'
+Plug 'ryanoasis/vim-devicons'
+Plug 'scrooloose/nerdtree'
+Plug 'Xuyuanp/nerdtree-git-plugin'
+Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
+Plug 'chrisbra/Colorizer'
+Plug 'mhinz/vim-startify'
+Plug 'Yggdroot/indentLine'
+Plug 'mbbill/undotree'
+Plug 'luochen1990/rainbow'
+Plug 'editorconfig/editorconfig-vim'
+Plug 'google/vim-searchindex'
+Plug 'gcmt/taboo.vim'
+Plug 'troydm/zoomwintab.vim'
+Plug 'tpope/vim-abolish'
+Plug 'ludovicchabant/vim-gutentags'
 
-  " UI -------------------------------------------------------------------------
-  call minpac#add('ayu-theme/ayu-vim')
-  call minpac#add('ryanoasis/vim-devicons')
-  call minpac#add('scrooloose/nerdtree')
-  call minpac#add('Xuyuanp/nerdtree-git-plugin')
-	call minpac#add('tiagofumo/vim-nerdtree-syntax-highlight')
-	call minpac#add('chrisbra/Colorizer')
-	call minpac#add('mhinz/vim-startify')
-	call minpac#add('Yggdroot/indentLine')
-	call minpac#add('mbbill/undotree')
-	call minpac#add('luochen1990/rainbow')
-	call minpac#add('editorconfig/editorconfig-vim')
-	call minpac#add('google/vim-searchindex')
-	call minpac#add('gcmt/taboo.vim')
-	call minpac#add('troydm/zoomwintab.vim')
-	call minpac#add('tpope/vim-abolish')
-	call minpac#add('ludovicchabant/vim-gutentags')
+" Marks
+Plug 'kshenoy/vim-signature'
 
-  " Marks
-	call minpac#add('kshenoy/vim-signature')
+" Registers
+Plug 'junegunn/vim-peekaboo'
 
-  " Registers
-	call minpac#add('junegunn/vim-peekaboo')
+" Session
+Plug 'tpope/vim-obsession'
 
-  " Session
-	call minpac#add('tpope/vim-obsession')
+" Statusbar
+Plug 'itchyny/lightline.vim'
 
-  " Statusbar
-	call minpac#add('itchyny/lightline.vim')
+" Buffers
+Plug 'jeetsukumaran/vim-buffergator'
 
-  " Buffers
-  call minpac#add('jeetsukumaran/vim-buffergator')
+" Editor ---------------------------------------------------------------------
+Plug 'tpope/vim-surround'
 
-  " Editor ---------------------------------------------------------------------
-	call minpac#add('tpope/vim-surround')
+" Comments
+Plug 'tpope/vim-commentary'
 
-  " Comments
-	call minpac#add('tpope/vim-commentary')
+" Development ----------------------------------------------------------------
+Plug 'sheerun/vim-polyglot'
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
-  " Development ----------------------------------------------------------------
-  call minpac#add('sheerun/vim-polyglot')
-  call minpac#add('neoclide/coc.nvim', {'branch': 'release'})
+" Go
+" Plug 'fatih/vim-go'
+" Plug 'buoto/gotests-vim'
+" Plug 'sebdah/vim-delve'
 
-  " Go
-  call minpac#add('fatih/vim-go')
-  call minpac#add('buoto/gotests-vim')
-  call minpac#add('sebdah/vim-delve')
+" VCS ------------------------------------------------------------------------
+Plug 'tpope/vim-fugitive'
+Plug 'rhysd/git-messenger.vim'
+Plug 'jreybert/vimagit'
+Plug 'mhinz/vim-signify'
 
-  " VCS ------------------------------------------------------------------------
-	call minpac#add('tpope/vim-fugitive')
-	call minpac#add('rhysd/git-messenger.vim')
-	call minpac#add('jreybert/vimagit')
-	call minpac#add('mhinz/vim-signify')
+" Search ---------------------------------------------------------------------
+Plug 'junegunn/fzf'
+Plug 'junegunn/fzf.vim'
 
-  " Search ---------------------------------------------------------------------
-	call minpac#add('junegunn/fzf')
-	call minpac#add('junegunn/fzf.vim')
+" File system ----------------------------------------------------------------
+Plug 'francoiscabrol/ranger.vim'
+Plug 'tpope/vim-eunuch'
+Plug 'airblade/vim-rooter'
 
-  " File system ----------------------------------------------------------------
-	call minpac#add('francoiscabrol/ranger.vim')
-	call minpac#add('tpope/vim-eunuch')
-	call minpac#add('airblade/vim-rooter')
+" Org ------------------------------------------------------------------------
+Plug 'vimwiki/vimwiki'
 
-  " Org ------------------------------------------------------------------------
-  call minpac#add('vimwiki/vimwiki')
-endif
-
-packloadall
+call plug#end()
 
 " File system -------------------------------------------------------------------
 
@@ -202,6 +192,11 @@ nnoremap <silent> <space>j  :<C-u>CocNext<CR>
 nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
 " Resume latest coc list
 nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
+"
+" Remap for do codeAction of current line
+nmap <leader>ac  <Plug>(coc-codeaction)
+" Fix autofix problem of current line
+nmap <leader>qf  <Plug>(coc-fix-current)
 
 " Search -----------------------------------------------------------------------
 
@@ -242,7 +237,7 @@ if executable('rg')
   command! -bang -nargs=* Find call fzf#vim#grep('rg --column --line-number --no-heading --fixed-strings --ignore-case --hidden --follow --glob "!.git/*" --color "always" '.shellescape(<q-args>).'| tr -d "\017"', 1, <bang>0)
 endif
 
-Files + devicons
+" Files + devicons
 function! Fzf_dev()
   let l:fzf_files_options = '--preview "bat --theme="OneHalfDark" --style=numbers,changes --color always {2..-1} | head -'.&lines.'"'
 
@@ -349,6 +344,14 @@ let g:indentLine_enabled = 1
 let g:indentLine_setColors = 0
 "let g:indentLine_char = '┆'
 
+" Tags -------------------------------------------------------------------------
+
+" Gutentags
+" Store tags file somewhere else than in the project dir
+let g:gutentags_cache_dir = '~/.gutentags'
+" Only create tags for tracked files
+let g:gutentags_file_list_command = 'git ls-files'
+
 " Lightline --------------------------------------------------------------------
 let g:lightline#ale#indicator_checking = "\uf110"
 let g:lightline#ale#indicator_warnings = "\uf071"
@@ -365,28 +368,36 @@ function! MyFileformat()
   return winwidth(0) > 70 ? (&fileformat . ' ' . WebDevIconsGetFileFormatSymbol()) : ''
 endfunction
 
+augroup MyGutentagsStatusLineRefresher
+  autocmd!
+  autocmd User GutentagsUpdating call lightline#update()
+  autocmd User GutentagsUpdated call lightline#update()
+augroup END
+
 let g:lightline = {
-  \   'colorscheme': 'one',
-  \   'active': {
-  \   'left': [ [ 'mode', 'paste' ],
-  \             [ 'readonly', 'fp', 'modified', 'gitbranch' ] ],
-  \   'right': [ [ 'lineinfo' ],
-  \              [ 'percent' ],
-  \              [ 'cocstatus', 'fileformat', 'fileencoding', 'filetype' ]
-  \            ]
-  \   },
-  \   'inactive': {
-  \     'left': [ [ 'readonly', 'fp', 'modified', 'gitbranch' ] ],
-  \     'right': [ [ ] ]
-  \   },
-  \   'component_function': {
-  \     'fp': '%<%F%<',
-  \     'gitbranch': 'fugitive#head',
-  \     'filetype': 'MyFiletype',
-  \     'fileformat': 'MyFileformat',
-  \     'cocstatus': 'coc#status'
-  \   }
-  \ }
+      \ 'colorscheme': 'one',
+      \ 'active': {
+      \   'left': [ [ 'mode', 'paste' ],
+      \             [ 'gitbranch', 'readonly', 'fp', 'filename', 'modified' ] ],
+      \   'right': [ [ 'lineinfo' ],
+      \              [ 'percent' ],
+      \             [ 'cocstatus', 'fileformat', 'fileencoding', 'filetype', 'gutentags'] ]
+      \ },
+      \ 'inactive': {
+      \   'left': [ [ 'readonly', 'fp', 'modified', 'gitbranch' ] ],
+      \   'right': [ [ ] ]
+      \ },
+      \ 'component': {
+      \     'fp': '%<%F%<'
+      \ },
+      \ 'component_function': {
+      \   'gitbranch': 'fugitive#head',
+      \   'cocstatus': 'coc#status',
+      \   'filetype': 'MyFiletype',
+      \   'fileformat': 'MyFileformat',
+      \   'gutentags': 'MyGutentagsStatusLineRefresher'
+      \ },
+      \ }
 
 let g:lightline.tabline = {
   \   'left': [ ['tabs'] ],
@@ -431,9 +442,6 @@ nnoremap <leader>sv :source $MYVIMRC<cr> " Source my vimrc
 set encoding=UTF-8
 set inccommand=nosplit
 
-let g:python_host_prog='/usr/local/bin/python'
-let g:python3_host_prog='/usr/local/bin/python3'
-
 " Fix some common typos --------------------------------------------------------
 cnoreabbrev W! w!
 cnoreabbrev Q! q!
@@ -441,7 +449,6 @@ cnoreabbrev Qall! qall!
 cnoreabbrev Wq wq
 cnoreabbrev Wa wa
 cnoreabbrev wQ wq
-cnoreabbrev WQ wq
 cnoreabbrev W w
 cnoreabbrev Q q
 cnoreabbrev Sp sp
