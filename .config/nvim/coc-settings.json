@@ -1,6 +1,9 @@
 {
   "coc.preferences.codeLens.enable": true,
   "coc.preferences.formatOnSaveFiletypes": ["go", "rust", "css", "Markdown", "elm"],
+  "diagnostic.refreshAfterSave": true,
+  "coc.preferences.formatOnSaveFiletypes": ["elm", "clojure", "clj", "js", "css", "scss"],
+  "coc.preferences.snippets.enable": false,
   "languageserver": {
     "golang": {
       "command": "gopls",
@@ -47,73 +50,6 @@
         "~"
       ]
     },
-    "python": {
-      "command": "python",
-      "args": [
-        "-mpyls",
-        "-vv",
-        "--log-file",
-        "/tmp/lsp_python.log"
-      ],
-      "trace.server": "verbose",
-      "filetypes": [
-        "python"
-      ],
-      "settings": {
-        "pyls": {
-          "enable": true,
-          "trace": {
-            "server": "verbose"
-          },
-          "commandPath": "",
-          "configurationSources": [
-            "pycodestyle"
-          ],
-          "plugins": {
-            "jedi_completion": {
-              "enabled": true
-            },
-            "jedi_hover": {
-              "enabled": true
-            },
-            "jedi_references": {
-              "enabled": true
-            },
-            "jedi_signature_help": {
-              "enabled": true
-            },
-            "jedi_symbols": {
-              "enabled": true,
-              "all_scopes": true
-            },
-            "mccabe": {
-              "enabled": true,
-              "threshold": 15
-            },
-            "preload": {
-              "enabled": true
-            },
-            "pycodestyle": {
-              "enabled": true
-            },
-            "pydocstyle": {
-              "enabled": false,
-              "match": "(?!test_).*\\.py",
-              "matchDir": "[^\\.].*"
-            },
-            "pyflakes": {
-              "enabled": true
-            },
-            "rope_completion": {
-              "enabled": true
-            },
-            "yapf": {
-              "enabled": true
-            }
-          }
-        }
-      }
-    },
     "elmLS": {
       "command": "elm-language-server",
       "args": [
@@ -130,7 +66,8 @@
         "elmPath": "elm",
         "elmFormatPath": "elm-format",
         "elmTestPath": "elm-test"
-      }
+      },
+      "trace.server": "verbose"
     },
     "clojure-lsp": {
       "command": "bash",
