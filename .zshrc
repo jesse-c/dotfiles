@@ -30,6 +30,7 @@ HOMEBREW_EDITOR=nvim
 # Completion -------------------------------------------------------------------
 
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
+zstyle ':completion:*' menu select
 
 # dots -------------------------------------------------------------------------
 alias dots='$(which git) --git-dir=$HOME/.dots.git/ --work-tree=$HOME'
