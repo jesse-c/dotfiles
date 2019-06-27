@@ -53,9 +53,8 @@ Plug 'sheerun/vim-polyglot'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 " Go
-" Plug 'fatih/vim-go'
-" Plug 'buoto/gotests-vim'
-" Plug 'sebdah/vim-delve'
+Plug 'buoto/gotests-vim'
+Plug 'sebdah/vim-delve'
 
 " VCS ------------------------------------------------------------------------
 Plug 'tpope/vim-fugitive'
@@ -110,7 +109,7 @@ nnoremap <F5> :UndotreeToggle<cr>
 " Development ------------------------------------------------------------------
 
 " Polyglot
-let g:polyglot_disabled = ['go']
+let g:polyglot_disabled = []
 
 " Elm 
 let g:elm_jump_to_error = 0
@@ -432,6 +431,10 @@ imap <F3> <C-R>=strftime("%Y-%m-%d")<CR>
 
 nnoremap <leader>ev :vsplit $MYVIMRC<cr> " Edit my vimrc
 nnoremap <leader>sv :source $MYVIMRC<cr> " Source my vimrc
+
+" https://vim.fandom.com/wiki/Copy_filename_to_clipboard
+nmap <leader>cs :let @*=expand("%")<CR>
+nmap <leader>cl :let @*=expand("%:p")<CR>
 
 set encoding=UTF-8
 set inccommand=nosplit
