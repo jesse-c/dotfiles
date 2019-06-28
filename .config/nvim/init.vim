@@ -26,6 +26,7 @@ Plug 'gcmt/taboo.vim'
 Plug 'troydm/zoomwintab.vim'
 Plug 'tpope/vim-abolish'
 Plug 'ludovicchabant/vim-gutentags'
+Plug 'liuchengxu/vista.vim'
 
 " Marks
 Plug 'kshenoy/vim-signature'
@@ -200,7 +201,8 @@ nmap <leader>qf  <Plug>(coc-fix-current)
 " Search -----------------------------------------------------------------------
 
 " FZF
-nmap <Leader>g :Tags<CR>
+" nmap <Leader>g :Tags<CR>
+nmap <Leader>g :Vista finder coc<CR>
 nmap <Leader>h :Buffers<CR>
 nmap <Leader>j :Files<CR>
 " nmap <Leader>j :call Fzf_dev()<CR><Space>
@@ -211,6 +213,8 @@ nmap <Leader>' :History:<CR>
 cnoreabbrev ag Ag
 cnoreabbrev aG Ag
 cnoreabbrev AG Ag
+
+let g:vista_fzf_preview = ['right:50%']
 
 let g:fzf_action = {
   \ 'ctrl-t': 'tab split',
@@ -351,6 +355,10 @@ let g:gutentags_cache_dir = '~/.gutentags'
 " Only create tags for tracked files
 let g:gutentags_file_list_command = 'git ls-files'
 
+" Vista
+nmap <F8> :Vista!!<CR>
+let g:vista_default_executive = 'coc'
+
 " Lightline --------------------------------------------------------------------
 
 set noshowmode " it's in the statusline now
@@ -361,6 +369,10 @@ endfunction
 
 function! MyFileformat()
   return winwidth(0) > 70 ? (&fileformat . ' ' . WebDevIconsGetFileFormatSymbol()) : ''
+endfunction
+
+function! NearestMethodOrFunction() abort
+  return get(b:, 'vista_nearest_method_or_function', '')
 endfunction
 
 autocmd User GutentagsUpdating call lightline#update()
@@ -375,20 +387,21 @@ let g:lightline = {
       \             [ 'gitbranch', 'readonly', 'fp', 'modified' ] ],
       \   'right': [ [ 'lineinfo' ],
       \              [ 'percent' ],
-      \              [ 'cocstatus', 'fileformat', 'fileencoding', 'filetype'] ]
+      \              [ 'method', 'cocstatus', 'fileformat', 'fileencoding', 'filetype'] ]
       \ },
       \ 'inactive': {
       \   'left': [ [ 'readonly', 'fp', 'modified', 'gitbranch' ] ],
       \   'right': [ [ ] ]
       \ },
       \ 'component': {
-      \     'fp': '%<%F%<'
+      \   'fp': '%<%F%<'
       \ },
       \ 'component_function': {
       \   'gitbranch': 'fugitive#head',
       \   'cocstatus': 'coc#status',
       \   'filetype': 'MyFiletype',
-      \   'fileformat': 'MyFileformat'
+      \   'fileformat': 'MyFileformat',
+      \   'method': 'NearestMethodOrFunction'
       \ },
       \ }
 
