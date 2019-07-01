@@ -92,13 +92,12 @@ zplugin light zsh-users/zsh-autosuggestions
 zplugin light zdharma/fast-syntax-highlighting
 zplugin light softmoth/zsh-vim-mode
 
-zplugin ice pick"gitstatus.prompt.zsh"
-zplugin light romkatv/gitstatus
-
 # Disabled
 # zplugin light popstas/zsh-command-time
 # zplugin snippet OMZ::plugins/colored-man-pages/colored-man-pages.plugin.zsh
 # zplugin snippet OMZ::plugins/timer/timer.plugin.zsh
+# zplugin ice pick"gitstatus.prompt.zsh"
+# zplugin light romkatv/gitstatus $GITSTATUS_PROMPT
 
 # FZF --------------------------------------------------------------------------
 
@@ -131,8 +130,25 @@ function check_last_exit_code() {
   fi
 }
 
+# Git status
+# https://github.com/subnixr/minimal
+MNML_OK_COLOR="${MNML_OK_COLOR:-2}"
+MNML_ERR_COLOR="${MNML_ERR_COLOR:-1}"
+
+function mnml_git {
+    local statc="%{\e[0;3${MNML_OK_COLOR}m%}" # assume clean
+    local bname="$(git rev-parse --abbrev-ref HEAD 2> /dev/null)"
+
+    if [ -n "$bname" ]; then
+        if [ -n "$(git status --porcelain 2> /dev/null)" ]; then
+            statc="%{\e[0;3${MNML_ERR_COLOR}m%}"
+        fi
+        printf '%b' "$statc$bname%{\e[0m%}"
+    fi
+}
+
 # Prompt symbols: λ ❯
-PROMPT='$(shrink_path -f) $GITSTATUS_PROMPT ❯ '
+PROMPT='$(shrink_path -f) $(mnml_git) ❯ '
 RPROMPT='$(check_last_exit_code) $n@%m ∙ %j ∙ %T $(vi_mode_prompt_info)'
 
 # Local ------------------------------------------------------------------------
