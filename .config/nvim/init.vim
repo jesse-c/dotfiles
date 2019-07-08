@@ -27,6 +27,7 @@ Plug 'troydm/zoomwintab.vim'
 Plug 'tpope/vim-abolish'
 Plug 'ludovicchabant/vim-gutentags'
 Plug 'liuchengxu/vista.vim'
+Plug 'junegunn/vim-easy-align'
 
 " Marks
 Plug 'kshenoy/vim-signature'
@@ -346,6 +347,12 @@ let g:indentLine_enabled = 1
 "let g:indentLine_showFirstIndentLevel = 1
 let g:indentLine_setColors = 0
 "let g:indentLine_char = '┆'
+
+" Start interactive EasyAlign in visual mode (e.g. vipga)
+xmap ga <Plug>(EasyAlign)
+
+" Start interactive EasyAlign for a motion/text object (e.g. gaip)
+nmap ga <Plug>(EasyAlign)
 
 " Tags -------------------------------------------------------------------------
 
