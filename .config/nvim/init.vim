@@ -388,7 +388,7 @@ autocmd User GutentagsUpdated call lightline#update()
 autocmd User CocDiagnosticChange call lightline#update()
 
 let g:lightline = {
-      \ 'colorscheme': 'one',
+      \ 'colorscheme': 'ayu',
       \ 'active': {
       \   'left': [ [ 'mode', 'paste' ],
       \             [ 'gitbranch', 'readonly', 'fp', 'modified' ] ],
