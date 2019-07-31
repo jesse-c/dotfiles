@@ -136,6 +136,7 @@ brew "doctl"
 
 # Clojure
 brew "leiningen"
+brew "boot-clj"
 
 # HTML
 brew "tidy-html5"
