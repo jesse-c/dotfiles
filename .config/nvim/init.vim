@@ -53,10 +53,17 @@ Plug 'tpope/vim-commentary'
 " Development ----------------------------------------------------------------
 Plug 'sheerun/vim-polyglot'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
+" Plug 'metakirby5/codi.vim'
+" Plug 'tpope/vim-projectionist'
 
 " Go
 Plug 'buoto/gotests-vim'
 Plug 'sebdah/vim-delve'
+
+" Clojure
+Plug 'eraserhd/parinfer-rust', {'do': 'cargo build --release'}
+Plug 'tpope/vim-fireplace'
+Plug 'tpope/vim-salve'
 
 " VCS ------------------------------------------------------------------------
 Plug 'tpope/vim-fugitive'
