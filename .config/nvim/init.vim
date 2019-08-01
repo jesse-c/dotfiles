@@ -155,6 +155,8 @@ function! s:check_back_space() abort
   return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
 
+autocmd User CocNvimInit call echom "CoC initialised"
+
 autocmd BufWritePre *.go :call CocAction("format")
 
 nmap <silent> <C-f> <Plug>(coc-diagnostic-prev)
@@ -177,8 +179,9 @@ function! s:show_documentation()
   endif
 endfunction
 
-" Remap for rename current word
 nmap <leader>rn <Plug>(coc-rename)
+
+" nmap <leader>f :call CocAction('format')<cr>
 
 " Use `:Format` to format current buffer
 command! -nargs=0 Format :call CocAction('format')
@@ -347,6 +350,7 @@ nmap <silent> <C-k> :wincmd k<CR>
 nmap <silent> <C-j> :wincmd j<CR>
 nmap <silent> <C-h> :wincmd h<CR>
 nmap <silent> <C-l> :wincmd l<CR>
+nmap <silent> <C-q> :q<CR>
 
 nmap <silent> <C-m> :GitMessenger<CR>
 
@@ -360,6 +364,9 @@ xmap ga <Plug>(EasyAlign)
 
 " Start interactive EasyAlign for a motion/text object (e.g. gaip)
 nmap ga <Plug>(EasyAlign)
+
+" Close a buffer but keep the window open
+command! Bd enew\|bd \#
 
 " Tags -------------------------------------------------------------------------
 
@@ -392,6 +399,7 @@ endfunction
 autocmd User GutentagsUpdating call lightline#update()
 autocmd User GutentagsUpdated call lightline#update()
 
+autocmd User CocStatusChange call lightline#update()
 autocmd User CocDiagnosticChange call lightline#update()
 
 let g:lightline = {
@@ -492,3 +500,4 @@ cnoreabbrev Qall qall
 " \b buffer listing
 " \f ranger
 " \ leader
+" <C-w>o zoom tab
