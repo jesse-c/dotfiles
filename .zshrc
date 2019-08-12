@@ -27,6 +27,9 @@ EDITOR=nvim
 VISUAL=nvim
 HOMEBREW_EDITOR=nvim
 
+autoload edit-command-line; zle -N edit-command-line
+bindkey -M vicmd v edit-command-line
+
 # Completion -------------------------------------------------------------------
 
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
