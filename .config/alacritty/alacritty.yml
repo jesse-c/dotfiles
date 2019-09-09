@@ -87,24 +87,27 @@ tabspaces: 4
 font:
   # Normal (roman) font face
   normal:
-    family: RobotoMono Nerd Font Mono
+    # family: RobotoMono Nerd Font Mono
+    family: FiraCode Nerd Font
     # The `style` can be specified to pick a specific face.
     #style: Regular
 
   # Bold font face
   bold:
-    family: RobotoMono Nerd Font Mono
+    # family: RobotoMono Nerd Font Mono
+    family: FiraCode Nerd Font
     # The `style` can be specified to pick a specific face.
     #style: Bold
 
   # Italic font face
   italic:
-    family: RobotoMono Nerd Font Mono
+    # family: RobotoMono Nerd Font Mono
+    family: FiraCode Nerd Font
     # The `style` can be specified to pick a specific face.
     #style: Italic
 
   # Point size
-  size: 11.0
+  size: 12.0
 
   # Offset is the extra space around each character. `offset.y` can be thought of
   # as modifying the line spacing, and `offset.x` as modifying the letter spacing.
@@ -542,15 +545,16 @@ key_bindings:
   - { key: W,        mods: Command, chars: "\x02\x78"                    } # Kill pane
   - { key: D,        mods: Command, chars: "\x02\x22"                    } # Vertical split
   - { key: D,        mods: Command|Shift, chars: "\x02\x25"              } # Horizontal split
-  - { key: H,        mods: Command|Shift, chars: "\x02\x70"                  } # Move to window to the left
-  - { key: L,        mods: Command|Shift, chars: "\x02\x6e"                 } # Move to window to the right
+  - { key: H,        mods: Command|Shift, chars: "\x02\x70"              } # Move to window to the left
+  - { key: L,        mods: Command|Shift, chars: "\x02\x6e"              } # Move to window to the right
   - { key: R,        mods: Command, chars: "\x02\x2c"                    } # Rename window
+  - { key: Key0,     mods: Command, chars: "\x02\x27"                    } # nth window by index
   - { key: Key1,     mods: Command, chars: "\x02\x31"                    } # 1st window
-  - { key: Key2,     mods: Command, chars: "\x02\x32"                    } # 1st window
-  - { key: Key3,     mods: Command, chars: "\x02\x33"                    } # 1st window
-  - { key: Key4,     mods: Command, chars: "\x02\x34"                    } # 1st window
-  - { key: Key5,     mods: Command, chars: "\x02\x35"                    } # 1st window
-  - { key: Key6,     mods: Command, chars: "\x02\x36"                    } # 1st window
-  - { key: Key7,     mods: Command, chars: "\x02\x37"                    } # 1st window
-  - { key: Key8,     mods: Command, chars: "\x02\x38"                    } # 1st window
-  - { key: Key9,     mods: Command, chars: "\x02\x39"                    } # 1st window
+  - { key: Key2,     mods: Command, chars: "\x02\x32"                    } # 2nd window
+  - { key: Key3,     mods: Command, chars: "\x02\x33"                    } # 3rd window
+  - { key: Key4,     mods: Command, chars: "\x02\x34"                    } # 4th window
+  - { key: Key5,     mods: Command, chars: "\x02\x35"                    } # 5th window
+  - { key: Key6,     mods: Command, chars: "\x02\x36"                    } # 6th window
+  - { key: Key7,     mods: Command, chars: "\x02\x37"                    } # 7th window
+  - { key: Key8,     mods: Command, chars: "\x02\x38"                    } # 8th window
+  - { key: Key9,     mods: Command, chars: "\x02\x39"                    } # 9th window
