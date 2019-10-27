@@ -1,14 +1,28 @@
 {
   "coc.preferences.codeLens.enable": true,
   "coc.preferences.snippets.enable": false,
-  "coc.preferences.formatOnSaveFiletypes": ["go", "rust", "css", "Markdown", "elm", "clojure", "clj", "js", "css", "scss"],
+  "coc.preferences.formatOnSaveFiletypes": [
+    "go",
+    "rust",
+    "css",
+    "Markdown",
+    "elm",
+    "clojure",
+    "clj",
+    "js",
+    "css",
+    "scss"
+  ],
   "diagnostic.virtualText": true,
   "diagnostic.checkCurrentLine": true,
   // "diagnostic.errorSign": "",
   // "diagnostic.warningSign": "",
   // "diagnostic.infoSign": "",
   // "diagnostic.hintSign": "",
-  "workspace.ignoredFiletypes": ["tags"],
+  "workspace.ignoredFiletypes": [
+    "tags"
+  ],
+  "latex.build.onSave": false,
   "languageserver": {
     "golang": {
       "command": "gopls",
@@ -93,6 +107,12 @@
       ],
       "trace.server": "verbose",
       "initializationOptions": {}
+    },
+    "purescript": {
+      "command": "purescript-language-server",
+      "args": ["--stdio"],
+      "filetypes": ["purescript", "purs"],
+      "rootPatterns": ["bower.json", "psc-package.json", "spago.dhall"]
     }
   }
 }
