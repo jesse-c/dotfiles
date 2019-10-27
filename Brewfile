@@ -5,6 +5,8 @@ tap "homebrew/core"
 tap "homebrew/fuse"
 #tap "universal-ctags/universal-ctags"
 tap "buo/cask-upgrade"
+tap "uptech/homebrew-oss"
+tap "dandavison/delta" "https://github.com/dandavison/delta"
 
 # System
 brew "mas"
@@ -112,6 +114,8 @@ brew "gpg"
 cask "gpg-suite"
 
 # Development
+brew "uptech/oss/alt"
+brew "dandavison/delta/git-delta"
 brew "asdf"
 brew "emacs"
 brew "jq"
