@@ -42,6 +42,8 @@ alias dots='$(which git) --git-dir=$HOME/.dots.git/ --work-tree=$HOME'
 
 alias cls='clear && printf "\e[3J"'
 
+export CLICOLOR=1
+
 # Applications -----------------------------------------------------------------
 
 # ripgrep
@@ -52,6 +54,8 @@ alias cdg='cd $(git rev-parse --show-toplevel)'
 
 # Emacs
 export EMACS_USER_DIRECTORY=~/.emacs.d
+# alias emacs="/usr/local/Cellar/emacs-plus/26.3/bin/emacs"
+alias emacs="/usr/local/Cellar/emacs-mac/emacs-26.3-z-mac-7.7/bin/emacs"
 
 # Homebrew
 HOMEBREW_NO_ANALYTICS=1

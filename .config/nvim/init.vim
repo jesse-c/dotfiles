@@ -11,6 +11,8 @@ call plug#begin('~/.vim/plugged')
 
 " UI -------------------------------------------------------------------------
 Plug 'ayu-theme/ayu-vim'
+" Plug 'chriskempson/tomorrow-theme', { 'rtp': 'vim' }
+Plug 'chriskempson/base16-vim'
 Plug 'ryanoasis/vim-devicons'
 Plug 'scrooloose/nerdtree'
 Plug 'Xuyuanp/nerdtree-git-plugin'
@@ -59,6 +61,9 @@ Plug 'neoclide/coc.nvim', {'branch': 'release'}
 " Go
 Plug 'buoto/gotests-vim'
 Plug 'sebdah/vim-delve'
+
+" Elm
+Plug 'andys8/vim-elm-syntax'
 
 " Clojure
 Plug 'eraserhd/parinfer-rust', {'do': 'cargo build --release'}
@@ -132,7 +137,7 @@ endfunction
 nnoremap <leader>. :w<cr>:call AltCommand(expand('%'), ':e')<cr>
 
 " Polyglot
-let g:polyglot_disabled = []
+let g:polyglot_disabled = ['elm']
 
 " Elm 
 let g:elm_jump_to_error = 0
@@ -310,6 +315,7 @@ set ruler
 set termguicolors     " enable true colors support
 let ayucolor="dark"   " for dark version of theme
 colorscheme ayu
+" colorscheme base16-bright
 
 set number relativenumber
 

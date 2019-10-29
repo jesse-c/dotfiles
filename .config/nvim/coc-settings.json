@@ -113,6 +113,10 @@
       "args": ["--stdio"],
       "filetypes": ["purescript", "purs"],
       "rootPatterns": ["bower.json", "psc-package.json", "spago.dhall"]
+    },
+    "elixirLS": {
+      "command": "/Users/jesse/src/github.com/JakeBecker/elixir-ls/rel/language_server.sh",
+      "filetypes": ["elixir", "eelixir"]
     }
   }
 }
