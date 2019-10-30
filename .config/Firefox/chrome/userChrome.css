@@ -1,3 +1,6 @@
+/* https://www.reddit.com/r/firefox/comments/c5n21e/690a1_nightly_how_to_hide_tab_bar_thank_you/ */
+/* toolkit.legacyUserProfileCustomizations.stylesheets to true */
+
 /* Hide tab bar */
 /* https://github.com/piroor/treestyletab/wiki/Code-snippets-for-custom-style-rules */
 #main-window[tabsintitlebar="true"]:not([extradragspace="true"]) #TabsToolbar > .toolbar-items {
