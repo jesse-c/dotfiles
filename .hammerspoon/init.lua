@@ -12,8 +12,8 @@ end)
 
 -- Wifi ------------------------------------------------------------------------
 wifiWatcher = nil
-homeSSID = "NETGEAR97"
-workSSIDs = {"jazz", "TechnoWLAN"}
+homeSSID = "Hillary Clinternet 2.4G" -- "Hillary Clinternet 5G"
+workSSIDs = {"Duffel Crew"}
 lastSSID = hs.wifi.currentNetwork()
 wifiMenu = hs.menubar.new()
 
@@ -26,12 +26,6 @@ function ssidMenuMessage(newSSID)
 end
 
 wifiMenu:setTitle(ssidMenuMessage(hs.wifi.currentNetwork()))
-
-jnConnect = [[
-  tell application "Viscosity"
-    connect "JN"
-  end
-]]
 
 function ssidChangedCallback()
   local newSSID = hs.wifi.currentNetwork()
@@ -48,10 +42,10 @@ function ssidChangedCallback()
     hs.audiodevice.defaultOutputDevice():setVolume(0)
   end
 
-  -- Connect to VPN when at work -
+  -- When at work
   for _, v in ipairs(workSSIDs) do
       if v == newSSID then
-        _, _, _ = hs.osascript.applescript(jnConnect)
+        -- Do nothing
       end
   end
 
@@ -74,6 +68,32 @@ end
 
 sleepWatcher = hs.caffeinate.watcher.new(sleepWatch)
 sleepWatcher:start()
+
+-- Currently playing song ------------------------------------------------------
+
+currentlyPlayingMenu = hs.menubar.new()
+log = hs.logger.new('currentlyPlayingMenu','debug')
+log.i('Initializing')
+function updateCurrentlyPlaying()
+  log.i('callback')
+  if hs.spotify.getPlaybackState() == hs.spotify.state_playing then
+    log.i('playing')
+    currentArtist = hs.spotify.getCurrentArtist()
+    currentTrack = hs.spotify.getCurrentTrack()
+    currentlyPlayingMenu:setTitle(currentArtist .. " — " .. currentTrack)
+
+    if not currentlyPlayingMenu:isInMenuBar() then
+      currentlyPlayingMenu:returnToMenuBar()
+    end
+  else
+    log.i('not playing')
+    if currentlyPlayingMenu:isInMenuBar() then
+      currentlyPlayingMenu:removeFromMenuBar()
+      currentlyPlayingMenu:setTitle("")
+    end
+  end
+end
+hs.timer.doEvery(1, updateCurrentlyPlaying)
 
 -- Window management -----------------------------------------------------------
 -- TODO Replace Spectacle
@@ -153,4 +173,4 @@ function updateMailMenu()
 end
 
 updateMailMenu()
-hs.timer.doEvery(5, updateMailMenu)
+hs.timer.doEvery(1, updateMailMenu)
