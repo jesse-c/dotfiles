@@ -10,6 +10,7 @@
     "clojure",
     "clj",
     "js",
+    "ts",
     "css",
     "scss"
   ],
@@ -115,8 +116,16 @@
       "rootPatterns": ["bower.json", "psc-package.json", "spago.dhall"]
     },
     "elixirLS": {
-      "command": "/Users/jesse/src/github.com/JakeBecker/elixir-ls/rel/language_server.sh",
+      "command": "/Users/jesse/src/github.com/elixir-lsp/elixir-ls/rel/language_server.sh",
       "filetypes": ["elixir", "eelixir"]
+    },
+    "terraform": {
+      "command": "terraform-lsp",
+      "filetypes": ["terraform"],
+    },
+    "lua": {
+      "command": "lua-lsp",
+      "filetypes": ["lua"]
     }
   }
 }
