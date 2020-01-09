@@ -4,3 +4,6 @@
 # Elm
 *.elmi
 *.elmo
+
+# Vim
+Session.vim

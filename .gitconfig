@@ -1,14 +1,15 @@
 [user]
 	name = Jesse Claven
-	email = jesse.claven@gmail.com
+	email = jesse.claven@me.com
 [github]
 	user = jesse-c
 [color]
 	ui = true
 [core]
 	editor = nvim
-	excludesfile = /Users/$HOME/.gitignore_global
+	excludesfile = ~/.gitignore_global
 	autocrlf = input
+	pager = delta --dark
 [difftool "sourcetree"]
 	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
 	path =
@@ -40,3 +41,5 @@
   insteadOf = https://github.com/
 [rebase]
 	autosquash = true
+[gpg]
+	program = gpg
