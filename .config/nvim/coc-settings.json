@@ -24,6 +24,7 @@
     "tags"
   ],
   "latex.build.onSave": false,
+  "xml.java.home": "/Users/jesse/.asdf/installs/java/adopt-openjdk-13.0.1+9",
   "languageserver": {
     "golang": {
       "command": "gopls",
