@@ -176,8 +176,6 @@ endfunction
 
 autocmd User CocNvimInit call echom "CoC initialised"
 
-autocmd BufWritePre *.go :call CocAction("format")
-
 nmap <silent> <C-f> <Plug>(coc-diagnostic-prev)
 nmap <silent> <C-g> <Plug>(coc-diagnostic-next)
 
@@ -222,7 +220,10 @@ nnoremap <silent> <space>j  :<C-u>CocNext<CR>
 nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
 " Resume latest coc list
 nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
-"
+
+" List yanks
+nnoremap <silent> <space>y  :<C-u>CocList -A --normal yank<cr>
+
 " Remap for do codeAction of current line
 nmap <leader>ac  <Plug>(coc-codeaction)
 " Fix autofix problem of current line
@@ -329,7 +330,7 @@ set showmode
 set showcmd
 set title
 set cul
-set colorcolumn=81
+set colorcolumn=80,90,120
 set autochdir
 set showtabline=2
 
