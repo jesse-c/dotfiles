@@ -1,11 +1,9 @@
 -- Config ----------------------------------------------------------------------
 -- Console
 hs.console.darkMode(true)
--- Global config reload
-hs.hotkey.bind({"cmd", "alt", "ctrl"}, "R", function()
-  -- TODO hs.alert.show("Config reloaded")
-  hs.reload()
-end)
+
+hs.loadSpoon("ReloadConfiguration")
+spoon.ReloadConfiguration:start()
 
 -- Init ------------------------------------------------------------------------
 -- TODO Module loading pattern
