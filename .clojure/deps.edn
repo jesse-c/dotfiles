@@ -1,0 +1,25 @@
+{:aliases {:deps {:extra-deps {org.clojure/tools.deps.alpha {:mvn/version "0.7.541"}}}
+           :test {:extra-paths ["test" "src/test/clojure"]
+                  :extra-deps {org.clojure/test.check {:mvn/version "RELEASE"}}}
+           :runner {:extra-paths ["test"]
+                    :extra-deps {com.cognitect/test-runner {:git/url "https://github.com/cognitect-labs/test-runner.git"
+                                                            :sha "209b64504cb3bd3b99ecfec7937b358a879f55c1"}}
+                    :main-opts ["-m" "cognitect.test-runner"]}
+           :repl {:extra-deps {com.bhauman/rebel-readline {:mvn/version "RELEASE"}
+                               com.gfredericks/user.clj {:mvn/version "RELEASE"}
+                               org.clojure/core.async {:mvn/version "RELEASE"}
+                               org.clojure/core.logic {:mvn/version "RELEASE"}
+                               org.clojure/test.check {:mvn/version "RELEASE"}
+                               com.clojure-goes-fast/clj-java-decompiler {:mvn/version "RELEASE"}
+                               com.clojure-goes-fast/clj-memory-meter {:mvn/version "RELEASE"}
+                               com.clojure-goes-fast/clj-async-profiler {:mvn/version "RELEASE"}
+                               com.clojure-goes-fast/jvm-alloc-rate-meter {:mvn/version "RELEASE"}
+                               com.clojure-goes-fast/jvm-hiccup-meter {:mvn/version "RELEASE"}
+                               io.aviso/pretty {:mvn/version "RELEASE"}
+                               mvxcvi/puget {:mvn/version "RELEASE"}
+                               com.hypirion/clj-xchart {:mvn/version "RELEASE"}
+                               org.clojure/clojure {:mvn/version "RELEASE"}
+                               generateme/fastmath {:mvn/version "RELEASE"}
+                               clj-commons/pomegranate {:mvn/version "RELEASE"}}
+                  :main-opts ["-m" "rebel-readline.main"]}}}
+

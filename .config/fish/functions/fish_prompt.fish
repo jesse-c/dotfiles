@@ -63,5 +63,11 @@ function fish_prompt --description 'Write out the prompt'
         set prompt_status ' ' (set_color $fish_color_status) "[$last_status]" "$normal"
     end
 
-    echo -n -s (set_color $fish_color_user) "$USER" $normal @ (set_color $fish_color_host) (prompt_hostname) $normal ' ' (set_color $color_cwd) (prompt_pwd) $normal (__fish_vcs_prompt) $normal $prompt_status $suffix " "
+    set -l plan_exists
+    if test -e .plan
+      # Alternate symbols: ✺ 
+      set plan_exists '◎ '
+    end
+
+    echo -n -s (set_color $fish_color_user) "$USER" $normal @ (set_color $fish_color_host) (prompt_hostname) $normal ' ' (set_color $color_cwd) (prompt_pwd) (set_color FF1FEF) $plan_exists $normal (__fish_vcs_prompt) $normal $prompt_status $suffix " "
 end
