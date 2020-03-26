@@ -262,7 +262,7 @@ command! -bang -nargs=* Rg
 let $FZF_DEFAULT_COMMAND = 'fd --type f'
 
 let g:fzf_files_options =
-  \ '--preview "(bat --theme="OneHalfDark" --style=numbers,changes --color always {} || cat {}) | head -'.&lines.'"'
+  \ '--preview "bat --theme="OneHalfDark" --style=numbers,changes --color=always {} | head -'.&lines.'"'
 
 " https://www.reddit.com/r/vim/comments/9xpb18/file_preview_with_fzf_rg_bat_and_devicons/ 
 if executable('rg')
@@ -314,7 +314,7 @@ syntax on
 set ruler
 " set background=dark
 set termguicolors     " enable true colors support
-let ayucolor="dark"   " for dark version of theme
+let ayucolor="dark"
 colorscheme ayu
 " colorscheme base16-bright
 
