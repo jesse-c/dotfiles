@@ -12,4 +12,5 @@
 	"r"	= "reply:";
 	"a"	= "replyAll:";
 	"f"	= "forwardMessage:";
+	"b"	= "archive:";
 }
