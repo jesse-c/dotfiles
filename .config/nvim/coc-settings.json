@@ -25,6 +25,11 @@
   ],
   "latex.build.onSave": false,
   "xml.java.home": "/Users/jesse/.asdf/installs/java/adopt-openjdk-13.0.1+9",
+  "rust-client.channel": "nightly",
+  "solargraph.autoformat": true,
+  "solargraph.formatting": true,
+  "solargraph.hover": true,
+  "solargraph.folding": true,
   "languageserver": {
     "golang": {
       "command": "gopls",
@@ -92,21 +97,10 @@
     },
     "clojure-lsp": {
       "command": "bash",
-      "args": [
-        "-c",
-        "clojure-lsp"
-      ],
-      "filetypes": [
-        "clojure",
-        "clj"
-      ],
-      "rootPatterns": [
-        "project.clj"
-      ],
-      "additionalSchemes": [
-        "jar",
-        "zipfile"
-      ],
+      "args": [ "-c", "clojure-lsp" ],
+      "filetypes": [ "clojure", "clj", "cljc", "cljs" ],
+      "rootPatterns": [ "project.clj", "deps.edn" ],
+      "additionalSchemes": [ "jar", "zipfile" ],
       "trace.server": "verbose",
       "initializationOptions": {}
     },
