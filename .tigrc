@@ -22,5 +22,11 @@ bind main p !git push origin
 # Push (force)
 bind main P !git push -f origin
 
+# Absorb
+bind main a !git absorb
+
+# Rebase on upstream
+bind main o !@sh -c "git fetch origin && git rebase origin/master"
+
 # Reload tigrc
 # bind generic x :source ~/.tigrc
