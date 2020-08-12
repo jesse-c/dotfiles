@@ -542,6 +542,7 @@ cnoreabbrev Q q
 cnoreabbrev Sp sp
 cnoreabbrev sP sp
 cnoreabbrev Qall qall
+cnoreabbrev FOrmat Format
 
 " Tips -------------------------------------------------------------------------
 " \t tab listing
