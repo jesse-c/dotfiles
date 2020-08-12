@@ -81,8 +81,9 @@ Plug 'jreybert/vimagit'
 Plug 'mhinz/vim-signify'
 
 " Search ---------------------------------------------------------------------
-Plug 'junegunn/fzf'
-Plug 'junegunn/fzf.vim'
+" Plug 'junegunn/fzf'
+" Plug 'junegunn/fzf.vim'
+Plug 'liuchengxu/vim-clap', { 'do': ':Clap install-binary!' }
 
 " File system ----------------------------------------------------------------
 Plug 'francoiscabrol/ranger.vim'
@@ -238,20 +239,39 @@ nmap <leader>qf  <Plug>(coc-fix-current)
 
 " Search -----------------------------------------------------------------------
 
-" FZF
-" nmap <Leader>g :Tags<CR>
-nmap <Leader>g :Vista finder coc<CR>
-nmap <Leader>h :Buffers<CR>
-nmap <Leader>j :Files<CR>
-" nmap <Leader>j :call Fzf_dev()<CR><Space>
-nmap <Leader>k :Marks<CR>
-nmap <Leader>l :History<CR>
-nmap <Leader>; :Rg<Space>
-nmap <Leader>' :History:<CR>
 cnoreabbrev ag Ag
 cnoreabbrev aG Ag
 cnoreabbrev AG Ag
 
+cnoreabbrev rg rg
+cnoreabbrev rG rg
+cnoreabbrev RG rg
+
+" vim-clap
+
+" let g:clap_provider_grep_opts = '-H --no-heading --vimgrep --smart-case --hidden -g "!.git/"'
+" let g:clap_provider_files_opts = '--hidden'
+
+" nmap <Leader>g :Tags<CR>
+nmap <Leader>g :Clap tags<CR>
+nmap <Leader>h :Clap buffers<CR>
+nmap <Leader>j :Clap files<CR>
+" nmap <Leader>j :call Fzf_dev()<CR><Space>
+nmap <Leader>k :Clap marks<CR>
+nmap <Leader>l :Clap hist:<CR>
+nmap <Leader>; :Clap grep<CR>
+nmap <Leader>' :Clap history<CR>
+
+" FZF
+" " nmap <Leader>g :Tags<CR>
+" nmap <Leader>g :Vista finder coc<CR>
+" nmap <Leader>h :Buffers<CR>
+" nmap <Leader>j :Files<CR>
+" " nmap <Leader>j :call Fzf_dev()<CR><Space>
+" nmap <Leader>k :Marks<CR>
+" nmap <Leader>l :History<CR>
+" nmap <Leader>; :Rg<Space>
+" nmap <Leader>' :History:<CR>
 let g:vista_fzf_preview = ['right:50%']
 
 let g:fzf_action = {
