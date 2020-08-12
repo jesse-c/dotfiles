@@ -67,8 +67,12 @@ Plug 'andys8/vim-elm-syntax'
 
 " Clojure
 Plug 'eraserhd/parinfer-rust', {'do': 'cargo build --release'}
-Plug 'tpope/vim-fireplace'
-Plug 'tpope/vim-salve'
+" Plug 'tpope/vim-fireplace'
+" Plug 'tpope/vim-salve'
+" Plug 'tpope/vim-dispatch'
+" Plug 'guns/vim-sexp',    {'for': 'clojure'}
+" Plug 'liquidz/vim-iced', {'for': 'clojure'}
+" Plug 'liquidz/vim-iced-coc-source', {'for': 'clojure'}
 
 " VCS ------------------------------------------------------------------------
 Plug 'tpope/vim-fugitive'
@@ -151,6 +155,9 @@ let g:elm_setup_keybindings = 0
 
 " Go
 let g:go_fmt_command = "goimports"
+
+" Clojure
+" let g:iced_enable_default_key_mappings = v:true
 
 " LSP --------------------------------------------------------------------------
 
