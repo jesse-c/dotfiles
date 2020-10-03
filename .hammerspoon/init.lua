@@ -103,29 +103,44 @@ sleepWatcher:start()
 
 -- Currently playing song ------------------------------------------------------
 
-currentlyPlayingMenu = hs.menubar.new()
-log = hs.logger.new('currentlyPlayingMenu','debug')
-log.i('Initializing')
-function updateCurrentlyPlaying()
-  log.i('callback')
-  if hs.spotify.getPlaybackState() == hs.spotify.state_playing then
-    log.i('playing')
-    currentArtist = hs.spotify.getCurrentArtist()
-    currentTrack = hs.spotify.getCurrentTrack()
-    currentlyPlayingMenu:setTitle(currentArtist .. " — " .. currentTrack)
+local spotifyMenu = hs.menubar.new()
 
-    if not currentlyPlayingMenu:isInMenuBar() then
-      currentlyPlayingMenu:returnToMenuBar()
-    end
-  else
-    log.i('not playing')
-    if currentlyPlayingMenu:isInMenuBar() then
-      currentlyPlayingMenu:removeFromMenuBar()
-      currentlyPlayingMenu:setTitle("")
-    end
+local spotifyLogger = hs.logger.new('spotifyMenu','debug')
+spotifyLogger.i('Initializing')
+
+local function hideSpotifyMenu()
+  if spotifyMenu:isInMenuBar() then
+    spotifyMenu:removeFromMenuBar()
+    spotifyMenu:setTitle("")
   end
 end
-hs.timer.doEvery(1, updateCurrentlyPlaying)
+
+local function showSpotifyMenu()
+  if not spotifyMenu:isInMenuBar() then
+    spotifyMenu:returnToMenuBar()
+  end
+end
+
+local function updateSpotifyMenu()
+  spotifyLogger.i('callback')
+  if hs.spotify.isRunning() then
+    if hs.spotify.getPlaybackState() == hs.spotify.state_playing then
+      spotifyLogger.i('playing')
+      local currentArtist = hs.spotify.getCurrentArtist()
+      local currentTrack = hs.spotify.getCurrentTrack()
+      spotifyMenu:setTitle(currentArtist .. " — " .. currentTrack)
+
+      showSpotifyMenu()
+    else
+      spotifyLogger.i('not playing')
+      hideSpotifyMenu()
+    end
+  else
+    hideSpotifyMenu()
+  end
+end
+
+hs.timer.doEvery(1, updateSpotifyMenu)
 
 -- Window management -----------------------------------------------------------
 -- TODO Replace Spectacle
