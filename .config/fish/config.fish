@@ -1,5 +1,3 @@
-fzf_key_bindings
-
 set --universal fish_greeting ""
 
 # dots -------------------------------------------------------------------------
@@ -12,8 +10,6 @@ alias cls='clear && printf "\e[3J"'
 export CLICOLOR=1
 
 # Applications -----------------------------------------------------------------
-
-set -g fish_user_paths "/usr/local/opt/terraform@0.11/bin" $fish_user_paths
 
 export GPG_TTY=(tty)
 
