@@ -14,9 +14,7 @@ Plug 'ayu-theme/ayu-vim'
 " Plug 'chriskempson/tomorrow-theme', { 'rtp': 'vim' }
 Plug 'chriskempson/base16-vim'
 Plug 'ryanoasis/vim-devicons'
-Plug 'scrooloose/nerdtree'
-Plug 'Xuyuanp/nerdtree-git-plugin'
-Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
+Plug 'ms-jpq/chadtree', {'branch': 'chad', 'do': ':UpdateRemotePlugins'}
 Plug 'chrisbra/Colorizer'
 Plug 'mhinz/vim-startify'
 Plug 'Yggdroot/indentLine'
@@ -486,12 +484,9 @@ let g:colorizer_skip_comments = 1
 
 " VimiDevIcons -----------------------------------------------------------------
 let g:webdevicons_enable = 1
-let g:webdevicons_enable_nerdtree = 1
-let g:webdevicons_conceal_nerdtree_brackets = 1
 
-" NerdTree ---------------------------------------------------------------------
-nmap <silent> <c-S-n> :NERDTreeToggle<CR>
-let g:NERDTreeShowHidden = 1
+" CHADTree ---------------------------------------------------------------------
+nmap <silent> <c-S-n> :CHADopen<CR>
 
 set guifont=RobotoMono\ Nerd\ Font:h11 " TODO
 "set guifont=*

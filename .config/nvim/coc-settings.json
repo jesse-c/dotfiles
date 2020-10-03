@@ -112,7 +112,8 @@
     },
     "elixirLS": {
       "command": "/Users/jesse/src/github.com/elixir-lsp/elixir-ls/rel/language_server.sh",
-      "filetypes": ["elixir", "eelixir"]
+      "filetypes": ["elixir", "eelixir"],
+      "fetchDeps": false
     },
     "terraform": {
       "command": "terraform-lsp",
