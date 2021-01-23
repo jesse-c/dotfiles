@@ -10,7 +10,7 @@ spoon.ReloadConfiguration:start()
 
 -- Wifi ------------------------------------------------------------------------
 wifiWatcher = nil
-homeSSID = "Hillary Clinternet 2.4G" -- "Hillary Clinternet 5G"
+homeSSID = "DADF Hyperoptic 1GB Fibre 5Ghz"
 workSSIDs = {"Duffel Crew"}
 lastSSID = hs.wifi.currentNetwork()
 wifiMenu = hs.menubar.new()
@@ -55,6 +55,26 @@ end
 
 wifiWatcher = hs.wifi.watcher.new(ssidChangedCallback)
 wifiWatcher:start()
+
+-- Quick application switching -------------------------------------------------
+
+-- https://liuhao.im/english/2017/06/02/macos-automation-and-shortcuts-with-hammerspoon.html
+
+function open(name)
+    return function()
+        hs.application.launchOrFocus(name)
+        if name == 'Finder' then
+            hs.appfinder.appFromName(name):activate()
+        end
+    end
+end
+
+hs.hotkey.bind({"alt"}, "t", open("Things"))
+hs.hotkey.bind({"alt"}, "k", open("kitty"))
+hs.hotkey.bind({"alt"}, "f", open("Firefox Nightly"))
+hs.hotkey.bind({"alt"}, "m", open("MailMate"))
+hs.hotkey.bind({"alt"}, "s", open("Safari"))
+hs.hotkey.bind({"alt"}, "p", open("Spotify"))
 
 -- Move mouse cursor ----------------------------------------------------------
 
@@ -140,7 +160,7 @@ local function updateSpotifyMenu()
   end
 end
 
-hs.timer.doEvery(1, updateSpotifyMenu)
+-- DISABLED hs.timer.doEvery(1, updateSpotifyMenu)
 
 -- Window management -----------------------------------------------------------
 -- TODO Replace Spectacle
