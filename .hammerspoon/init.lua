@@ -60,7 +60,7 @@ wifiWatcher:start()
 
 -- https://liuhao.im/english/2017/06/02/macos-automation-and-shortcuts-with-hammerspoon.html
 
-function open(name)
+local function open(name)
     return function()
         hs.application.launchOrFocus(name)
         if name == 'Finder' then
@@ -73,8 +73,11 @@ hs.hotkey.bind({"alt"}, "t", open("Things"))
 hs.hotkey.bind({"alt"}, "k", open("kitty"))
 hs.hotkey.bind({"alt"}, "f", open("Firefox Nightly"))
 hs.hotkey.bind({"alt"}, "m", open("MailMate"))
-hs.hotkey.bind({"alt"}, "s", open("Safari"))
+hs.hotkey.bind({"alt"}, "a", open("Safari"))
 hs.hotkey.bind({"alt"}, "p", open("Spotify"))
+hs.hotkey.bind({"alt"}, "z", open("zoom.us"))
+hs.hotkey.bind({"alt"}, "s", open("Slack"))
+hs.hotkey.bind({"alt"}, "n", open("Notion"))
 
 -- Move mouse cursor ----------------------------------------------------------
 
