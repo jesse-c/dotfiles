@@ -13,6 +13,9 @@ export CLICOLOR=1
 
 export GPG_TTY=(tty)
 
+# Go
+export GO111MODULE=on
+
 # ripgrep
 # alias rg='rg --smart-case --pretty'
 
