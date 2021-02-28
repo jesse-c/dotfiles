@@ -45,6 +45,7 @@ Plug 'mhinz/vim-startify'
 Plug 'Yggdroot/indentLine'
 Plug 'psliwka/vim-smoothie'
 Plug 'tpope/vim-abolish'
+Plug 'easymotion/vim-easymotion'
 " Marks
 Plug 'kshenoy/vim-signature'
 " Registers
