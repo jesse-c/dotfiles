@@ -17,6 +17,7 @@ Plug 'nvim-lua/plenary.nvim'
 
 " Theme
 Plug 'ayu-theme/ayu-vim'
+Plug 'bluz71/vim-moonfly-colors'
 " Plug 'sainnhe/edge'
 
 " VCS
@@ -98,10 +99,11 @@ let g:smoothie_enabled = 0
 " Theme
 set termguicolors " enable true colors support
 " set background=dark
-let ayucolor="dark"
-colorscheme ayu
+" let ayucolor="dark"
+" colorscheme ayu
 " let g:edge_style = 'dark'
 " colorscheme edge
+colorscheme moonfly
 
 " Current line
 set ruler
@@ -366,6 +368,13 @@ require('lspkind').init({
     --   Struct = ''
     -- },
 })
+
+require('nvim-treesitter.configs').setup {
+  ensure_installed = "maintained", -- one of "all", "maintained" (parsers with maintainers), or a list of languages
+  highlight = {
+    enable = true               -- false will disable the whole extension
+  },
+}
 
 EOF 
 
