@@ -47,6 +47,7 @@ Plug 'Yggdroot/indentLine'
 Plug 'psliwka/vim-smoothie'
 Plug 'tpope/vim-abolish'
 Plug 'easymotion/vim-easymotion'
+Plug 'norcalli/nvim-colorizer.lua'
 " Marks
 Plug 'kshenoy/vim-signature'
 " Registers
@@ -104,6 +105,9 @@ set termguicolors " enable true colors support
 " let g:edge_style = 'dark'
 " colorscheme edge
 colorscheme moonfly
+
+" Colours
+lua require'colorizer'.setup()
 
 " Current line
 set ruler
