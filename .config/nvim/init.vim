@@ -16,7 +16,7 @@ Plug 'nvim-lua/popup.nvim'
 Plug 'nvim-lua/plenary.nvim'
 
 " Theme
-Plug 'ayu-theme/ayu-vim'
+" Plug 'ayu-theme/ayu-vim'
 Plug 'bluz71/vim-moonfly-colors'
 " Plug 'sainnhe/edge'
 
