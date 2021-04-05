@@ -1,0 +1,6 @@
+require('settings')
+require('ui')
+require('plugins')
+require('completion')
+require('languages')
+require('keymappings')
