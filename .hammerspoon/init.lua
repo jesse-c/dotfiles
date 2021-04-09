@@ -69,12 +69,13 @@ local function open(name)
     end
 end
 
-hs.hotkey.bind({"alt"}, "t", open("Things"))
+hs.hotkey.bind({"alt"}, "t", open("/Applications/Things3.app"))
 hs.hotkey.bind({"alt"}, "k", open("kitty"))
 hs.hotkey.bind({"alt"}, "f", open("Firefox Nightly"))
 hs.hotkey.bind({"alt"}, "m", open("MailMate"))
 hs.hotkey.bind({"alt"}, "a", open("Safari"))
 hs.hotkey.bind({"alt"}, "p", open("Spotify"))
+hs.hotkey.bind({"alt"}, "w", open("Paw"))
 hs.hotkey.bind({"alt"}, "z", open("zoom.us"))
 hs.hotkey.bind({"alt"}, "s", open("Slack"))
 hs.hotkey.bind({"alt"}, "n", open("Notion"))
