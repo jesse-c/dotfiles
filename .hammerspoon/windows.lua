@@ -1,6 +1,8 @@
 -- Window management -----------------------------------------------------------
-
 -- TODO Replace Rectangle
+
+require("hs.window")
+hs.window.animationDuration = 0
 
 -- Window Switcher
 switcher = hs.window.switcher.new(
