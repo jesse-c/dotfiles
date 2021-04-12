@@ -21,6 +21,10 @@ paq 'kosayoda/nvim-lightbulb'
 paq 'liuchengxu/vista.vim'
 paq 'onsails/lspkind-nvim'
 
+-- Testing
+paq 'vim-test/vim-test'
+paq{'rcarriga/vim-ultest', run = [[ :UpdateRemotePlugins ]] }
+
 -- UI
 paq 'nvim-telescope/telescope.nvim'
 paq 'kyazdani42/nvim-web-devicons'
@@ -37,6 +41,7 @@ paq 'tpope/vim-abolish'
 paq 'easymotion/vim-easymotion'
 paq 'norcalli/nvim-colorizer.lua'
 -- paq 'jeffkreeftmeijer/vim-numbertoggle'
+paq 'nacro90/numb.nvim'
 -- Marks
 paq 'kshenoy/vim-signature'
 -- Registers
@@ -59,13 +64,15 @@ paq 'hrsh7th/nvim-compe'
 paq 'tpope/vim-eunuch'
 paq 'airblade/vim-rooter'
 paq 'francoiscabrol/ranger.vim'
-paq{ 'ms-jpq/chadtree', branch = 'chad', run = [[python3 -m chadtree deps]] }
+paq{ 'ms-jpq/chadtree', branch = 'chad', run = [[ python3 -m chadtree deps ]] }
 
 -- Tree-sitter
-paq{ 'nvim-treesitter/nvim-treesitter', run = [[:TSUpdate]] }
+paq{ 'nvim-treesitter/nvim-treesitter', run = [[ :TSUpdate ]] }
 
 -- Development
-paq 'sheerun/vim-polyglot'
+-- Replaced with treesitter
+-- paq 'sheerun/vim-polyglot'
+paq 'elixir-editors/vim-elixir'
 
 -- Snippets
 paq 'hrsh7th/vim-vsnip'
@@ -76,7 +83,7 @@ paq 'sbdchd/neoformat'
 
 -- Languages
 -- Clojure
-paq{ 'eraserhd/parinfer-rust', run = [[cargo build --release]] }
+paq{ 'eraserhd/parinfer-rust', run = [[ cargo build --release ]] }
 
 ----------------
 -- Configuration
@@ -94,3 +101,4 @@ require('plugins.onsails.lspkind-nvim')
 require('plugins.neovim.nvim-lspconfig')
 require('plugins.ms-jpq.chadtree')
 require('plugins.mbbill.undotree')
+require('plugins.nacro90.numb-nvim')
