@@ -1,106 +1,223 @@
-vim.cmd 'packadd paq-nvim'           -- Load package
-local paq = require('paq-nvim').paq  -- Import module and bind `paq` function
-paq{ 'savq/paq-nvim', opt = true }   -- Let Paq manage itself
+local user = require("user")
+user.setup()
+local use = user.use
+
+-- user.nvim needs to manage itself!
+use 'faerryn/user.nvim'
 
 -- Miscellaneous
-paq 'nvim-lua/popup.nvim'
-paq 'nvim-lua/plenary.nvim'
+use 'nvim-lua/popup.nvim'
+use 'nvim-lua/plenary.nvim'
 
 -- Theme
-paq 'bluz71/vim-moonfly-colors'
-paq 'sainnhe/edge'
+use 'bluz71/vim-moonfly-colors'
+use {
+  'sainnhe/edge',
+  config = function()
+    local o = vim.o -- For the globals options
+
+    -- o.edge_style = 'default'
+    -- o.edge_enable_italic = false
+    -- o.edge_disable_italic_comment = true
+  end
+}
 
 -- VCS
-paq 'tpope/vim-fugitive'
-paq 'mhinz/vim-signify'
-paq 'APZelos/blamer.nvim'
+use 'tpope/vim-fugitive'
+use 'mhinz/vim-signify'
+use {
+  'APZelos/blamer.nvim',
+  config = function()
+    vim.g.blamer_enabled = true
+  end
+}
 
 -- LSP
-paq 'neovim/nvim-lspconfig'
-paq{ 'glepnir/lspsaga.nvim', branch = 'main' }
-paq 'kosayoda/nvim-lightbulb'
-paq 'liuchengxu/vista.vim'
-paq 'onsails/lspkind-nvim'
+use {
+  'neovim/nvim-lspconfig',
+  config = function()
+    local lspconfig = require('lspconfig')
+
+    lspconfig.gopls.setup{}
+    lspconfig.clojure_lsp.setup{}
+    lspconfig.sourcekit.setup{}
+    lspconfig.elixirls.setup{
+      cmd = { '/Users/jesse/src/github.com/elixir-lsp/elixir-ls/rel/language_server.sh' };
+    }
+  end
+}
+use {
+  'glepnir/lspsaga.nvim',
+  branch = 'main',
+  config = function()
+    local saga = require 'lspsaga'
+    saga.init_lsp_saga()
+  end
+}
+use {
+  'kosayoda/nvim-lightbulb',
+  config = function()
+    vim.cmd [[autocmd CursorHold,CursorHoldI * lua require'nvim-lightbulb'.update_lightbulb()]]
+  end
+}
+use {
+  'liuchengxu/vista.vim',
+  config = function()
+    vim.cmd [[ nmap <F8> :Vista!!<CR> ]]
+    vim.cmd [[ let g:vista#renderer#enable_icon = 1 ]]
+  end
+}
+use {
+  'onsails/lspkind-nvim',
+  config = function()
+    require('lspkind').init({
+        -- with_text = true,
+        -- symbol_map = {
+        --   Text = '',
+        --   Method = 'ƒ',
+        --   Function = '',
+        --   Constructor = '',
+        --   Variable = '',
+        --   Class = '',
+        --   Interface = 'ﰮ',
+        --   Module = '',
+        --   Property = '',
+        --   Unit = '',
+        --   Value = '',
+        --   Enum = '了',
+        --   Keyword = '',
+        --   Snippet = '﬌',
+        --   Color = '',
+        --   File = '',
+        --   Folder = '',
+        --   EnumMember = '',
+        --   Constant = '',
+        --   Struct = ''
+        -- },
+    })
+  end
+}
 
 -- Testing
-paq 'vim-test/vim-test'
-paq{'rcarriga/vim-ultest', run = [[ :UpdateRemotePlugins ]] }
+use 'vim-test/vim-test'
+use 'rcarriga/vim-ultest' -- :UpdateRemotePlugins
 
 -- UI
-paq 'nvim-telescope/telescope.nvim'
-paq 'kyazdani42/nvim-web-devicons'
-paq 'tommcdo/vim-lion'
-paq 'mbbill/undotree'
-paq 'luochen1990/rainbow'
-paq 'google/vim-searchindex'
-paq 'troydm/zoomwintab.vim'
-paq 'hoob3rt/lualine.nvim'
-paq 'chrisbra/Colorizer'
-paq 'Yggdroot/indentLine'
-paq 'psliwka/vim-smoothie'
-paq 'tpope/vim-abolish'
-paq 'easymotion/vim-easymotion'
-paq 'norcalli/nvim-colorizer.lua'
--- paq 'jeffkreeftmeijer/vim-numbertoggle'
-paq 'nacro90/numb.nvim'
+use 'nvim-telescope/telescope.nvim'
+use 'kyazdani42/nvim-web-devicons'
+use 'tommcdo/vim-lion'
+use {
+  'mbbill/undotree',
+  config = function()
+    vim.cmd [[ nnoremap <F5> :UndotreeToggle<cr> ]]
+  end
+}
+use {
+  'luochen1990/rainbow',
+  config = function()
+    vim.g.rainbow_active = true
+  end
+}
+use 'google/vim-searchindex'
+use 'troydm/zoomwintab.vim'
+use {
+  'hoob3rt/lualine.nvim',
+  config = function()
+    require('lualine').setup()
+  end
+}
+use 'chrisbra/Colorizer'
+use {
+  'Yggdroot/indentLine',
+  config = function()
+    vim.g.indentLine_enabled = true
+    -- vim.g.indentLine_showFirstIndentLevel = 1
+    vim.g.indentLine_setColors = false
+    --"vim.g.indentLine_char = '┆'
+  end
+}
+use {
+  'psliwka/vim-smoothie',
+  disabled = true,
+  config = function()
+    vim.g.smoothie_enabled = false
+  end
+}
+use 'tpope/vim-abolish'
+use 'easymotion/vim-easymotion'
+use {
+  'norcalli/nvim-colorizer.lua',
+  config = function()
+    require('colorizer').setup()
+  end
+}
+use 'kevinhwang91/nvim-hlslens'
+-- use 'jeffkreeftmeijer/vim-numbertoggle'
+use {
+  'nacro90/numb.nvim',
+  config = function()
+    require('numb').setup()
+  end
+}
 -- Marks
-paq 'kshenoy/vim-signature'
+use 'kshenoy/vim-signature'
 -- Registers
-paq 'junegunn/vim-peekaboo'
--- paq 'gennaro-tedesco/nvim-peekup'
+use 'junegunn/vim-peekaboo'
+-- use 'gennaro-tedesco/nvim-peekup'
 
 -- Session
-paq 'tpope/vim-obsession'
+use 'tpope/vim-obsession'
 
 -- Buffers
-paq 'jeetsukumaran/vim-buffergator'
+use 'jeetsukumaran/vim-buffergator'
 
 -- Comments
-paq{ 'b3nj5m1n/kommentary', branch = 'main' }
+use { 'b3nj5m1n/kommentary', branch = 'main' }
 
 -- Completion
-paq 'hrsh7th/nvim-compe'
+use 'hrsh7th/nvim-compe'
 
 -- File system
-paq 'tpope/vim-eunuch'
-paq 'airblade/vim-rooter'
-paq 'francoiscabrol/ranger.vim'
-paq{ 'ms-jpq/chadtree', branch = 'chad', run = [[ python3 -m chadtree deps ]] }
+use 'tpope/vim-eunuch'
+use 'airblade/vim-rooter'
+use 'francoiscabrol/ranger.vim'
+use {
+  'ms-jpq/chadtree',
+  branch = 'chad',
+  config = function()
+    vim.cmd [[ nnoremap <leader>v <cmd>CHADopen<cr> ]]
+  end
+  -- run = [[ python3 -m chadtree deps ]] }
+}
 
 -- Tree-sitter
-paq{ 'nvim-treesitter/nvim-treesitter', run = [[ :TSUpdate ]] }
+use {
+  'nvim-treesitter/nvim-treesitter',
+  config = function()
+    require('nvim-treesitter.configs').setup {
+      ensure_installed = "maintained", -- One of "all", "maintained" (parsers with maintainers), or a list of languages
+      highlight = {
+        enable = true                  -- False will disable the whole extension
+      },
+    }
+  end
+  -- run = [[ :TSUpdate ]]
+}
 
 -- Development
 -- Replaced with treesitter
--- paq 'sheerun/vim-polyglot'
-paq 'elixir-editors/vim-elixir'
+-- use 'sheerun/vim-polyglot'
+use 'elixir-editors/vim-elixir'
 
 -- Snippets
-paq 'hrsh7th/vim-vsnip'
-paq 'hrsh7th/vim-vsnip-integ'
+use 'hrsh7th/vim-vsnip'
+use 'hrsh7th/vim-vsnip-integ'
 
 -- Formatting
-paq 'sbdchd/neoformat'
+use 'sbdchd/neoformat'
 
 -- Languages
 -- Clojure
-paq{ 'eraserhd/parinfer-rust', run = [[ cargo build --release ]] }
+use 'eraserhd/parinfer-rust' -- run = [[ cargo build --release ]] }
 
-----------------
--- Configuration
-----------------
-require('plugins.psliwka.vim-smoothie')
-require('plugins.hoob3rt.lualine-nvim')
-require('plugins.norcalli.nvim-colorizer-lua')
-require('plugins.APZelos.blamer-nvim')
-require('plugins.luochen1990.rainbow')
-require('plugins.Yggdroot.indentLine')
-require('plugins.nvim-treesitter.nvim-treesitter')
-require('plugins.glepnir.lspsaga-nvim')
-require('plugins.kosayoda.nvim-lightbulb')
-require('plugins.onsails.lspkind-nvim')
-require('plugins.neovim.nvim-lspconfig')
-require('plugins.ms-jpq.chadtree')
-require('plugins.mbbill.undotree')
-require('plugins.nacro90.numb-nvim')
-require('plugins.sainnhe.edge/')
+user.startup()
