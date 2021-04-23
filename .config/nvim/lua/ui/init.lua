@@ -7,9 +7,9 @@ local autocmd = require('core.autocmd')
 --------
 -- Theme
 --------
-vim.cmd [[ colorscheme moonfly ]]
--- True colour support
-o.termguicolors = true
+vim.cmd [[ colorscheme edge ]]
+-- o.background = 'light'
+o.background = 'dark'
 ---------------
 -- Line numbers
 ---------------
