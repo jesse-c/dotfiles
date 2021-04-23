@@ -8,6 +8,7 @@ paq 'nvim-lua/plenary.nvim'
 
 -- Theme
 paq 'bluz71/vim-moonfly-colors'
+paq 'sainnhe/edge'
 
 -- VCS
 paq 'tpope/vim-fugitive'
@@ -102,3 +103,4 @@ require('plugins.neovim.nvim-lspconfig')
 require('plugins.ms-jpq.chadtree')
 require('plugins.mbbill.undotree')
 require('plugins.nacro90.numb-nvim')
+require('plugins.sainnhe.edge/')

@@ -10,6 +10,12 @@ require('abbrs')
 -- Editor
 -- ====================
 
+----------
+-- Colours
+----------
+-- True colour support
+o.termguicolors = true
+
 ---------------------
 -- File
 ---------------------
