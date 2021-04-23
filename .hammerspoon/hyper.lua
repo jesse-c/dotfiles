@@ -21,10 +21,12 @@ end
 
 -- Single keybinding for app launch
 hs.fnutils.each({
-  { key = 't', appname = '/Applications/Things3.app'},
+  { key = 'q', appname = '/Applications/Things3.app'},
+  { key = 'e', appname = 'Height'},
   { key = 'g', appname = 'kitty'},
   { key = 'f', appname = 'Firefox Nightly'},
-  { key = 'm', appname = 'MailMate'},
+  -- { key = 'm', appname = 'MailMate'},
+  { key = 'm', appname = 'Mail'},
   { key = 'a', appname = 'Safari'},
   { key = 'p', appname = 'Spotify'},
   { key = 'w', appname = 'Paw'},
@@ -33,6 +35,7 @@ hs.fnutils.each({
   { key = 'n', appname = 'Notion'},
   { key = 'r', appname = 'Raycast'},
   { key = 'd', appname = 'Dash'},
+  { key = 't', appname = 'TablePlus'},
 }, function(object)
   k:bind({}, object.key, function() launch(object.appname); k:exit(); end)
 end)
