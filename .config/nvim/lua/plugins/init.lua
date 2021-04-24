@@ -31,6 +31,13 @@ use {
     vim.g.blamer_enabled = true
   end
 }
+use {
+  'pwntester/octo.nvim',
+  after = 'nvim-telescope/telescope.nvim',
+  config = function()
+    require('telescope').load_extension('octo')
+  end
+}
 
 -- LSP
 use {
@@ -97,6 +104,13 @@ use {
     })
   end
 }
+use 'folke/lsp-colors.nvim'
+use {
+  'folke/lsp-trouble.nvim',
+  config = function()
+    require("trouble").setup()
+  end
+}
 
 -- Testing
 use 'vim-test/vim-test'
@@ -124,6 +138,13 @@ use {
   'hoob3rt/lualine.nvim',
   config = function()
     require('lualine').setup()
+  end
+}
+use {
+  'akinsho/nvim-bufferline.lua',
+  after = 'kyazdani42/nvim-web-devicons',
+  config = function()
+    require('bufferline').setup{}
   end
 }
 use 'chrisbra/Colorizer'
