@@ -165,7 +165,11 @@ use {
   end
 }
 use 'tpope/vim-abolish'
-use 'easymotion/vim-easymotion'
+use {
+  'easymotion/vim-easymotion',
+  disabled = true,
+}
+use 'phaazon/hop.nvim'
 use {
   'norcalli/nvim-colorizer.lua',
   config = function()
@@ -173,18 +177,24 @@ use {
   end
 }
 use 'kevinhwang91/nvim-hlslens'
--- use 'jeffkreeftmeijer/vim-numbertoggle'
+use 'jeffkreeftmeijer/vim-numbertoggle'
 use {
   'nacro90/numb.nvim',
   config = function()
     require('numb').setup()
   end
 }
+use 'liuchengxu/vim-which-key'
+use {
+  'AckslD/nvim-whichkey-setup.lua',
+  after = 'liuchengxu/vim-which-key'
+}
+
 -- Marks
 use 'kshenoy/vim-signature'
 -- Registers
-use 'junegunn/vim-peekaboo'
--- use 'gennaro-tedesco/nvim-peekup'
+-- use 'junegunn/vim-peekaboo'
+use 'gennaro-tedesco/nvim-peekup'
 
 -- Session
 use 'tpope/vim-obsession'
@@ -226,6 +236,18 @@ use {
 }
 
 -- Development
+use {
+  'haringsrob/nvim_context_vt',
+  disabled = true,
+}
+use 'machakann/vim-sandwich'
+use {
+  'code-biscuits/nvim-biscuits',
+  disabled = true,
+  config = function()
+    require('nvim-biscuits').setup({})
+  end
+}
 -- Replaced with treesitter
 -- use 'sheerun/vim-polyglot'
 use 'elixir-editors/vim-elixir'
