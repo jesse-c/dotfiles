@@ -257,7 +257,12 @@ use 'hrsh7th/vim-vsnip'
 use 'hrsh7th/vim-vsnip-integ'
 
 -- Formatting
-use 'sbdchd/neoformat'
+use {
+  'sbdchd/neoformat',
+  config = function()
+    vim.g.neoformat_enabled_yaml = {}
+  end
+}
 
 -- Languages
 -- Clojure
