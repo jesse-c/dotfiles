@@ -184,10 +184,15 @@ use {
     require('numb').setup()
   end
 }
-use 'liuchengxu/vim-which-key'
 use {
-  'AckslD/nvim-whichkey-setup.lua',
-  after = 'liuchengxu/vim-which-key'
+  "folke/which-key.nvim",
+  config = function()
+    require("which-key").setup {
+      -- your configuration comes here
+      -- or leave it empty to use the default settings
+      -- refer to the configuration section below
+    }
+  end
 }
 
 -- Marks
