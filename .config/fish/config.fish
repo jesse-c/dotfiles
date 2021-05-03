@@ -11,6 +11,10 @@ export CLICOLOR=1
 
 # Applications -----------------------------------------------------------------
 
+alias ray='~/src/github.com/raycast-api/api-alpha/cli/x86/ray'
+
+alias g='git'
+
 export GPG_TTY=(tty)
 
 # Go
@@ -29,7 +33,7 @@ export EMACS_USER_DIRECTORY=~/.emacs.d
 export HOMEBREW_NO_ANALYTICS=1
 
 # asdf
-source ~/.asdf/asdf.fish
+source /usr/local/opt/asdf/asdf.fish
 
 # Local ------------------------------------------------------------------------
 
