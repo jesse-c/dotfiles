@@ -39,7 +39,7 @@ o.formatoptions = 'qj'
 ------------------------------
 -- Spellchecking
 ------------------------------
-o.spelllang = 'en,es'
+o.spelllang = 'en'
 -------------------
 -- Undo persistance
 -------------------
