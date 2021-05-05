@@ -14,7 +14,7 @@ o.background = 'dark'
 -- Line numbers
 ---------------
 o.number = true
-o.relativenumber = true
+wo.relativenumber = true
 ----------------------
 -- Syntax highlighting
 ----------------------
