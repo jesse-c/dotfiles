@@ -51,6 +51,7 @@ use {
     lspconfig.elixirls.setup{
       cmd = { '/Users/jesse/src/github.com/elixir-lsp/elixir-ls/rel/language_server.sh' };
     }
+    lspconfig.rust_analyzer.setup{}
   end
 }
 use {
@@ -117,6 +118,7 @@ use 'vim-test/vim-test'
 use 'rcarriga/vim-ultest' -- :UpdateRemotePlugins
 
 -- UI
+use 'RRethy/vim-illuminate'
 use 'nvim-telescope/telescope.nvim'
 use 'kyazdani42/nvim-web-devicons'
 use 'tommcdo/vim-lion'
@@ -216,7 +218,15 @@ use 'hrsh7th/nvim-compe'
 -- File system
 use 'tpope/vim-eunuch'
 use 'airblade/vim-rooter'
-use 'francoiscabrol/ranger.vim'
+-- use 'francoiscabrol/ranger.vim'
+use {
+  'kevinhwang91/rnvimr',
+  config = function() 
+    vim.cmd [[ let g:rnvimr_enable_picker = 1 ]]
+    vim.cmd [[ let g:rnvimr_draw_border = 0 ]]
+    vim.cmd [[ nnoremap <leader>f <cmd>RnvimrToggle<cr> ]]
+  end
+}
 use {
   'ms-jpq/chadtree',
   branch = 'chad',
@@ -273,4 +283,8 @@ use {
 -- Clojure
 use 'eraserhd/parinfer-rust' -- run = [[ cargo build --release ]] }
 
+-- Rust
+use 'simrat39/rust-tools.nvim'
+
+--
 user.startup()

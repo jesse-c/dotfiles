@@ -71,6 +71,7 @@ o.showmode = true
 -- Column marker
 ------------------------------
 o.colorcolumn = '81'
+wo.signcolumn = 'yes'
 ---------------------------
 -- Characters
 ---------------------------
