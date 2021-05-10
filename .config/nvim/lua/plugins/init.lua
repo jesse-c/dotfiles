@@ -213,7 +213,37 @@ use 'jeetsukumaran/vim-buffergator'
 use { 'b3nj5m1n/kommentary', branch = 'main' }
 
 -- Completion
-use 'hrsh7th/nvim-compe'
+use {
+  'hrsh7th/nvim-compe',
+  config = function()
+    vim.o.completeopt = "menuone,noselect"
+
+    require('compe').setup {
+      enabled = true;
+      autocomplete = true;
+      debug = false;
+      min_length = 1;
+      preselect = 'enable';
+      throttle_time = 80;
+      source_timeout = 200;
+      incomplete_delay = 400;
+      max_abbr_width = 100;
+      max_kind_width = 100;
+      max_menu_width = 100;
+      documentation = true;
+
+      source = {
+        path = true;
+        buffer = true;
+        calc = true;
+        nvim_lsp = true;
+        nvim_lua = true;
+        vsnip = true;
+        ultisnips = true;
+      };
+    }
+  end
+}
 
 -- File system
 use 'tpope/vim-eunuch'
@@ -285,6 +315,9 @@ use 'eraserhd/parinfer-rust' -- run = [[ cargo build --release ]] }
 
 -- Rust
 use 'simrat39/rust-tools.nvim'
+
+-- Markdown
+use 'npxbr/glow.nvim'
 
 --
 user.startup()
