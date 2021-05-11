@@ -119,6 +119,7 @@ use 'rcarriga/vim-ultest' -- :UpdateRemotePlugins
 
 -- UI
 use 'RRethy/vim-illuminate'
+use 'machakann/vim-highlightedyank'
 use 'nvim-telescope/telescope.nvim'
 use 'kyazdani42/nvim-web-devicons'
 use 'tommcdo/vim-lion'
