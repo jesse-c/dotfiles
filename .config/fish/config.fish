@@ -11,8 +11,10 @@ export CLICOLOR=1
 
 # Applications -----------------------------------------------------------------
 
+# Raycast
 alias ray='~/src/github.com/raycast-api/api-alpha/cli/x86/ray'
 
+# Git
 alias g='git'
 
 export GPG_TTY=(tty)
@@ -34,6 +36,9 @@ export HOMEBREW_NO_ANALYTICS=1
 
 # asdf
 source /usr/local/opt/asdf/asdf.fish
+
+# direnv
+direnv hook fish | source
 
 # Local ------------------------------------------------------------------------
 
