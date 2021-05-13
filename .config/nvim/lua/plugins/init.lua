@@ -118,6 +118,12 @@ use 'vim-test/vim-test'
 use 'rcarriga/vim-ultest' -- :UpdateRemotePlugins
 
 -- UI
+use {
+  "folke/todo-comments.nvim",
+  config = function()
+    require("todo-comments").setup()
+  end
+}
 use 'RRethy/vim-illuminate'
 use 'machakann/vim-highlightedyank'
 use 'nvim-telescope/telescope.nvim'
@@ -264,7 +270,6 @@ use {
   config = function()
     vim.cmd [[ nnoremap <leader>v <cmd>CHADopen<cr> ]]
   end
-  -- run = [[ python3 -m chadtree deps ]] }
 }
 
 -- Tree-sitter
