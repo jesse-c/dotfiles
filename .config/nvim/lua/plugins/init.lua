@@ -269,7 +269,10 @@ use {
   branch = 'chad',
   config = function()
     vim.cmd [[ nnoremap <leader>v <cmd>CHADopen<cr> ]]
-  end
+  end,
+  update = function()
+    vim.api.nvim_command [[ CHADdeps ]]
+	end,
 }
 
 -- Tree-sitter
