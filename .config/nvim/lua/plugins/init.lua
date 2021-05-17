@@ -170,6 +170,11 @@ use {
   end
 }
 use {
+  'lukas-reineke/indent-blankline.nvim',
+  branch = 'lua',
+  after = 'Yggdroot/indentLine',
+}
+use {
   'psliwka/vim-smoothie',
   disabled = true,
   config = function()
