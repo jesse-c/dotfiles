@@ -181,7 +181,15 @@ use {
   'easymotion/vim-easymotion',
   disabled = true,
 }
-use 'phaazon/hop.nvim'
+use {
+  'phaazon/hop.nvim',
+  branch = 'master',
+  config = function()
+    -- require('hop').setup()
+    vim.cmd [[ nnoremap <leader>s <cmd>HopWord<cr> ]]
+  end,
+  disabled = false
+}
 use {
   'norcalli/nvim-colorizer.lua',
   config = function()
@@ -275,7 +283,17 @@ use {
   end,
   update = function()
     vim.api.nvim_command [[ CHADdeps ]]
-	end,
+  end,
+  disabled = true
+}
+use {
+  'kyazdani42/nvim-tree.lua',
+  branch = 'master',
+  after = 'kyazdani42/nvim-web-devicons',
+  config = function()
+    vim.cmd [[ nnoremap <leader>v <cmd>NvimTreeToggle<cr> ]]
+  end,
+  disabled = false
 }
 
 -- Tree-sitter
