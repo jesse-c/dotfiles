@@ -41,6 +41,9 @@ source /usr/local/opt/asdf/asdf.fish
 # direnv
 direnv hook fish | source
 
+# zoxide
+zoxide init fish | source
+
 # Local ------------------------------------------------------------------------
 
 if test -e ~/local.sh
