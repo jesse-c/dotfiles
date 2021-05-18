@@ -2,6 +2,8 @@ local user = require("user")
 user.setup()
 local use = user.use
 
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 -- user.nvim needs to manage itself!
 use 'faerryn/user.nvim'
 
@@ -167,7 +169,8 @@ use {
     -- vim.g.indentLine_showFirstIndentLevel = 1
     vim.g.indentLine_setColors = false
     --"vim.g.indentLine_char = '┆'
-  end
+  end,
+  disabled = true
 }
 use {
   'lukas-reineke/indent-blankline.nvim',
@@ -354,5 +357,6 @@ use 'simrat39/rust-tools.nvim'
 -- Markdown
 use 'npxbr/glow.nvim'
 
---
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 user.startup()
