@@ -17,6 +17,8 @@ alias ray='~/src/github.com/raycast-api/api-alpha/cli/x86/ray'
 
 # Git
 alias g='git'
+alias gsw='git checkout (git branch | fzf | cut -c 3-)'
+alias cdg='cd (git rev-parse --show-toplevel)'
 
 export GPG_TTY=(tty)
 
@@ -25,9 +27,6 @@ export GO111MODULE=on
 
 # ripgrep
 # alias rg='rg --smart-case --pretty'
-
-# Git
-alias cdg='cd (git rev-parse --show-toplevel)'
 
 # Emacs
 export EMACS_USER_DIRECTORY=~/.emacs.d
