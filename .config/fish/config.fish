@@ -43,6 +43,8 @@ direnv hook fish | source
 # zoxide
 zoxide init fish | source
 
+
+# https://www.reddit.com/r/fishshell/comments/n5bhka/up_cd_up_till_you_find_a_folder_as_child_dir/gzm48td/?context=3
 # https://gist.github.com/zlksnk/81a4993be410586c038f8b3fc140b1c7
 function up
   set -l dir_to_be_child $argv[1]
