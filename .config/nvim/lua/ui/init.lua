@@ -71,7 +71,6 @@ o.showmode = true
 -- Column marker
 ------------------------------
 o.colorcolumn = '81'
-wo.signcolumn = 'yes'
 ---------------------------
 -- Characters
 ---------------------------
@@ -83,7 +82,7 @@ o.listchars = 'trail:·,tab:→ ,nbsp:·'
 -- Sign column
 ----------------------------
 -- Always show sign column
-o.signcolumn = 'yes'
+wo.signcolumn = 'yes'
 ----------------------
 -- Folds
 ----------------------
