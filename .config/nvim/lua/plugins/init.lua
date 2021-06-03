@@ -222,6 +222,17 @@ use {
     }
   end
 }
+use {
+  'sudormrfbin/cheatsheet.nvim',
+  after = {
+    'nvim-telescope/telescope.nvim',
+    'nvim-lua/popup.nvim',
+    'nvim-lua/plenary.nvim',
+  },
+  config = function()
+    vim.cmd [[ nnoremap <leader>c <cmd>Cheatsheet<cr> ]]
+  end
+}
 
 -- Marks
 use 'kshenoy/vim-signature'
