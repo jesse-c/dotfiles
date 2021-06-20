@@ -193,8 +193,8 @@ use {
   'phaazon/hop.nvim',
   branch = 'master',
   config = function()
-    -- require('hop').setup()
-    vim.cmd [[ nnoremap <leader>s <cmd>HopWord<cr> ]]
+    require('hop').setup({})
+    vim.api.nvim_set_keymap('n', '$', "<cmd>lua require'hop'.hint_words()<cr>", {})
   end,
   disabled = false
 }
