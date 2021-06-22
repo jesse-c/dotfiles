@@ -117,6 +117,12 @@ use {
     })
   end
 }
+use {
+  'rmagatti/goto-preview',
+  config = function()
+    require('goto-preview').setup {}
+  end
+}
 
 -- Testing
 use 'vim-test/vim-test'
@@ -194,7 +200,7 @@ use {
   branch = 'master',
   config = function()
     require('hop').setup({})
-    vim.api.nvim_set_keymap('n', '$', "<cmd>lua require'hop'.hint_words()<cr>", {})
+    vim.api.nvim_set_keymap('n', '<leader>a', "<cmd>lua require'hop'.hint_words()<cr>", {})
   end,
   disabled = false
 }
