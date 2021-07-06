@@ -365,7 +365,8 @@ use {
   branch = 'master',
   after = 'kyazdani42/nvim-web-devicons',
   config = function()
-    vim.cmd [[ nnoremap <leader>v <cmd>NvimTreeToggle<cr> ]]
+    -- vim.cmd [[ nnoremap <leader>v <cmd>NvimTreeToggle<cr> ]]
+    vim.cmd [[ nnoremap <leader>v <cmd>NvimTreeFindFile<cr> ]]
   end,
   disabled = false
 }
