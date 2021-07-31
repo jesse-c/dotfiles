@@ -420,7 +420,12 @@ use {
 use 'eraserhd/parinfer-rust' -- run = [[ cargo build --release ]] }
 
 -- Rust
-use 'simrat39/rust-tools.nvim'
+use {
+  'simrat39/rust-tools.nvim',
+  config = function()
+    require('rust-tools').setup({})
+  end
+}
 
 -- Markdown
 use 'npxbr/glow.nvim'
