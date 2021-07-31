@@ -374,6 +374,7 @@ use {
 -- Tree-sitter
 use {
   'nvim-treesitter/nvim-treesitter',
+  branch = '0.5-compat',
   config = function()
     require('nvim-treesitter.configs').setup {
       ensure_installed = "maintained", -- One of "all", "maintained" (parsers with maintainers), or a list of languages
