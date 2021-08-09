@@ -1,9 +1,13 @@
--- Bootstrap user.nvim
-local user_install_path = vim.fn.stdpath("data").."/site/pack/user/opt/faerryn/user.nvim/default/default"
-if vim.fn.empty(vim.fn.glob(user_install_path)) > 0 then
-	os.execute([[git clone --depth 1 https://github.com/faerryn/user.nvim.git "]]..user_install_path..[["]])
+-- Bootstrap packer.nvim
+local execute = vim.api.nvim_command
+local fn = vim.fn
+
+local install_path = fn.stdpath('data')..'/site/pack/packer/start/packer.nvim'
+
+if fn.empty(fn.glob(install_path)) > 0 then
+  fn.system({'git', 'clone', 'https://github.com/wbthomason/packer.nvim', install_path})
+  execute 'packadd packer.nvim'
 end
-vim.api.nvim_command("packadd faerryn/user.nvim/default/default")
 
 require('settings')
 require('plugins')
