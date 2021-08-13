@@ -115,7 +115,15 @@ return require('packer').startup(function()
   -- use 'rcarriga/vim-ultest' -- :UpdateRemotePlugins
 
   -- UI
-  use 'nvim-telescope/telescope.nvim'
+  use {
+    "nvim-telescope/telescope.nvim",
+    requires = "nvim-telescope/telescope-fzy-native.nvim",
+    config = function()
+      require('telescope').setup({})
+      require('telescope').load_extension('fzy_native')
+    end
+  }
+  use "nvim-telescope/telescope-fzy-native.nvim"
   use {
     "folke/todo-comments.nvim",
     config = function()

@@ -163,3 +163,7 @@ RPROMPT='$(check_last_exit_code) $n@%m ∙ %j ∙ %T $(vi_mode_prompt_info)'
 if [ -f ~/local.sh ]; then
   source ~/local.sh
 fi
+autoload -U +X bashcompinit && bashcompinit
+complete -o nospace -C /usr/local/bin/bit bit
+autoload -U +X bashcompinit && bashcompinit
+complete -o nospace -C /usr/local/bin/bit bit
