@@ -134,3 +134,9 @@ o.title = true
 --------
 o.errorbells = false
 o.visualbell = false
+------------
+-- Rendering
+------------
+-- When running macros and regexes on a large file, lazy redraw tells Neovim
+-- not to draw the screen, which greatly speeds it up, upto 6-7x faster
+o.lazyredraw = true

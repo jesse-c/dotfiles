@@ -46,6 +46,12 @@ o.spelllang = 'en'
 o.undodir = configuration_folder..'/undodir.nvim'
 o.undofile = true
 o.undolevels = 10000
+--------
+-- Shell
+--------
+-- For fish users out there, its quite slow compared to stock bash, as such
+-- tell Neovim to use bash to execute commands
+vim.opt.shell = "/bin/bash"
 -----------
 -- Commands
 -----------
