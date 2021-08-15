@@ -303,17 +303,6 @@ return require('packer').startup(function()
     end
   }
   use {
-    'ms-jpq/chadtree',
-    branch = 'chad',
-    config = function()
-      vim.cmd [[ nnoremap <leader>v <cmd>CHADopen<cr> ]]
-    end,
-    update = function()
-      vim.api.nvim_command [[ CHADdeps ]]
-    end,
-    disabled = true
-  }
-  use {
     'kyazdani42/nvim-tree.lua',
     branch = 'master',
     requires = 'kyazdani42/nvim-web-devicons',
