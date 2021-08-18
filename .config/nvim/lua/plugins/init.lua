@@ -163,19 +163,15 @@ return require('packer').startup(function()
   }
   use 'chrisbra/Colorizer'
   use {
-    'Yggdroot/indentLine',
-    config = function()
-      vim.g.indentLine_enabled = true
-      -- vim.g.indentLine_showFirstIndentLevel = 1
-      vim.g.indentLine_setColors = false
-      --"vim.g.indentLine_char = '┆'
-    end,
-    disabled = true
-  }
-  use {
     'lukas-reineke/indent-blankline.nvim',
     branch = 'master',
-    requires = 'Yggdroot/indentLine',
+    config = function()
+      vim.g.indent_blankline_enabled = true
+      vim.g.indent_blankline_char = '┆'
+      vim.g.indent_blankline_char_list = {'|', '¦', '┆', '┊'}
+      vim.g.indent_blankline_use_treesitter = true
+      vim.g.indent_blankline_show_first_indent_level = false
+    end,
   }
   use {
     'psliwka/vim-smoothie',
