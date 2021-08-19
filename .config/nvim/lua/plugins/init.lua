@@ -276,7 +276,7 @@ return require('packer').startup(function()
     branch = 'coq',
     config = function()
       vim.g.coq_settings = {
-        auto_start = true,
+        auto_start = 'shut-up',
         keymap = {
           jump_to_mark = "<c-x>",
           bigger_preview = "<c-x>",
