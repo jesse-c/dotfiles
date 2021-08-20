@@ -279,7 +279,7 @@ return require('packer').startup(function()
   use {
     'ms-jpq/coq_nvim',
     branch = 'coq',
-    event = "InsertEnter",
+    -- event = "InsertEnter",
     config = function()
       vim.g.coq_settings = {
         auto_start = 'shut-up',
