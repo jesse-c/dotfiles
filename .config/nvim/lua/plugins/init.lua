@@ -25,7 +25,10 @@ end
 
 return require('packer').startup(function()
   -- Packer can manage itself
-  use 'wbthomason/packer.nvim'
+  use {
+    'wbthomason/packer.nvim',
+    event = "VimEnter",
+  }
 
   -- Miscellaneous
   use 'nvim-lua/popup.nvim'
@@ -190,6 +193,7 @@ return require('packer').startup(function()
   use {
     'lukas-reineke/indent-blankline.nvim',
     branch = 'master',
+    event = "BufRead",
     config = function()
       vim.g.indent_blankline_enabled = true
       vim.g.indent_blankline_char = '┆'
@@ -245,6 +249,7 @@ return require('packer').startup(function()
   }
   use {
     'sudormrfbin/cheatsheet.nvim',
+    event = "VimEnter",
     requires = {
       'nvim-telescope/telescope.nvim',
       'nvim-lua/popup.nvim',
@@ -274,6 +279,7 @@ return require('packer').startup(function()
   use {
     'ms-jpq/coq_nvim',
     branch = 'coq',
+    event = "InsertEnter",
     config = function()
       vim.g.coq_settings = {
         auto_start = 'shut-up',
@@ -316,6 +322,7 @@ return require('packer').startup(function()
   -- Tree-sitter
   use {
     'nvim-treesitter/nvim-treesitter',
+    event = "BufRead",
     config = function()
       require('nvim-treesitter.configs').setup {
         ensure_installed = "maintained", -- One of "all", "maintained" (parsers with maintainers), or a list of languages
@@ -353,7 +360,8 @@ return require('packer').startup(function()
     'sbdchd/neoformat',
     config = function()
       vim.g.neoformat_enabled_yaml = {}
-    end
+    end,
+    disabled = false,
   }
 
   -- Languages
