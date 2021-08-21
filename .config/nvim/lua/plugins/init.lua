@@ -329,9 +329,39 @@ return require('packer').startup(function()
         highlight = {
           enable = true                  -- False will disable the whole extension
         },
+        incremental_selection = {
+          enable = true,
+          keymaps = {
+            init_selection = "gnn",
+            node_incremental = "grn",
+            scope_incremental = "grc",
+            node_decremental = "grm",
+          },
+        },
       }
     end
     -- run = [[ :TSUpdate ]]
+  }
+  use {
+    'David-Kunz/treesitter-unit',
+    requires = 'nvim-treesitter/nvim-treesitter',
+    event = "BufRead",
+    config = function()
+      vim.api.nvim_set_keymap('v', 'x', ':lua require"treesitter-unit".select()<CR>', {noremap=true})
+      vim.api.nvim_set_keymap('o', 'x', ':<c-u>lua require"treesitter-unit".select()<CR>', {noremap=true})
+    end,
+  }
+  use {
+    'romgrk/nvim-treesitter-context',
+    requires = 'nvim-treesitter/nvim-treesitter',
+    event = "BufRead",
+    config = function()
+      require('treesitter-context').setup({
+        enable = true,
+        throttle = true,
+    })
+    end,
+    disabled = false,
   }
 
   -- Development
