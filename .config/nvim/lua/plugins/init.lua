@@ -39,7 +39,28 @@ return require('packer').startup(function()
   use 'bluz71/vim-moonfly-colors'
 
   -- VCS
-  use 'tpope/vim-fugitive'
+  use {
+    'sindrets/diffview.nvim',
+    event = "BufRead",
+  }
+  use {
+    'TimUntersberger/neogit',
+    event = "BufRead",
+    requires = {
+      'nvim-lua/plenary.nvim',
+      'sindrets/diffview.nvim',
+    },
+    config = function()
+      local neogit = require('neogit')
+
+      neogit.setup({
+        integrations = {
+          diffview = true
+        },
+      })
+
+    end,
+  }
   use 'mhinz/vim-signify'
   use {
     'APZelos/blamer.nvim',
