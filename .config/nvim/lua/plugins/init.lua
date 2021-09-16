@@ -240,7 +240,7 @@ return require('packer').startup(function()
   }
   use {
     'psliwka/vim-smoothie',
-    disabled = true,
+    disable = true,
     config = function()
       vim.g.smoothie_enabled = false
     end
@@ -248,7 +248,7 @@ return require('packer').startup(function()
   use 'tpope/vim-abolish'
   use {
     'easymotion/vim-easymotion',
-    disabled = true,
+    disable = true,
   }
   use {
     'phaazon/hop.nvim',
@@ -257,7 +257,7 @@ return require('packer').startup(function()
       require('hop').setup({})
       vim.api.nvim_set_keymap('n', '<leader>a', "<cmd>lua require'hop'.hint_words()<cr>", {})
     end,
-    disabled = false
+    disable = false
   }
   use {
     'norcalli/nvim-colorizer.lua',
@@ -352,7 +352,7 @@ return require('packer').startup(function()
       -- vim.cmd [[ nnoremap <leader>v <cmd>NvimTreeToggle<cr> ]]
       vim.cmd [[ nnoremap <leader>v <cmd>NvimTreeFindFile<cr> ]]
     end,
-    disabled = false
+    disable = false
   }
 
   -- Tree-sitter
@@ -397,18 +397,18 @@ return require('packer').startup(function()
         throttle = true,
     })
     end,
-    disabled = false,
+    disable = false,
   }
 
   -- Development
   use {
     'haringsrob/nvim_context_vt',
-    disabled = true,
+    disable = true,
   }
   use 'machakann/vim-sandwich'
   use {
     'code-biscuits/nvim-biscuits',
-    disabled = true,
+    disable = true,
     config = function()
       require('nvim-biscuits').setup({})
     end
@@ -427,7 +427,7 @@ return require('packer').startup(function()
     config = function()
       vim.g.neoformat_enabled_yaml = {}
     end,
-    disabled = false,
+    disable = false,
   }
 
   -- Languages
