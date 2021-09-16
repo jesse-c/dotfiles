@@ -93,6 +93,17 @@ return require('packer').startup(function()
         cmd = { '/Users/jesse/src/github.com/elixir-lsp/elixir-ls/rel/language_server.sh' };
       }
       lspconfig.rust_analyzer.setup{}
+      lspconfig.efm.setup{
+        init_options = {documentFormatting = true},
+        settings = {
+            rootMarkers = {".git/"},
+            languages = {
+                elixir = {
+                    {formatCommand = "mix format -", formatStdin = true}
+                }
+            }
+        }
+      }
     end
   }
   use {
