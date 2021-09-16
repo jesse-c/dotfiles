@@ -44,6 +44,10 @@ return require('packer').startup(function()
     event = "BufRead",
   }
   use {
+    'tpope/vim-fugitive',
+    event = "BufRead",
+  }
+  use {
     'TimUntersberger/neogit',
     event = "BufRead",
     requires = {
