@@ -304,6 +304,22 @@ return require('packer').startup(function()
 
   -- Session
   use 'tpope/vim-obsession'
+  use {
+    "folke/persistence.nvim",
+    event = "BufReadPre", -- this will only start session saving when an actual file was opened
+    module = "persistence",
+    config = function()
+      require("persistence").setup()
+    end,
+  }
+  use {
+    'goolord/alpha-nvim',
+    requires = { 'kyazdani42/nvim-web-devicons' },
+    config = function ()
+      require('alpha').setup(require'alpha.themes.dashboard'.opts)
+    end,
+    disable = true,
+  }
 
   -- Buffers
   use 'jeetsukumaran/vim-buffergator'
