@@ -399,8 +399,8 @@ return require('packer').startup(function()
     requires = 'nvim-treesitter/nvim-treesitter',
     event = "BufRead",
     config = function()
-      vim.api.nvim_set_keymap('v', 'x', ':lua require"treesitter-unit".select()<CR>', {noremap=true})
-      vim.api.nvim_set_keymap('o', 'x', ':<c-u>lua require"treesitter-unit".select()<CR>', {noremap=true})
+      -- vim.api.nvim_set_keymap('v', 'x', ':lua require"treesitter-unit".select()<CR>', {noremap=true})
+      -- vim.api.nvim_set_keymap('o', 'x', ':<c-u>lua require"treesitter-unit".select()<CR>', {noremap=true})
     end,
   }
   use {
