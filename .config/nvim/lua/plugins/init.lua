@@ -23,7 +23,7 @@ for _, plugin in pairs(disabled_built_ins) do
     vim.g["loaded_" .. plugin] = 1
 end
 
-return require('packer').startup(function()
+return require('packer').startup(function(use)
   -- Packer can manage itself
   use {
     'wbthomason/packer.nvim',
