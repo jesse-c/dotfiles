@@ -447,8 +447,20 @@ return require('packer').startup(function(use)
   }
 
   -- Languages
+  use {
+    'mrjones2014/dash.nvim',
+    requires = {
+      'nvim-telescope/telescope.nvim',
+      'nvim-lua/plenary.nvim'
+    },
+    rocks = { 'xml2lua' }
+  }
+
   -- Clojure
-  use 'eraserhd/parinfer-rust' -- run = [[ cargo build --release ]] }
+  use {
+    'eraserhd/parinfer-rust',
+    run = "cargo build --release",
+  }
 
   -- Rust
   use {
