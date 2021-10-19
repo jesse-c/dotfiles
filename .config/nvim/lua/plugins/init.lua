@@ -23,7 +23,7 @@ for _, plugin in pairs(disabled_built_ins) do
     vim.g["loaded_" .. plugin] = 1
 end
 
-return require('packer').startup(function(use)
+return require('packer').startup(function()
   -- Packer can manage itself
   use {
     'wbthomason/packer.nvim',
@@ -362,13 +362,12 @@ return require('packer').startup(function(use)
   }
   use {
     'kyazdani42/nvim-tree.lua',
-    branch = 'master',
     requires = 'kyazdani42/nvim-web-devicons',
     config = function()
-      -- vim.cmd [[ nnoremap <leader>v <cmd>NvimTreeToggle<cr> ]]
-      vim.cmd [[ nnoremap <leader>v <cmd>NvimTreeFindFile<cr> ]]
-    end,
-    disable = false
+      require('nvim-tree').setup({})
+      vim.cmd [[ nnoremap <leader>v :NvimTreeFindFile<CR> ]]
+      vim.cmd [[ nnoremap <leader>n :NvimTreeToggle<CR> ]]
+    end
   }
 
   -- Tree-sitter
