@@ -36,7 +36,10 @@ return require('packer').startup(function()
 
   -- Theme
   use 'sainnhe/edge'
-  use 'bluz71/vim-moonfly-colors'
+  use {
+    'bluz71/vim-moonfly-colors',
+    disable = tre,
+  }
 
   -- VCS
   use {
@@ -72,12 +75,14 @@ return require('packer').startup(function()
       vim.g.blamer_enabled = true
     end
   }
+  -- Edit and review GitHub issues and pull requests from the comfort of your favorite editor 
   use {
     'pwntester/octo.nvim',
     requires = 'nvim-telescope/telescope.nvim',
     config = function()
       require('telescope').load_extension('octo')
-    end
+    end,
+    disable = true
   }
 
   -- LSP
@@ -104,7 +109,7 @@ return require('packer').startup(function()
             }
         }
       }
-    end
+    end,
   }
   use {
     'glepnir/lspsaga.nvim',
@@ -112,20 +117,23 @@ return require('packer').startup(function()
     config = function()
       local saga = require 'lspsaga'
       saga.init_lsp_saga()
-    end
+    end,
+    disable = true,
   }
   use {
     'kosayoda/nvim-lightbulb',
     config = function()
       vim.cmd [[autocmd CursorHold,CursorHoldI * lua require'nvim-lightbulb'.update_lightbulb()]]
-    end
+    end,
+    disable = true,
   }
   use {
     'liuchengxu/vista.vim',
     config = function()
       vim.cmd [[ nmap <F8> :Vista!!<CR> ]]
       vim.cmd [[ let g:vista#renderer#enable_icon = 1 ]]
-    end
+    end,
+    disable = true,
   }
   use {
     'onsails/lspkind-nvim',
@@ -155,9 +163,13 @@ return require('packer').startup(function()
           --   Struct = ''
           -- },
       })
-    end
+    end,
+    disable = true,
   }
-  use 'folke/lsp-colors.nvim'
+  use {
+    'folke/lsp-colors.nvim',
+    disable = true,
+  }
   use {
     'folke/lsp-trouble.nvim',
     config = function()
@@ -165,18 +177,19 @@ return require('packer').startup(function()
     auto_open = true, -- automatically open the list when you have diagnostics
         auto_close = true, -- automatically close the list when you have no diagnostics
       })
-    end
+    end,
+    disable = true,
   }
   use {
     'rmagatti/goto-preview',
     config = function()
       require('goto-preview').setup {}
-    end
+    end,
+    disable = true,
   }
 
   -- Testing
-  -- use 'vim-test/vim-test'
-  -- use 'rcarriga/vim-ultest' -- :UpdateRemotePlugins
+  -- TODO
 
   -- UI
   use {
@@ -191,13 +204,23 @@ return require('packer').startup(function()
   use {
     "folke/todo-comments.nvim",
     config = function()
-      require("todo-comments").setup()
+      require("todo-comments").setup({})
     end
   }
-  use 'RRethy/vim-illuminate'
-  use 'machakann/vim-highlightedyank'
+  -- Vim plugin for automatically highlighting other uses of the word under the cursor. Integrates with Neovim's LSP client for intelligent highlighting. 
+  use {
+    'RRethy/vim-illuminate',
+    disable = true,
+  }
+  use {
+    'machakann/vim-highlightedyank',
+    disable = true,
+  }
   use 'kyazdani42/nvim-web-devicons'
-  use 'tommcdo/vim-lion'
+  use {
+    'tommcdo/vim-lion',
+    disable = true,
+  }
   use {
     'mbbill/undotree',
     config = function()
@@ -208,12 +231,12 @@ return require('packer').startup(function()
     'luochen1990/rainbow',
     config = function()
       vim.g.rainbow_active = true
-    end
+    end,
   }
   use 'google/vim-searchindex'
   use 'troydm/zoomwintab.vim'
   use {
-    'hoob3rt/lualine.nvim',
+    'nvim-lualine/lualine.nvim',
     config = function()
       require('lualine').setup()
     end
@@ -243,13 +266,10 @@ return require('packer').startup(function()
     disable = true,
     config = function()
       vim.g.smoothie_enabled = false
-    end
-  }
-  use 'tpope/vim-abolish'
-  use {
-    'easymotion/vim-easymotion',
+    end,
     disable = true,
   }
+  use 'tpope/vim-abolish'
   use {
     'phaazon/hop.nvim',
     branch = 'master',
@@ -257,7 +277,7 @@ return require('packer').startup(function()
       require('hop').setup({})
       vim.api.nvim_set_keymap('n', '<leader>a', "<cmd>lua require'hop'.hint_words()<cr>", {})
     end,
-    disable = false
+    disable = false,
   }
   use {
     'norcalli/nvim-colorizer.lua',
@@ -265,8 +285,12 @@ return require('packer').startup(function()
       require('colorizer').setup()
     end
   }
-  use 'kevinhwang91/nvim-hlslens'
+  use {
+    'kevinhwang91/nvim-hlslens',
+    disable = true,
+  }
   use 'jeffkreeftmeijer/vim-numbertoggle'
+  -- Peek lines just when you intend 
   use {
     'nacro90/numb.nvim',
     config = function()
@@ -298,11 +322,13 @@ return require('packer').startup(function()
 
   -- Marks
   use 'kshenoy/vim-signature'
+
   -- Registers
-  -- use 'junegunn/vim-peekaboo'
+  -- Alternatives:
+  -- - 'junegunn/vim-peekaboo'
   use 'gennaro-tedesco/nvim-peekup'
 
-  -- Session
+  -- Sessions
   use 'tpope/vim-obsession'
   use {
     "folke/persistence.nvim",
@@ -351,7 +377,8 @@ return require('packer').startup(function()
   -- File system
   use 'tpope/vim-eunuch'
   use 'airblade/vim-rooter'
-  -- use 'francoiscabrol/ranger.vim'
+  -- Alternatives:
+  -- - 'francoiscabrol/ranger.vim'
   use {
     'kevinhwang91/rnvimr',
     config = function() 
@@ -367,20 +394,22 @@ return require('packer').startup(function()
       require('nvim-tree').setup({})
       vim.cmd [[ nnoremap <leader>v :NvimTreeFindFile<CR> ]]
       vim.cmd [[ nnoremap <leader>n :NvimTreeToggle<CR> ]]
+      vim.g.nvim_tree_width = 60
     end
   }
 
   -- Tree-sitter
+  -- Nvim Treesitter configurations and abstraction layer 
   use {
     'nvim-treesitter/nvim-treesitter',
     event = "BufRead",
     config = function()
-      require('nvim-treesitter.configs').setup {
-        ensure_installed = "maintained", -- One of "all", "maintained" (parsers with maintainers), or a list of languages
+      require('nvim-treesitter.configs').setup({
+        ensure_installed = "maintained",
         highlight = {
           enable = true                  -- False will disable the whole extension
         },
-        incremental_selection = {
+        --[[ incremental_selection = {
           enable = true,
           keymaps = {
             init_selection = "gnn",
@@ -388,10 +417,10 @@ return require('packer').startup(function()
             scope_incremental = "grc",
             node_decremental = "grm",
           },
-        },
-      }
-    end
-    -- run = [[ :TSUpdate ]]
+        }, ]]
+      })
+    end,
+    run = ':TSUpdate',
   }
   use {
     'David-Kunz/treesitter-unit',
@@ -401,6 +430,7 @@ return require('packer').startup(function()
       -- vim.api.nvim_set_keymap('v', 'x', ':lua require"treesitter-unit".select()<CR>', {noremap=true})
       -- vim.api.nvim_set_keymap('o', 'x', ':<c-u>lua require"treesitter-unit".select()<CR>', {noremap=true})
     end,
+    disable = true,
   }
   use {
     'romgrk/nvim-treesitter-context',
@@ -412,7 +442,7 @@ return require('packer').startup(function()
         throttle = true,
     })
     end,
-    disable = false,
+    disable = true,
   }
 
   -- Development
@@ -420,21 +450,28 @@ return require('packer').startup(function()
     'haringsrob/nvim_context_vt',
     disable = true,
   }
-  use 'machakann/vim-sandwich'
+  use {
+    'machakann/vim-sandwich',
+    disable = true,
+  }
   use {
     'code-biscuits/nvim-biscuits',
     disable = true,
     config = function()
       require('nvim-biscuits').setup({})
-    end
+    end,
+    disable = true,
   }
-  -- Replaced with treesitter
-  -- use 'sheerun/vim-polyglot'
-  use 'elixir-editors/vim-elixir'
 
   -- Snippets
-  use 'hrsh7th/vim-vsnip'
-  use 'hrsh7th/vim-vsnip-integ'
+  use {
+    'hrsh7th/vim-vsnip',
+    disable = true,
+  }
+  use {
+    'hrsh7th/vim-vsnip-integ',
+    disable = true,
+  }
 
   -- Formatting
   use {
@@ -452,8 +489,12 @@ return require('packer').startup(function()
       'nvim-telescope/telescope.nvim',
       'nvim-lua/plenary.nvim'
     },
-    rocks = { 'xml2lua' }
+    rocks = { 'xml2lua' },
+    disable = true,
   }
+
+  -- Elixir
+  use 'elixir-editors/vim-elixir'
 
   -- Clojure
   use {
