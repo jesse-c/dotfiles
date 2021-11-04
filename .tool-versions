@@ -1,13 +1,13 @@
-golang 1.15.8
-ruby 2.7.2
-elixir 1.11.3-otp-23
-erlang 23.2.7
-racket 809
-clojure 1.10.1
-lua 5.4.0
-nodejs 15.2.0
-rust nightly
-java adoptopenjdk-15.0.1+9
-# ocaml 4.06.1
-python 3.9.0 2.7.18
-# haskell 8.10.2
+golang 1.17.2
+ruby 3.0.2 
+erlang 24.1.3
+elixir 1.12.3-otp-24
+racket 8.2
+lua 5.4.3
+nodejs 17.0.1
+clojure 1.10.3.1013
+ocaml 4.13.1
+python 3.9.7 2.7.18
+haskell 9.0.1
+zig 0.8.1
+nim 1.6.0
