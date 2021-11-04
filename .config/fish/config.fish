@@ -1,8 +1,16 @@
 set --universal fish_greeting ""
 
-# dots -------------------------------------------------------------------------
+set -gx HOMEBREW_PREFIX "/opt/homebrew";
+set -gx HOMEBREW_CELLAR "/opt/homebrew/Cellar";
+set -gx HOMEBREW_REPOSITORY "/opt/homebrew";
+set -gx HOMEBREW_SHELLENV_PREFIX "/opt/homebrew";
+set -q PATH; or set PATH ''; set -gx PATH "/opt/homebrew/bin" "/opt/homebrew/sbin" $PATH;
+set -q MANPATH; or set MANPATH ''; set -gx MANPATH "/opt/homebrew/share/man" $MANPATH;
+set -q INFOPATH; or set INFOPATH ''; set -gx INFOPATH "/opt/homebrew/share/info" $INFOPATH;
 
-alias dots='git --git-dir=$HOME/.dots.git/ --work-tree=$HOME'
+# dotfiles ---------------------------------------------------------------------
+
+alias dotfiles='git --git-dir=$HOME/.dotfiles.git/ --work-tree=$HOME'
 
 # Visual -----------------------------------------------------------------------
 
@@ -11,9 +19,6 @@ alias cls='clear && printf "\e[3J"'
 export CLICOLOR=1
 
 # Applications -----------------------------------------------------------------
-
-# Raycast
-alias ray='~/src/github.com/raycast-api/api-alpha/cli/x86/ray'
 
 # Git
 alias g='git'
@@ -25,9 +30,6 @@ export GPG_TTY=(tty)
 # Go
 export GO111MODULE=on
 
-# ripgrep
-# alias rg='rg --smart-case --pretty'
-
 # Emacs
 export EMACS_USER_DIRECTORY=~/.emacs.d
 
@@ -35,10 +37,14 @@ export EMACS_USER_DIRECTORY=~/.emacs.d
 export HOMEBREW_NO_ANALYTICS=1
 
 # asdf
-source /usr/local/opt/asdf/asdf.fish
+source (brew --prefix asdf)/libexec/asdf.fish
 
 # direnv
 direnv hook fish | source
+
+# Rust
+# source $HOME/.cargo/env
+set -Ua fish_user_paths $HOME/.cargo/bin
 
 # zoxide
 zoxide init fish | source
