@@ -112,6 +112,11 @@ return require('packer').startup(function()
     end,
   }
   use {
+    'williamboman/nvim-lsp-installer',
+    requires = 'neovim/nvim-lspconfig',
+    disable = false,
+  }
+  use {
     'glepnir/lspsaga.nvim',
     branch = 'main',
     config = function()
