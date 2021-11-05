@@ -40,6 +40,8 @@ return require('packer').startup(function()
   use 'nvim-lua/popup.nvim'
   use 'nvim-lua/plenary.nvim'
 
+  use 'nathom/filetype.nvim'
+
   -- Theme
   use 'sainnhe/edge'
   use {
