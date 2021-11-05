@@ -24,6 +24,11 @@ for _, plugin in pairs(disabled_built_ins) do
 end
 
 return require('packer').startup(function()
+  config = {
+    -- Move to lua dir so impatient.nvim can cache it
+    compile_path = vim.fn.stdpath('config')..'/lua/packer_compiled.lua'
+  }
+
   -- Packer can manage itself
   use {
     'wbthomason/packer.nvim',
@@ -31,6 +36,7 @@ return require('packer').startup(function()
   }
 
   -- Miscellaneous
+  use 'lewis6991/impatient.nvim'
   use 'nvim-lua/popup.nvim'
   use 'nvim-lua/plenary.nvim'
 
