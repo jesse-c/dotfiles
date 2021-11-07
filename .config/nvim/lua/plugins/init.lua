@@ -220,6 +220,10 @@ return require('packer').startup(function()
       require("todo-comments").setup({})
     end
   }
+  use {
+    "luukvbaal/stabilize.nvim",
+    config = function() require("stabilize").setup() end,
+  }
   -- Vim plugin for automatically highlighting other uses of the word under the cursor. Integrates with Neovim's LSP client for intelligent highlighting. 
   use {
     'RRethy/vim-illuminate',
