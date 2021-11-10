@@ -254,12 +254,13 @@ return require('packer').startup(function()
   use 'troydm/zoomwintab.vim'
   use {
     'nvim-lualine/lualine.nvim',
+    requires = {'kyazdani42/nvim-web-devicons', opt = true},
     config = function()
       require('lualine').setup()
     end
   }
   use {
-    'akinsho/nvim-bufferline.lua',
+    'akinsho/bufferline.nvim',
     requires = 'kyazdani42/nvim-web-devicons',
     config = function()
       require('bufferline').setup{}
