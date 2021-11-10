@@ -2,14 +2,14 @@ local o = vim.o -- For the globals options
 local wo = vim.wo -- For the window local options
 local bo = vim.bo -- For the buffer local options
 
-local autocmd = require('core.autocmd')
+local autocmd = require("core.autocmd")
 
 --------
 -- Theme
 --------
-vim.cmd [[ colorscheme edge ]]
--- o.background = 'light'
-o.background = 'dark'
+vim.cmd([[ colorscheme edge ]])
+-- o.background = 'dark'
+o.background = "dark"
 ---------------
 -- Line numbers
 ---------------
@@ -18,33 +18,33 @@ wo.relativenumber = true
 ----------------------
 -- Syntax highlighting
 ----------------------
-vim.cmd [[ filetype plugin indent on ]]
-vim.cmd [[ syntax enable ]]
+vim.cmd([[ filetype plugin indent on ]])
+vim.cmd([[ syntax enable ]])
 ----------------------
 -- Search
 ----------------------
 o.incsearch = true
 o.hlsearch = true
 o.showmatch = true
-vim.cmd [[ set ignorecase ]]
-vim.cmd [[ set smartcase ]]
-vim.cmd [[ nnoremap <esc> :noh<return><esc> ]]
+vim.cmd([[ set ignorecase ]])
+vim.cmd([[ set smartcase ]])
+vim.cmd([[ nnoremap <esc> :noh<return><esc> ]])
 ----------------------
 -- Splits
 ----------------------
 -- Auto resize splits when window is resized
-autocmd {
-  events = { 'VimResized' },
-  pattern = '*',
-  command = 'wincmd ='
-}
+autocmd({
+	events = { "VimResized" },
+	pattern = "*",
+	command = "wincmd =",
+})
 o.splitbelow = true
 o.splitright = true
 ----------
 -- Buffers
 ----------
 -- Close a buffer but keep the window open
-vim.cmd [[ command! Bd enew\|bd \# ]]
+vim.cmd([[ command! Bd enew\|bd \# ]])
 ------------
 -- Scrolling
 ------------
@@ -57,7 +57,7 @@ o.cursorline = true
 ------------------------
 -- Conceal
 ------------------------
-o.concealcursor = ''
+o.concealcursor = ""
 -----------------------
 -- Status
 -----------------------
@@ -65,19 +65,19 @@ o.showmode = true
 ------------------------------
 -- Column marker
 ------------------------------
-o.colorcolumn = '81'
+o.colorcolumn = "81"
 ---------------------------
 -- Characters
 ---------------------------
 -- Show whitespace characters
 o.list = true
 -- Show trailing whitespace as dots
-o.listchars = 'trail:·,tab:→ ,nbsp:·'
+o.listchars = "trail:·,tab:→ ,nbsp:·"
 ----------------------------
 -- Sign column
 ----------------------------
 -- Always show sign column
-wo.signcolumn = 'yes'
+wo.signcolumn = "yes"
 ----------------------
 -- Folds
 ----------------------
@@ -86,13 +86,13 @@ o.foldlevelstart = 99
 -- Terminal
 -------------------------
 -- Enable mouse support
-o.mouse = 'a'
+o.mouse = "a"
 -- Restore cursor on exit
-autocmd {
-  events = { 'VimLeave' },
-  pattern = '*',
-  command = 'set guicursor=a:ver100-blinkon0'
-}
+autocmd({
+	events = { "VimLeave" },
+	pattern = "*",
+	command = "set guicursor=a:ver100-blinkon0",
+})
 ----------------------------
 -- Indentation
 ----------------------------
@@ -120,9 +120,9 @@ o.linebreak = true
 -- Mantain indentation on wrap
 o.breakindent = true
 -- Add characters after wrap
-o.breakindentopt = 'shift:2'
+o.breakindentopt = "shift:2"
 -- Character to show after wrap
-o.showbreak = '↳ '
+o.showbreak = "↳ "
 ----------
 -- Tabline
 ----------
