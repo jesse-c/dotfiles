@@ -8,8 +8,8 @@ local autocmd = require("core.autocmd")
 -- Theme
 --------
 vim.cmd([[ colorscheme edge ]])
--- o.background = 'dark'
-o.background = "dark"
+o.background = 'dark'
+
 ---------------
 -- Line numbers
 ---------------
