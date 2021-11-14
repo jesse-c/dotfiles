@@ -102,7 +102,7 @@ return require("packer").startup(function()
 			lspconfig.clojure_lsp.setup({})
 			lspconfig.sourcekit.setup({})
 			lspconfig.elixirls.setup({
-				cmd = { "/Users/jesse/src/github.com/elixir-lsp/elixir-ls/rel/language_server.sh" },
+				-- cmd = { "/Users/jesse/src/github.com/elixir-lsp/elixir-ls/rel/language_server.sh" },
 			})
 			lspconfig.rust_analyzer.setup({})
 			lspconfig.efm.setup({
