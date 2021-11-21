@@ -4,24 +4,21 @@ show_icon: false
 show_notifications: true
 
 matches:
-  # Simple text replacement
-  - trigger: ":espanso"
-    replace: "Hi there!"
+  - trigger: ":jc"
+    replace: "jesse.claven@me.com"
 
-  # Dates
   - trigger: ":date"
     replace: "{{mydate}}"
     vars:
       - name: mydate
         type: date
         params:
-          format: "%m/%d/%Y"
+          format: "%Y-%m-%d"
 
-  # Shell commands
-  - trigger: ":shell"
-    replace: "{{output}}"
+  - trigger: ":time"
+    replace: "{{mydate}}"
     vars:
-      - name: output
-        type: shell
+      - name: mydate
+        type: date
         params:
-          cmd: "echo Hello from your shell"
+          format: "%H:%M"
