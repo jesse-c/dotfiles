@@ -46,7 +46,7 @@ return require("packer").startup(function()
 	use("sainnhe/edge")
 	use({
 		"bluz71/vim-moonfly-colors",
-		disable = tre,
+		disable = true,
 	})
 
 	-- VCS
