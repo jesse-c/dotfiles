@@ -107,8 +107,9 @@ return require("packer").startup(function()
 			lspconfig.rust_analyzer.setup({})
 			lspconfig.efm.setup({
 				init_options = { documentFormatting = true },
+				filetypes = { "elixir" },
 				settings = {
-					rootMarkers = { ".git/" },
+					rootMarkers = { ".git/", "mix.exs" },
 					languages = {
 						elixir = {
 							{ formatCommand = "mix format -", formatStdin = true },
