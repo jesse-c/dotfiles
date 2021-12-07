@@ -98,30 +98,40 @@ return require("packer").startup(function()
 		config = function()
 			local lspconfig = require("lspconfig")
 
-			lspconfig.gopls.setup({})
-			lspconfig.clojure_lsp.setup({})
 			lspconfig.sourcekit.setup({})
-			lspconfig.elixirls.setup({
-				-- cmd = { "/Users/jesse/src/github.com/elixir-lsp/elixir-ls/rel/language_server.sh" },
-			})
-			lspconfig.rust_analyzer.setup({})
-			lspconfig.efm.setup({
-				init_options = { documentFormatting = true },
-				filetypes = { "elixir" },
-				settings = {
-					rootMarkers = { ".git/", "mix.exs" },
-					languages = {
-						elixir = {
-							{ formatCommand = "mix format -", formatStdin = true },
-						},
-					},
-				},
-			})
 		end,
 	})
 	use({
 		"williamboman/nvim-lsp-installer",
 		requires = "neovim/nvim-lspconfig",
+		config = function()
+			local lsp_installer = require("nvim-lsp-installer")
+
+			-- Register a handler that will be called for all installed servers.
+			-- Alternatively, you may also register handlers on specific server instances instead (see example below).
+			lsp_installer.on_server_ready(function(server)
+				local opts = {}
+
+				if server.name == "efm" then
+					opts = {
+						init_options = { documentFormatting = true },
+						filetypes = { "elixir" },
+						settings = {
+							rootMarkers = { ".git/", "mix.exs" },
+							languages = {
+								elixir = {
+									{ formatCommand = "mix format -", formatStdin = true },
+								},
+							},
+						},
+					}
+				end
+
+				-- This setup() function is exactly the same as lspconfig's setup function.
+				-- Refer to https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md
+				server:setup(opts)
+			end)
+		end,
 		disable = false,
 	})
 	use({
