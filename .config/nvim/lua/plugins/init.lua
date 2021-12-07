@@ -103,7 +103,7 @@ return require("packer").startup(function()
 	})
 	use({
 		"williamboman/nvim-lsp-installer",
-		requires = "neovim/nvim-lspconfig",
+		requires = { "neovim/nvim-lspconfig", "stevearc/aerial.nvim" },
 		config = function()
 			local lsp_installer = require("nvim-lsp-installer")
 
@@ -111,9 +111,11 @@ return require("packer").startup(function()
 			-- Alternatively, you may also register handlers on specific server instances instead (see example below).
 			lsp_installer.on_server_ready(function(server)
 				local opts = {}
+				local aerial = require("aerial")
 
 				if server.name == "efm" then
 					opts = {
+						on_attach = aerial.on_attach,
 						init_options = { documentFormatting = true },
 						filetypes = { "elixir" },
 						settings = {
@@ -151,13 +153,31 @@ return require("packer").startup(function()
 		disable = true,
 	})
 	use({
-		"liuchengxu/vista.vim",
+		"stevearc/stickybuf.nvim",
 		config = function()
-			vim.cmd([[ nmap <F8> :Vista!!<CR> ]])
-			vim.cmd([[ let g:vista#renderer#enable_icon = 1 ]])
+			require("stickybuf").setup({})
 		end,
-		disable = true,
 	})
+	use({
+		"stevearc/aerial.nvim",
+		requires = "stevearc/stickybuf.nvim",
+		config = function()
+			local aerial = require("aerial")
+
+			-- Aerial does not set any mappings by default, so you'll want to set some up
+			aerial.register_attach_cb(function(bufnr)
+				-- Toggle the aerial window with <leader>a
+				vim.api.nvim_buf_set_keymap(bufnr, "n", "<leader>a", "<cmd>AerialToggle!<CR>", {})
+				-- Jump forwards/backwards with '{' and '}'
+				vim.api.nvim_buf_set_keymap(bufnr, "n", "{", "<cmd>AerialPrev<CR>", {})
+				vim.api.nvim_buf_set_keymap(bufnr, "n", "}", "<cmd>AerialNext<CR>", {})
+				-- Jump up the tree with '[[' or ']]'
+				vim.api.nvim_buf_set_keymap(bufnr, "n", "[[", "<cmd>AerialPrevUp<CR>", {})
+				vim.api.nvim_buf_set_keymap(bufnr, "n", "]]", "<cmd>AerialNextUp<CR>", {})
+			end)
+		end,
+	})
+
 	use({
 		"onsails/lspkind-nvim",
 		config = function()
