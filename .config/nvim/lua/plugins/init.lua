@@ -434,7 +434,12 @@ return require("packer").startup(function()
 	use("jeetsukumaran/vim-buffergator")
 
 	-- Comments
-	use({ "b3nj5m1n/kommentary", branch = "main" })
+	use({
+		"numToStr/Comment.nvim",
+		config = function()
+			require("Comment").setup({})
+		end,
+	})
 
 	-- Completion
 	use({
