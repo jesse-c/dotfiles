@@ -300,7 +300,7 @@ return require("packer").startup(function()
 		requires = { "kyazdani42/nvim-web-devicons", opt = true },
 		config = function()
 			local function condensed_path()
-				path = vim.fn.pathshorten(vim.fn.fnamemodify(vim.fn.expand("%:p"), ":p:."))
+				local path = vim.fn.pathshorten(vim.fn.fnamemodify(vim.fn.expand("%:p"), ":p:."))
 
 				return path
 			end
@@ -316,7 +316,7 @@ return require("packer").startup(function()
 				},
 				sections = {
 					lualine_a = { "mode" },
-					lualine_b = { "branch", "diff", { "diagnostics", sources = { "nvim_lsp" } } },
+					lualine_b = { "branch", "diff", { "diagnostics", sources = { "nvim_diagnostic" } } },
 					lualine_c = { condensed_path },
 					lualine_x = { "encoding", "fileformat", "filetype" },
 					lualine_y = { "progress" },
