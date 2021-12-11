@@ -342,7 +342,13 @@ return require("packer").startup(function()
 			require("bufferline").setup({})
 		end,
 	})
-	use("chrisbra/Colorizer")
+	use({
+		"norcalli/nvim-colorizer.lua",
+		event = "BufRead",
+		config = function()
+			require("colorizer").setup()
+		end,
+	})
 	use({
 		"lukas-reineke/indent-blankline.nvim",
 		branch = "master",
@@ -371,12 +377,6 @@ return require("packer").startup(function()
 			vim.api.nvim_set_keymap("n", "<leader>a", "<cmd>lua require'hop'.hint_words()<cr>", {})
 		end,
 		disable = false,
-	})
-	use({
-		"norcalli/nvim-colorizer.lua",
-		config = function()
-			require("colorizer").setup()
-		end,
 	})
 	use({
 		"kevinhwang91/nvim-hlslens",
