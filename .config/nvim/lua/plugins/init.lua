@@ -357,7 +357,6 @@ return require("packer").startup(function()
 	})
 	use({
 		"psliwka/vim-smoothie",
-		disable = true,
 		config = function()
 			vim.g.smoothie_enabled = false
 		end,
@@ -555,7 +554,6 @@ return require("packer").startup(function()
 	})
 	use({
 		"code-biscuits/nvim-biscuits",
-		disable = true,
 		config = function()
 			require("nvim-biscuits").setup({})
 		end,
