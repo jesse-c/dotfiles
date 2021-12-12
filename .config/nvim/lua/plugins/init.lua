@@ -110,8 +110,11 @@ return require("packer").startup(function()
 			-- Register a handler that will be called for all installed servers.
 			-- Alternatively, you may also register handlers on specific server instances instead (see example below).
 			lsp_installer.on_server_ready(function(server)
-				local opts = {}
 				local aerial = require("aerial")
+
+				local opts = {
+					on_attach = aerial.on_attach,
+				}
 
 				if server.name == "efm" then
 					opts = {
@@ -234,6 +237,9 @@ return require("packer").startup(function()
 	-- Testing
 	-- TODO
 
+	-- Debugging
+	-- TODO
+
 	-- UI
 	use({
 		"nvim-telescope/telescope.nvim",
@@ -332,6 +338,14 @@ return require("packer").startup(function()
 				},
 				tabline = {},
 				extensions = { "nvim-tree" },
+			})
+		end,
+	})
+	use({
+		"windwp/nvim-autopairs",
+		config = function()
+			require("nvim-autopairs").setup({
+				disable_filetype = { "TelescopePrompt", "vim" },
 			})
 		end,
 	})
@@ -504,31 +518,58 @@ return require("packer").startup(function()
 		config = function()
 			require("nvim-treesitter.configs").setup({
 				ensure_installed = "maintained",
+				ignore_install = { "elixir" },
 				highlight = {
 					enable = true, -- False will disable the whole extension
 				},
-				--[[ incremental_selection = {
-          enable = true,
-          keymaps = {
-            init_selection = "gnn",
-            node_incremental = "grn",
-            scope_incremental = "grc",
-            node_decremental = "grm",
-          },
-        }, ]]
+				incremental_selection = {
+					enable = true,
+					keymaps = {
+						init_selection = "<CR>",
+						scope_incremental = "<CR>",
+						node_incremental = "<TAB>",
+						node_decremental = "<S-TAB>",
+					},
+				},
+				textobjects = {
+					swap = {
+						enable = true,
+						swap_next = {
+							["<leader>s"] = "@parameter.inner",
+						},
+						swap_previous = {
+							["<leader>S"] = "@parameter.inner",
+						},
+					},
+					move = {
+						enable = true,
+						set_jumps = true, -- whether to set jumps in the jumplist
+						goto_next_start = {
+							["]m"] = "@function.outer",
+							["]]"] = "@class.outer",
+						},
+						goto_next_end = {
+							["]M"] = "@function.outer",
+							["]["] = "@class.outer",
+						},
+						goto_previous_start = {
+							["[m"] = "@function.outer",
+							["[["] = "@class.outer",
+						},
+						goto_previous_end = {
+							["[M"] = "@function.outer",
+							["[]"] = "@class.outer",
+						},
+					},
+				},
 			})
 		end,
 		run = ":TSUpdate",
 	})
 	use({
-		"David-Kunz/treesitter-unit",
+		"nvim-treesitter/nvim-treesitter-textobjects",
 		requires = "nvim-treesitter/nvim-treesitter",
 		event = "BufRead",
-		config = function()
-			-- vim.api.nvim_set_keymap('v', 'x', ':lua require"treesitter-unit".select()<CR>', {noremap=true})
-			-- vim.api.nvim_set_keymap('o', 'x', ':<c-u>lua require"treesitter-unit".select()<CR>', {noremap=true})
-		end,
-		disable = true,
 	})
 	use({
 		"romgrk/nvim-treesitter-context",
