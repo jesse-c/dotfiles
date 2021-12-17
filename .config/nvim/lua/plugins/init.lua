@@ -210,6 +210,26 @@ return require("packer").startup(function()
 		"folke/lsp-colors.nvim",
 		disable = false,
 	})
+	use({
+		"jose-elias-alvarez/null-ls.nvim",
+		requires = "nvim-lua/plenary.nvim",
+		event = "VimEnter",
+		config = function()
+			local null_ls = require("null-ls")
+
+			null_ls.setup({
+				sources = {
+					null_ls.builtins.diagnostics.credo,
+					null_ls.builtins.diagnostics.flake8,
+					null_ls.builtins.diagnostics.proselint,
+					null_ls.builtins.diagnostics.shellcheck,
+					null_ls.builtins.code_actions.gitsigns,
+					null_ls.builtins.code_actions.proselint,
+					null_ls.builtins.code_actions.shellcheck,
+				},
+			})
+		end,
+	})
 	-- A pretty list for showing diagnostics, references, telescope results,
 	-- quickfix and location lists to help you solve all the trouble your code
 	-- is causing.
