@@ -75,7 +75,21 @@ return require("packer").startup(function()
 			})
 		end,
 	})
-	use("mhinz/vim-signify")
+	-- Signify (or just Sy) uses the sign column to indicate added, modified and
+	-- removed lines in a file that is managed by a version control system (VCS).
+	use({
+		"mhinz/vim-signify",
+		disable = true,
+	})
+	-- Super fast git decorations implemented purely in lua/teal.
+	use({
+		"lewis6991/gitsigns.nvim",
+		requires = "nvim-lua/plenary.nvim",
+		-- tag = 'release' -- To use the latest release
+		config = function()
+			require("gitsigns").setup()
+		end,
+	})
 	use({
 		"APZelos/blamer.nvim",
 		config = function()
