@@ -37,6 +37,7 @@ return require("packer").startup(function()
 
 	-- Miscellaneous
 	use("lewis6991/impatient.nvim")
+
 	use("nvim-lua/popup.nvim")
 	use("nvim-lua/plenary.nvim")
 
@@ -137,12 +138,13 @@ return require("packer").startup(function()
 		end,
 		disable = false,
 	})
+	-- A light-weight lsp plugin based on neovim built-in lsp with highly a
+	-- performant UI.
 	use({
 		"glepnir/lspsaga.nvim",
 		branch = "main",
 		config = function()
-			local saga = require("lspsaga")
-			saga.init_lsp_saga()
+			require("lspsaga").init_lsp_saga()
 		end,
 		disable = true,
 	})
