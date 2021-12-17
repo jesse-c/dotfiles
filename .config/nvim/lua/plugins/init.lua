@@ -140,12 +140,6 @@ return require("packer").startup(function()
 		disable = true,
 	})
 	use({
-		"stevearc/stickybuf.nvim",
-		config = function()
-			require("stickybuf").setup({})
-		end,
-	})
-	use({
 		"stevearc/aerial.nvim",
 		requires = "stevearc/stickybuf.nvim",
 		config = function()
@@ -266,11 +260,18 @@ return require("packer").startup(function()
 		end,
 	})
 	use({ "nvim-telescope/telescope-fzf-native.nvim", run = "make" })
-
 	use({
 		"folke/todo-comments.nvim",
 		config = function()
 			require("todo-comments").setup({})
+		end,
+	})
+	-- Neovim plugin for locking a buffer to a window
+	-- Have you ever accidentally opened a file into your file explorer or quickfix window?
+	use({
+		"stevearc/stickybuf.nvim",
+		config = function()
+			require("stickybuf").setup({})
 		end,
 	})
 	use({
