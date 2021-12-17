@@ -426,6 +426,7 @@ return require("packer").startup(function()
 		disable = true,
 	})
 	use("tpope/vim-abolish")
+	use("machakann/vim-sandwich")
 	use({
 		"phaazon/hop.nvim",
 		branch = "master",
