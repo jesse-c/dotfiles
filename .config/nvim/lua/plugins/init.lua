@@ -116,22 +116,6 @@ return require("packer").startup(function()
 					on_attach = aerial.on_attach,
 				}
 
-				if server.name == "efm" then
-					opts = {
-						on_attach = aerial.on_attach,
-						init_options = { documentFormatting = true },
-						filetypes = { "elixir" },
-						settings = {
-							rootMarkers = { ".git/", "mix.exs" },
-							languages = {
-								elixir = {
-									{ formatCommand = "mix format -", formatStdin = true },
-								},
-							},
-						},
-					}
-				end
-
 				-- This setup() function is exactly the same as lspconfig's setup function.
 				-- Refer to https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md
 				server:setup(opts)
