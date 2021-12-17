@@ -218,15 +218,35 @@ return require("packer").startup(function()
 		"folke/lsp-colors.nvim",
 		disable = false,
 	})
+	-- A pretty list for showing diagnostics, references, telescope results,
+	-- quickfix and location lists to help you solve all the trouble your code
+	-- is causing.
 	use({
 		"folke/lsp-trouble.nvim",
 		config = function()
 			require("trouble").setup({
-				auto_open = true, -- automatically open the list when you have diagnostics
-				auto_close = true, -- automatically close the list when you have no diagnostics
+				auto_open = false, -- automatically open the list when you have diagnostics
+				auto_close = false, -- automatically close the list when you have no diagnostics
 			})
+
+			vim.api.nvim_set_keymap("n", "<leader>xx", "<cmd>TroubleToggle<CR>", { silent = true, noremap = true })
+			vim.api.nvim_set_keymap(
+				"n",
+				"<leader>xw",
+				"<cmd>Trouble workspace_diagnostics<CR>",
+				{ silent = true, noremap = true }
+			)
+			vim.api.nvim_set_keymap(
+				"n",
+				"<leader>xd",
+				"<cmd>Trouble document_diagnostics<CR>",
+				{ silent = true, noremap = true }
+			)
+			vim.api.nvim_set_keymap("n", "<leader>xl", "<cmd>Trouble loclist<CR>", { silent = true, noremap = true })
+			vim.api.nvim_set_keymap("n", "<leader>xq", "<cmd>Trouble quickfix<CR>", { silent = true, noremap = true })
+			vim.api.nvim_set_keymap("n", "gR", "<cmd>Trouble lsp_references<CR>", { silent = true, noremap = true })
 		end,
-		disable = true,
+		disable = false,
 	})
 	use({
 		"rmagatti/goto-preview",
