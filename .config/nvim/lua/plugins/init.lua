@@ -212,9 +212,11 @@ return require("packer").startup(function()
 		end,
 		disable = true,
 	})
+	-- Automatically creates missing LSP diagnostics highlight groups for color
+	-- schemes that don't yet support the Neovim 0.5 builtin lsp client.
 	use({
 		"folke/lsp-colors.nvim",
-		disable = true,
+		disable = false,
 	})
 	use({
 		"folke/lsp-trouble.nvim",
