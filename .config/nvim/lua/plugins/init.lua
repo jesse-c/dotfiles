@@ -111,9 +111,12 @@ return require("packer").startup(function()
 	use({
 		"neovim/nvim-lspconfig",
 		config = function()
-			local lspconfig = require("lspconfig")
-
-			lspconfig.sourcekit.setup({})
+			vim.api.nvim_set_keymap(
+				"n",
+				"<Leader>d",
+				"<CMD>lua vim.lsp.buf.formatting()<CR>",
+				{ silent = true, noremap = true }
+			)
 		end,
 	})
 	use({
@@ -146,7 +149,7 @@ return require("packer").startup(function()
 		config = function()
 			require("lspsaga").init_lsp_saga()
 		end,
-		disable = true,
+		disable = false,
 	})
 	use({
 		"kosayoda/nvim-lightbulb",
@@ -163,8 +166,8 @@ return require("packer").startup(function()
 
 			-- Aerial does not set any mappings by default, so you'll want to set some up
 			aerial.register_attach_cb(function(bufnr)
-				-- Toggle the aerial window with <leader>a
-				vim.api.nvim_buf_set_keymap(bufnr, "n", "<leader>a", "<cmd>AerialToggle!<CR>", {})
+				-- Toggle the aerial window with <Leader>a
+				vim.api.nvim_buf_set_keymap(bufnr, "n", "<Leader>a", "<cmd>AerialToggle!<CR>", {})
 				-- Jump forwards/backwards with '{' and '}'
 				vim.api.nvim_buf_set_keymap(bufnr, "n", "{", "<cmd>AerialPrev<CR>", {})
 				vim.api.nvim_buf_set_keymap(bufnr, "n", "}", "<cmd>AerialNext<CR>", {})
@@ -221,16 +224,22 @@ return require("packer").startup(function()
 
 			null_ls.setup({
 				sources = {
+					-- Diagnostics
 					null_ls.builtins.diagnostics.credo,
 					null_ls.builtins.diagnostics.flake8,
 					null_ls.builtins.diagnostics.proselint,
 					null_ls.builtins.diagnostics.shellcheck,
+					-- Code actions
 					null_ls.builtins.code_actions.gitsigns,
 					null_ls.builtins.code_actions.proselint,
 					null_ls.builtins.code_actions.shellcheck,
+					-- Formatters
 					null_ls.builtins.formatting.prettier.with({
 						filetypes = { "html", "json", "yaml", "markdown" },
 					}),
+					null_ls.builtins.formatting.joker,
+					null_ls.builtins.formatting.stylua,
+					null_ls.builtins.formatting.swiftformat,
 				},
 			})
 		end,
@@ -246,21 +255,21 @@ return require("packer").startup(function()
 				auto_close = false, -- automatically close the list when you have no diagnostics
 			})
 
-			vim.api.nvim_set_keymap("n", "<leader>xx", "<cmd>TroubleToggle<CR>", { silent = true, noremap = true })
+			vim.api.nvim_set_keymap("n", "<Leader>xx", "<cmd>TroubleToggle<CR>", { silent = true, noremap = true })
 			vim.api.nvim_set_keymap(
 				"n",
-				"<leader>xw",
+				"<Leader>xw",
 				"<cmd>Trouble workspace_diagnostics<CR>",
 				{ silent = true, noremap = true }
 			)
 			vim.api.nvim_set_keymap(
 				"n",
-				"<leader>xd",
+				"<Leader>xd",
 				"<cmd>Trouble document_diagnostics<CR>",
 				{ silent = true, noremap = true }
 			)
-			vim.api.nvim_set_keymap("n", "<leader>xl", "<cmd>Trouble loclist<CR>", { silent = true, noremap = true })
-			vim.api.nvim_set_keymap("n", "<leader>xq", "<cmd>Trouble quickfix<CR>", { silent = true, noremap = true })
+			vim.api.nvim_set_keymap("n", "<Leader>xl", "<cmd>Trouble loclist<CR>", { silent = true, noremap = true })
+			vim.api.nvim_set_keymap("n", "<Leader>xq", "<cmd>Trouble quickfix<CR>", { silent = true, noremap = true })
 			vim.api.nvim_set_keymap("n", "gR", "<cmd>Trouble lsp_references<CR>", { silent = true, noremap = true })
 		end,
 		disable = false,
@@ -296,6 +305,49 @@ return require("packer").startup(function()
 				},
 			})
 			require("telescope").load_extension("fzf")
+
+			-- Finder
+			vim.api.nvim_set_keymap("n", "<Leader>g", "<CMD>Telescope tags<CR>", { silent = true, noremap = true })
+			vim.api.nvim_set_keymap("n", "<Leader>h", "<CMD>Telescope buffers<CR>", { silent = true, noremap = true })
+			vim.api.nvim_set_keymap(
+				"n",
+				"<Leader>j",
+				"<CMD>Telescope find_files<CR>",
+				{ silent = true, noremap = true }
+			)
+			vim.api.nvim_set_keymap("n", "<Leader>k", "<CMD>Telescope marks<CR>", { silent = true, noremap = true })
+			vim.api.nvim_set_keymap("n", "<Leader>;", "<CMD>Telescope live_grep<CR>", { silent = true, noremap = true })
+			vim.api.nvim_set_keymap(
+				"n",
+				"<Leader>'",
+				"<CMD>Telescope command_history<CR>",
+				{ silent = true, noremap = true }
+			)
+			-- LSP
+			vim.api.nvim_set_keymap(
+				"n",
+				"<Leader>q",
+				"<CMD>Telescope lsp_document_symbols<CR>",
+				{ silent = true, noremap = true }
+			)
+			vim.api.nvim_set_keymap(
+				"n",
+				"<Leader>w",
+				"<CMD>Telescope lsp_workspace_symbols<CR>",
+				{ silent = true, noremap = true }
+			)
+			vim.api.nvim_set_keymap(
+				"n",
+				"<Leader>r",
+				"<CMD>Telescope lsp_document_diagnostics<CR>",
+				{ silent = true, noremap = true }
+			)
+			vim.api.nvim_set_keymap(
+				"n",
+				"<Leader>t",
+				"<CMD>Telescope lsp_workspace_diagnostics<CR>",
+				{ silent = true, noremap = true }
+			)
 		end,
 	})
 	use({ "nvim-telescope/telescope-fzf-native.nvim", run = "make" })
@@ -435,7 +487,7 @@ return require("packer").startup(function()
 		branch = "master",
 		config = function()
 			require("hop").setup({})
-			vim.api.nvim_set_keymap("n", "<leader>a", "<cmd>lua require'hop'.hint_words()<cr>", {})
+			vim.api.nvim_set_keymap("n", "<Leader>a", "<cmd>lua require'hop'.hint_words()<cr>", {})
 		end,
 		disable = false,
 	})
@@ -470,7 +522,7 @@ return require("packer").startup(function()
 			"nvim-lua/plenary.nvim",
 		},
 		config = function()
-			vim.cmd([[ nnoremap <leader>c <cmd>Cheatsheet<cr> ]])
+			vim.cmd([[ nnoremap <Leader>c <cmd>Cheatsheet<cr> ]])
 		end,
 	})
 
@@ -543,7 +595,7 @@ return require("packer").startup(function()
 		config = function()
 			vim.cmd([[ let g:rnvimr_enable_picker = 1 ]])
 			vim.cmd([[ let g:rnvimr_draw_border = 0 ]])
-			vim.cmd([[ nnoremap <leader>f <cmd>RnvimrToggle<cr> ]])
+			vim.cmd([[ nnoremap <Leader>f <cmd>RnvimrToggle<cr> ]])
 		end,
 	})
 	use({
@@ -551,8 +603,8 @@ return require("packer").startup(function()
 		requires = "kyazdani42/nvim-web-devicons",
 		config = function()
 			require("nvim-tree").setup({})
-			vim.cmd([[ nnoremap <leader>v :NvimTreeFindFile<CR> ]])
-			vim.cmd([[ nnoremap <leader>n :NvimTreeToggle<CR> ]])
+			vim.cmd([[ nnoremap <Leader>v :NvimTreeFindFile<CR> ]])
+			vim.cmd([[ nnoremap <Leader>n :NvimTreeToggle<CR> ]])
 			vim.g.nvim_tree_width = 60
 		end,
 	})
@@ -582,10 +634,10 @@ return require("packer").startup(function()
 					swap = {
 						enable = true,
 						swap_next = {
-							["<leader>s"] = "@parameter.inner",
+							["<Leader>s"] = "@parameter.inner",
 						},
 						swap_previous = {
-							["<leader>S"] = "@parameter.inner",
+							["<Leader>S"] = "@parameter.inner",
 						},
 					},
 					move = {
@@ -663,6 +715,7 @@ return require("packer").startup(function()
 		"sbdchd/neoformat",
 		config = function()
 			vim.g.neoformat_enabled_yaml = {}
+			-- vim.api.nvim_set_keymap("n", "<Leader>d", "<CMD>Neoformat<CR>", { silent = true, noremap = true })
 		end,
 		disable = false,
 	})
