@@ -34,6 +34,7 @@ hs.fnutils.each({
   { key = 'r', appname = 'Raycast'},
   { key = 'd', appname = 'Dash'},
   { key = 't', appname = 'TablePlus'},
+  { key = 'y', appname = '/Applications/Orion.app'},
 }, function(object)
   k:bind({}, object.key, function() launch(object.appname); k:exit(); end)
 end)
