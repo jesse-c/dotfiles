@@ -1,15 +1,19 @@
--- Bootstrap packer.nvim
-local fn = vim.fn
-local install_path = fn.stdpath('data')..'/site/pack/packer/start/packer.nvim'
-if fn.empty(fn.glob(install_path)) > 0 then
-  packer_bootstrap = fn.system({'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim', install_path})
-end
-
-require('impatient')
-
-require('settings')
-require('plugins')
-require('ui')
-require('completion')
-require('languages')
-require('mappings')
+require("user.options")
+require("user.options.abbrs")
+require("user.plugins")
+require("user.ui")
+require("user.ui.themes")
+require("user.keymaps")
+require("user.spotlight")
+require("user.vcs")
+require("user.buffers")
+require("user.lsp")
+require("user.undo")
+require("user.comments")
+require("user.languages.rust")
+require("user.languages.python2")
+require("user.languages.python3")
+require("user.file_system")
+require("user.completion")
+require("user.search")
+require("user.terminal")

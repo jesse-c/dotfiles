@@ -4,8 +4,6 @@ local bo = vim.bo -- For the buffer local options
 
 local configuration_folder = vim.fn.expand("~") .. "/.config/nvim"
 
-require("abbrs")
-
 -- ====================
 -- Editor
 -- ====================

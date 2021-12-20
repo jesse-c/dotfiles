@@ -2,13 +2,7 @@ local o = vim.o -- For the globals options
 local wo = vim.wo -- For the window local options
 local bo = vim.bo -- For the buffer local options
 
-local autocmd = require("core.autocmd")
-
---------
--- Theme
---------
-vim.cmd([[ colorscheme edge ]])
-o.background = 'dark'
+local autocmd = require("user.autocmd")
 
 ---------------
 -- Line numbers
@@ -20,15 +14,11 @@ wo.relativenumber = true
 ----------------------
 vim.cmd([[ filetype plugin indent on ]])
 vim.cmd([[ syntax enable ]])
-----------------------
--- Search
-----------------------
-o.incsearch = true
-o.hlsearch = true
-o.showmatch = true
-vim.cmd([[ set ignorecase ]])
-vim.cmd([[ set smartcase ]])
-vim.cmd([[ nnoremap <esc> :noh<return><esc> ]])
+vim.g.indent_blankline_enabled = true
+vim.g.indent_blankline_char = "┆"
+vim.g.indent_blankline_char_list = { "|", "¦", "┆", "┊" }
+vim.g.indent_blankline_use_treesitter = true
+vim.g.indent_blankline_show_first_indent_level = false
 ----------------------
 -- Splits
 ----------------------
@@ -40,11 +30,6 @@ autocmd({
 })
 o.splitbelow = true
 o.splitright = true
-----------
--- Buffers
-----------
--- Close a buffer but keep the window open
-vim.cmd([[ command! Bd enew\|bd \# ]])
 ------------
 -- Scrolling
 ------------
@@ -82,17 +67,6 @@ wo.signcolumn = "yes"
 -- Folds
 ----------------------
 o.foldlevelstart = 99
--------------------------
--- Terminal
--------------------------
--- Enable mouse support
-o.mouse = "a"
--- Restore cursor on exit
-autocmd({
-	events = { "VimLeave" },
-	pattern = "*",
-	command = "set guicursor=a:ver100-blinkon0",
-})
 ----------------------------
 -- Indentation
 ----------------------------
@@ -140,3 +114,5 @@ o.visualbell = false
 -- When running macros and regexes on a large file, lazy redraw tells Neovim
 -- not to draw the screen, which greatly speeds it up, upto 6-7x faster
 o.lazyredraw = true
+
+vim.g.rainbow_active = true
