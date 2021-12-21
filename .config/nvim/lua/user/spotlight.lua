@@ -3,7 +3,22 @@ if not ok then
 	return
 end
 
-telescope.setup()
+local actions = require("telescope.actions")
+
+telescope.setup({
+	pickers = {
+		buffers = {
+			show_all_buffers = true,
+			sort_lastused = true,
+			mappings = {
+				i = {
+					["<c-d>"] = actions.delete_buffer + actions.move_to_top,
+				},
+			},
+		},
+	},
+})
+
 telescope.load_extension("fzf")
 
 -- Finder

@@ -138,7 +138,6 @@ return packer.startup(function(use)
 			require("stabilize").setup()
 		end,
 	})
-	use("jeetsukumaran/vim-buffergator")
 
 	-- Windows
 	use("troydm/zoomwintab.vim")
