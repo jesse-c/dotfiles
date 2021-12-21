@@ -30,6 +30,8 @@ autocmd({
 })
 o.splitbelow = true
 o.splitright = true
+vim.api.nvim_set_keymap("n", "<C-X>", "<cmd>split<cr>", { silent = true, noremap = true })
+vim.api.nvim_set_keymap("n", "<C-V>", "<cmd>vsplit<cr>", { silent = true, noremap = true })
 ------------
 -- Scrolling
 ------------
