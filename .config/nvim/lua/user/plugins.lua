@@ -69,6 +69,7 @@ return packer.startup(function(use)
 	-- UI
 	use("nvim-lua/popup.nvim")
 	use("nvim-lua/plenary.nvim")
+	use("rcarriga/nvim-notify")
 	use({
 		"folke/todo-comments.nvim",
 		event = "BufRead",
