@@ -34,15 +34,5 @@ vim.api.nvim_set_keymap("n", "<Leader>w", "<CMD>Telescope lsp_workspace_symbols<
 	silent = true,
 	noremap = true,
 })
-vim.api.nvim_set_keymap(
-	"n",
-	"<Leader>r",
-	"<CMD>Telescope diagnostics bufnr=0<CR>",
-	{ silent = true, noremap = true }
-)
-vim.api.nvim_set_keymap(
-	"n",
-	"<Leader>t",
-	"<CMD>Telescope diagnostics<CR>",
-	{ silent = true, noremap = true }
-)
+vim.api.nvim_set_keymap("n", "<Leader>r", "<CMD>Telescope diagnostics bufnr=0<CR>", { silent = true, noremap = true })
+vim.api.nvim_set_keymap("n", "<Leader>t", "<CMD>Telescope diagnostics<CR>", { silent = true, noremap = true })
