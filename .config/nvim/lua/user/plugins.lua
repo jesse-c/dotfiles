@@ -277,6 +277,13 @@ return packer.startup(function(use)
 					null_ls.builtins.formatting.joker,
 					null_ls.builtins.formatting.stylua,
 					null_ls.builtins.formatting.swiftformat,
+					null_ls.builtins.formatting.black,
+					null_ls.builtins.formatting.isort,
+					null_ls.builtins.formatting.erlfmt,
+					null_ls.builtins.formatting.fish_indent,
+					null_ls.builtins.formatting.fnlfmt,
+					null_ls.builtins.formatting.shfmt,
+					null_ls.builtins.formatting.shellharden,
 				},
 			})
 		end,
