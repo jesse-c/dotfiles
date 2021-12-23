@@ -87,6 +87,7 @@ return packer.startup(function(use)
 		"luochen1990/rainbow",
 		event = "BufRead",
 	})
+	use({ "andymass/vim-matchup", requires = "nvim-treesitter/nvim-treesitter" })
 	use({
 		"windwp/nvim-autopairs",
 		event = "BufRead",
@@ -383,6 +384,10 @@ return packer.startup(function(use)
 						goto_node = "<cr>",
 						show_help = "?",
 					},
+				},
+				matchup = {
+					enable = true,
+					disable = {},
 				},
 			})
 		end,

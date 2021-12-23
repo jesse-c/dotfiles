@@ -63,6 +63,11 @@ if f ~= nil then
 	io.close(f)
 	vim.cmd([[ source ~/.config/nvim/local.vim ]])
 end
+--------
+-- Folds
+--------
+o.foldexpr = "nvim_treesitter#foldexpr()"
+wo.foldmethod = "expr"
 ----------------
 -- Miscellaneous
 ----------------
