@@ -21,6 +21,7 @@ telescope.setup({
 
 telescope.load_extension("fzf")
 telescope.load_extension("notify")
+telescope.load_extension("zoxide")
 
 -- Finder
 vim.api.nvim_set_keymap("n", "<Leader>g", "<CMD>Telescope tags<CR>", { silent = true, noremap = true })
