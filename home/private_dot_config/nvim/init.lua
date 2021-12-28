@@ -1,6 +1,7 @@
 require("user.options")
 require("user.options.abbrs")
 require("user.plugins")
+require("user.plugins.fine-cmdline-nvim")
 require("user.ui")
 require("user.ui.themes")
 require("user.keymaps")

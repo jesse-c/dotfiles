@@ -120,6 +120,10 @@ return packer.startup(function(use)
 			require("which-key").setup()
 		end,
 	})
+	use({
+		"VonHeikemen/fine-cmdline.nvim",
+		requires = { "MunifTanjim/nui.nvim" },
+	})
 
 	-- UI / Themes
 	use("sainnhe/edge")
