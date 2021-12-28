@@ -124,6 +124,7 @@ return packer.startup(function(use)
 		"VonHeikemen/fine-cmdline.nvim",
 		requires = { "MunifTanjim/nui.nvim" },
 	})
+	use("sindrets/winshift.nvim")
 
 	-- UI / Themes
 	use("sainnhe/edge")
