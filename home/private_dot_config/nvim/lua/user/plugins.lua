@@ -454,6 +454,14 @@ return packer.startup(function(use)
 	-- Languages / Markdown
 	use("npxbr/glow.nvim")
 
+	-- Languages / Lua
+	use({
+		"rafcamlet/nvim-luapad",
+		config = function()
+			require("luapad").setup({})
+		end,
+	})
+
 	--------------------------------------------------------------------------------
 
 	if PACKER_BOOTSTRAP then
