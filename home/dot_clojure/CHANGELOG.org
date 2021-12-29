@@ -1,0 +1,543 @@
+#+TITLE: Changelog
+
+* Unreleased
+
+** Changed
+*** command line documentation for :security/nvd to pass correct arguments
+*** Use -T flag with :project/outated alias, with alias updated to use `:exec-fn` and `:exec-args` for default values
+*** Rewrite project introduction
+
+* 2021-12-18
+** Added
+*** [[https://github.com/practicalli/clojure-deps-edn/pull/27][#27]] ~:security/nvd~ alias added to run nvd-clojure to detect security issues in dependencies, as identified in the [[https://nvd.nist.gov/][National Vunerability Database]]
+*** `:kaocha-global` experimental alias to use a user level configuration rather than the project specific `tests.edn` configuration
+
+** Changed
+*** Update kaocha library versions
+*** GitHub Action workflow lint-with-clj-kondo.yml updated from 2021.08.06 to 2021.12.16
+*** Update library versions using `:project/outated` alias
+
+  | :name                             |                                 :current |                                  :latest |
+  |-----------------------------------+------------------------------------------+------------------------------------------|
+  | borkdude/carve                    | c9a4dec89032f2003cc439c473fcd3c41e809669 | 1fd3da8472cf9ee902f9616ca3aeb4812b5c734c |
+  | cider/cider-nrepl                 |                                   0.26.0 |                                   0.27.4 |
+  | cider/piggieback                  |                                    0.5.2 |                                    0.5.3 |
+  | clj-kondo/clj-kondo               |                               2021.08.06 |                               2021.12.16 |
+  | com.bhauman/figwheel-main         |                                   0.2.14 |                                   0.2.15 |
+  | com.github.liquidz/antq           |                                    1.0.0 |                                    1.3.0 |
+  | com.github.seancorfield/clj-new   |                                  1.1.331 |                                  1.2.380 |
+  | com.github.seancorfield/depstar   |                                  2.1.297 |                                  2.1.303 |
+  | com.github.seancorfield/next.jdbc |                                  1.2.709 |                                  1.2.761 |
+  | com.h2database/h2                 |                                  1.4.200 |                                  2.0.202 |
+  | djblue/portal                     |                                   0.14.0 |                                   0.19.0 |
+  | jonase/eastwood                   |                                    0.9.9 |                                    1.0.0 |
+  | lambdaisland/kaocha               |                                 1.60.945 |                                 1.60.972 |
+  | nrepl/nrepl                       |                                    0.8.3 |                                    0.9.0 |
+  | org.clojure/spec-alpha2           | c087ded910b3532a938b37e853df79fc3b9c48c1 | 99456b1856a6fd934e2c30b17920bd790dd81775 |
+  | org.clojure/test.check            |                                    1.1.0 |                                    1.1.1 |
+  | org.clojure/tools.deps.graph      |                                   1.0.63 |                                   1.1.68 |
+  | org.slf4j/slf4j-nop               |                                   1.7.31 |                                   1.7.32 |
+  | refactor-nrepl/refactor-nrepl     |                              3.0.0-pr301 |                                    3.1.0 |
+  | slipset/deps-deploy               |                                    0.1.5 |                                    0.2.0 |
+  | thomasa/morpheus                  | 7f4876ea631a6f5ccee2094d255efd2d1a98ffb6 | 0c4cb1436e49077a4762347cf4b1f5885a007a2f |
+  | uberdeps/uberdeps                 |                                    1.0.4 |                                    1.1.1 |
+  | vlaaad/reveal                     |                                  1.3.214 |                                  1.3.251 |
+  | zprint/zprint                     |                                    1.1.2 |                                    1.2.0 |
+
+
+* 2021-12-12
+** Added
+*** `test/watch` alias - Kaocha test runner in watch mode, including fast fail and skipping meta data.  Provides a quick to use test runner that watches for file changes and re-runs tests from the last failed test.
+** Changed
+*** `test/run` alias replaces `test/runner` to fit better with the intent and the name of the watch alias
+*** Add Kaocha alias changes to README.org
+*** Simplify common aliases table in README.org
+
+* 2021-09-13
+** .github/workflows/lint-with-clj-kondo.yml
+   Update run command to output messages in GitHub Actions format
+
+   Library version updates from ~:project/outdated~ alias
+
+  | :name               |   :current |    :latest |
+  |---------------------+------------+------------|
+  | clj-kondo/clj-kondo | 2020.04.05 | 2021.08.06 |
+
+** deps.edn
+   Add ~:lib/hotload~ alias to load libraries into a running REPL process.  This is a more memorable name for the alpha/hotload alias
+
+   Cognitect test runner version  using Git tag and providing Clojure exec function, invoked by ~clojure -X:test/cognitect~
+
+   Removed eftest aliases due to #22 eftest runner hangs when finished.  Kaocha or Cognitect-labs runners are recommended instead
+
+   Deprecated: test/midje - seldom used test runner and not recommended approach by Practicalli
+
+   Deprecated: `project/uberdeps` removed, depstar recommended until that itself is incorporated into tools.build
+
+   Library version updates from ~:project/outdated~ alias
+
+  | :name                             | :current |     :latest |
+  |-----------------------------------+----------+-------------|
+  | com.bhauman/figwheel-main         |   0.2.13 |      0.2.14 |
+  | com.github.liquidz/antq           |   0.16.0 |       1.0.0 |
+  | com.github.seancorfield/clj-new   |  1.1.321 |     1.1.331 |
+  | com.github.seancorfield/depstar   |  2.1.267 |     2.1.297 |
+  | com.github.seancorfield/next.jdbc |  1.2.659 |     1.2.709 |
+  | djblue/portal                     |   0.12.0 |      0.14.0 |
+  | jonase/eastwood                   |    0.8.1 |       0.9.9 |
+  | lambdaisland/kaocha               |  1.0.861 |     1.0.887 |
+  | lambdaisland/kaocha-cljs          |   1.0.71 |     1.0.107 |
+  | refactor-nrepl/refactor-nrepl     |    2.5.1 | 3.0.0-pr301 |
+  | vlaaad/reveal                     |  1.3.212 |     1.3.214 |
+
+
+* 2021-07-17
+  Update version of GitHub actions lint-with-clj-kondo.  Checks deps.edn to ensure its a valid structure.
+
+  Remove `RELEASE` version from aliases and used explicit versions
+
+  Change seancorfield/clj-new to new com.github.seancorfield/clj-new
+
+  `:alpha/hotload-libs` - add slf4j-nop dependency to specifically set the logging implementation.  Update documentation and add links to Practicalli Clojure page on hotloading and example project.
+
+  Add status badge to readme showing result of lint-with-clj-kondo GitHub Action
+
+* 2021-07-16
+  Readme updates
+  Monthly library updates
+
+  | :name                             |                                 :current |                                  :latest |
+  |-----------------------------------+------------------------------------------+------------------------------------------|
+  | borkdude/carve                    | 3fcc2a900e4fa4be2c9a539c9971c60e2e921162 | c9a4dec89032f2003cc439c473fcd3c41e809669 |
+  | com.bhauman/figwheel-main         |                                   0.2.11 |                                   0.2.13 |
+  | com.cognitect/test-runner         | 705ad25bbf0228b1c38d0244a36001c2987d7337 | f597341b6ca7bb4cf027e0a34a6710ca9cb969da |
+  | com.github.seancorfield/depstar   |                                  2.0.216 |                                  2.1.267 |
+  | com.github.seancorfield/next.jdbc |                                  1.2.659 |                                  1.2.674 |
+  | djblue/portal                     |                                   0.11.2 |                                   0.12.0 |
+  | org.clojure/clojurescript         |                                 1.10.773 |                                 1.10.866 |
+  | org.clojure/data.json             |                                    2.3.1 |                                    2.4.0 |
+  | org.clojure/tools.deps.graph      |                                   1.0.56 |                                   1.0.63 |
+  | vlaaad/reveal                     |                                  1.3.209 |                                  1.3.212 |
+
+  Available diffs:
+  - https://github.com/borkdude/carve/compare/3fcc2a900e4fa4be2c9a539c9971c60e2e921162...c9a4dec89032f2003cc439c473fcd3c41e809669
+  - https://github.com/bhauman/figwheel-main/compare/v0.2.11...head
+  - https://github.com/cognitect-labs/test-runner/compare/705ad25bbf0228b1c38d0244a36001c2987d7337...f597341b6ca7bb4cf027e0a34a6710ca9cb969da
+  - https://github.com/seancorfield/depstar/compare/v2.0.216...v2.1.267
+  - https://github.com/seancorfield/next-jdbc/compare/v1.2.659...v1.2.674
+  - https://github.com/djblue/portal/compare/0.11.2...0.12.0
+  - https://github.com/clojure/clojurescript/compare/r1.9.946...r1.10.866
+  - https://github.com/clojure/clojurescript/compare/r1.10.773...r1.10.866
+  - https://github.com/clojure/clojurescript/compare/r1.10.844...r1.10.866
+  - https://github.com/clojure/data.json/compare/v2.3.1...v2.4.0
+  - https://github.com/clojure/tools.deps.graph/compare/tools.deps.graph-1.0.56...v1.0.63
+  - https://github.com/vlaaad/reveal/compare/1.3.209...1.3.212
+
+
+* 2021-05-26
+  PR #21 The  `clojure` CLI tool has renamed the configuration `user-config` to `config-user` bringing it in line with the other configuration names
+
+  Add ~:project/depsify~ alias to generate a Clojure CLI deps.edn configuration from a Leiningen project.clj configuration file.
+
+  Add ~:format/zprint~ alias to format a given Clojure data structure, similar to clojure.pprint but with more options.
+
+  Regular library version updates:
+
+  | :name                     |                                 :current |                                  :latest |
+  |---------------------------+------------------------------------------+------------------------------------------|
+  | borkdude/carve            | f499f65e36e02484609f01ce891f3c0207b24444 | 3fcc2a900e4fa4be2c9a539c9971c60e2e921162 |
+  | com.cognitect/test-runner | 2d69f33d7980c3353b246c28f72ffeafbd9f2fab | 705ad25bbf0228b1c38d0244a36001c2987d7337 |
+  | com.github.liquidz/antq   |                                   0.13.0 |                                   0.14.1 |
+  | depify/depify             | 04329744872890711dbba8939a16e9987dd33bb3 | b3f61517c860518c1990133aa6eb54caf1e4d591 |
+  | lambdaisland/kaocha       |                                  1.0.829 |                                  1.0.861 |
+  | org.clojure/data.json     |                                    2.2.3 |                                    2.3.1 |
+  | seancorfield/clj-new      |                                  1.1.297 |                                  1.1.309 |
+  | zprint/zprint             |                                    0.4.9 |                                    1.1.2 |
+
+  Available diffs:
+  - https://github.com/borkdude/carve/compare/f499f65e36e02484609f01ce891f3c0207b24444...3fcc2a900e4fa4be2c9a539c9971c60e2e921162
+  - https://github.com/cognitect-labs/test-runner/compare/b6b3193fcc42659d7e46ecd1884a228993441182...705ad25bbf0228b1c38d0244a36001c2987d7337
+  - https://github.com/cognitect-labs/test-runner/compare/2d69f33d7980c3353b246c28f72ffeafbd9f2fab...705ad25bbf0228b1c38d0244a36001c2987d7337
+  - https://github.com/liquidz/antq/compare/0.13.0...0.14.1
+  - https://github.com/hagmonk/depify/compare/04329744872890711dbba8939a16e9987dd33bb3...b3f61517c860518c1990133aa6eb54caf1e4d591
+  - https://github.com/lambdaisland/kaocha/compare/v1.0.829...v1.0.861
+  - https://github.com/clojure/data.json/compare/v2.2.3...v2.3.1
+  - https://github.com/seancorfield/clj-new/compare/v1.1.297...v1.1.309
+  - https://github.com/kkinnear/zprint/compare/0.4.9...1.1.2
+
+
+* 2021-05-17
+  Add ~:project/new~ example to generate a ClojureScript Figwheel-main project with reagent
+
+
+* 2021-05-11
+  Add ~:lib/ring-mock~ alias to include mocking library for testing ring based web applications
+
+  | :name                             |                                 :current | :latest                                  |
+  |-----------------------------------+------------------------------------------+------------------------------------------|
+  | com.cognitect/test-runner         | b6b3193fcc42659d7e46ecd1884a228993441182 | 2d69f33d7980c3353b246c28f72ffeafbd9f2fab |
+  | com.github.seancorfield/next.jdbc |                                  1.1.646 | 1.2.659                                  |
+  | djblue/portal                     |                                   0.11.1 | 0.11.2                                   |
+  | org.clojure/data.json             |                                    2.2.2 | 2.2.3                                    |
+
+  Available diffs:
+  - https://github.com/cognitect-labs/test-runner/compare/b6b3193fcc42659d7e46ecd1884a228993441182...2d69f33d7980c3353b246c28f72ffeafbd9f2fab
+  - https://github.com/seancorfield/next-jdbc/compare/v1.1.646...v1.2.659
+  - https://github.com/djblue/portal/compare/0.11.1...0.11.2
+  - https://github.com/clojure/data.json/compare/v2.2.2...v2.2.3
+
+
+* 2021-04-27
+  org.clojure/data.json updated to 2.2.2
+
+  Library version updates from :project/outdated
+
+  | :name                  | :current | :latest |
+  |------------------------+----------+---------|
+  | cider/cider-nrepl      |  0.25.11 |  0.26.0 |
+  | djblue/portal          |   0.11.0 |  0.11.1 |
+  | org.clojure/core.async |  1.3.610 | 1.3.618 |
+  | vlaaad/reveal          |  1.3.206 | 1.3.209 |
+
+  Available diffs:
+  - https://github.com/clojure-emacs/cider-nrepl/compare/v0.25.11...v0.26.0
+  - https://github.com/djblue/portal/compare/0.11.0...0.11.1
+  - https://github.com/clojure/core.async/compare/core.async-1.3.610...v1.3.618
+  - https://github.com/vlaaad/reveal/compare/1.3.206...1.3.209
+
+
+
+* 2021-04-17
+  Add ~:test/eftest-sequential~ to run unit tests sequentially with eftest (which defaults to parrallel running of unit tests)
+
+  Library version updates from :project/outdated
+
+  | :name                           |                                 :current |                                  :latest |
+  |---------------------------------+------------------------------------------+------------------------------------------|
+  | com.github.liquidz/antq         |                                   0.12.4 |                                   0.13.0 |
+  | com.github.seancorfield/depstar |                                  2.0.211 |                                  2.0.216 |
+  | djblue/portal                   |                                   0.10.0 |                                   0.11.0 |
+  | org.clojure/data.json           |                                    2.1.0 |                                    2.2.0 |
+  | org.clojure/spec-alpha2         | 9118b766b3fd8451995182264f3b2eb04d7a1167 | c087ded910b3532a938b37e853df79fc3b9c48c1 |
+
+  Available diffs:
+  - https://github.com/liquidz/antq/compare/0.12.4...0.13.0
+  - https://github.com/seancorfield/depstar/compare/v2.0.211...v2.0.216
+  - https://github.com/djblue/portal/compare/0.10.0...0.11.0
+  - https://github.com/clojure/data.json/compare/data.json-2.1.0...v2.2.0
+  - https://github.com/clojure/spec-alpha2/compare/9118b766b3fd8451995182264f3b2eb04d7a1167...c087ded910b3532a938b37e853df79fc3b9c48c1
+
+
+* 2021-04-14
+  Library version updates
+
+  | :name                        |                                 :current |                                  :latest |
+  |------------------------------+------------------------------------------+------------------------------------------|
+  | cider/cider-nrepl            |                                   0.25.9 |                                  0.25.11 |
+  | org.clojure/data.json        |                                    2.0.2 |                                    2.1.0 |
+  | seancorfield/clj-new         |                                  1.1.293 |                                  1.1.297 |
+  | vlaaad/reveal                |                                  1.3.199 |                                  1.3.206 |
+
+  Available diffs:
+  - https://github.com/clojure-emacs/cider-nrepl/compare/v0.25.9...v0.25.11
+  - https://github.com/clojure/data.json/compare/data.json-2.0.2...data.json-2.1.0
+  - https://github.com/seancorfield/clj-new/compare/v1.1.293...v1.1.297
+  - https://github.com/vlaaad/reveal/compare/1.3.199...1.3.206
+
+
+* 2021-04-11
+  Add aliases for more REPL options, with nREPL server and client.  Separated REPL into REPL terminal UI, REPL with Editor and Remote REPL connection
+
+  New aliases:
+  - :repl/nrepl - Clojure REPL with nREPL server
+  - :repl/cider - Clojure REPL with nREPL server and Cider-nrepl (code completion, pretty print, etc.)
+  - :repl/cider - as above with clj-refactor
+  - :repl/remote - simple terminal UI nREPL client for a remote REPL
+  - :repl/rebel-remote - as above with Rebel Readline UI
+
+
+* 2021-04-06
+  Add ~:project/calve~ and ~:project/unused-vars~ to complement the ~:project/outdated~ alias that uses carve to find unused vars in the code base.
+
+  Library version updates
+
+  | :name                           |                                 :current |                                  :latest |
+  |---------------------------------+------------------------------------------+------------------------------------------|
+  | com.github.liquidz/antq         |                                   0.12.2 |                                   0.12.4 |
+  | com.github.seancorfield/depstar |                                  2.0.206 |                                  2.0.211 |
+  | org.clojure/clojurescript       |                                 1.10.773 |                                 1.10.844 |
+  | seancorfield/clj-new            |                                  1.1.264 |                                  1.1.293 |
+
+  Available diffs:
+  - https://github.com/liquidz/antq/compare/0.12.2...0.12.4
+  - https://github.com/seancorfield/depstar/compare/v2.0.206...v2.0.211
+  - https://github.com/seancorfield/clj-new/compare/v1.1.264...v1.1.293
+
+
+* 2021-03-28
+  Library version updates
+
+  | :name                 |                                 :current |                                  :latest |
+  |-----------------------+------------------------------------------+------------------------------------------|
+  | athos/clj-check       | cd1f25456de5eebda0a69602dd3445905382b3a4 | 518d5a1cbfcd7c952f548e6dbfcb9a4a5faf9062 |
+  | org.clojure/data.json |                                    1.1.0 |                                    2.0.2 |
+  | vlaaad/reveal         |                                  1.3.196 |                                  1.3.199 |
+
+
+
+* 2021-03-20
+  Fixed copy-paste error for :project/uberjar and :project/jar aliases when changing fully qualified name of depstar
+
+  Add ~org.slf4j/slf4j-nop~ library to ~:project/antq~ to [[https://github.com/liquidz/antq/blob/main/doc/avoid-slf4j-warnings.adoc][suppress SLF4J warnings]]
+
+  Remove depstar 1.x versions and only using version 2.x
+
+  Library updates reported by ~:project/outdated~
+
+  | :name                           |                                 :current |                                  :latest |
+  |---------------------------------+------------------------------------------+------------------------------------------|
+  | borkdude/carve                  | c0f68129e37a8bae06225e8cd09075911af0d9a3 | f499f65e36e02484609f01ce891f3c0207b24444 |
+  | com.github.liquidz/antq         |                                   0.12.1 |                                   0.12.2 |
+  | com.github.seancorfield/depstar |                                  2.0.193 |                                  2.0.206 |
+  | org.clojure/data.json           |                                    1.1.0 |                                    2.0.1 |
+  | org.clojure/spec-alpha2         | 6a5889b3c12e645147b9af8661908c1d54f685bd | 9118b766b3fd8451995182264f3b2eb04d7a1167 |
+
+
+* 2021-03-17
+  Minor fix for antq
+
+  | :name     | :current  | :latest                 |
+  |-----------+-----------+-------------------------|
+  | antq/antq | antq/antq | com.github.liquidz/antq |
+  | antq/antq | 0.12.0    | 0.12.1                  |
+
+
+* 2021-03-16
+  Library version updates
+
+  | :name                         |                                 :version |                          :latest-version |
+  |-------------------------------+------------------------------------------+------------------------------------------|
+  | antq/antq                     |                                    0.9.3 |                                   0.12.0 |
+  | antq/antq                     |                                antq/antq | com.github.liquidz/antq                  |
+  | athos/clj-check               | 0f734f560dd989b2ec0f9078cc646476bfdab4e1 | cd1f25456de5eebda0a69602dd3445905382b3a4 |
+  | borkdude/carve                | a3a5b941d4327127e36541bf7322b15b33260386 | c0f68129e37a8bae06225e8cd09075911af0d9a3 |
+  | cider/cider-nrepl             |                                   0.25.8 |                                   0.25.9 |
+  | closh/closh                   | 80735a4df79bd8572b568f61977a2c3611625623 | b1a7fd310b6511048fbacb8e496f574c8ccfa291 |
+  | djblue/portal                 |                                    0.9.0 |                                   0.10.0 |
+  | lambdaisland/kaocha           |                                  1.0.732 |                                  1.0.829 |
+  | org.clojure/clojure           |                                   1.10.1 |                                   1.10.3 |
+  | org.clojure/data.json         |                                    1.0.0 |                                    1.1.0 |
+  | org.clojure/tools.deps.alpha  | d77476f3d5f624249462e275ae62d26da89f320b | 479c63d54de43577435d1c6557e4b82f6fa85c4b |
+  | org.clojure/spec-alpha2       | a5ffe8bf89b3095676fb5eb0f4b9fc2828296fba | 6a5889b3c12e645147b9af8661908c1d54f685bd |
+  | org.yaml/snakeyaml            |                                     1.27 |                                     1.28 |
+  | refactor-nrepl/refactor-nrepl |                                    2.5.0 |                                    2.5.1 |
+  | seancorfield/clj-new          |                                  1.1.243 |                                  1.1.264 |
+  | seancorfield/depstar          |                     seancorfield/depstar | com.github.seancorfield/depstar          |
+  | seancorfield/depstar          |                                  1.1.136 |                                  2.0.193 |
+  | seancorfield/next.jdbc        |                   seancorfield/next.jdbc | com.github.seancorfield/next.jdbc        |
+  | seancorfield/next.jdbc        |                                  1.1.613 |                                  1.1.646 |
+  | thomasa/morpheus              | d3decebc1cb9ef697cd34781f9cf83d44a071e85 | 7f4876ea631a6f5ccee2094d255efd2d1a98ffb6 |
+  | vlaaad/reveal                 |                                  1.1.164 | 1.3.196                                  |
+
+** Not upgraded
+   tools.deps.alpha is not upgraded as the SHA uses the add-libs branch to the add-libs function which hotloads one or more libraries into a running repl.
+
+* 2021-03-09
+  new ~:service/webserver~ zero-config command line HTTP server using the [[https://github.com/kachayev/nasus][nasus project]]
+
+* 2021-02-09
+
+  | :name                |                                 :version |                          :latest-version |
+  |----------------------+------------------------------------------+------------------------------------------|
+  | borkdude/carve       | b79d411e49244becf40787a7fcc2ead8e40ba3b5 | a3a5b941d4327127e36541bf7322b15b33260386 |
+  | cider/cider-nrepl    |                                   0.25.7 |                                   0.25.8 |
+  | seancorfield/clj-new |                                  1.1.243 |                                          |
+  | seancorfield/depstar |                                  1.1.136 |                                  2.0.171 |
+  | vlaaad/reveal        |                                  1.3.193 |                                  1.3.196 |
+
+
+* 2020-01-23
+  - Reset ~org.clojure/tools.deps.alpha~ to latest commit on ~add-libs3~ branch which has the SHA ~d77476f3d5f624249462e275ae62d26da89f320b~
+  - promote calve to main aliases
+  - depstar to version 2.x
+
+  **deps.edn library version updates**
+
+ | :name                   |                                 :version |                          :latest-version |
+ |-------------------------+------------------------------------------+------------------------------------------|
+ | borkdude/carve          | 4d30e186e3a0d66f6b1ede1a70169e66d0f070ed | b79d411e49244becf40787a7fcc2ead8e40ba3b5 |
+ | cider/cider-nrepl       |                                   0.25.5 |                                   0.25.7 |
+ | clojurians-zulip/feeds  | 002335d93e937bfb56d1c9f5c6760bef885a58b8 | 345a756196d68bde6de0eaa22d217a45f87362b7 |
+ | closh/closh             | dec68b43a66ff8547e4742fa433c4d486f550e60 | 80735a4df79bd8572b568f61977a2c3611625623 |
+ | djblue/portal           |                                    0.7.0 |                                    0.9.0 |
+ | org.clojure/spec-alpha2 | cd07a40c4ee720614a18429da4b09a6c5d8fe979 | a5ffe8bf89b3095676fb5eb0f4b9fc2828296fba |
+ | seancorfield/clj-new    |                                  1.1.228 |                                  1.1.234 |
+ | seancorfield/depstar    |                                  1.1.136 |                                  2.0.165 |
+ | uberdeps/uberdeps       |                                    1.0.3 |                                    1.0.4 |
+ | vlaaad/reveal           |                                  1.1.171 |                                  1.3.193 |
+
+
+
+* 2020-12-18
+  - 6bb07d2 middleware/cider-cljs: add nrepl as explicit dependency
+  - ~:repl/reveal-nrepl~ and ~:repl/reveal-light-nrepl~ aliases for reveal data visualization with a terminal REPL and editor connection via nREPL protocol.
+
+
+* 2020-12-15
+  Reverted `:project/jar`, `:project/uberjar`, `:project/uberdeps` to `:extra-deps` configuration and removed the `:replace-paths` configuration.
+
+  **deps.edn library version updates**
+
+| :name                        |                                 :version |                          :latest-version |
+|------------------------------+------------------------------------------+------------------------------------------|
+| djblue/portal                |                                    0.6.4 |                                    0.7.0 |
+| org.clojure/tools.deps.alpha | 34f40ea3b1e0ccf8aedb927c7d5bacfbfa7ee6af | ada6944e1bf949f9e2ed5291a6fd45e5c4628392 |
+| vlaaad/reveal                |                                  1.1.164 |                                  1.1.171 |
+
+
+* 2020-12-13
+  Add aliases to run Reveal data visualization tool with Rebel Readline terminal repl
+  - :repl/rebel-reveal
+  - :inspect/reveal-rebel
+  - :inspect/reveal-light-rebel
+
+
+* 2020-12-07
+  Add ~:replace-paths~ to aliases representing tools that do not require access to a Clojure project configuration.  These tools already ignore the project dependencies via ~:replace-deps~
+
+  antq updated to support ~:replace-deps~ and ~clojure -M:project/outdated~ run to update tools library versions.
+
+  *deps.edn library version updates*
+
+| :name                        |                                 :version |                          :latest-version |
+|------------------------------+------------------------------------------+------------------------------------------|
+| antq/antq                    |                                    0.9.2 |                                    0.9.3 |
+| clojurians-zulip/feeds       | 8668c3ed7285ebb004f2060c893e07183a192bcf | 002335d93e937bfb56d1c9f5c6760bef885a58b8 |
+| org.clojure/tools.deps.alpha | f3a2fbb426ae65d5a5c79a756f3b95b463f334a4 | 34f40ea3b1e0ccf8aedb927c7d5bacfbfa7ee6af |
+| seancorfield/clj-new         |                                  1.1.226 |                                  1.1.228 |
+| seancorfield/depstar         |                                  1.1.126 |                                  1.1.136 |
+| uberdeps/uberdeps            |                                    1.0.2 |                                    1.0.3 |
+
+
+* 2020-12-05
+  :test/kaocha* updated as issue [[https://github.com/lambdaisland/kaocha/issues/159][#159]] seems to be resolved.  If issues are experienced, revert to kaocha version 1.0.672 and comment on the related issue
+
+  GitHub action that practicalli/clojure-deps-edn uses for linting has also been updated thanks to new library version detected by antq
+
+  *deps.edn library version updates*
+
+| :name                         | :version                                 | :latest-version                          |
+|-------------------------------+------------------------------------------+------------------------------------------|
+| borkdude/carve                | e9e2b1fbdd337b989c65a1983a1b3f72e310c970 | af7004dab7000ad7e9c942499f269cf7d21c0728 |
+| cider/cider-nrepl             | 0.25.4                                   | 0.25.5                                   |
+| lambdaisland/kaocha           | 1.0.672                                  | 1.0.732                                  |
+| lambdaisland/kaocha-cloverage | 1.0.63                                   | 1.0.75                                   |
+| org.clojure/spec-alpha2       | 8ba5dc543872369129181c4432f438c82b6cd297 | cd07a40c4ee720614a18429da4b09a6c5d8fe979 |
+| org.clojure/tools.deps.alpha  | 65b1f039929acdd852aae60c87b2e57606e099a3 | f3a2fbb426ae65d5a5c79a756f3b95b463f334a4 |
+
+
+  *.github/workflows/lint-with-clj-kondo.yml GitHub action update*
+
+| :name            | :version | :latest-version |
+|------------------+----------+-----------------|
+| actions/checkout |    2.3.3 |           2.3.4 |
+
+
+* 2020-11-08
+
+  :community/zulip-event alias for creating standard events on the Clojurians Zulip, which are then added to a global ical of events.
+
+  The following updates were made manually after running the =:project/outdated= in the root of the =~/.clojure/= directory
+
+| :name                        |                                 :version | :latest-version                          |
+|------------------------------+------------------------------------------+------------------------------------------|
+| athos/clj-check              | 0f734f560dd989b2ec0f9078cc646476bfdab4e1 | cd1f25456de5eebda0a69602dd3445905382b3a4 |
+| borkdude/carve               | 542078b21d72a96848bc342e57aa560339b79698 | e9e2b1fbdd337b989c65a1983a1b3f72e310c970 |
+| cider/cider-nrepl            |                                   0.25.3 | 0.25.4                                   |
+| cider/piggieback             |                                    0.5.1 | 0.5.2                                    |
+| com.cognitect/test-runner    | 6ec7f8eef509cd14d831e8cc16e856b31327a862 | b6b3193fcc42659d7e46ecd1884a228993441182 |
+| djblue/portal                |                                    0.5.0 | 0.6.3                                    |
+| nrepl/nrepl                  |                                    0.8.2 | 0.8.3                                    |
+| olical/cljs-test-runner      |                                    3.7.0 | 3.8.0                                    |
+| org.clojure/spec-alpha2      | d514b06b25c41a676b95afcc9bfac8ca34c5741e | 8ba5dc543872369129181c4432f438c82b6cd297 |
+| org.clojure/tools.deps.alpha | 2ff45e287273f86eaf9765a5f2d0042464748c0e | 65b1f039929acdd852aae60c87b2e57606e099a3 |
+| seancorfield/next.jdbc       |                                  1.1.588 | 1.1.613                                  |
+| tubular/tubular              |                                    1.3.0 | 1.4.0                                    |
+| vlaaad/reveal                |                                  1.0.154 | 1.1.159                                  |
+
+
+  Kaocha reverted to 1.0.672 due to [[https://github.com/lambdaisland/kaocha/issues/159][#159]]
+
+| lambdaisland/kaocha          |                                  1.0.672 | 1.0.700                                  |
+
+
+
+* 2020-10-09
+  Reorganized project related aliases into one section.  Changed ~:build/~ and ~:deploy/~ to ~:project/~ alias name qualifier, simplifying the catagories of aliases.
+
+  Added a mini table of contents with sub-sections for the categories of aliases
+
+  Library version updates (from message via Clojurians Slack)
+
+| :name                | :version | :latest-version |
+|----------------------+----------+-----------------|
+| seancorfield/clj-new |  1.1.216 |         1.1.226 |
+| seancorfield/depstar |  1.1.117 |         1.1.216 |
+
+
+* 2020-09-26
+The following updates were made manually after running the =:project/outdated= in the root of the =~/.clojure/= directory
+
+#+BEGIN_SRC shell
+clojure -M:project/outdated > version-changes-to-review.org
+#+END_SRC
+
+JavaFX libraries are only used from OpenJDK Long Term Support version of Java, not updating to short term releases.
+
+| :name                        |                                 :version |                          :latest-version |
+|------------------------------+------------------------------------------+------------------------------------------|
+| athos/clj-check              | da6363a38b06d9b84976ed330a9544b69d3c4dee | 0f734f560dd989b2ec0f9078cc646476bfdab4e1 |
+| cider/cider-nrepl            |                                   0.25.2 |                                   0.25.3 |
+| closh/closh                  | 6a7c0aa293616e2d28f7f735e915a301e44d2121 | dec68b43a66ff8547e4742fa433c4d486f550e60 |
+| com.cognitect/rebl           |                                  0.9.241 |                          Failed to fetch |
+| djblue/portal                |                                    0.5.0 |                                    0.5.1 |
+| find-deps/find-deps          | 6fc73813aafdd2288260abb2160ce0d4cdbac8be | 9bf23a52cb0a8190c9c2c7ad1d796da802f8ce7a |
+| io.dominic/vizns             | fb2391a4af24246ac4e46f3a573970ba5b7c92de | 69774e8c29e1c1c691f9922d5c5a6d764374ada3 |
+| lambdaisland/kaocha          |                                  1.0.672 |                                  1.0.700 |
+| nrepl/nrepl                  |                                    0.8.1 |                                    0.8.2 |
+| org.clojure/data.csv         |                                    0.1.4 |                                    1.0.0 |
+| org.clojure/data.json        |                                    0.2.7 |                                    1.0.0 |
+| org.clojure/tools.deps.alpha | 2ff45e287273f86eaf9765a5f2d0042464748c0e | 947f2969170826890cf9c0f9f9362e40fcc9acb4 |
+| org.yaml/snakeyaml           |                                     1.25 |                                     1.27 |
+| seancorfield/clj-new         |                                  1.1.215 |                                  1.1.216 |
+| uberdeps/uberdeps            |                                    1.0.0 |                                    1.0.2 |
+| vlaaad/reveal                |                                  1.0.128 |                                  1.0.130 |
+
+
+* 2020-09-05
+The following updates were made manually after running the =:outdated= in the root of the =~/.clojure/= directory
+
+#+BEGIN_SRC shell
+clojure -A:outdated > version-changes-to-review.org
+#+END_SRC
+
+JavaFX libraries are only used from the current stable version of Java, not short term releases.
+
+| :name                                  |                                 :version | :latest-version                          |
+|----------------------------------------+------------------------------------------+------------------------------------------|
+| athos/clj-check                        | 46214bb33fccf30df797fc15ad818f7151f3f44c | 0f734f560dd989b2ec0f9078cc646476bfdab4e1 |
+| cider/cider-nrepl                      |                                   0.22.4 | 0.25.3                                   |
+| com.clojure-goes-fast/clj-memory-meter |                                    0.1.2 | 0.1.3                                    |
+| com.cognitect/test-runner              | f7ef16dc3b8332b0d77bc0274578ad5270fbfedd | 6ec7f8eef509cd14d831e8cc16e856b31327a862 |
+| criterium/criterium                    |                                    0.4.5 | 0.4.6                                    |
+| djblue/portal                          |                                    0.3.0 | 0.4.1                                    |
+| lambdaisland/kaocha                    |                                  1.0.669 | 1.0.672                                  |
+| nrepl/nrepl                            |                                    0.8.0 | 0.8.1                                    |
+| org.clojure/clojurescript              |                                 1.10.758 | 1.10.773                                 |
+| org.clojure/spec-alpha2                | 495e5ac3238be002b4de72d1c48479f6bec06bb3 | d514b06b25c41a676b95afcc9bfac8ca34c5741e |
+| org.clojure/spec.alpha                 |                                  0.2.176 | 0.2.187                                  |
+| org.clojure/tools.deps.alpha           | 19d197ab221d37db750423eb970880cb87a91100 | 2ff45e287273f86eaf9765a5f2d0042464748c0e |
+| thomasa/morpheus                       | d3decebc1cb9ef697cd34781f9cf83d44a071e85 | 7f4876ea631a6f5ccee2094d255efd2d1a98ffb6 |
+| tvaughan/kibit-runner                  |                                    0.2.3 | 1.0.1                                    |
+| uberdeps/uberdeps                      |                                   0.1.10 | 1.0.0                                    |
+| vlaaad/reveal                          |                               0.1.0-ea26 | 0.1.0-ea30                               |
