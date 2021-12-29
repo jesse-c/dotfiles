@@ -69,7 +69,12 @@ return packer.startup(function(use)
 	-- UI
 	use("nvim-lua/popup.nvim")
 	use("nvim-lua/plenary.nvim")
-	use("rcarriga/nvim-notify")
+	use({
+		"rcarriga/nvim-notify",
+		config = function()
+			vim.notify = require("notify")
+		end,
+	})
 	use({
 		"folke/todo-comments.nvim",
 		event = "BufRead",
