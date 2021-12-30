@@ -1,8 +1,8 @@
 vim.o.timeoutlen = 500
 
-vim.cmd([[ nmap <silent> <C-k> :wincmd k<CR> ]])
-vim.cmd([[ nmap <silent> <C-j> :wincmd j<CR> ]])
-vim.cmd([[ nmap <silent> <C-h> :wincmd h<CR> ]])
-vim.cmd([[ nmap <silent> <C-l> :wincmd l<CR> ]])
+vim.api.nvim_set_keymap("n", "<C-k>", ":wincmd k<CR>", { silent = true, noremap = true })
+vim.api.nvim_set_keymap("n", "<C-j>", ":wincmd j<CR>", { silent = true, noremap = true })
+vim.api.nvim_set_keymap("n", "<C-h>", ":wincmd h<CR>", { silent = true, noremap = true })
+vim.api.nvim_set_keymap("n", "<C-l>", ":wincmd l<CR>", { silent = true, noremap = true })
 
-vim.cmd([[ nmap <silent> <C-q> :q<CR> ]])
+vim.api.nvim_set_keymap("n", "<C-q>", ":q<CR>", { silent = true, noremap = true })
