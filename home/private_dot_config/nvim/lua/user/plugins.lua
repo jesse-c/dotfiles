@@ -450,6 +450,7 @@ return packer.startup(function(use)
 
 	-- Languages / Rust
 	use("simrat39/rust-tools.nvim")
+	use("rust-lang/rust.vim")
 
 	-- Languages / Markdown
 	use("npxbr/glow.nvim")
