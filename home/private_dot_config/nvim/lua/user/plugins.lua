@@ -300,7 +300,13 @@ return packer.startup(function(use)
 			})
 		end,
 	})
-
+	use({
+		"folke/trouble.nvim",
+		requires = "kyazdani42/nvim-web-devicons",
+		config = function()
+			require("trouble").setup()
+		end,
+	})
 	use({
 		"stevearc/aerial.nvim",
 		requires = "stevearc/stickybuf.nvim",
