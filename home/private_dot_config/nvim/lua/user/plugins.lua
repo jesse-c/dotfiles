@@ -130,6 +130,14 @@ return packer.startup(function(use)
 		requires = { "MunifTanjim/nui.nvim" },
 	})
 	use("sindrets/winshift.nvim")
+	use({
+		"akinsho/toggleterm.nvim",
+		config = function()
+			require("toggleterm").setup({
+				direction = "float",
+			})
+		end,
+	})
 
 	-- UI / Themes
 	use("sainnhe/edge")
