@@ -7,6 +7,6 @@ vim.g.coq_settings = {
 	},
 }
 
-vim.cmd([[ set updatetime=300 ]])
+vim.o.updatetime = 250
 -- Don't give |ins-completion-menu| messages.
 vim.cmd([[ set shortmess+=c ]])

@@ -1,9 +1,18 @@
+-- Diagnostics
+-- https://www.reddit.com/r/neovim/comments/ru871v/how_to_change_the_position_of_linting_in/
+vim.cmd([[autocmd CursorHold,CursorHoldI * lua vim.diagnostic.open_float(nil, {focus=false})]])
+vim.diagnostic.config({
+	virtual_text = {
+		prefix = "●", -- Could be '■', '●', '▎', 'x'
+	},
+})
+
 -- Symbols
 -- https://github.com/neovim/nvim-lspconfig/wiki/UI-customization#change-diagnostic-symbols-in-the-sign-column-gutter
 local signs = { Error = " ", Warn = " ", Hint = " ", Info = " " }
 for type, icon in pairs(signs) do
-  local hl = "DiagnosticSign" .. type
-  vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
+	local hl = "DiagnosticSign" .. type
+	vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
 end
 
 -- Go to definition
@@ -16,6 +25,7 @@ vim.api.nvim_set_keymap("n", "K", "<CMD>lua vim.lsp.buf.hover()<CR>", { silent =
 vim.api.nvim_set_keymap("n", "<Leader>d", "<CMD>lua vim.lsp.buf.formatting()<CR>", { silent = true, noremap = true })
 
 -- Code actions
+vim.api.nvim_set_keymap("n", "ga", "<CMD>lua vim.lsp.buf.code_action()<CR>", { silent = true, noremap = true })
 
 local ok, lsp_installer = pcall(require, "nvim-lsp-installer")
 if not ok then
