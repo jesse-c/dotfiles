@@ -1,4 +1,5 @@
 local o = vim.o -- For the globals options
+local g = vim.g -- For the globals options
 local wo = vim.wo -- For the window local options
 local bo = vim.bo -- For the buffer local options
 
@@ -22,6 +23,10 @@ o.backup = false
 o.writebackup = false
 -- Do not create swap files
 o.swapfile = false
+-- Opt-in to filetype.lua
+-- https://www.reddit.com/r/neovim/comments/rvwsl3/introducing_filetypelua_and_a_call_for_help/
+g.do_filetype_lua = true
+g.did_load_filetypes = true
 -------------------------
 -- Encoding
 -------------------------
