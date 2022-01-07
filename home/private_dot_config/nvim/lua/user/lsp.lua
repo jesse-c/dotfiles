@@ -1,10 +1,13 @@
 -- Diagnostics
 -- https://www.reddit.com/r/neovim/comments/ru871v/how_to_change_the_position_of_linting_in/
-vim.cmd([[autocmd CursorHold,CursorHoldI * lua vim.diagnostic.open_float(nil, {focus=false})]])
+-- Disable hover since it's redundant due to lsp_lines.
+-- vim.cmd([[autocmd CursorHold,CursorHoldI * lua vim.diagnostic.open_float(nil, {focus=false})]])
 vim.diagnostic.config({
-	virtual_text = {
-		prefix = "●", -- Could be '■', '●', '▎', 'x'
-	},
+	-- Disable virtual_text since it's redundant due to lsp_lines.
+	virtual_text = false,
+	-- virtual_text = {
+	-- 	prefix = "●", -- Could be '■', '●', '▎', 'x'
+	-- },
 })
 
 -- Symbols

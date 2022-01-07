@@ -138,9 +138,41 @@ return packer.startup(function(use)
 			})
 		end,
 	})
+	use({
+		"petertriho/nvim-scrollbar",
+		config = function()
+			require("scrollbar").setup()
+		end,
+	})
+	use({ "kevinhwang91/nvim-hlslens" })
+	use({
+		"https://git.sr.ht/~whynothugo/lsp_lines.nvim",
+		requires = "neovim/nvim-lspconfig",
+		config = function()
+			require("lsp_lines").register_lsp_virtual_lines()
+		end,
+	})
 
 	-- UI / Themes
-	use("sainnhe/edge")
+	use({
+		"sainnhe/edge",
+		config = function()
+			vim.g.edge_diagnostic_virtual_text = "colored"
+			vim.cmd([[let g:edge_diagnostic_virtual_text = 'colored']])
+			-- The above doesn't appear to be working, so I've copied this in directly.
+			-- https://github.com/sainnhe/edge/blob/447c0407c5579ac861ad67023633949561a2b404/colors/edge.vim#L281
+			-- vim.cmd([[highlight! link VirtualTextWarning Yellow]])
+			-- vim.cmd([[highlight! link VirtualTextError Red]])
+			-- vim.cmd([[highlight! link VirtualTextInfo Blue]])
+			-- vim.cmd([[highlight! link VirtualTextHint Green]])
+			-- Use colours with backgrounds.
+			-- https://www.reddit.com/r/neovim/comments/ry9qxi/comment/hroyko0/?utm_source=share&utm_medium=web2x&context=3
+			vim.cmd([[:hi DiagnosticVirtualTextError guifg=#db4b4b guibg=#2D202A]])
+			vim.cmd([[:hi DiagnosticVirtualTextWarn guifg=#e0af68 guibg=#2E2A2D]])
+			vim.cmd([[:hi DiagnosticVirtualTextInfo guifg=#0db9d7 guibg=#192B38]])
+			vim.cmd([[:hi DiagnosticVirtualTextHint guifg=#1abc9c guibg=#1A2B3]])
+		end,
+	})
 
 	-- UI / Marks
 	use("kshenoy/vim-signature")
