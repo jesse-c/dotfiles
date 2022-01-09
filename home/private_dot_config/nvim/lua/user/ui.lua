@@ -52,7 +52,8 @@ o.showmode = true
 ------------------------------
 -- Column marker
 ------------------------------
-o.colorcolumn = "81"
+-- Using lukas-reineke/virt-column.nvim instead
+-- o.colorcolumn = "81"
 ---------------------------
 -- Characters
 ---------------------------

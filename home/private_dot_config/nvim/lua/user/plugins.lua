@@ -152,25 +152,40 @@ return packer.startup(function(use)
 			require("lsp_lines").register_lsp_virtual_lines()
 		end,
 	})
+	use({
+		"lukas-reineke/virt-column.nvim",
+		config = function()
+			-- https://github.com/lukas-reineke/virt-column.nvim/issues/2
+			vim.cmd("highlight clear ColorColumn")
+			require("virt-column").setup({
+				char = "│",
+			})
+		end,
+	})
 
 	-- UI / Themes
 	use({
-		"sainnhe/edge",
+		"projekt0n/github-nvim-theme",
 		config = function()
-			vim.g.edge_diagnostic_virtual_text = "colored"
-			vim.cmd([[let g:edge_diagnostic_virtual_text = 'colored']])
-			-- The above doesn't appear to be working, so I've copied this in directly.
-			-- https://github.com/sainnhe/edge/blob/447c0407c5579ac861ad67023633949561a2b404/colors/edge.vim#L281
-			-- vim.cmd([[highlight! link VirtualTextWarning Yellow]])
-			-- vim.cmd([[highlight! link VirtualTextError Red]])
-			-- vim.cmd([[highlight! link VirtualTextInfo Blue]])
-			-- vim.cmd([[highlight! link VirtualTextHint Green]])
-			-- Use colours with backgrounds.
 			-- https://www.reddit.com/r/neovim/comments/ry9qxi/comment/hroyko0/?utm_source=share&utm_medium=web2x&context=3
-			vim.cmd([[:hi DiagnosticVirtualTextError guifg=#db4b4b guibg=#2D202A]])
-			vim.cmd([[:hi DiagnosticVirtualTextWarn guifg=#e0af68 guibg=#2E2A2D]])
-			vim.cmd([[:hi DiagnosticVirtualTextInfo guifg=#0db9d7 guibg=#192B38]])
-			vim.cmd([[:hi DiagnosticVirtualTextHint guifg=#1abc9c guibg=#1A2B3]])
+			-- Disabled for now as it's causing the statusline and colorcolumn to look incorrect
+			-- vim.cmd([[:hi DiagnosticVirtualTextError guifg=#db4b4b guibg=#2D202A]])
+			-- vim.cmd([[:hi DiagnosticVirtualTextWarn guifg=#e0af68 guibg=#2E2A2D]])
+			-- vim.cmd([[:hi DiagnosticVirtualTextInfo guifg=#0db9d7 guibg=#192B38]])
+			-- vim.cmd([[:hi DiagnosticVirtualTextHint guifg=#1abc9c guibg=#1A2B3]])
+			local theme = require("user.ui.theme")
+			require("github-theme").setup({
+				theme_style = theme,
+				-- Overwrite the highlight groups
+				overrides = function(_)
+					return {
+						DiagnosticVirtualTextError = { fg = "#db4b4b", bg = "#2D202A" },
+						DiagnosticVirtualTextWarn = { fg = "#e0af68", bg = "#2E2A2D" },
+						DiagnosticVirtualTextInfo = { fg = "#1abc9c", bg = "#1A2B3" },
+						DiagnosticVirtualTextHint = { fg = "#1abc9c", bg = "#1A2B3" },
+					}
+				end,
+			})
 		end,
 	})
 
