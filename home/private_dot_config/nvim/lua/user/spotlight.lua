@@ -17,6 +17,11 @@ telescope.setup({
 			},
 		},
 	},
+	extensions = {
+		file_browser = {
+			path = "%:p:h",
+		},
+	},
 })
 
 telescope.load_extension("fzf")
