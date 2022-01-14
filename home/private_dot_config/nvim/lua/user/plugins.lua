@@ -371,7 +371,6 @@ return packer.startup(function(use)
 	-- File system
 	use("tpope/vim-eunuch")
 	use("airblade/vim-rooter")
-	use("kevinhwang91/rnvimr")
 	use({
 		"kyazdani42/nvim-tree.lua",
 		requires = "kyazdani42/nvim-web-devicons",
