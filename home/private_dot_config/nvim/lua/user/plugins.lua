@@ -321,7 +321,6 @@ return packer.startup(function(use)
 		"williamboman/nvim-lsp-installer",
 		requires = { "neovim/nvim-lspconfig", "stevearc/aerial.nvim" },
 	})
-
 	use({
 		"jose-elias-alvarez/null-ls.nvim",
 		requires = "nvim-lua/plenary.nvim",
@@ -366,6 +365,13 @@ return packer.startup(function(use)
 	use({
 		"stevearc/aerial.nvim",
 		requires = "stevearc/stickybuf.nvim",
+	})
+	use({
+		"j-hui/fidget.nvim",
+		requires = "neovim/nvim-lspconfig",
+		config = function()
+			require("fidget").setup()
+		end,
 	})
 
 	-- File system
