@@ -1,0 +1,9 @@
+[editor]
+line-number = "relative"
+mouse = false
+
+[lsp]
+display-messages = true
+
+[keys.normal]
+C-q = ":q"
