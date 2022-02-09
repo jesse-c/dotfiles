@@ -7,3 +7,5 @@ display-messages = true
 
 [keys.normal]
 C-q = ":q"
+C-v = "vsplit"
+C-x = "hsplit"
