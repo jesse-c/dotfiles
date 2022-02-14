@@ -142,7 +142,13 @@ return packer.startup(function(use)
 		"petertriho/nvim-scrollbar",
 		config = function()
 			require("scrollbar").setup()
+			-- require("scrollbar").setup({
+			-- handle = {
+			-- 	color = "#5A616A",
+			-- },
+			-- })
 		end,
+		disable = true,
 	})
 	use({ "kevinhwang91/nvim-hlslens" })
 	use({
@@ -514,6 +520,7 @@ return packer.startup(function(use)
 		"eraserhd/parinfer-rust",
 		run = "cargo build --release",
 	})
+	use("Olical/conjure")
 
 	-- Languages / Rust
 	use("simrat39/rust-tools.nvim")
