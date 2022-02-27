@@ -512,6 +512,9 @@ return packer.startup(function(use)
 
 	-- Languages
 
+	-- Languages / plist
+	use("darfink/vim-plist")
+
 	-- Languages / Elixir
 	use("elixir-editors/vim-elixir")
 
