@@ -132,6 +132,7 @@ return packer.startup(function(use)
 	use("sindrets/winshift.nvim")
 	use({
 		"akinsho/toggleterm.nvim",
+		branch = "main",
 		config = function()
 			require("toggleterm").setup({
 				direction = "float",
@@ -218,6 +219,7 @@ return packer.startup(function(use)
 	-- Bufferline
 	use({
 		"akinsho/bufferline.nvim",
+		branch = "main",
 		requires = "kyazdani42/nvim-web-devicons",
 		config = function()
 			require("bufferline").setup()
