@@ -2,7 +2,7 @@
 line-number = "relative"
 mouse = false
 
-[lsp]
+[editor.lsp]
 display-messages = true
 
 [keys.normal]
