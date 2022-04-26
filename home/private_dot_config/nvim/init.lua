@@ -1,3 +1,5 @@
+require('impatient')
+
 require("user.options")
 require("user.options.abbrs")
 require("user.plugins")
