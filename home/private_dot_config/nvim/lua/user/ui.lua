@@ -2,8 +2,6 @@ local o = vim.o -- For the globals options
 local wo = vim.wo -- For the window local options
 local bo = vim.bo -- For the buffer local options
 
-local autocmd = require("user.autocmd")
-
 ---------------
 -- Line numbers
 ---------------
@@ -22,11 +20,12 @@ vim.g.indent_blankline_show_first_indent_level = false
 ----------------------
 -- Splits
 ----------------------
--- Auto resize splits when window is resized
-autocmd({
-	events = { "VimResized" },
+vim.api.nvim_create_autocmd("VimResized", {
 	pattern = "*",
-	command = "wincmd =",
+	callback = function(_args)
+		vim.cmd([[ wincmd = ]])
+	end,
+	desc = "Auto resize splits when window is resized",
 })
 o.splitbelow = true
 o.splitright = true
