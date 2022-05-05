@@ -25,7 +25,7 @@ vim.api.nvim_set_keymap("n", "gd", "<CMD>lua vim.lsp.buf.definition()<CR>", { si
 vim.api.nvim_set_keymap("n", "K", "<CMD>lua vim.lsp.buf.hover()<CR>", { silent = true, noremap = true })
 
 -- Format
-vim.api.nvim_set_keymap("n", "<Leader>d", "<CMD>lua vim.lsp.buf.formatting()<CR>", { silent = true, noremap = true })
+vim.api.nvim_set_keymap("n", "<Leader>d", "<CMD>lua vim.lsp.buf.format({ async = true })<CR>", { silent = true, noremap = true })
 
 -- Code actions
 vim.api.nvim_set_keymap("n", "ga", "<CMD>lua vim.lsp.buf.code_action()<CR>", { silent = true, noremap = true })
