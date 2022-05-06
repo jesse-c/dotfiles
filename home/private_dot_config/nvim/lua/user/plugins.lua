@@ -374,6 +374,7 @@ return packer.startup(function(use)
 		"stevearc/aerial.nvim",
 		requires = "stevearc/stickybuf.nvim",
 	})
+	-- Standalone UI for nvim-lsp progress. Eye candy for the impatient.
 	use({
 		"j-hui/fidget.nvim",
 		requires = "neovim/nvim-lspconfig",
@@ -406,7 +407,7 @@ return packer.startup(function(use)
 		config = function()
 			require("nvim-treesitter.configs").setup({
 				ensure_installed = "all",
-				ignore_install = {},
+				ignore_install = { "phpdoc" },
 				highlight = {
 					enable = true, -- False will disable the whole extension
 				},
