@@ -31,6 +31,7 @@ export EMACS_USER_DIRECTORY=~/.emacs.d
 
 # Homebrew
 export HOMEBREW_NO_ANALYTICS=1
+export HOMEBREW_NO_ENV_HINTS=1
 
 # asdf
 source (brew --prefix asdf)/libexec/asdf.fish
