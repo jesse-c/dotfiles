@@ -1,1 +1,0 @@
-return "dark_default"

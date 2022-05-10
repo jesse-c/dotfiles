@@ -180,7 +180,16 @@ return packer.startup(function(use)
 			-- vim.cmd([[:hi DiagnosticVirtualTextWarn guifg=#e0af68 guibg=#2E2A2D]])
 			-- vim.cmd([[:hi DiagnosticVirtualTextInfo guifg=#0db9d7 guibg=#192B38]])
 			-- vim.cmd([[:hi DiagnosticVirtualTextHint guifg=#1abc9c guibg=#1A2B3]])
+
+			-- Default theme
+			local theme = "dark_default"
+			-- The "user.ui.theme" module may contain `return $THEME`
 			local theme = require("user.ui.theme")
+			local ok, local_theme = pcall(require, "user.ui.theme")
+			if ok then
+				theme = local_theme
+			end
+
 			require("github-theme").setup({
 				theme_style = theme,
 				-- Overwrite the highlight groups
