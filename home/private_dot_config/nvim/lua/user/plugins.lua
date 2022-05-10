@@ -328,40 +328,14 @@ return packer.startup(function(use)
 	use({
 		"williamboman/nvim-lsp-installer",
 		requires = { "neovim/nvim-lspconfig", "stevearc/aerial.nvim" },
+		config = function()
+			require("nvim-lsp-installer").setup({})
+		end
 	})
 	use({
 		"jose-elias-alvarez/null-ls.nvim",
 		requires = "nvim-lua/plenary.nvim",
 		event = "VimEnter",
-		config = function()
-			local null_ls = require("null-ls")
-
-			null_ls.setup({
-				sources = {
-					-- Diagnostics
-					null_ls.builtins.diagnostics.credo,
-					null_ls.builtins.diagnostics.flake8,
-					null_ls.builtins.diagnostics.proselint,
-					null_ls.builtins.diagnostics.shellcheck,
-					-- Code actions
-					null_ls.builtins.code_actions.gitsigns,
-					null_ls.builtins.code_actions.proselint,
-					null_ls.builtins.code_actions.shellcheck,
-					-- Formatters
-					null_ls.builtins.formatting.prettier,
-					null_ls.builtins.formatting.joker,
-					null_ls.builtins.formatting.stylua,
-					null_ls.builtins.formatting.swiftformat,
-					null_ls.builtins.formatting.black,
-					null_ls.builtins.formatting.isort,
-					null_ls.builtins.formatting.erlfmt,
-					null_ls.builtins.formatting.fish_indent,
-					null_ls.builtins.formatting.fnlfmt,
-					null_ls.builtins.formatting.shfmt,
-					null_ls.builtins.formatting.shellharden,
-				},
-			})
-		end,
 	})
 	use({
 		"folke/trouble.nvim",

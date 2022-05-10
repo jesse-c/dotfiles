@@ -35,24 +35,33 @@ if not ok then
 	return
 end
 
--- Register a handler that will be called for all installed servers.
--- Alternatively, you may also register handlers on specific server instances instead (see example below).
-lsp_installer.on_server_ready(function(server)
-	local aerial = require("aerial")
+local lspconfig = require("lspconfig")
 
-	local opts = {
+local opts = {}
+
+local ok, aerial = pcall(require, "aerial")
+if ok then
+	opts = {
 		on_attach = aerial.on_attach,
-	}
+  }
+end
 
-	-- This setup() function is exactly the same as lspconfig's setup function.
-	-- Refer to https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md
-	server:setup(opts)
-end)
+lspconfig.clojure_lsp.setup(opts)
+lspconfig.erlangls.setup(opts)
+lspconfig.elixirls.setup(opts)
+lspconfig.lemminx.setup(opts)
+lspconfig.pylsp.setup(opts)
+lspconfig.rust_analyzer.setup(opts)
+lspconfig.sourcekit.setup(opts)
+lspconfig.sqls.setup(opts)
+lspconfig.sumneko_lua.setup(opts)
+lspconfig.tsserver.setup(opts)
 
 local ok, aerial = pcall(require, "aerial")
 if not ok then
 	return
 end
+
 -- Aerial does not set any mappings by default, so you'll want to set some up
 require("aerial").setup({
 	on_attach = function(bufnr)
@@ -73,20 +82,27 @@ if not ok then
 end
 
 null_ls.setup({
-	sources = {
-		-- Diagnostics
-		null_ls.builtins.diagnostics.credo,
-		null_ls.builtins.diagnostics.flake8,
-		null_ls.builtins.diagnostics.proselint,
-		null_ls.builtins.diagnostics.shellcheck,
-		-- Code actions
-		null_ls.builtins.code_actions.gitsigns,
-		null_ls.builtins.code_actions.proselint,
-		null_ls.builtins.code_actions.shellcheck,
-		-- Formatters
-		null_ls.builtins.formatting.prettier,
-		null_ls.builtins.formatting.joker,
-		null_ls.builtins.formatting.stylua,
-		null_ls.builtins.formatting.swiftformat,
-	},
+  sources = {
+    -- Diagnostics
+    null_ls.builtins.diagnostics.credo,
+    null_ls.builtins.diagnostics.flake8,
+    null_ls.builtins.diagnostics.proselint,
+    null_ls.builtins.diagnostics.shellcheck,
+    -- Code actions
+    null_ls.builtins.code_actions.gitsigns,
+    null_ls.builtins.code_actions.proselint,
+    null_ls.builtins.code_actions.shellcheck,
+    -- Formatters
+    null_ls.builtins.formatting.prettier,
+    null_ls.builtins.formatting.joker,
+    null_ls.builtins.formatting.stylua,
+    null_ls.builtins.formatting.swiftformat,
+    null_ls.builtins.formatting.black,
+    null_ls.builtins.formatting.isort,
+    null_ls.builtins.formatting.erlfmt,
+    null_ls.builtins.formatting.fish_indent,
+    null_ls.builtins.formatting.fnlfmt,
+    null_ls.builtins.formatting.shfmt,
+    null_ls.builtins.formatting.shellharden,
+  },
 })
