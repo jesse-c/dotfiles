@@ -1,4 +1,5 @@
-require('impatient')
+-- Safely try and require impatient.nvim
+pcall(require, "impatient")
 
 require("user.options")
 require("user.options.abbrs")
