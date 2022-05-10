@@ -25,7 +25,12 @@ vim.api.nvim_set_keymap("n", "gd", "<CMD>lua vim.lsp.buf.definition()<CR>", { si
 vim.api.nvim_set_keymap("n", "K", "<CMD>lua vim.lsp.buf.hover()<CR>", { silent = true, noremap = true })
 
 -- Format
-vim.api.nvim_set_keymap("n", "<Leader>d", "<CMD>lua vim.lsp.buf.format({ async = true })<CR>", { silent = true, noremap = true })
+vim.api.nvim_set_keymap(
+	"n",
+	"<Leader>d",
+	"<CMD>lua vim.lsp.buf.format({ async = true })<CR>",
+	{ silent = true, noremap = true }
+)
 
 -- Code actions
 vim.api.nvim_set_keymap("n", "ga", "<CMD>lua vim.lsp.buf.code_action()<CR>", { silent = true, noremap = true })
@@ -43,7 +48,7 @@ local ok, aerial = pcall(require, "aerial")
 if ok then
 	opts = {
 		on_attach = aerial.on_attach,
-  }
+	}
 end
 
 lspconfig.clojure_lsp.setup(opts)
@@ -82,27 +87,27 @@ if not ok then
 end
 
 null_ls.setup({
-  sources = {
-    -- Diagnostics
-    null_ls.builtins.diagnostics.credo,
-    null_ls.builtins.diagnostics.flake8,
-    null_ls.builtins.diagnostics.proselint,
-    null_ls.builtins.diagnostics.shellcheck,
-    -- Code actions
-    null_ls.builtins.code_actions.gitsigns,
-    null_ls.builtins.code_actions.proselint,
-    null_ls.builtins.code_actions.shellcheck,
-    -- Formatters
-    null_ls.builtins.formatting.prettier,
-    null_ls.builtins.formatting.joker,
-    null_ls.builtins.formatting.stylua,
-    null_ls.builtins.formatting.swiftformat,
-    null_ls.builtins.formatting.black,
-    null_ls.builtins.formatting.isort,
-    null_ls.builtins.formatting.erlfmt,
-    null_ls.builtins.formatting.fish_indent,
-    null_ls.builtins.formatting.fnlfmt,
-    null_ls.builtins.formatting.shfmt,
-    null_ls.builtins.formatting.shellharden,
-  },
+	sources = {
+		-- Diagnostics
+		null_ls.builtins.diagnostics.credo,
+		null_ls.builtins.diagnostics.flake8,
+		null_ls.builtins.diagnostics.proselint,
+		null_ls.builtins.diagnostics.shellcheck,
+		-- Code actions
+		null_ls.builtins.code_actions.gitsigns,
+		null_ls.builtins.code_actions.proselint,
+		null_ls.builtins.code_actions.shellcheck,
+		-- Formatters
+		null_ls.builtins.formatting.prettier,
+		null_ls.builtins.formatting.joker,
+		null_ls.builtins.formatting.stylua,
+		null_ls.builtins.formatting.swiftformat,
+		null_ls.builtins.formatting.black,
+		null_ls.builtins.formatting.isort,
+		null_ls.builtins.formatting.erlfmt,
+		null_ls.builtins.formatting.fish_indent,
+		null_ls.builtins.formatting.fnlfmt,
+		null_ls.builtins.formatting.shfmt,
+		null_ls.builtins.formatting.shellharden,
+	},
 })

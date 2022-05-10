@@ -330,7 +330,7 @@ return packer.startup(function(use)
 		requires = { "neovim/nvim-lspconfig", "stevearc/aerial.nvim" },
 		config = function()
 			require("nvim-lsp-installer").setup({})
-		end
+		end,
 	})
 	use({
 		"jose-elias-alvarez/null-ls.nvim",
