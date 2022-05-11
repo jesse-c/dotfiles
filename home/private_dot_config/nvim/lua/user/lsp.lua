@@ -51,6 +51,7 @@ if ok then
 	}
 end
 
+lspconfig.bashls.setup(opts)
 lspconfig.clojure_lsp.setup(opts)
 lspconfig.erlangls.setup(opts)
 lspconfig.elixirls.setup(opts)
