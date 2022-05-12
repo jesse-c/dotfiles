@@ -81,6 +81,23 @@ function up
   end
 end
 
+# fzf
+#
+# Migration:
+# fish: Unknown command: fzf_key_bindings
+# ~/.config/fish/functions/fish_user_key_bindings.fish (line 2):
+#   fzf_key_bindings
+#   ^
+# in function 'fish_user_key_bindings'
+# in function '__fish_reload_key_bindings'
+#         called on line 188 of file /usr/local/Cellar/fish/3.4.1/share/fish/functions/__fish_config_interactive.fish
+# in function '__fish_config_interactive'
+#         called on line 153 of file /usr/local/Cellar/fish/3.4.1/share/fish/config.fish
+# in function '__fish_on_interactive'
+# in event handler: handler for generic event 'fish_prompt'
+# https://github.com/PatrickF1/fzf.fish/wiki/Migration-Guides#v7
+fzf_configure_bindings
+
 # Local ------------------------------------------------------------------------
 
 if test -e ~/local.sh
