@@ -51,16 +51,37 @@ if ok then
 	}
 end
 
+-- Source: http://lua-users.org/wiki/CopyTable (22-05-12)
+local function shallowcopy(orig)
+	local orig_type = type(orig)
+	local copy
+	if orig_type == "table" then
+		copy = {}
+		for orig_key, orig_value in pairs(orig) do
+			copy[orig_key] = orig_value
+		end
+	else -- number, string, boolean, etc
+		copy = orig
+	end
+	return copy
+end
+
+local elixir_opts = shallowcopy(opts)
+elixir_opts["cmd"] = { "/Users/jesse/.local/share/nvim/lsp_servers/elixirls/elixir-ls/language_server.sh" }
+
+local lua_opts = shallowcopy(opts)
+lua_opts["cmd"] = { "/Users/jesse/.local/share/nvim/lsp_servers/sumneko_lua/extension/server/bin/lua-language-server" }
+
 lspconfig.bashls.setup(opts)
 lspconfig.clojure_lsp.setup(opts)
 lspconfig.erlangls.setup(opts)
-lspconfig.elixirls.setup(opts)
+lspconfig.elixirls.setup(elixir_opts)
 lspconfig.lemminx.setup(opts)
 lspconfig.pylsp.setup(opts)
 lspconfig.rust_analyzer.setup(opts)
 lspconfig.sourcekit.setup(opts)
 lspconfig.sqls.setup(opts)
-lspconfig.sumneko_lua.setup(opts)
+lspconfig.sumneko_lua.setup(lua_opts)
 lspconfig.tsserver.setup(opts)
 
 local ok, aerial = pcall(require, "aerial")
