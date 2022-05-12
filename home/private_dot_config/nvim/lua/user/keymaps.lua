@@ -8,5 +8,6 @@ vim.api.nvim_set_keymap("n", "<C-h>", ":wincmd h<CR>", { silent = true, noremap 
 vim.api.nvim_set_keymap("n", "<C-l>", ":wincmd l<CR>", { silent = true, noremap = true })
 
 vim.api.nvim_set_keymap("n", "<C-q>", ":q<CR>", { silent = true, noremap = true })
+vim.api.nvim_set_keymap("n", "<C-a>", ":bd<CR>", { silent = true, noremap = true })
 
 vim.api.nvim_set_keymap("n", "<Leader>.", ':lua require("user.a")()<CR>', { silent = true, noremap = true })
