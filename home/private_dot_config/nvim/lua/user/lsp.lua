@@ -71,6 +71,19 @@ elixir_opts["cmd"] = { "/Users/jesse/.local/share/nvim/lsp_servers/elixirls/elix
 
 local lua_opts = shallowcopy(opts)
 lua_opts["cmd"] = { "/Users/jesse/.local/share/nvim/lsp_servers/sumneko_lua/extension/server/bin/lua-language-server" }
+lua_opts["settings"] = {
+	-- Get the language server to recognize the `vim` global
+	-- https://www.reddit.com/r/neovim/comments/khk335/lua_configuration_global_vim_is_undefined/
+	-- https://neovim.discourse.group/t/how-to-suppress-warning-undefined-global-vim/1882/8
+	Lua = {
+		diagnostics = {
+			globals = { "vim" },
+		},
+	},
+}
+
+local pylsp_opts = shallowcopy(opts)
+pylsp_opts["cmd"] = { "/Users/jesse/.local/share/nvim/lsp_servers/pylsp/venv/bin/pylsp" }
 
 lspconfig.bashls.setup(opts)
 lspconfig.clojure_lsp.setup(opts)
