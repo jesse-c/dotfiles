@@ -496,6 +496,19 @@ return packer.startup(function(use)
 	-- Formatting
 	use("sbdchd/neoformat")
 
+	-- Testing
+	use("vim-test/vim-test")
+	use({
+		"rcarriga/vim-ultest",
+		requires = "vim-test/vim-test",
+		run = ":UpdateRemotePlugins",
+		config = function()
+			vim.api.nvim_set_keymap("n", "<Space>y", "<CMD>UltestLast<CR>", { silent = true, noremap = true })
+			vim.api.nvim_set_keymap("n", "<Space>u", "<CMD>UltestNearest<CR>", { silent = true, noremap = true })
+			vim.api.nvim_set_keymap("n", "<Space>o", "<CMD>Ultest<CR>", { silent = true, noremap = true })
+		end,
+	})
+
 	-- Languages
 
 	-- Languages / plist
