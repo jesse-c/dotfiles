@@ -505,7 +505,9 @@ return packer.startup(function(use)
 		config = function()
 			vim.api.nvim_set_keymap("n", "<Space>y", "<CMD>UltestLast<CR>", { silent = true, noremap = true })
 			vim.api.nvim_set_keymap("n", "<Space>u", "<CMD>UltestNearest<CR>", { silent = true, noremap = true })
-			vim.api.nvim_set_keymap("n", "<Space>o", "<CMD>Ultest<CR>", { silent = true, noremap = true })
+			vim.api.nvim_set_keymap("n", "<Space>i", "<CMD>Ultest<CR>", { silent = true, noremap = true })
+
+			vim.g.ultest_virtual_text = 1
 		end,
 	})
 
