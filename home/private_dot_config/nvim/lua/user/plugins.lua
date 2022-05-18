@@ -184,7 +184,7 @@ return packer.startup(function(use)
 			-- Default theme
 			local theme = "dark_default"
 			-- The "user.ui.theme" module may contain `return $THEME`
-			local theme = require("user.ui.theme")
+			theme = require("user.ui.theme")
 			local ok, local_theme = pcall(require, "user.ui.theme")
 			if ok then
 				theme = local_theme
