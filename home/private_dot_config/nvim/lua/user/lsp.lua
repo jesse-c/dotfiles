@@ -28,7 +28,7 @@ vim.api.nvim_set_keymap("n", "K", "<CMD>lua vim.lsp.buf.hover()<CR>", { silent =
 vim.api.nvim_set_keymap(
 	"n",
 	"<Leader>d",
-	"<CMD>lua vim.lsp.buf.formatting({ async = true })<CR>",
+	"<CMD>lua vim.lsp.buf.format({ async = true })<CR>",
 	{ silent = true, noremap = true }
 )
 
