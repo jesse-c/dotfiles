@@ -10,8 +10,6 @@ vim.api.nvim_set_keymap("n", "<C-l>", ":wincmd l<CR>", { silent = true, noremap 
 vim.api.nvim_set_keymap("n", "<C-q>", ":q<CR>", { silent = true, noremap = true })
 vim.api.nvim_set_keymap("n", "<C-a>", ":bd<CR>", { silent = true, noremap = true })
 
-vim.api.nvim_set_keymap("n", "<Leader>.", ':lua require("user.a")()<CR>', { silent = true, noremap = true })
-
 -- https://www.reddit.com/r/neovim/comments/um3epn/what_are_your_prizedfavorite_lua_functions/
 local async = require("plenary.async")
 local packer_sync = function()
