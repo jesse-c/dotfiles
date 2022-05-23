@@ -85,6 +85,12 @@ lua_opts["settings"] = {
 local pylsp_opts = shallowcopy(opts)
 pylsp_opts["cmd"] = { "/Users/jesse/.local/share/nvim/lsp_servers/pylsp/venv/bin/pylsp" }
 
+local tsserver_opts = shallowcopy(opts)
+tsserver_opts["cmd"] = {
+	"/Users/jesse/.local/share/nvim/lsp_servers/tsserver/node_modules/.bin/typescript-language-server",
+	"--stdio",
+}
+
 lspconfig.bashls.setup(opts)
 lspconfig.clojure_lsp.setup(opts)
 lspconfig.erlangls.setup(opts)
@@ -95,7 +101,7 @@ lspconfig.rust_analyzer.setup(opts)
 lspconfig.sourcekit.setup(opts)
 lspconfig.sqls.setup(opts)
 lspconfig.sumneko_lua.setup(lua_opts)
-lspconfig.tsserver.setup(opts)
+lspconfig.tsserver.setup(tsserver_opts)
 
 local ok, aerial = pcall(require, "aerial")
 if not ok then
