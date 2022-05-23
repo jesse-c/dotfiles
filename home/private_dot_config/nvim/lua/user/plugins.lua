@@ -237,45 +237,15 @@ return packer.startup(function(use)
 
 	-- Statusline
 	use({
-		"nvim-lualine/lualine.nvim",
-		requires = { "kyazdani42/nvim-web-devicons", opt = true },
+		"feline-nvim/feline.nvim",
+		requires = "lewis6991/gitsigns.nvim",
 		config = function()
-			local function condensed_path()
-				local path = vim.fn.pathshorten(vim.fn.fnamemodify(vim.fn.expand("%:p"), ":p:."))
+			local feline = require("feline")
 
-				return path
-			end
-
-			require("lualine").setup({
-				options = {
-					icons_enabled = true,
-					theme = "auto",
-					component_separators = { left = "", right = "" },
-					section_separators = { left = "", right = "" },
-					disabled_filetypes = {},
-					always_divide_middle = true,
-				},
-				sections = {
-					lualine_a = { "mode" },
-					lualine_b = { "branch", "diff", { "diagnostics", sources = { "nvim_diagnostic" } } },
-					-- lualine_c = { condensed_path },
-					lualine_c = {},
-					lualine_x = { "%{ObsessionStatus('●', '○')}", "encoding", "fileformat", "filetype" },
-					lualine_y = { "progress" },
-					lualine_z = { "location" },
-				},
-				inactive_sections = {
-					lualine_a = {},
-					lualine_b = {},
-					lualine_c = { condensed_path },
-					lualine_x = { "location" },
-					lualine_y = {},
-					lualine_z = {},
-				},
-				tabline = {},
-				extensions = { "nvim-tree" },
-			})
+			feline.setup()
+			feline.winbar.setup()
 		end,
+		disable = false,
 	})
 
 	-- Undo
