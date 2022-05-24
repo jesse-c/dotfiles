@@ -326,6 +326,9 @@ return packer.startup(function(use)
 	use({
 		"stevearc/aerial.nvim",
 		requires = "stevearc/stickybuf.nvim",
+		config = function()
+			require("aerial").setup()
+		end,
 	})
 	-- Standalone UI for nvim-lsp progress. Eye candy for the impatient.
 	use({

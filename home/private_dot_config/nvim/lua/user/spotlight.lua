@@ -59,8 +59,8 @@ wk.register({
 		l = {
 			name = "LSP",
 			r = { "<CMD>lua vim.lsp.buf.rename()<CR>", "Rename" },
-			f = { "<CMD>lua vim.lsp.buf.format({ async = true })<CR>", "Rename" },
-			a = { "<CMD>lua vim.lsp.buf.code_action()<CR>", "Rename" },
+			f = { "<CMD>lua vim.lsp.buf.format({ async = true })<CR>", "Format" },
+			a = { "<CMD>lua vim.lsp.buf.code_action()<CR>", "Code actions" },
 		},
 	},
 
@@ -91,6 +91,7 @@ wk.register({
 			name = "LSP",
 			k = { "<CMD>lua vim.lsp.buf.hover()<CR>", "Hover" },
 			e = { "<CMD>im.diagnostic.open_float()<CR>", "Diagnostics" },
+			t = { "<CMD>AerialToggle<CR>", "Outline" },
 		},
 	},
 
