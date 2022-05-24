@@ -67,8 +67,8 @@ wk.register({
 	-- Minor mode: Goto
 	g = {
 		name = "Goto",
-		-- TODO Tree-Sitter
 		a = { "<CMD>lua require'hop'.hint_words()<CR>", "Hop / Words" },
+		-- TODO Tree-Sitter
 		-- LSP
 		l = {
 			name = "LSP",
@@ -76,10 +76,10 @@ wk.register({
 			S = { "<CMD>Telescope lsp_workspace_symbols<CR>", "Symbols / Workspace" },
 			h = { "<CMD>Telescope diagnostics bufnr=0<CR>", "Diagnostisc / Document" },
 			H = { "<CMD>Telescope diagnostics<CR>", "Diagnostics / Workspace" },
-			d = { "<cmd>lua vim.lsp.buf.definition()<CR>", "Definition" },
-			D = { "<cmd>lua vim.lsp.buf.declaration()<CR>", "Declaration" },
-			i = { "<cmd>lua vim.lsp.buf.implementation()<CR>", "Implementation" },
-			t = { "<cmd>lua vim.lsp.buf.type_definition()<CR>", "Type definition" },
+			d = { "<CMD>lua vim.lsp.buf.definition()<CR>", "Definition" },
+			D = { "<CMD>lua vim.lsp.buf.declaration()<CR>", "Declaration" },
+			i = { "<CMD>lua vim.lsp.buf.implementation()<CR>", "Implementation" },
+			t = { "<CMD>lua vim.lsp.buf.type_definition()<CR>", "Type definition" },
 		},
 	},
 
@@ -124,17 +124,17 @@ wk.register({
 	-- Minor mode: Previous
 	p = {
 		name = "Previous",
-		e = { "<cmd>silent lua vim.diagnostic.goto_prev()<cr>", "Error" },
-		q = { "<cmd>cprevious<cr>", "quickfix item" },
-		c = { "<cmd>lua require('gitsigns.actions').prev_hunk()<CR>", "Change" },
+		e = { "<CMD>silent lua vim.diagnostic.goto_prev()<cr>", "Error" },
+		q = { "<CMD>cprevious<cr>", "quickfix item" },
+		c = { "<CMD>lua require('gitsigns.actions').prev_hunk()<CR>", "Change" },
 	},
 
 	-- Minor mode: Next
 	n = {
 		name = "Next",
-		e = { "<cmd>silent lua vim.diagnostic.goto_next()<cr>", "Error" },
-		q = { "<cmd>cnext<cr>", "quickfix item" },
-		c = { "<cmd>lua require('gitsigns.actions').next_hunk()<CR>", "Change" },
+		e = { "<CMD>silent lua vim.diagnostic.goto_next()<cr>", "Error" },
+		q = { "<CMD>cnext<cr>", "quickfix item" },
+		c = { "<CMD>lua require('gitsigns.actions').next_hunk()<CR>", "Change" },
 	},
 
 	-- Minor mode: Run
