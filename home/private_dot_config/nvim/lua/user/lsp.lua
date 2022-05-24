@@ -18,23 +18,6 @@ for type, icon in pairs(signs) do
 	vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
 end
 
--- Go to definition
-vim.api.nvim_set_keymap("n", "gd", "<CMD>lua vim.lsp.buf.definition()<CR>", { silent = true, noremap = true })
-
--- Hover doc
-vim.api.nvim_set_keymap("n", "K", "<CMD>lua vim.lsp.buf.hover()<CR>", { silent = true, noremap = true })
-
--- Format
-vim.api.nvim_set_keymap(
-	"n",
-	"<Leader>d",
-	"<CMD>lua vim.lsp.buf.format({ async = true })<CR>",
-	{ silent = true, noremap = true }
-)
-
--- Code actions
-vim.api.nvim_set_keymap("n", "ga", "<CMD>lua vim.lsp.buf.code_action()<CR>", { silent = true, noremap = true })
-
 local ok, lsp_installer = pcall(require, "nvim-lsp-installer")
 if not ok then
 	return

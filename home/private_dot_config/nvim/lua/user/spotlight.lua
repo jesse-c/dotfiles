@@ -58,7 +58,9 @@ wk.register({
 		-- LSP
 		l = {
 			name = "LSP",
-			r = { "<cmd>lua vim.lsp.buf.rename()<CR>", "Rename" },
+			r = { "<CMD>lua vim.lsp.buf.rename()<CR>", "Rename" },
+			f = { "<CMD>lua vim.lsp.buf.format({ async = true })<CR>", "Rename" },
+			a = { "<CMD>lua vim.lsp.buf.code_action()<CR>", "Rename" },
 		},
 	},
 
