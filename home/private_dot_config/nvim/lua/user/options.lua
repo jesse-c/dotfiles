@@ -14,7 +14,6 @@ local configuration_folder = vim.fn.expand("~") .. "/.config/nvim"
 ----------
 -- True colour support
 o.termguicolors = true
-
 ---------------------
 -- File
 ---------------------
@@ -78,10 +77,3 @@ wo.foldmethod = "expr"
 ----------------
 vim.cmd([[ nmap <F3> i<C-R>=strftime("%Y-%m-%d")<CR><Esc> ]])
 vim.cmd([[ imap <F3> <C-R>=strftime("%Y-%m-%d")<CR> ]])
-
-vim.cmd([[ nnoremap <leader>ev :vsplit $MYVIMRC<cr> ]]) -- Edit my vimrc
-vim.cmd([[ nnoremap <leader>sv :source $MYVIMRC<cr> ]]) -- Source my vimrc
-
--- https://vim.fandom.com/wiki/Copy_filename_to_clipboard
-vim.cmd([[ nmap <leader>cs :let @*=expand("%")<CR> ]])
-vim.cmd([[ nmap <leader>cl :let @*=expand("%:p")<CR> ]])
