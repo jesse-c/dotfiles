@@ -119,6 +119,7 @@ return packer.startup(function(use)
 			require("numb").setup()
 		end,
 	})
+	use("linty-org/key-menu.nvim")
 	use({
 		"folke/which-key.nvim",
 		config = function()
