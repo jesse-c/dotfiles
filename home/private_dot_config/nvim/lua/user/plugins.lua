@@ -243,8 +243,10 @@ return packer.startup(function(use)
 		config = function()
 			local feline = require("feline")
 
-			feline.setup()
-			feline.winbar.setup()
+			local config = require("user.plugins.feline-nvim")
+
+			feline.setup(config.statusline)
+			feline.winbar.setup(config.winbar)
 		end,
 		disable = false,
 	})
