@@ -74,7 +74,16 @@ tsserver_opts["cmd"] = {
 	"--stdio",
 }
 
-lspconfig.bashls.setup(opts)
+local bashls_opts = shallowcopy(opts)
+bashls_opts["cmd"] = {
+	"/Users/jesse/.local/share/nvim/lsp_servers/bashls/node_modules/.bin/bash-language-server",
+	"start",
+}
+
+local sqls_opts = shallowcopy(opts)
+sqls_opts["cmd"] = { "~/.local/share/nvim/lsp_servers/sqls/sqls" }
+
+lspconfig.bashls.setup(bashls_opts)
 lspconfig.clojure_lsp.setup(opts)
 lspconfig.erlangls.setup(opts)
 lspconfig.elixirls.setup(elixir_opts)
@@ -82,7 +91,7 @@ lspconfig.lemminx.setup(opts)
 lspconfig.pylsp.setup(opts)
 lspconfig.rust_analyzer.setup(opts)
 lspconfig.sourcekit.setup(opts)
-lspconfig.sqls.setup(opts)
+lspconfig.sqls.setup(sqls_opts)
 lspconfig.sumneko_lua.setup(lua_opts)
 lspconfig.tsserver.setup(tsserver_opts)
 
