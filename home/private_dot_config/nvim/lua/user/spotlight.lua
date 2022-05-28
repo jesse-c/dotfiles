@@ -66,14 +66,14 @@ space("a", "Actions")
 
 -- -- LSP
 space("al", "LSP")
-vim.keymap.set("n", "<Space>alr", "<CMD>lua vim.lsp.buf.rename()<CR>", { desc = "Rename" })
+vim.keymap.set("n", "<Space>alr", vim.lsp.buf.rename, { desc = "Rename" })
 vim.keymap.set("n", "<Space>alf", "<CMD>lua vim.lsp.buf.format({ async = true })<CR>", { desc = "Format" })
-vim.keymap.set("n", "<Space>ala", "<CMD>lua vim.lsp.buf.code_action()<CR>", { desc = "Code actions" })
+vim.keymap.set("n", "<Space>ala", vim.lsp.buf.code_action, { desc = "Code actions" })
 
 -- Minor mode: Goto
 space("g", "Goto")
 
-vim.keymap.set("n", "<Space>aa", '<CMD>lua require"hop".hint_words()<CR>', { desc = "Hop / Words" })
+vim.keymap.set("n", "<Space>aa", require("hop").hint_words, { desc = "Hop / Words" })
 
 -- -- LSP
 space("gl", "LSP")
@@ -81,10 +81,10 @@ vim.keymap.set("n", "<Space>gls", "<CMD>Telescope lsp_document_symbols<CR>", { d
 vim.keymap.set("n", "<Space>glS", "<CMD>Telescope lsp_workspace_symbols<CR>", { desc = "Symbols / Workspace" })
 vim.keymap.set("n", "<Space>glh", "<CMD>Telescope diagnostics bufnr=0<CR>", { desc = "Diagnostics / Document" })
 vim.keymap.set("n", "<Space>glH", "<CMD>Telescope diagnostics<CR>", { desc = "Diagnostics / Workspace" })
-vim.keymap.set("n", "<Space>gld", "<CMD>lua vim.lsp.buf.definition()<CR>", { desc = "Definition" })
-vim.keymap.set("n", "<Space>glD", "<CMD>lua vim.lsp.buf.declaration()<CR>", { desc = "Declaration" })
-vim.keymap.set("n", "<Space>gli", "<CMD>lua vim.lsp.buf.implementation()<CR>", { desc = "Implementation" })
-vim.keymap.set("n", "<Space>glt", "<CMD>lua vim.lsp.buf.type_definition()<CR>", { desc = "Type definition" })
+vim.keymap.set("n", "<Space>gld", vim.lsp.buf.definition, { desc = "Definition" })
+vim.keymap.set("n", "<Space>glD", vim.lsp.buf.declaration, { desc = "Declaration" })
+vim.keymap.set("n", "<Space>gli", vim.lsp.buf.implementation, { desc = "Implementation" })
+vim.keymap.set("n", "<Space>glt", vim.lsp.buf.type_definition, { desc = "Type definition" })
 
 -- Minor mode: Show
 space("h", "Show")
@@ -96,13 +96,13 @@ vim.keymap.set("n", "<Space>htv", "<CMD>NvimTreeFindFile<CR>", { desc = "Find fi
 
 -- -- LSP
 space("hl", "LSP")
-vim.keymap.set("n", "<Space>hlk", "<CMD>lua vim.lsp.buf.hover()<CR>", { desc = "Hover" })
-vim.keymap.set("n", "<Space>hle", "<CMD>lua vim.diagnostic.open_float()<CR>", { desc = "Diagnostics" })
+vim.keymap.set("n", "<Space>hlk", vim.lsp.buf.hover, { desc = "Hover" })
+vim.keymap.set("n", "<Space>hle", vim.diagnostic.open_float, { desc = "Diagnostics" })
 vim.keymap.set("n", "<Space>hlt", "<CMD>AerialToggle<CR>", { desc = "Outline" })
 
 -- Minor mode: Open
 space("o", "Open")
-vim.keymap.set("n", "<Space>oa", '<CMD>lua require("user.a")()<CR>', { desc = "Alternate file" })
+vim.keymap.set("n", "<Space>oa", require("user.a"), { desc = "Alternate file" })
 vim.keymap.set("n", "<Space>ot", "<CMD>Telescope tags<CR>", { desc = "Tags" })
 vim.keymap.set("n", "<Space>ob", "<CMD>Telescope buffers<CR>", { desc = "Buffers" })
 vim.keymap.set("n", "<Space>om", "<CMD>Telescope marks<CR>", { desc = "Marks" })
@@ -117,15 +117,15 @@ vim.keymap.set("n", "<Space>fg", "<CMD>Telescope live_grep<CR>", { desc = "Grep"
 
 -- Minor mode: Previous
 space("p", "Previous")
-vim.keymap.set("n", "<Space>pe", "<CMD>silent lua vim.diagnostic.goto_prev()<CR>", { desc = "Error" })
+vim.keymap.set("n", "<Space>pe", vim.diagnostic.goto_prev, { desc = "Error", silent = true })
 vim.keymap.set("n", "<Space>pq", "<CMD>cprevious<cr><cr>", { desc = "quickfix item" })
-vim.keymap.set("n", "<Space>pc", '<CMD>lua require("gitsigns.actions").prev_hunk()<CR>', { desc = "Change" })
+vim.keymap.set("n", "<Space>pc", require("gitsigns.actions").prev_hunk, { desc = "Change" })
 
 -- Minor mode: Next
 space("n", "Next")
-vim.keymap.set("n", "<Space>ne", "<CMD>silent lua vim.diagnostic.goto_next()<CR>", { desc = "Error" })
+vim.keymap.set("n", "<Space>ne", vim.diagnostic.goto_next, { desc = "Error", silent = true })
 vim.keymap.set("n", "<Space>nq", "<CMD>cnext<cr><cr>", { desc = "quickfix item" })
-vim.keymap.set("n", "<Space>nc", '<CMD>lua require("gitsigns.actions").next_hunk()<CR>', { desc = "Change" })
+vim.keymap.set("n", "<Space>nc", require("gitsigns.actions").next_hunk, { desc = "Change" })
 
 -- Minor mode: Run
 space("r", "Run")
