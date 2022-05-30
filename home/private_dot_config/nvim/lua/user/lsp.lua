@@ -50,10 +50,10 @@ local function shallowcopy(orig)
 end
 
 local elixir_opts = shallowcopy(opts)
-elixir_opts["cmd"] = { "/Users/jesse/.local/share/nvim/lsp_servers/elixirls/elixir-ls/language_server.sh" }
+elixir_opts["cmd"] = { "~/.local/share/nvim/lsp_servers/elixirls/elixir-ls/language_server.sh" }
 
 local lua_opts = shallowcopy(opts)
-lua_opts["cmd"] = { "/Users/jesse/.local/share/nvim/lsp_servers/sumneko_lua/extension/server/bin/lua-language-server" }
+lua_opts["cmd"] = { "~/.local/share/nvim/lsp_servers/sumneko_lua/extension/server/bin/lua-language-server" }
 lua_opts["settings"] = {
 	-- Get the language server to recognize the `vim` global
 	-- https://www.reddit.com/r/neovim/comments/khk335/lua_configuration_global_vim_is_undefined/
@@ -65,35 +65,19 @@ lua_opts["settings"] = {
 	},
 }
 
-local pylsp_opts = shallowcopy(opts)
-pylsp_opts["cmd"] = { "/Users/jesse/.local/share/nvim/lsp_servers/pylsp/venv/bin/pylsp" }
-
-local tsserver_opts = shallowcopy(opts)
-tsserver_opts["cmd"] = {
-	"/Users/jesse/.local/share/nvim/lsp_servers/tsserver/node_modules/.bin/typescript-language-server",
-	"--stdio",
-}
-
-local bashls_opts = shallowcopy(opts)
-bashls_opts["cmd"] = {
-	"/Users/jesse/.local/share/nvim/lsp_servers/bashls/node_modules/.bin/bash-language-server",
-	"start",
-}
-
-local sqls_opts = shallowcopy(opts)
-sqls_opts["cmd"] = { "~/.local/share/nvim/lsp_servers/sqls/sqls" }
-
-lspconfig.bashls.setup(bashls_opts)
+lspconfig.bashls.setup(opts)
 lspconfig.clojure_lsp.setup(opts)
 lspconfig.erlangls.setup(opts)
 lspconfig.elixirls.setup(elixir_opts)
 lspconfig.lemminx.setup(opts)
+lspconfig.ltex.setup(opts)
 lspconfig.pylsp.setup(opts)
 lspconfig.rust_analyzer.setup(opts)
 lspconfig.sourcekit.setup(opts)
-lspconfig.sqls.setup(sqls_opts)
+lspconfig.prosemd_lsp.setup(opts)
+lspconfig.sqls.setup(opts)
 lspconfig.sumneko_lua.setup(lua_opts)
-lspconfig.tsserver.setup(tsserver_opts)
+lspconfig.tsserver.setup(opts)
 
 local ok, aerial = pcall(require, "aerial")
 if not ok then
@@ -112,6 +96,7 @@ null_ls.setup({
 		null_ls.builtins.diagnostics.flake8,
 		null_ls.builtins.diagnostics.proselint,
 		null_ls.builtins.diagnostics.shellcheck,
+		null_ls.builtins.diagnostics.vale,
 		-- Code actions
 		null_ls.builtins.code_actions.gitsigns,
 		null_ls.builtins.code_actions.proselint,
