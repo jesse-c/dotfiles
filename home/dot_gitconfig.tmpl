@@ -1,6 +1,7 @@
 [user]
 	name = Jesse Claven
-	email = jesse.claven@me.com
+	email = {{ .email | quote }}
+	signingkey = {{ .email | quote }}
 [github]
 	user = jesse-c
 [color]
@@ -10,17 +11,6 @@
 	excludesfile = ~/.gitignore_global
 	autocrlf = input
 	pager = delta --dark
-[difftool "sourcetree"]
-	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
-	path =
-[mergetool "sourcetree"]
-	cmd = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
-	trustExitCode = true
-[difftool "Kaleidoscope"]
-	cmd = ksdiff --partial-changeset --relative-path \"$MERGED\" -- \"$LOCAL\" \"$REMOTE\"
-[mergetool "Kaleidoscope"]
-	cmd = ksdiff --merge --output \"$MERGED\" --base \"$BASE\" -- \"$LOCAL\" --snapshot \"$REMOTE\" --snapshot
-	trustexitcode = true
 [stash]
 	showPatch = true
 [merge]
