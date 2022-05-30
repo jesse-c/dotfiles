@@ -18,7 +18,7 @@ for type, icon in pairs(signs) do
 	vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
 end
 
-local ok, lsp_installer = pcall(require, "nvim-lsp-installer")
+local ok, _ = pcall(require, "nvim-lsp-installer")
 if not ok then
 	return
 end
@@ -27,10 +27,34 @@ local lspconfig = require("lspconfig")
 
 local opts = {}
 
-local ok, aerial = pcall(require, "aerial")
-if ok then
+local has_aerial, aerial = pcall(require, "aerial")
+if has_aerial then
+	local on_attach = function(client, bufnr)
+		aerial.on_attach(client, bufnr)
+
+		-- Code lens
+		if client.server_capabilities.code_lens then
+			-- Do an initial refresh
+			vim.lsp.codelens.refresh()
+
+			-- Setup auto-refreshing
+
+			-- https://github.com/hydeik/dotfiles/blob/022763feec5aa50383474f161dbe7cc111d22bd5/private_dot_config/nvim/lua/rc/config/lsp/code_lens.lua
+			vim.api.nvim_create_augroup("ConfigLspCodeLens", { clear = true })
+
+			vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "CursorHold", "InsertLeave", "TextChanged" }, {
+				group = "ConfigLspCodeLens",
+				buffer = bufnr,
+				callback = function()
+					vim.lsp.codelens.refresh()
+				end,
+				desc = "[LSP] Refresh the codelens for the current buffer.",
+			})
+		end
+	end
+
 	opts = {
-		on_attach = aerial.on_attach,
+		on_attach = on_attach,
 	}
 end
 
@@ -102,11 +126,6 @@ lspconfig.prosemd_lsp.setup(prosemd_lsp_opts)
 lspconfig.sqls.setup(sqls_opts)
 lspconfig.sumneko_lua.setup(lua_opts)
 lspconfig.tsserver.setup(tsserver_opts)
-
-local ok, aerial = pcall(require, "aerial")
-if not ok then
-	return
-end
 
 local ok, null_ls = pcall(require, "null-ls")
 if not ok then

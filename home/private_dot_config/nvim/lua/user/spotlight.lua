@@ -69,11 +69,12 @@ space("al", "LSP")
 vim.keymap.set("n", "<Space>alr", vim.lsp.buf.rename, { desc = "Rename" })
 vim.keymap.set("n", "<Space>alf", "<CMD>lua vim.lsp.buf.format({ async = true })<CR>", { desc = "Format" })
 vim.keymap.set("n", "<Space>ala", vim.lsp.buf.code_action, { desc = "Code actions" })
+vim.keymap.set("n", "<Space>ald", vim.lsp.codelens.run, { desc = "Code lens / Run" })
 
 -- Minor mode: Goto
 space("g", "Goto")
 
-vim.keymap.set("n", "<Space>aa", require("hop").hint_words, { desc = "Hop / Words" })
+vim.keymap.set("n", "<Space>ga", require("hop").hint_words, { desc = "Hop / Words" })
 
 -- -- LSP
 space("gl", "LSP")
@@ -85,6 +86,7 @@ vim.keymap.set("n", "<Space>gld", vim.lsp.buf.definition, { desc = "Definition" 
 vim.keymap.set("n", "<Space>glD", vim.lsp.buf.declaration, { desc = "Declaration" })
 vim.keymap.set("n", "<Space>gli", vim.lsp.buf.implementation, { desc = "Implementation" })
 vim.keymap.set("n", "<Space>glt", vim.lsp.buf.type_definition, { desc = "Type definition" })
+vim.keymap.set("n", "<Space>glr", vim.lsp.buf.references, { desc = "References" })
 
 -- Minor mode: Show
 space("h", "Show")
@@ -97,6 +99,7 @@ vim.keymap.set("n", "<Space>htv", "<CMD>NvimTreeFindFile<CR>", { desc = "Find fi
 -- -- LSP
 space("hl", "LSP")
 vim.keymap.set("n", "<Space>hlk", vim.lsp.buf.hover, { desc = "Hover" })
+vim.keymap.set("n", "<Space>hls", vim.lsp.buf.signature_help, { desc = "Signature help" })
 vim.keymap.set("n", "<Space>hle", vim.diagnostic.open_float, { desc = "Diagnostics" })
 vim.keymap.set("n", "<Space>hlt", "<CMD>AerialToggle<CR>", { desc = "Outline" })
 
