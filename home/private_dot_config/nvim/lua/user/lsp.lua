@@ -50,10 +50,10 @@ local function shallowcopy(orig)
 end
 
 local elixir_opts = shallowcopy(opts)
-elixir_opts["cmd"] = { "~/.local/share/nvim/lsp_servers/elixirls/elixir-ls/language_server.sh" }
+elixir_opts["cmd"] = { "/Users/jesse/.local/share/nvim/lsp_servers/elixirls/elixir-ls/language_server.sh" }
 
 local lua_opts = shallowcopy(opts)
-lua_opts["cmd"] = { "~/.local/share/nvim/lsp_servers/sumneko_lua/extension/server/bin/lua-language-server" }
+lua_opts["cmd"] = { "/Users/jesse/.local/share/nvim/lsp_servers/sumneko_lua/extension/server/bin/lua-language-server" }
 lua_opts["settings"] = {
 	-- Get the language server to recognize the `vim` global
 	-- https://www.reddit.com/r/neovim/comments/khk335/lua_configuration_global_vim_is_undefined/
@@ -65,19 +65,43 @@ lua_opts["settings"] = {
 	},
 }
 
-lspconfig.bashls.setup(opts)
+local pylsp_opts = shallowcopy(opts)
+pylsp_opts["cmd"] = { "/Users/jesse/.local/share/nvim/lsp_servers/pylsp/venv/bin/pylsp" }
+
+local tsserver_opts = shallowcopy(opts)
+tsserver_opts["cmd"] = {
+	"/Users/jesse/.local/share/nvim/lsp_servers/tsserver/node_modules/.bin/typescript-language-server",
+	"--stdio",
+}
+
+local bashls_opts = shallowcopy(opts)
+bashls_opts["cmd"] = {
+	"/Users/jesse/.local/share/nvim/lsp_servers/bashls/node_modules/.bin/bash-language-server",
+	"start",
+}
+
+local sqls_opts = shallowcopy(opts)
+sqls_opts["cmd"] = { "/Users/jesse/.local/share/nvim/lsp_servers/sqls/sqls" }
+
+local prosemd_lsp_opts = shallowcopy(opts)
+prosemd_lsp_opts["cmd"] = { "/Users/jesse/.local/share/nvim/lsp_servers/prosemd_lsp/prosemd-lsp" }
+
+local ltex_lsp_opts = shallowcopy(opts)
+ltex_lsp_opts["cmd"] = { "/Users/jesse/.local/share/nvim/lsp_servers/ltex/ltex-ls/bin/ltex-ls" }
+
+lspconfig.bashls.setup(bashls_opts)
 lspconfig.clojure_lsp.setup(opts)
 lspconfig.erlangls.setup(opts)
 lspconfig.elixirls.setup(elixir_opts)
 lspconfig.lemminx.setup(opts)
-lspconfig.ltex.setup(opts)
-lspconfig.pylsp.setup(opts)
+lspconfig.ltex.setup(ltex_lsp_opts)
+lspconfig.pylsp.setup(pylsp_opts)
 lspconfig.rust_analyzer.setup(opts)
 lspconfig.sourcekit.setup(opts)
-lspconfig.prosemd_lsp.setup(opts)
-lspconfig.sqls.setup(opts)
+lspconfig.prosemd_lsp.setup(prosemd_lsp_opts)
+lspconfig.sqls.setup(sqls_opts)
 lspconfig.sumneko_lua.setup(lua_opts)
-lspconfig.tsserver.setup(opts)
+lspconfig.tsserver.setup(tsserver_opts)
 
 local ok, aerial = pcall(require, "aerial")
 if not ok then
