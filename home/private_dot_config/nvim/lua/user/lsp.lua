@@ -73,12 +73,14 @@ local function shallowcopy(orig)
 	return copy
 end
 
-local elixir_opts = shallowcopy(opts)
-elixir_opts["cmd"] = { "/Users/jesse/.local/share/nvim/lsp_servers/elixirls/elixir-ls/language_server.sh" }
+local elixirls_opts = shallowcopy(opts)
+elixirls_opts["cmd"] = { "/Users/jesse/.local/share/nvim/lsp_servers/elixirls/elixir-ls/language_server.sh" }
 
-local lua_opts = shallowcopy(opts)
-lua_opts["cmd"] = { "/Users/jesse/.local/share/nvim/lsp_servers/sumneko_lua/extension/server/bin/lua-language-server" }
-lua_opts["settings"] = {
+local sumenko_opts = shallowcopy(opts)
+sumenko_opts["cmd"] = {
+	"/Users/jesse/.local/share/nvim/lsp_servers/sumneko_lua/extension/server/bin/lua-language-server",
+}
+sumenko_opts["settings"] = {
 	-- Get the language server to recognize the `vim` global
 	-- https://www.reddit.com/r/neovim/comments/khk335/lua_configuration_global_vim_is_undefined/
 	-- https://neovim.discourse.group/t/how-to-suppress-warning-undefined-global-vim/1882/8
@@ -113,10 +115,17 @@ prosemd_lsp_opts["cmd"] = { "/Users/jesse/.local/share/nvim/lsp_servers/prosemd_
 local ltex_lsp_opts = shallowcopy(opts)
 ltex_lsp_opts["cmd"] = { "/Users/jesse/.local/share/nvim/lsp_servers/ltex/ltex-ls/bin/ltex-ls" }
 
+local jsonls_opts = shallowcopy(opts)
+jsonls_opts["cmd"] = {
+	"/Users/jesse/.local/share/nvim/lsp_servers/jsonls/node_modules/.bin/vscode-json-language-server",
+	"--stdio",
+}
+
 lspconfig.bashls.setup(bashls_opts)
 lspconfig.clojure_lsp.setup(opts)
 lspconfig.erlangls.setup(opts)
-lspconfig.elixirls.setup(elixir_opts)
+lspconfig.elixirls.setup(elixirls_opts)
+lspconfig.jsonls.setup(jsonls_opts)
 lspconfig.lemminx.setup(opts)
 lspconfig.ltex.setup(ltex_lsp_opts)
 lspconfig.pylsp.setup(pylsp_opts)
@@ -124,7 +133,7 @@ lspconfig.rust_analyzer.setup(opts)
 lspconfig.sourcekit.setup(opts)
 lspconfig.prosemd_lsp.setup(prosemd_lsp_opts)
 lspconfig.sqls.setup(sqls_opts)
-lspconfig.sumneko_lua.setup(lua_opts)
+lspconfig.sumneko_lua.setup(sumenko_opts)
 lspconfig.tsserver.setup(tsserver_opts)
 
 local ok, null_ls = pcall(require, "null-ls")
