@@ -121,20 +121,65 @@ jsonls_opts["cmd"] = {
 	"--stdio",
 }
 
+local html_opts = shallowcopy(opts)
+html_opts["cmd"] = {
+	"/Users/jesse/.local/share/nvim/lsp_servers/html/node_modules/vscode-langservers-extracted/bin/vscode-html-language-server",
+	"--stdio",
+}
+
+local yamlls_opts = shallowcopy(opts)
+yamlls_opts["cmd"] = {
+	"/Users/jesse/.local/share/nvim/lsp_servers/yamlls/node_modules/.bin/yaml-language-server",
+	"--stdio",
+}
+
+local solargraph_opts = shallowcopy(opts)
+solargraph_opts["cmd"] = {
+	"/Users/jesse/.local/share/nvim/lsp_servers/solargraph/bin/solargraph",
+	"stdio",
+}
+
+local sorbet_opts = shallowcopy(opts)
+sorbet_opts["cmd"] = {
+	"/Users/jesse/.local/share/nvim/lsp_servers/sorbet/bin/srb",
+	"tc",
+	--lsp",
+}
+
+local lemminx_opts = shallowcopy(opts)
+lemminx_opts["cmd"] = {
+	"/Users/jesse/.local/share/nvim/lsp_servers/lemminx/lemminx",
+}
+
+local clojure_lsp_opts = shallowcopy(opts)
+clojure_lsp_opts["cmd"] = {
+	"/Users/jesse/.local/share/nvim/lsp_servers/clojure_lsp/clojure-lsp",
+}
+
+local gopls_opts = shallowcopy(opts)
+gopls_opts["cmd"] = {
+	"/Users/jesse/.local/share/nvim/lsp_servers/gopls/clojure-lsp",
+}
+
 lspconfig.bashls.setup(bashls_opts)
-lspconfig.clojure_lsp.setup(opts)
+lspconfig.clojure_lsp.setup(clojure_lsp_opts)
 lspconfig.erlangls.setup(opts)
 lspconfig.elixirls.setup(elixirls_opts)
+lspconfig.gopls.setup(gopls_opts)
+lspconfig.html.setup(html_opts)
 lspconfig.jsonls.setup(jsonls_opts)
-lspconfig.lemminx.setup(opts)
+lspconfig.lemminx.setup(lemminx_opts)
 lspconfig.ltex.setup(ltex_lsp_opts)
 lspconfig.pylsp.setup(pylsp_opts)
 lspconfig.rust_analyzer.setup(opts)
 lspconfig.sourcekit.setup(opts)
 lspconfig.prosemd_lsp.setup(prosemd_lsp_opts)
+lspconfig.sorbet.setup(sorbet_opts)
+lspconfig.solargraph.setup(solargraph_opts)
 lspconfig.sqls.setup(sqls_opts)
 lspconfig.sumneko_lua.setup(sumenko_opts)
 lspconfig.tsserver.setup(tsserver_opts)
+lspconfig.yamlls.setup(yamlls_opts)
 
 local ok, null_ls = pcall(require, "null-ls")
 if not ok then
