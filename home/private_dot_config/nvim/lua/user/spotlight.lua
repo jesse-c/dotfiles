@@ -143,6 +143,20 @@ vim.keymap.set("n", "<Space>rts", "<CMD>UltestSummary<CR>", { desc = "Summary" }
 -- Minor mode: System
 space("s", "System")
 
+-- https://www.reddit.com/r/neovim/comments/um3epn/what_are_your_prizedfavorite_lua_functions/
+local async = require("plenary.async")
+local packer_sync = function()
+	async.run(function()
+		vim.notify.async("Syncing packer.", "info", {
+			title = "Packer",
+		})
+	end)
+	local snap_shot_time = os.date("!%Y-%m-%dT%TZ")
+	vim.cmd("PackerSnapshot " .. snap_shot_time)
+	vim.cmd("PackerSync")
+end
+vim.keymap.set("n", "<Space>ss", packer_sync, { desc = "Sync" })
+
 -- -- File
 space("sf", "File")
 -- https://vim.fandom.com/wiki/Copy_filename_to_clipboard
