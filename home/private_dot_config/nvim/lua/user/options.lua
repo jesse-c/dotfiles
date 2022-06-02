@@ -70,5 +70,5 @@ end
 --------
 -- Folds
 --------
-o.foldexpr = "nvim_treesitter#foldexpr()"
+wo.foldexpr = "nvim_treesitter#foldexpr()"
 wo.foldmethod = "expr"
