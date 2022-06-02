@@ -137,7 +137,9 @@ space("r", "Run")
 space("rt", "Test")
 vim.keymap.set("n", "<Space>rty", "<CMD>UltestLast<CR>", { desc = "Last" })
 vim.keymap.set("n", "<Space>rtu", "<CMD>UltestNearest<CR>", { desc = "Nearest" })
+vim.keymap.set("n", "<Space>rtj", "<CMD>UltestStopNearest<CR>", { desc = "Nearest (Stop)" })
 vim.keymap.set("n", "<Space>rti", "<CMD>Ultest<CR>", { desc = "All" })
+vim.keymap.set("n", "<Space>rtk", "<CMD>UltestStop<CR>", { desc = "All (Stop)" })
 vim.keymap.set("n", "<Space>rts", "<CMD>UltestSummary<CR>", { desc = "Summary" })
 
 -- Minor mode: System
