@@ -66,6 +66,8 @@ end
 -- Minor mode: Actions
 space("a", "Actions")
 
+vim.keymap.set("n", "<Space>ad", require('neogen').generate, { desc = "Generate annotations" })
+
 -- -- TODO Tree-Sitter
 
 -- -- LSP
