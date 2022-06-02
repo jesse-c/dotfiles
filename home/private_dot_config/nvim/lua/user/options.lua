@@ -72,8 +72,3 @@ end
 --------
 o.foldexpr = "nvim_treesitter#foldexpr()"
 wo.foldmethod = "expr"
-----------------
--- Miscellaneous
-----------------
-vim.cmd([[ nmap <F3> i<C-R>=strftime("%Y-%m-%d")<CR><Esc> ]])
-vim.cmd([[ imap <F3> <C-R>=strftime("%Y-%m-%d")<CR> ]])
