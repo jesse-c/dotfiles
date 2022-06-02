@@ -47,6 +47,9 @@ if not has_km then
 	return
 end
 
+-- Support some built-in keymaps
+km.set('n', 'g')
+
 km.set("n", "<Space>")
 
 local space = function(keys, desc)
