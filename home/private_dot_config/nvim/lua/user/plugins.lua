@@ -75,6 +75,7 @@ return packer.startup(function(use)
 			vim.notify = require("notify")
 		end,
 	})
+	-- ✅ Highlight, list and search todo comments in your projects
 	use({
 		"folke/todo-comments.nvim",
 		event = "BufRead",
@@ -88,11 +89,14 @@ return packer.startup(function(use)
 			require("nvim-web-devicons").setup({})
 		end,
 	})
+	-- Rainbow Parentheses Improved, shorter code, no level limit, smooth and fast, powerful configuration
 	use({
 		"luochen1990/rainbow",
 		event = "BufRead",
 	})
+	-- match-up is a plugin that lets you highlight, navigate, and operate on sets of matching text. It extends vim's % key to language-specific words instead of just single characters.
 	use({ "andymass/vim-matchup", requires = "nvim-treesitter/nvim-treesitter" })
+	-- A super powerful autopair plugin for Neovim that supports multiple characters.
 	use({
 		"windwp/nvim-autopairs",
 		event = "BufRead",
@@ -102,6 +106,7 @@ return packer.startup(function(use)
 			})
 		end,
 	})
+	-- A high-performance color highlighter
 	use({
 		"norcalli/nvim-colorizer.lua",
 		event = "BufRead",
@@ -109,6 +114,7 @@ return packer.startup(function(use)
 			require("colorizer").setup()
 		end,
 	})
+	-- Toggles between hybrid and absolute line numbers automatically
 	use({ "lukas-reineke/indent-blankline.nvim", branch = "master", event = "BufRead" })
 	use("jeffkreeftmeijer/vim-numbertoggle")
 	-- Peek lines just when you intend
@@ -170,18 +176,16 @@ return packer.startup(function(use)
 			vim.api.nvim_set_keymap("n", [[<C-g>]], "<CMD>FloatermToggle tig<CR>", { noremap = true, silent = true })
 		end,
 	})
+	-- Extensible Neovim Scrollbar
 	use({
 		"petertriho/nvim-scrollbar",
+		requires = "kevinhwang91/nvim-hlslens",
 		config = function()
 			require("scrollbar").setup()
-			-- require("scrollbar").setup({
-			-- handle = {
-			-- 	color = "#5A616A",
-			-- },
-			-- })
+			require("scrollbar.handlers.search").setup()
 		end,
-		disable = true,
 	})
+	-- Hlsearch Lens for Neovim
 	use({ "kevinhwang91/nvim-hlslens" })
 	use({
 		"https://git.sr.ht/~whynothugo/lsp_lines.nvim",
@@ -190,28 +194,11 @@ return packer.startup(function(use)
 			require("lsp_lines").register_lsp_virtual_lines()
 		end,
 	})
-	use({
-		"lukas-reineke/virt-column.nvim",
-		config = function()
-			-- https://github.com/lukas-reineke/virt-column.nvim/issues/2
-			vim.cmd("highlight clear ColorColumn")
-			require("virt-column").setup({
-				char = "│",
-			})
-		end,
-	})
 
 	-- UI / Themes
 	use({
 		"projekt0n/github-nvim-theme",
 		config = function()
-			-- https://www.reddit.com/r/neovim/comments/ry9qxi/comment/hroyko0/?utm_source=share&utm_medium=web2x&context=3
-			-- Disabled for now as it's causing the statusline and colorcolumn to look incorrect
-			-- vim.cmd([[:hi DiagnosticVirtualTextError guifg=#db4b4b guibg=#2D202A]])
-			-- vim.cmd([[:hi DiagnosticVirtualTextWarn guifg=#e0af68 guibg=#2E2A2D]])
-			-- vim.cmd([[:hi DiagnosticVirtualTextInfo guifg=#0db9d7 guibg=#192B38]])
-			-- vim.cmd([[:hi DiagnosticVirtualTextHint guifg=#1abc9c guibg=#1A2B3]])
-
 			-- Default theme
 			local theme = "dark_default"
 			-- The "user.ui.theme" module may contain `return $THEME`
@@ -236,16 +223,15 @@ return packer.startup(function(use)
 		end,
 	})
 
-	-- UI / Marks
-	use("kshenoy/vim-signature")
-
 	-- Buffers
+	-- Neovim plugin for locking a buffer to a window
 	use({
 		"stevearc/stickybuf.nvim",
 		config = function()
 			require("stickybuf").setup()
 		end,
 	})
+	-- Neovim plugin to stabilize window open/close events
 	use({
 		"luukvbaal/stabilize.nvim",
 		config = function()
@@ -256,13 +242,14 @@ return packer.startup(function(use)
 	-- Windows
 	use("troydm/zoomwintab.vim")
 
-	-- Bufferline
+	-- Tabline
+	-- A snazzy bufferline for Neovim
 	use({
 		"akinsho/bufferline.nvim",
 		branch = "main",
 		requires = "kyazdani42/nvim-web-devicons",
 		config = function()
-			require("bufferline").setup()
+			require("bufferline").setup({ options = { mode = "tabs", numbers = "ordinal" } })
 		end,
 	})
 
@@ -278,13 +265,13 @@ return packer.startup(function(use)
 			feline.setup(config.statusline)
 			feline.winbar.setup(config.winbar)
 		end,
-		disable = false,
 	})
 
 	-- Undo
 	use("mbbill/undotree")
 
 	-- Search
+	-- display number of search matches & index of a current match
 	use({ "google/vim-searchindex", event = "BufRead" })
 	-- Smart substitution
 	use({ "tpope/vim-abolish", event = "BufRead" })
@@ -306,6 +293,7 @@ return packer.startup(function(use)
 	use({ "nvim-telescope/telescope-file-browser.nvim", requires = "nvim-telescope/telescope.nvim" })
 
 	-- VCS
+	-- magit for neovim
 	use({
 		"TimUntersberger/neogit",
 		event = "BufRead",
@@ -321,6 +309,7 @@ return packer.startup(function(use)
 			})
 		end,
 	})
+	-- Single tabpage interface for easily cycling through diffs for all modified files for any git rev.
 	use({ "sindrets/diffview.nvim", event = "BufRead" })
 	-- Super fast git decorations implemented purely in lua/teal.
 	use({
@@ -332,7 +321,9 @@ return packer.startup(function(use)
 			require("gitsigns").setup()
 		end,
 	})
+	-- A git blame plugin for neovim inspired by VS Code's GitLens plugin
 	use({ "APZelos/blamer.nvim", event = "BufRead" })
+	-- A Git wrapper so awesome, it should be illegal
 	use({ "tpope/vim-fugitive", event = "BufRead" })
 
 	-- LSP
@@ -344,11 +335,13 @@ return packer.startup(function(use)
 			require("nvim-lsp-installer").setup({})
 		end,
 	})
+	-- Use Neovim as a language server to inject LSP diagnostics, code actions, and more via Lua
 	use({
 		"jose-elias-alvarez/null-ls.nvim",
 		requires = "nvim-lua/plenary.nvim",
 		event = "VimEnter",
 	})
+	-- 🚦 A pretty diagnostics, references, telescope results, quickfix and location list to help you solve all the trouble your code is causing.
 	use({
 		"folke/trouble.nvim",
 		requires = "kyazdani42/nvim-web-devicons",
@@ -356,6 +349,7 @@ return packer.startup(function(use)
 			require("trouble").setup()
 		end,
 	})
+	-- Neovim plugin for a code outline window
 	use({
 		"stevearc/aerial.nvim",
 		requires = "stevearc/stickybuf.nvim",
@@ -373,7 +367,9 @@ return packer.startup(function(use)
 	})
 
 	-- File system
+	-- Helpers for UNIX
 	use("tpope/vim-eunuch")
+	-- Changes Vim working directory to project root
 	use("airblade/vim-rooter")
 	use({
 		"kyazdani42/nvim-tree.lua",
@@ -381,6 +377,7 @@ return packer.startup(function(use)
 	})
 
 	-- Comments
+	-- 🧠 💪 // Smart and powerful comment plugin for neovim. Supports treesitter, dot repeat, left-right/up-down motions, hooks, and more
 	use({
 		"numToStr/Comment.nvim",
 		config = function()
@@ -473,11 +470,13 @@ return packer.startup(function(use)
 		requires = "nvim-treesitter/nvim-treesitter",
 		event = "BufRead",
 	})
+	-- Syntax aware text-objects, select, move, swap, and peek support
 	use({
 		"nvim-treesitter/nvim-treesitter-textobjects",
 		requires = "nvim-treesitter/nvim-treesitter",
 		event = "BufRead",
 	})
+	-- Neovim treesitter plugin for setting the commentstring based on the cursor location in a file.
 	use({
 		"JoosepAlviste/nvim-ts-context-commentstring",
 		requires = "nvim-treesitter/nvim-treesitter",
@@ -485,6 +484,7 @@ return packer.startup(function(use)
 	})
 
 	-- Sessions
+	-- continuously updated session files
 	use("tpope/vim-obsession")
 
 	-- Completion
@@ -500,10 +500,14 @@ return packer.startup(function(use)
 	}) -- 9000+ Snippets
 
 	-- Formatting
+	-- ✨ A (Neo)vim plugin for formatting code.
+	-- Backup if there's no LSP (incl. null-ls)
 	use("sbdchd/neoformat")
 
 	-- Testing
+	-- Run your tests at the speed of thought
 	use("vim-test/vim-test")
+	-- The ultimate testing plugin for (Neo)Vim
 	use({
 		"rcarriga/vim-ultest",
 		requires = "vim-test/vim-test",
@@ -522,10 +526,12 @@ return packer.startup(function(use)
 	use("elixir-editors/vim-elixir")
 
 	-- Languages / Clojure
+	-- Infer parentheses for Clojure, Lisp and Scheme.
 	use({
 		"eraserhd/parinfer-rust",
 		run = "cargo build --release",
 	})
+	-- Interactive evaluation for Neovim (Clojure, Fennel, Janet, Racket, Hy, MIT Scheme, Guile)
 	use("Olical/conjure")
 
 	-- Languages / Rust
@@ -536,6 +542,7 @@ return packer.startup(function(use)
 	use("npxbr/glow.nvim")
 
 	-- Languages / Lua
+	-- Interactive real time neovim scratchpad for embedded lua engine - type and watch!
 	use({
 		"rafcamlet/nvim-luapad",
 		config = function()
