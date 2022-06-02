@@ -1,8 +1,3 @@
-local o = vim.o -- For the globals options
-local g = vim.g -- For the globals options
-local wo = vim.wo -- For the window local options
-local bo = vim.bo -- For the buffer local options
-
 local configuration_folder = vim.fn.expand("~") .. "/.config/nvim"
 
 -- ====================
@@ -13,41 +8,41 @@ local configuration_folder = vim.fn.expand("~") .. "/.config/nvim"
 -- Colours
 ----------
 -- True colour support
-o.termguicolors = true
+vim.o.termguicolors = true
 ---------------------
 -- File
 ---------------------
 -- Do not write backups
-o.backup = false
-o.writebackup = false
+vim.o.backup = false
+vim.o.writebackup = false
 -- Do not create swap files
-o.swapfile = false
+vim.o.swapfile = false
 -- Opt-in to filetype.lua
 -- https://www.reddit.com/r/neovim/comments/rvwsl3/introducing_filetypelua_and_a_call_for_help/
-g.do_filetype_lua = true
-g.did_load_filetypes = true
+vim.g.do_filetype_lua = true
+vim.g.did_load_filetypes = true
 -------------------------
 -- Encoding
 -------------------------
-o.encoding = "utf-8"
+vim.o.encoding = "utf-8"
 ------------
 -- Clipboard
 ------------
-o.clipboard = "unnamed"
+vim.o.clipboard = "unnamed"
 -----------------------
 -- Format
 -----------------------
-o.formatoptions = "qj"
+vim.o.formatoptions = "qj"
 ------------------------------
 -- Spellchecking
 ------------------------------
-o.spelllang = "en"
+vim.o.spelllang = "en"
 -------------------
 -- Undo persistance
 -------------------
-o.undodir = configuration_folder .. "/undodir.nvim"
-o.undofile = true
-o.undolevels = 10000
+vim.o.undodir = configuration_folder .. "/undodir.nvim"
+vim.o.undofile = true
+vim.o.undolevels = 10000
 --------
 -- Shell
 --------
@@ -57,7 +52,7 @@ vim.opt.shell = "/bin/bash"
 -----------
 -- Commands
 -----------
-o.inccommand = "nosplit"
+vim.o.inccommand = "nosplit"
 -----------------------------
 -- Local per machine settings
 -----------------------------
@@ -70,5 +65,5 @@ end
 --------
 -- Folds
 --------
-wo.foldexpr = "nvim_treesitter#foldexpr()"
-wo.foldmethod = "expr"
+vim.wo.foldmethod = "expr"
+vim.wo.foldexpr = "nvim_treesitter#foldexpr()"
