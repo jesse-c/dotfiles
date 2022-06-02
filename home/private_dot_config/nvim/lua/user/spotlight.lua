@@ -28,6 +28,7 @@ telescope.load_extension("fzf")
 telescope.load_extension("notify")
 telescope.load_extension("zoxide")
 telescope.load_extension("file_browser")
+telescope.load_extension("aerial")
 
 -- Multiple leader keys to for groups of like operations AKA minor modes
 --
@@ -48,7 +49,7 @@ if not has_km then
 end
 
 -- Support some built-in keymaps
-km.set('n', 'g')
+km.set("n", "g")
 
 km.set("n", "<Space>")
 
