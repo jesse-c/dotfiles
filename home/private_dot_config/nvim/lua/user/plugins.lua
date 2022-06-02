@@ -132,12 +132,42 @@ return packer.startup(function(use)
 	})
 	use("sindrets/winshift.nvim")
 	use({
-		"akinsho/toggleterm.nvim",
-		branch = "main",
+		"voldikss/vim-floaterm",
+		branch = "master",
 		config = function()
-			require("toggleterm").setup({
-				direction = "float",
-			})
+			vim.g.floaterm_shell = "fish"
+			vim.g.floaterm_width = 0.9
+			vim.g.floaterm_height = 0.9
+
+			function _G.set_terminal_keymaps()
+				vim.api.nvim_buf_set_keymap(
+					0,
+					"t",
+					[[<C-\>]],
+					"<CMD>FloatermToggle<CR>",
+					{ noremap = true, silent = true }
+				)
+				vim.api.nvim_buf_set_keymap(
+					0,
+					"t",
+					[[<C-k>]],
+					"<CMD>FloatermKill<CR>",
+					{ noremap = true, silent = true }
+				)
+				vim.api.nvim_buf_set_keymap(
+					0,
+					"t",
+					[[<C-g>]],
+					"<CMD>FloatermUpdate --title=tig tig<CR>",
+					{ noremap = true, silent = true }
+				)
+			end
+
+			-- if you only want these mappings for toggle term use term://*toggleterm#* instead
+			vim.cmd("autocmd! TermOpen term://* lua set_terminal_keymaps()")
+
+			vim.api.nvim_set_keymap("n", [[<C-\>]], "<CMD>FloatermToggle<CR>", { noremap = true, silent = true })
+			vim.api.nvim_set_keymap("n", [[<C-g>]], "<CMD>FloatermToggle tig<CR>", { noremap = true, silent = true })
 		end,
 	})
 	use({
