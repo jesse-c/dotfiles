@@ -190,8 +190,8 @@ lspconfig.sumneko_lua.setup(sumenko_opts)
 lspconfig.tsserver.setup(tsserver_opts)
 lspconfig.yamlls.setup(yamlls_opts)
 
-local ok, null_ls = pcall(require, "null-ls")
-if not ok then
+local has_null_ls, null_ls = pcall(require, "null-ls")
+if not has_null_ls then
 	return
 end
 
