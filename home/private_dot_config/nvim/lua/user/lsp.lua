@@ -31,9 +31,18 @@ local has_aerial, aerial = pcall(require, "aerial")
 if has_aerial then
 	local on_attach = function(client, bufnr)
 		aerial.on_attach(client, bufnr)
+		-- Formatting
+		if client.server_capabilities.documentFormattingProvider then
+			vim.keymap.set(
+				"n",
+				"<Space>af",
+				"<CMD>lua vim.lsp.buf.format({ async = true })<CR>",
+				{ desc = "Format", buffer = bufnr }
+			)
+		end
 
 		-- Code lens
-		if client.server_capabilities.code_lens then
+		if client.server_capabilities.codeLensProvider then
 			-- Do an initial refresh
 			vim.lsp.codelens.refresh()
 

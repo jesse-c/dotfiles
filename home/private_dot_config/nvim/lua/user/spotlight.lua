@@ -66,14 +66,14 @@ end
 -- Minor mode: Actions
 space("a", "Actions")
 
-vim.keymap.set("n", "<Space>ad", require('neogen').generate, { desc = "Generate annotations" })
+vim.keymap.set("n", "<Space>ad", require("neogen").generate, { desc = "Generate annotations" })
+vim.keymap.set("n", "<Space>af", "<CMD>Neoformat<CR>", { desc = "Format" })
 
 -- -- TODO Tree-Sitter
 
 -- -- LSP
 space("al", "LSP")
 vim.keymap.set("n", "<Space>alr", vim.lsp.buf.rename, { desc = "Rename" })
-vim.keymap.set("n", "<Space>alf", "<CMD>lua vim.lsp.buf.format({ async = true })<CR>", { desc = "Format" })
 vim.keymap.set("n", "<Space>ala", vim.lsp.buf.code_action, { desc = "Code actions" })
 vim.keymap.set("n", "<Space>ald", vim.lsp.codelens.run, { desc = "Code lens / Run" })
 
