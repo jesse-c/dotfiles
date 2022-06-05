@@ -119,7 +119,7 @@ local sqls_opts = shallowcopy(opts)
 sqls_opts["cmd"] = { "/Users/jesse/.local/share/nvim/lsp_servers/sqls/sqls" }
 
 local prosemd_lsp_opts = shallowcopy(opts)
-prosemd_lsp_opts["cmd"] = { "/Users/jesse/.local/share/nvim/lsp_servers/prosemd_lsp/prosemd-lsp" }
+prosemd_lsp_opts["cmd"] = { "/Users/jesse/.local/share/nvim/lsp_servers/prosemd_lsp/prosemd-lsp", "--stdio" }
 
 local ltex_lsp_opts = shallowcopy(opts)
 ltex_lsp_opts["cmd"] = { "/Users/jesse/.local/share/nvim/lsp_servers/ltex/ltex-ls/bin/ltex-ls" }
