@@ -174,7 +174,6 @@ return packer.startup(function(use)
 			vim.cmd("autocmd! TermOpen term://* lua set_terminal_keymaps()")
 
 			vim.api.nvim_set_keymap("n", [[<C-\>]], "<CMD>FloatermToggle<CR>", { noremap = true, silent = true })
-			vim.api.nvim_set_keymap("n", [[<C-h>]], "<CMD>FloatermToggle tig<CR>", { noremap = true, silent = true })
 		end,
 	})
 	-- Extensible Neovim Scrollbar
