@@ -537,6 +537,23 @@ return packer.startup(function(use)
 			vim.g.ultest_virtual_text = 1
 		end,
 	})
+	use({
+		"rcarriga/neotest",
+		requires = {
+			"nvim-lua/plenary.nvim",
+			"nvim-treesitter/nvim-treesitter",
+			"antoinemadec/FixCursorHold.nvim",
+			-- Adapters
+			"rcarriga/neotest-vim-test",
+		},
+		config = function()
+			require("neotest").setup({
+				adapters = {
+					require("neotest-vim-test")({}),
+				},
+			})
+		end,
+	})
 
 	-- Languages
 
