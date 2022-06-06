@@ -65,6 +65,7 @@ return packer.startup(function(use)
 	-- Performance
 	use("lewis6991/impatient.nvim")
 	use("nathom/filetype.nvim")
+	use("antoinemadec/FixCursorHold.nvim")
 
 	-- UI
 	use("nvim-lua/popup.nvim")
