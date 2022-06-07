@@ -117,6 +117,10 @@ bashls_opts["cmd"] = {
 
 local sqls_opts = shallowcopy(opts)
 sqls_opts["cmd"] = { "/Users/jesse/.local/share/nvim/lsp_servers/sqls/sqls" }
+sqls_opts["on_attach"] = function(client, bufnr)
+	-- This is currently overriding the default on_attach function
+	require("sqls").on_attach(client, bufnr)
+end
 
 local prosemd_lsp_opts = shallowcopy(opts)
 prosemd_lsp_opts["cmd"] = { "/Users/jesse/.local/share/nvim/lsp_servers/prosemd_lsp/prosemd-lsp", "--stdio" }

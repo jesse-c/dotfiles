@@ -587,6 +587,10 @@ return packer.startup(function(use)
 		end,
 	})
 
+	-- Languages / SQL
+	-- Neovim plugin for sqls that leverages the built-in LSP client
+	use("nanotee/sqls.nvim")
+
 	--------------------------------------------------------------------------------
 
 	if PACKER_BOOTSTRAP then
