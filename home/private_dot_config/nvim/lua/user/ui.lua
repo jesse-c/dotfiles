@@ -45,6 +45,7 @@ vim.o.concealcursor = ""
 -----------------------
 vim.o.showmode = true
 vim.o.laststatus = 3
+vim.o.cmdheight = 0
 ------------------------------
 -- Column marker
 ------------------------------
