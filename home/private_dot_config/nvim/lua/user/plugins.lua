@@ -331,8 +331,6 @@ return packer.startup(function(use)
 			require("gitsigns").setup()
 		end,
 	})
-	-- A git blame plugin for neovim inspired by VS Code's GitLens plugin
-	use({ "APZelos/blamer.nvim", event = "BufRead" })
 	-- A Git wrapper so awesome, it should be illegal
 	use({ "tpope/vim-fugitive", event = "BufRead" })
 
@@ -348,7 +346,7 @@ return packer.startup(function(use)
 	-- Use Neovim as a language server to inject LSP diagnostics, code actions, and more via Lua
 	use({
 		"jose-elias-alvarez/null-ls.nvim",
-		requires = "nvim-lua/plenary.nvim",
+		requires = { "nvim-lua/plenary.nvim", "lewis6991/gitsigns.nvim" },
 		event = "VimEnter",
 	})
 	-- 🚦 A pretty diagnostics, references, telescope results, quickfix and location list to help you solve all the trouble your code is causing.
