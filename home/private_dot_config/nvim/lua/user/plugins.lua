@@ -579,6 +579,7 @@ return packer.startup(function(use)
 			vim.g.ultest_virtual_text = 1
 		end,
 	})
+	-- An extensible framework for interacting with tests within NeoVim.
 	use({
 		"rcarriga/neotest",
 		requires = {
@@ -586,6 +587,7 @@ return packer.startup(function(use)
 			"nvim-treesitter/nvim-treesitter",
 			"antoinemadec/FixCursorHold.nvim",
 			-- Adapters
+			"vim-test/vim-test",
 			"rcarriga/neotest-vim-test",
 		},
 		config = function()
