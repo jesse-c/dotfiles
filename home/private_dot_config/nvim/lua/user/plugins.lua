@@ -573,6 +573,7 @@ return packer.startup(function(use)
 		requires = "vim-test/vim-test",
 		run = ":UpdateRemotePlugins",
 		config = function()
+			vim.g.ultest_deprecation_notice = 0
 			vim.g.ultest_virtual_text = 1
 		end,
 	})
