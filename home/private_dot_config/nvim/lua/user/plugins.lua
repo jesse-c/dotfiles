@@ -174,6 +174,7 @@ return packer.startup(function(use)
 		config = function()
 			require("which-key").setup()
 		end,
+		disable = true,
 	})
 	use({
 		"VonHeikemen/fine-cmdline.nvim",
