@@ -342,7 +342,8 @@ return packer.startup(function(use)
 	-- Spotlight
 	use({ "nvim-telescope/telescope.nvim", requires = "nvim-telescope/telescope-fzf-native.nvim" })
 	use({ "nvim-telescope/telescope-fzf-native.nvim", run = "make" })
-	use({ "jvgrootveld/telescope-zoxide" })
+	use({ "jvgrootveld/telescope-zoxide", requires = "nvim-telescope/telescope.nvim" })
+	use({ "gbrlsnchs/telescope-lsp-handlers.nvim", requires = "nvim-telescope/telescope.nvim" })
 	use({ "nvim-telescope/telescope-file-browser.nvim", requires = "nvim-telescope/telescope.nvim" })
 
 	-- VCS

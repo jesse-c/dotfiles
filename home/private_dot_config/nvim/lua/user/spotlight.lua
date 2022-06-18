@@ -29,6 +29,7 @@ telescope.load_extension("notify")
 telescope.load_extension("zoxide")
 telescope.load_extension("file_browser")
 telescope.load_extension("aerial")
+telescope.load_extension("lsp_handlers")
 
 -- Multiple leader keys to for groups of like operations AKA minor modes
 --
