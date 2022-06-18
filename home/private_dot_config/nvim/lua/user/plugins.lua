@@ -593,7 +593,7 @@ return packer.startup(function(use)
 		config = function()
 			require("neotest").setup({
 				adapters = {
-					require("neotest-vim-test")({}),
+					require("neotest-vim-test"),
 				},
 			})
 		end,
