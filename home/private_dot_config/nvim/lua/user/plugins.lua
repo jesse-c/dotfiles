@@ -395,6 +395,8 @@ return packer.startup(function(use)
 			require("nvim-lsp-installer").setup({})
 		end,
 	})
+	-- vscode-like pictograms for neovim lsp completion items
+	use("onsails/lspkind.nvim")
 	-- Use Neovim as a language server to inject LSP diagnostics, code actions, and more via Lua
 	use({
 		"jose-elias-alvarez/null-ls.nvim",
@@ -558,16 +560,27 @@ return packer.startup(function(use)
 	use("tpope/vim-obsession")
 
 	-- Completion
+	-- A completion plugin for neovim coded in Lua.
 	use({
-		"ms-jpq/coq_nvim",
-		branch = "coq",
-		-- event = "InsertEnter",
+		"hrsh7th/nvim-cmp",
+		requires = {
+			"neovim/nvim-lspconfig",
+			"onsails/lspkind.nvim",
+		},
+		config = function()
+			require("user.completion").setup()
+		end,
 	})
-	use({
-		"ms-jpq/coq.artifacts",
-		branch = "artifacts",
-		requires = "ms-jpq/coq_nvim",
-	}) -- 9000+ Snippets
+	use({ "hrsh7th/cmp-path", requires = "hrsh7th/nvim-cmp" })
+	use({ "ray-x/cmp-treesitter", requires = "hrsh7th/nvim-cmp" })
+	use({ "hrsh7th/cmp-nvim-lsp", requires = "hrsh7th/nvim-cmp" })
+	use({ "hrsh7th/cmp-buffer", requires = "hrsh7th/nvim-cmp" })
+	use({ "hrsh7th/cmp-path", requires = "hrsh7th/nvim-cmp" })
+	use({ "hrsh7th/cmp-cmdline", requires = "hrsh7th/nvim-cmp" })
+	use({ "saadparwaiz1/cmp_luasnip", requires = "L3MON4D3/LuaSnip" })
+
+	-- Snippets
+	use("L3MON4D3/LuaSnip")
 
 	-- Formatting
 	-- ✨ A (Neo)vim plugin for formatting code.
