@@ -377,10 +377,12 @@ return packer.startup(function(use)
 	use({
 		"lewis6991/gitsigns.nvim",
 		requires = "nvim-lua/plenary.nvim",
-		tag = "release", -- To use the latest release
+		-- tag = "release", -- To use the latest release
 		event = "BufRead",
 		config = function()
-			require("gitsigns").setup()
+			require("gitsigns").setup({
+				current_line_blame = true,
+			})
 		end,
 	})
 	-- A Git wrapper so awesome, it should be illegal
