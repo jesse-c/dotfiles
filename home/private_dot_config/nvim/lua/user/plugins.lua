@@ -227,6 +227,14 @@ return packer.startup(function(use)
 			require("scrollbar").setup()
 			require("scrollbar.handlers.search").setup()
 		end,
+		disable = true,
+	})
+	use({
+		"lewis6991/satellite.nvim",
+		config = function()
+			require("satellite").setup()
+		end,
+		disable = true,
 	})
 	-- Hlsearch Lens for Neovim
 	use({ "kevinhwang91/nvim-hlslens" })
