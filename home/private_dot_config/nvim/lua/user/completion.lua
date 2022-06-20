@@ -47,6 +47,10 @@ M.setup = function()
 					luasnip.expand_or_jump()
 				elseif has_words_before() then
 					cmp.complete()
+				elseif vim.api.nvim_buf_get_option(0, "buftype") == "prompt" then
+					return false
+				elseif vim.bo.ft == "TelescopePrompt" then
+					return false
 				else
 					fallback()
 				end
