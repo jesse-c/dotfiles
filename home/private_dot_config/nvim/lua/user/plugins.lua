@@ -246,6 +246,14 @@ return packer.startup(function(use)
 		end,
 	})
 
+	-- UI / Marks
+	use({
+		"chentoast/marks.nvim",
+		config = function()
+			require("marks").setup({})
+		end,
+	})
+
 	-- UI / Folds
 	use({
 		"anuvyklack/pretty-fold.nvim",
