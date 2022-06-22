@@ -1,6 +1,7 @@
 vim.o.timeoutlen = 300
 
-vim.cmd([[ let maplocalleader = "," ]])
+vim.g.mapleader = "\\"
+vim.g.maplocalleader = ","
 
 vim.api.nvim_set_keymap("n", "<C-k>", ":wincmd k<CR>", { silent = true, noremap = true })
 vim.api.nvim_set_keymap("n", "<C-j>", ":wincmd j<CR>", { silent = true, noremap = true })
