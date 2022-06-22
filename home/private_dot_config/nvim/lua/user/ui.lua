@@ -56,7 +56,7 @@ function _G.ToggleCmdline()
 	end
 end
 
-vim.keymap.set("n", "<C-c>", ToggleCmdline, { desc = "Toggle command-line" })
+vim.keymap.set("n", "<C-e>", ToggleCmdline, { desc = "Toggle command-line" })
 ------------------------------
 -- Column marker
 ------------------------------
