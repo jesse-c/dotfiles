@@ -45,7 +45,7 @@ vim.o.concealcursor = ""
 -----------------------
 vim.o.showmode = true
 vim.o.laststatus = 3
-vim.o.cmdheight = 0
+vim.o.cmdheight = 1
 
 -- Temporary fix: https://www.reddit.com/r/neovim/comments/vfn99v/psa_macros_w_cmdheight_0/
 function _G.ToggleCmdline()
