@@ -585,7 +585,6 @@ return packer.startup(function(use)
 	use({ "ray-x/cmp-treesitter", requires = "hrsh7th/nvim-cmp" })
 	use({ "hrsh7th/cmp-nvim-lsp", requires = "hrsh7th/nvim-cmp" })
 	use({ "hrsh7th/cmp-buffer", requires = "hrsh7th/nvim-cmp" })
-	use({ "hrsh7th/cmp-path", requires = "hrsh7th/nvim-cmp" })
 	use({ "hrsh7th/cmp-cmdline", requires = "hrsh7th/nvim-cmp" })
 	use({ "saadparwaiz1/cmp_luasnip", requires = "L3MON4D3/LuaSnip" })
 
