@@ -7,6 +7,11 @@ local actions = require("telescope.actions")
 
 telescope.setup({
 	pickers = {
+		live_grep = {
+			mappings = {
+				i = { ["<c-f>"] = actions.to_fuzzy_refine },
+			},
+		},
 		buffers = {
 			show_all_buffers = true,
 			sort_lastused = true,
