@@ -17,10 +17,6 @@ vim.o.backup = false
 vim.o.writebackup = false
 -- Do not create swap files
 vim.o.swapfile = false
--- Opt-in to filetype.lua
--- https://www.reddit.com/r/neovim/comments/rvwsl3/introducing_filetypelua_and_a_call_for_help/
-vim.g.do_filetype_lua = true
-vim.g.did_load_filetypes = true
 -------------------------
 -- Encoding
 -------------------------
