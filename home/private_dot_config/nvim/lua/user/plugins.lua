@@ -242,7 +242,7 @@ return packer.startup(function(use)
 		"https://git.sr.ht/~whynothugo/lsp_lines.nvim",
 		requires = "neovim/nvim-lspconfig",
 		config = function()
-			require("lsp_lines").register_lsp_virtual_lines()
+			require("lsp_lines").setup()
 		end,
 	})
 
@@ -260,7 +260,13 @@ return packer.startup(function(use)
 		requires = "anuvyklack/nvim-keymap-amend", -- only for preview
 		config = function()
 			require("pretty-fold").setup()
-			require("pretty-fold.preview").setup()
+		end,
+	})
+	use({
+		"anuvyklack/fold-preview.nvim",
+		requires = { "anuvyklack/keymap-amend.nvim", "anuvyklack/pretty-fold.nvim" },
+		config = function()
+			require("fold-preview").setup()
 		end,
 	})
 
