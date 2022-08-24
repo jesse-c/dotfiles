@@ -21,6 +21,12 @@ M.setup = function()
 			end,
 		},
 		enabled = function()
+			-- disable completion in prompts
+			local buftype = vim.api.nvim_buf_get_option(0, "buftype")
+			if buftype == "prompt" then
+				return false
+			end
+
 			-- disable completion in comments
 			local context = require("cmp.config.context")
 			-- keep command mode completion enabled when cursor is in a comment
