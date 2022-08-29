@@ -716,6 +716,9 @@ return packer.startup(function(use)
 		disable = true,
 	})
 
+	-- Languages / LaTeX
+	use("lervag/vimtex")
+
 	-- Languages / plist
 	use("darfink/vim-plist")
 
