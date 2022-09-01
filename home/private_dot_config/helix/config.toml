@@ -1,9 +1,20 @@
 [editor]
 line-number = "relative"
 mouse = false
+cursorline = true
+color-modes = true
+rulers = [80, 120]
+
+[editor.indent-guides]
+render = true
 
 [editor.lsp]
 display-messages = true
+
+[editor.statusline]
+left = ["mode", "file-name", "file-type"]
+center = ["selections", "position", "position-percentage"]
+right = ["spinner", "diagnostics"]
 
 [editor.whitespace.render]
 space = "all"
