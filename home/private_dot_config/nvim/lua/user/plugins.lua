@@ -67,6 +67,14 @@ return packer.startup(function(use)
 	use("nathom/filetype.nvim")
 	use("antoinemadec/FixCursorHold.nvim")
 
+	-- Meta
+	use({
+		"williamboman/mason.nvim",
+		config = function()
+			require("mason").setup()
+		end,
+	})
+
 	-- UI
 	use("nvim-lua/popup.nvim")
 	use("nvim-lua/plenary.nvim")
@@ -414,10 +422,36 @@ return packer.startup(function(use)
 	-- LSP
 	use("neovim/nvim-lspconfig")
 	use({
-		"williamboman/nvim-lsp-installer",
-		requires = { "neovim/nvim-lspconfig", "stevearc/aerial.nvim" },
+		"williamboman/mason-lspconfig.nvim",
+		requires = {
+			"williamboman/mason.nvim",
+			"neovim/nvim-lspconfig",
+			"stevearc/aerial.nvim",
+		},
 		config = function()
-			require("nvim-lsp-installer").setup({})
+			require("mason-lspconfig").setup({
+				ensure_installed = {
+					"bashls",
+					"clojure_lsp",
+					"elixirls",
+					"erlangls",
+					"html",
+					"gopls",
+					"jsonls",
+					"lemminx",
+					"ltex",
+					"prosemd_lsp",
+					"pylsp",
+					"rust_analyzer",
+					"solargraph",
+					"sorbet",
+					"sourcekit",
+					"sqls",
+					"sumneko_lua",
+					"tsserver",
+					"yamlls",
+				},
+			})
 		end,
 	})
 	-- vscode-like pictograms for neovim lsp completion items
@@ -645,6 +679,9 @@ return packer.startup(function(use)
 	})
 
 	-- Languages
+
+	-- Debugging
+	use("mfussenegger/nvim-dap")
 
 	-- Interactive Repl Over Neovim
 	use({

@@ -18,11 +18,6 @@ for type, icon in pairs(signs) do
 	vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
 end
 
-local ok, _ = pcall(require, "nvim-lsp-installer")
-if not ok then
-	return
-end
-
 local lspconfig = require("lspconfig")
 
 local capabilities = require("cmp_nvim_lsp").update_capabilities(vim.lsp.protocol.make_client_capabilities())
@@ -86,12 +81,10 @@ local function shallowcopy(orig)
 end
 
 local elixirls_opts = shallowcopy(opts)
-elixirls_opts["cmd"] = { "/Users/jesse/.local/share/nvim/lsp_servers/elixirls/elixir-ls/language_server.sh" }
+elixirls_opts["cmd"] = { "elixir-ls" }
 
 local sumenko_opts = shallowcopy(opts)
-sumenko_opts["cmd"] = {
-	"/Users/jesse/.local/share/nvim/lsp_servers/sumneko_lua/extension/server/bin/lua-language-server",
-}
+sumenko_opts["cmd"] = { "lua-language-server" }
 sumenko_opts["settings"] = {
 	-- Get the language server to recognize the `vim` global
 	-- https://www.reddit.com/r/neovim/comments/khk335/lua_configuration_global_vim_is_undefined/
@@ -104,78 +97,54 @@ sumenko_opts["settings"] = {
 }
 
 local pylsp_opts = shallowcopy(opts)
-pylsp_opts["cmd"] = { "/Users/jesse/.local/share/nvim/lsp_servers/pylsp/venv/bin/pylsp" }
+pylsp_opts["cmd"] = { "pylsp" }
 
 local tsserver_opts = shallowcopy(opts)
-tsserver_opts["cmd"] = {
-	"/Users/jesse/.local/share/nvim/lsp_servers/tsserver/node_modules/.bin/typescript-language-server",
-	"--stdio",
-}
+tsserver_opts["cmd"] = { "typescript-language-server", "--stdio" }
 
 local bashls_opts = shallowcopy(opts)
-bashls_opts["cmd"] = {
-	"/Users/jesse/.local/share/nvim/lsp_servers/bashls/node_modules/.bin/bash-language-server",
-	"start",
-}
+bashls_opts["cmd"] = { "bash-language-server", "start" }
 
 local sqls_opts = shallowcopy(opts)
-sqls_opts["cmd"] = { "/Users/jesse/.local/share/nvim/lsp_servers/sqls/sqls" }
+sqls_opts["cmd"] = { "sqls" }
 sqls_opts["on_attach"] = function(client, bufnr)
 	-- This is currently overriding the default on_attach function
 	require("sqls").on_attach(client, bufnr)
 end
 
 local prosemd_lsp_opts = shallowcopy(opts)
-prosemd_lsp_opts["cmd"] = { "/Users/jesse/.local/share/nvim/lsp_servers/prosemd_lsp/prosemd-lsp", "--stdio" }
+prosemd_lsp_opts["cmd"] = { "prosemd-lsp", "--stdio" }
 
 local ltex_lsp_opts = shallowcopy(opts)
-ltex_lsp_opts["cmd"] = { "/Users/jesse/.local/share/nvim/lsp_servers/ltex/ltex-ls/bin/ltex-ls" }
+ltex_lsp_opts["cmd"] = { "ltex-ls" }
 
 local jsonls_opts = shallowcopy(opts)
-jsonls_opts["cmd"] = {
-	"/Users/jesse/.local/share/nvim/lsp_servers/jsonls/node_modules/.bin/vscode-json-language-server",
-	"--stdio",
-}
+jsonls_opts["cmd"] = { "vscode-json-language-server", "--stdio" }
 
 local html_opts = shallowcopy(opts)
-html_opts["cmd"] = {
-	"/Users/jesse/.local/share/nvim/lsp_servers/html/node_modules/vscode-langservers-extracted/bin/vscode-html-language-server",
-	"--stdio",
-}
+html_opts["cmd"] = { "vscode-html-language-server", "--stdio" }
 
 local yamlls_opts = shallowcopy(opts)
-yamlls_opts["cmd"] = {
-	"/Users/jesse/.local/share/nvim/lsp_servers/yamlls/node_modules/.bin/yaml-language-server",
-	"--stdio",
-}
+yamlls_opts["cmd"] = { "yaml-language-server", "--stdio" }
 
 local solargraph_opts = shallowcopy(opts)
-solargraph_opts["cmd"] = {
-	"/Users/jesse/.local/share/nvim/lsp_servers/solargraph/bin/solargraph",
-	"stdio",
-}
+solargraph_opts["cmd"] = { "solargraph", "stdio" }
 
 local sorbet_opts = shallowcopy(opts)
 sorbet_opts["cmd"] = {
-	"/Users/jesse/.local/share/nvim/lsp_servers/sorbet/bin/srb",
+	"srb",
 	"tc",
 	--lsp",
 }
 
 local lemminx_opts = shallowcopy(opts)
-lemminx_opts["cmd"] = {
-	"/Users/jesse/.local/share/nvim/lsp_servers/lemminx/lemminx",
-}
+lemminx_opts["cmd"] = { "lemminx" }
 
 local clojure_lsp_opts = shallowcopy(opts)
-clojure_lsp_opts["cmd"] = {
-	"/Users/jesse/.local/share/nvim/lsp_servers/clojure_lsp/clojure-lsp",
-}
+clojure_lsp_opts["cmd"] = { "clojure-lsp" }
 
 local gopls_opts = shallowcopy(opts)
-gopls_opts["cmd"] = {
-	"/Users/jesse/.local/share/nvim/lsp_servers/gopls/clojure-lsp",
-}
+gopls_opts["cmd"] = { "gopls" }
 
 lspconfig.bashls.setup(bashls_opts)
 lspconfig.clojure_lsp.setup(clojure_lsp_opts)
