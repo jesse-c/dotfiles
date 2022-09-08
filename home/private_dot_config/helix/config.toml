@@ -13,8 +13,8 @@ display-messages = true
 
 [editor.statusline]
 left = ["mode", "file-name", "file-type"]
-center = ["selections", "position", "position-percentage"]
-right = ["spinner", "diagnostics"]
+center= ["spinner", "diagnostics"]
+right= ["selections", "position", "position-percentage"]
 
 [editor.whitespace.render]
 space = "all"
@@ -32,6 +32,9 @@ C-q = ":q"
 
 C-v = "vsplit"
 C-x = "hsplit"
+
+x = "extend_line_below"
+X = "extend_line_above"
 
 C-h = "jump_view_left"
 C-j = "jump_view_down"
