@@ -355,8 +355,7 @@ return packer.startup(function(use)
 			local config = require("user.plugins.feline-nvim")
 
 			feline.setup(config.statusline)
-			feline.winbar.setup(config.winbar)
-		end,
+	end,
 	})
 
 	-- Undo

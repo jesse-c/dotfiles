@@ -33,7 +33,7 @@ if has_aerial then
 			vim.keymap.set(
 				"n",
 				"<Space>af",
-				"<CMD>lua vim.lsp.buf.format({ async = true })<CR>",
+				"<CMD>lua vim.lsp.buf.formatting({ async = true })<CR>",
 				{ desc = "Format", buffer = bufnr }
 			)
 		end
