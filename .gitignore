@@ -1,3 +1,9 @@
+# Karabiner
+
+home/private_dot_config/karabiner/automatic_backups/*
+
+# Generated
+
 ### macOS ###
 # General
 .DS_Store
