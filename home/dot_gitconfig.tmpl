@@ -10,19 +10,32 @@
 	editor = nvim
 	excludesfile = ~/.gitignore_global
 	autocrlf = input
-	pager = delta --dark
+	pager = delta
 [stash]
 	showPatch = true
 [merge]
 	conflictstyle = diff3
+[diff]
+	colorMoved = default
+[interactive]
+	diffFilter = delta --color-only
+[add.interactive]
+	useBuiltin = false # required for git 2.37.0
 [push]
 	default = upstream
 [commit]
 	verbose = true
 	gpgsign = true
+[pager]
+	difftool = true
 [diff]
 	compactionHeuristic = true
 	indentHeuristic = on
+	tool = difftastic
+[difftool]
+	prompt = false
+[difftool "difftastic"]
+	cmd = difft "$LOCAL" "$REMOTE"
 [alias]
 	ks = difftool -y -t Kaleidoscope
 	st = status
@@ -40,6 +53,7 @@
 	unpublish = "!git push origin :$(git branch-name)"
 	sw = switch
 	swc = switch -c
+	dft = difftool
 [ghq]
 	root = ~/src
 [url "git@github.com:"]
@@ -50,3 +64,6 @@
 	program = gpg
 [init]
 	defaultBranch = main
+[delta]
+	navigate = true    # use n and N to move between diff sections
+	light = false      # set to true if you're in a terminal w/ a light background color (e.g. the default macOS terminal)
