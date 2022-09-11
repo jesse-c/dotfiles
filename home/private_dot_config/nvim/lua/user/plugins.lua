@@ -46,10 +46,12 @@ end
 
 -- Have packer use a popup window
 packer.init({
+	preview_updates = true,
 	display = {
 		open_fn = function()
 			return require("packer.util").float({ border = "rounded" })
 		end,
+		compact = true,
 	},
 })
 
