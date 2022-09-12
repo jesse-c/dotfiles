@@ -357,7 +357,7 @@ return packer.startup(function(use)
 			local config = require("user.plugins.feline-nvim")
 
 			feline.setup(config.statusline)
-	end,
+		end,
 	})
 
 	-- Undo
@@ -669,11 +669,17 @@ return packer.startup(function(use)
 			-- Adapters
 			"vim-test/vim-test",
 			"rcarriga/neotest-vim-test",
+			"jfpedroza/neotest-elixir",
+			"rouge8/neotest-rust",
+			"nvim-neotest/neotest-python",
 		},
 		config = function()
 			require("neotest").setup({
 				adapters = {
 					require("neotest-vim-test"),
+					require("neotest-elixir"),
+					require("neotest-rust"),
+					require("neotest-python"),
 				},
 			})
 		end,
