@@ -647,18 +647,6 @@ return packer.startup(function(use)
 	use("sbdchd/neoformat")
 
 	-- Testing
-	-- Run your tests at the speed of thought
-	use("vim-test/vim-test")
-	-- The ultimate testing plugin for (Neo)Vim
-	use({
-		"rcarriga/vim-ultest",
-		requires = "vim-test/vim-test",
-		run = ":UpdateRemotePlugins",
-		config = function()
-			vim.g.ultest_deprecation_notice = 0
-			vim.g.ultest_virtual_text = 1
-		end,
-	})
 	-- An extensible framework for interacting with tests within NeoVim.
 	use({
 		"rcarriga/neotest",
@@ -667,8 +655,6 @@ return packer.startup(function(use)
 			"nvim-treesitter/nvim-treesitter",
 			"antoinemadec/FixCursorHold.nvim",
 			-- Adapters
-			"vim-test/vim-test",
-			"rcarriga/neotest-vim-test",
 			"jfpedroza/neotest-elixir",
 			"rouge8/neotest-rust",
 			"nvim-neotest/neotest-python",
@@ -676,7 +662,6 @@ return packer.startup(function(use)
 		config = function()
 			require("neotest").setup({
 				adapters = {
-					require("neotest-vim-test"),
 					require("neotest-elixir"),
 					require("neotest-rust"),
 					require("neotest-python"),
