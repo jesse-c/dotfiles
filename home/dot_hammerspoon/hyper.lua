@@ -22,6 +22,7 @@ end
 -- Single keybinding for app launch
 hs.fnutils.each({
   { key = 'q', appname = '/Applications/Things3.app'},
+  { key = 'b', appname = '/Applications/Emacs.app'},
   { key = 'g', appname = 'kitty'},
   { key = 'f', appname = 'Firefox Nightly'},
   { key = 'm', appname = 'Mail'},
