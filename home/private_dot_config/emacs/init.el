@@ -317,7 +317,9 @@
 
 (use-package counsel-projectile
   :after (counsel projectile)
-  :config (setq projectile-project-search-path '("~/Documents/projects/" ("~/src/" . 2)))
+  :config 
+  (setq projectile-project-search-path '("~/Documents/projects/" ("~/src/" . 3)))
+  (setq projectile-auto-discover nil)
   :init (counsel-projectile-mode))
 
 ;; Make Ivy a bit more friendly by adding information to ivy buffers, e.g. description of commands in Alt-x, meta info when switching buffers, etc.
