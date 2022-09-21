@@ -34,6 +34,16 @@
 
 (use-package dash)
 
+(use-package crux)
+
+;; -----------------------------------------------------------------------------
+;; Server
+;; -----------------------------------------------------------------------------
+
+;; Hint: emacsclient -n file1 file2 ...
+;;       Use -c to open in a new frame
+;; (server-start)
+
 ;; -----------------------------------------------------------------------------
 ;; OS
 ;; -----------------------------------------------------------------------------
@@ -49,9 +59,28 @@
   (require 'exec-path-from-shell)
   (exec-path-from-shell-initialize))
 
+(when (memq window-system '(mac ns))
+  (setq dired-use-ls-dired nil))
+
 ;; -----------------------------------------------------------------------------
 ;; GUI
 ;; -----------------------------------------------------------------------------
+
+;; Themes
+(use-package spacemacs-theme
+  :defer t ; Don't load it immediately
+  :config
+  (load-theme 'spacemacs-light t))
+
+;; Disabled while I use a different distribution
+;; (defun my/apply-theme (appearance)
+;;   "Load theme, taking current system APPEARANCE into consideration."
+;;   (mapc #'disable-theme custom-enabled-themes)
+;;   (pcase appearance
+;;     ('light (load-theme 'spacemacs-light t))
+;;     ('dark (load-theme 'spacemacs-dark t))))
+;;
+;; (add-hook 'ns-system-appearance-change-functions #'my/apply-theme)
 
 ;; Font
 (set-frame-font "JetBrains Mono 12" nil t)
@@ -111,13 +140,16 @@
 ;; Windows
 (windmove-default-keybindings)
 
+;; Tabs
+(setq tab-bar-tab-hints t) ; Show tab numbers
+
 ;; -----------------------------------------------------------------------------
 ;; Editor
 ;; -----------------------------------------------------------------------------
 
 (use-package which-key
-  :diminish)
-(which-key-mode)
+  :diminish
+  :init (which-key-mode))
 
 ;; Indentation
 (use-package indent-guide
@@ -132,6 +164,7 @@
 (use-package rainbow-delimiters
   :diminish
   :config
+  ; Start the mode automatically in most programming modes
   (add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
 
 ;; Smart parens
@@ -262,7 +295,14 @@
   :init (global-flycheck-mode))
 
 ;; Formatting
-(use-package format-all)
+(use-package format-all
+  :init
+  ; Auto-format code on save
+  (add-hook 'elixir-mode-hook 'format-all-mode)
+  (add-hook 'rust-mode-hook 'format-all-mode)
+  (add-hook 'python-mode-hook 'format-all-mode)
+  (add-hook 'lua-mode-hook 'format-all-mode)
+  (add-hook 'go-mode-hook 'format-all-mode))
 
 ;; Treesitter
 (use-package tree-sitter
@@ -285,6 +325,7 @@
 (use-package lsp-mode
   :config
   (setq lsp-elixir-server-command '("elixir-ls"))
+  (setq lsp-clients-lua-language-server-command '("lua-language-server"))
   :init
   ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
   (setq lsp-keymap-prefix "C-c l")
@@ -526,7 +567,9 @@
 ;;   :init (magit-todos-mode))
 
 (use-package forge
-  :after magit)
+  :after magit
+  :config
+  (setq auth-sources '("~/.authinfo")))
 
 ;; Show changes in the gutter
 (use-package git-gutter
