@@ -28,8 +28,8 @@
 (straight-use-package 'use-package)
 (setq straight-use-package-by-default t)
 
-;; Ensure PATH is correct when launched as GUI application
-(use-package exec-path-from-shell)
+;; Needed libraries
+(use-package dash)
 
 ;; -----------------------------------------------------------------------------
 ;; GUI
@@ -186,6 +186,9 @@
 
 ;; Rust
 (use-package rust-mode)
+(use-package flycheck-rust
+  :after (flycheck rust-mode)
+  :config (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
 
 ;; Web
 (use-package web-mode
@@ -233,6 +236,10 @@
   :commands flymake-shellcheck-load
   :init
   (add-hook 'sh-mode-hook 'flymake-shellcheck-load))
+
+;; Syntax
+(use-package flycheck
+  :init (global-flycheck-mode))
 
 ;; Formatting
 (use-package format-all)
@@ -488,9 +495,13 @@
 
 ;; Magit
 (use-package magit
-  :straight t
   :config
-  (global-set-key (kbd "s-g") 'magit-status))   ;; Cmd+g for git status
+  (global-set-key (kbd "s-g") 'magit-status))
+(use-package magit-todos
+  :after magit
+  :init (magit-todos-mode))
+(use-package forge
+  :after magit)
 
 ;; Show changes in the gutter
 (use-package git-gutter
@@ -504,6 +515,9 @@
 ;; macOS
 
 (setq delete-by-moving-to-trash t)
+
+;; Ensure PATH is correct when launched as GUI application
+(use-package exec-path-from-shell)
 
 (when (memq window-system '(mac ns))
   (require 'exec-path-from-shell)
