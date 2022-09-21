@@ -28,8 +28,26 @@
 (straight-use-package 'use-package)
 (setq straight-use-package-by-default t)
 
-;; Needed libraries
+;; -----------------------------------------------------------------------------
+;; Common
+;; -----------------------------------------------------------------------------
+
 (use-package dash)
+
+;; -----------------------------------------------------------------------------
+;; OS
+;; -----------------------------------------------------------------------------
+
+;; macOS
+
+(setq delete-by-moving-to-trash t)
+
+;; Ensure PATH is correct when launched as GUI application
+(use-package exec-path-from-shell)
+
+(when (memq window-system '(mac ns))
+  (require 'exec-path-from-shell)
+  (exec-path-from-shell-initialize))
 
 ;; -----------------------------------------------------------------------------
 ;; GUI
@@ -73,10 +91,10 @@
 (setq initial-scratch-message nil) ; Empty scratch buffer
 
 ;; Keyboard-centric user interface
-(scroll-bar-mode -1)
-(tool-bar-mode   -1)
-(tooltip-mode    -1)
-(menu-bar-mode   -1)
+(scroll-bar-mode  -1)
+(tool-bar-mode    -1)
+(tooltip-mode     -1)
+(menu-bar-mode    -1)
 (setq visible-bell 1)
 
 (setq confirm-kill-emacs 'y-or-n-p) ; y and n instead of yes and no when quitting
@@ -199,13 +217,15 @@
 (use-package elixir-mode)
 (use-package alchemist)
 (use-package mix
-  :config
-  (add-hook 'elixir-mode-hook 'mix-minor-mode))
+  :config (add-hook 'elixir-mode-hook 'mix-minor-mode))
 (use-package flycheck-credo
   :init
   '(flycheck-credo-setup)
   :config
   (setq flycheck-elixir-credo-strict t))
+(use-package flycheck-elixir
+  :after (flycheck elixir-mode)
+  :config (add-hook 'elixir-mode-hook 'flycheck-mode))
 
 ;; Go
 (use-package go-mode)
@@ -263,6 +283,8 @@
 
 ;; LSP
 (use-package lsp-mode
+  :config
+  (setq lsp-elixir-server-command '("elixir-ls"))
   :init
   ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
   (setq lsp-keymap-prefix "C-c l")
@@ -497,9 +519,12 @@
 (use-package magit
   :config
   (global-set-key (kbd "s-g") 'magit-status))
-(use-package magit-todos
-  :after magit
-  :init (magit-todos-mode))
+
+;; Disable due to performance on large repositories
+;; (use-package magit-todos
+;;   :after magit
+;;   :init (magit-todos-mode))
+
 (use-package forge
   :after magit)
 
@@ -508,17 +533,3 @@
   :diminish
   :config
   (global-git-gutter-mode +1))
-;; -----------------------------------------------------------------------------
-;; OS
-;; -----------------------------------------------------------------------------
-
-;; macOS
-
-(setq delete-by-moving-to-trash t)
-
-;; Ensure PATH is correct when launched as GUI application
-(use-package exec-path-from-shell)
-
-(when (memq window-system '(mac ns))
-  (require 'exec-path-from-shell)
-  (exec-path-from-shell-initialize))
