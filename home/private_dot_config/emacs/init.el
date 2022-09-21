@@ -90,6 +90,9 @@
   :init (doom-modeline-mode 1))
 (doom-modeline-mode) ; TODO: This shouldn't be needed
 
+;; Windows
+(windmove-default-keybindings)
+
 ;; -----------------------------------------------------------------------------
 ;; Editor
 ;; -----------------------------------------------------------------------------
@@ -276,12 +279,17 @@
 
 (use-package yasnippet)
 (use-package yasnippet-snippets)
+(use-package ivy-yasnippet
+  :after (yasnippet yasnippet-snippets ivy))
 (yas-global-mode 1)
 
 ;; Code completion
 (use-package company
   :config
   (add-hook 'after-init-hook 'global-company-mode))
+(use-package company-quickhelp
+  :after (company)
+  :init (company-quickhelp-mode))
 
 ;; Menu completion
 ;; Use minimalist Ivy for most things.
@@ -317,7 +325,7 @@
 
 (use-package counsel-projectile
   :after (counsel projectile)
-  :config 
+  :config
   (setq projectile-project-search-path '("~/Documents/projects/" ("~/src/" . 3)))
   (setq projectile-auto-discover nil)
   :init (counsel-projectile-mode))
