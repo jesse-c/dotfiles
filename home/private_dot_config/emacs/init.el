@@ -345,6 +345,10 @@
 
 (use-package lsp-ui :commands lsp-ui-mode)
 
+;; DAP
+
+(use-package dap-mode)
+
 ;; Snippets
 
 (use-package yasnippet)
@@ -360,6 +364,8 @@
 (use-package company-quickhelp
   :after (company)
   :init (company-quickhelp-mode))
+(use-package company-box
+  :hook (company-mode . company-box-mode))
 
 ;; Menu completion
 ;; Use minimalist Ivy for most things.
