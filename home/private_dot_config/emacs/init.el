@@ -559,7 +559,7 @@
 (use-package org)
 
 ;; -----------------------------------------------------------------------------
-;; Version control
+;; VCS
 ;; -----------------------------------------------------------------------------
 
 ;; Magit
@@ -582,3 +582,12 @@
   :diminish
   :config
   (global-git-gutter-mode +1))
+
+;; Create URLs to files and commits in repository hosting services
+(use-package git-link)
+
+;; View versions of a file
+;; (use-package git-timemachine)
+
+;; View git blame
+(use-package vc-msg)
