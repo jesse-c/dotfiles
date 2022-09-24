@@ -228,8 +228,22 @@
           undo-tree-visualizer-diff t)))
 
 ;; Vim
-(use-package evil)
-(evil-mode 1)
+(use-package evil
+  :init
+  (setq evil-want-integration t) ;; This is optional since it's already set to t by default.
+  (setq evil-want-keybinding nil)
+  :config
+  (evil-mode 1))
+
+(use-package evil-collection
+  :after evil
+  :config
+  (evil-collection-init))
+
+(use-package evil-surround
+  :after evil
+  :config
+  (global-evil-surround-mode 1))
 
 (evil-set-undo-system 'undo-tree)
 
