@@ -233,6 +233,24 @@
 
 (evil-set-undo-system 'undo-tree)
 
+;; Programming
+
+;; Overwrite existing function
+(defun find-alternate-file ()
+  "Find alternate FILE, if any."
+  (interactive)
+  (let* (
+         (default-directory (projectile-project-root))
+         ;; https://emacs.stackexchange.com/questions/45419/get-file-name-relative-to-projectile-root
+         (buffile (file-relative-name buffer-file-name (projectile-project-root)))
+         (cmd (format "/opt/homebrew/bin/alt %s" buffile))
+         (output (shell-command-to-string cmd)))
+
+    (if (string= output "")
+        (message "No alternate file found")
+      (if (y-or-n-p (format "Found alternate file %s. Open?" output))
+       (find-file output (message "Not opening"))))))
+
 ;; Languages
 
 ;; Rust
