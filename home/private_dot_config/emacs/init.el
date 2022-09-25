@@ -10,6 +10,9 @@
 ;; Package management
 ;; -----------------------------------------------------------------------------
 
+(setq package-archives '(("melpa" . "http://melpa.org/packages/")
+                         ("gnu" . "http://elpa.gnu.org/packages/")))
+
 (defvar bootstrap-version)
 (let ((bootstrap-file
        (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
@@ -29,11 +32,20 @@
 (setq straight-use-package-by-default t)
 
 ;; -----------------------------------------------------------------------------
+;; Org
+;; -----------------------------------------------------------------------------
+
+(use-package org)
+(use-package org-contrib)
+(use-package org-journal)
+
+;; -----------------------------------------------------------------------------
 ;; Common
 ;; -----------------------------------------------------------------------------
 
 (use-package dash)
-
+(use-package loop)
+(use-package s)
 (use-package crux)
 
 ;; -----------------------------------------------------------------------------
@@ -69,8 +81,7 @@
 ;; Themes
 (use-package spacemacs-theme
   :defer t ; Don't load it immediately
-  :config
-  (load-theme 'spacemacs-light t))
+  :init (load-theme 'spacemacs-light t))
 
 ;; Disabled while I use a different distribution
 ;; (defun my/apply-theme (appearance)
@@ -143,6 +154,9 @@
 ;; Tabs
 (setq tab-bar-tab-hints t) ; Show tab numbers
 
+;; Keymaps
+(use-package hydra)
+
 ;; -----------------------------------------------------------------------------
 ;; Editor
 ;; -----------------------------------------------------------------------------
@@ -156,6 +170,15 @@
   :config
   (indent-guide-global-mode))
 
+(use-package aggressive-indent
+  :hook
+  (elixir-mode-hook . aggressive-indent-mode))
+
+;; Search
+(use-package anzu
+  :init
+  (global-anzu-mode +1))
+
 ;; Whitespace
 (add-hook 'before-save-hook 'delete-trailing-whitespace) ; Delete trailing spaces
 (setq require-final-newline t) ; Add new line in the end of a file on save.
@@ -168,6 +191,20 @@
   (add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
 
 ;; Smart parens
+(use-package smartparens
+  :config
+  (add-hook 'elixir-mode-hook #'smartparens-mode)
+  (add-hook 'go-mode-hook #'smartparens-mode)
+  (add-hook 'html-mode-hook #'smartparens-mode)
+  (add-hook 'lua-mode-hook #'smartparens-mode)
+  (add-hook 'python-mode-hook #'smartparens-mode)
+  (add-hook 'rust-mode-hook #'smartparens-mode)
+  (add-hook 'ruby-mode-hook #'smartparens-mode)
+  (add-hook 'swift-mode-hook #'smartparens-mode)
+  (add-hook 'clojure-mode-hook #'smartparens-mode))
+
+(require 'smartparens-config)
+
 (use-package parinfer-rust-mode
   :diminish
   :hook emacs-lisp-mode)
@@ -245,6 +282,8 @@
   :config
   (global-evil-surround-mode 1))
 
+(use-package evil-anzu)
+
 (evil-set-undo-system 'undo-tree)
 
 ;; Programming
@@ -269,6 +308,9 @@
 
 ;; Rust
 (use-package rust-mode)
+(use-package rustic)
+(use-package cargo
+  :init (add-hook 'rust-mode-hook 'cargo-minor-mode))
 (use-package flycheck-rust
   :after (flycheck rust-mode)
   :config (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
@@ -291,6 +333,8 @@
 (use-package flycheck-elixir
   :after (flycheck elixir-mode)
   :config (add-hook 'elixir-mode-hook 'flycheck-mode))
+(use-package exunit
+  :init (add-hook 'elixir-mode-hook 'exunit-mode))
 
 ;; Go
 (use-package go-mode)
@@ -322,19 +366,53 @@
   :init
   (add-hook 'sh-mode-hook 'flymake-shellcheck-load))
 
+;; Clojure
+(use-package clojure-mode)
+
+(use-package cider)
+
+;; .env
+(use-package dotenv-mode)
+
+;; SASS
+(use-package sass-mode)
+
+;; Typescript
+(use-package typescript-mode)
+
+;; Dockerfile
+(use-package dockerfile-mode)
+
+;; Emacs Lisp
+(use-package eldoc
+  :diminish eldoc-mode
+  :hook (emacs-lisp-mode . turn-on-eldoc-mode)
+        (lisp-interaction-mode . turn-on-eldoc-mode))
+
+;; Writing
+(use-package flycheck-vale
+  :after flycheck
+  :init (flycheck-vale-setup))
+
 ;; Syntax
 (use-package flycheck
   :init (global-flycheck-mode))
 
 ;; Formatting
-(use-package format-all
-  :init
+(use-package format-all)
+  ; Disabled for now whilst using apheleia
+  ;; :init)
   ; Auto-format code on save
-  (add-hook 'elixir-mode-hook 'format-all-mode)
-  (add-hook 'rust-mode-hook 'format-all-mode)
-  (add-hook 'python-mode-hook 'format-all-mode)
-  (add-hook 'lua-mode-hook 'format-all-mode)
-  (add-hook 'go-mode-hook 'format-all-mode))
+  ;; (add-hook 'elixir-mode-hook 'format-all-mode)
+  ;; (add-hook 'rust-mode-hook 'format-all-mode)
+  ;; (add-hook 'python-mode-hook 'format-all-mode)
+  ;; (add-hook 'lua-mode-hook 'format-all-mode)
+  ;; (add-hook 'go-mode-hook 'format-all-mode)
+  ;; (add-hook 'clojure-mode-hook 'format-all-mode))
+
+(use-package apheleia
+  :hook
+  (elixir-mode . apheleia-mode))
 
 ;; Treesitter
 (use-package tree-sitter
@@ -346,6 +424,7 @@
 (require 'tree-sitter-langs)
 
 (global-tree-sitter-mode)
+(add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode)
 
 (use-package tree-edit)
 (use-package evil-tree-edit
@@ -373,6 +452,7 @@
   (ruby-mode . lsp)
   (shell-mode . lsp)
   (lua-mode . lsp)
+  (clojure-mode . lsp)
   :commands lsp)
 
 (use-package lsp-ui :commands lsp-ui-mode)
@@ -396,6 +476,9 @@
 (use-package company-quickhelp
   :after (company)
   :init (company-quickhelp-mode))
+(use-package company-statistics
+  :after (company)
+  :init (company-statistics-mode))
 (use-package company-box
   :hook (company-mode . company-box-mode))
 
@@ -447,6 +530,15 @@
 (use-package smex)  ;; show recent commands when invoking Alt-x (or Cmd+Shift+p)
 (use-package flx)   ;; enable fuzzy matching
 (use-package avy)   ;; enable avy for quick navigation
+
+; Disabled for now due to not being good at fuzzy finding
+;; (use-package prescient)
+;; (use-package ivy-prescient
+;;   :after (ivy prescient)
+;;   :init (ivy-prescient-mode t))
+;; (use-package company-prescient
+;;   :after (company prescient)
+;;   :init (company-prescient-mode t))
 
 ;; -----------------------------------------------------------------------------
 ;; File system
@@ -615,8 +707,18 @@
   :config
   (global-git-gutter-mode +1))
 
+;; Show author
+(use-package blamer
+  :init (global-blamer-mode 1))
+
 ;; Create URLs to files and commits in repository hosting services
 (use-package git-link)
+
+;; Browse target page on github/bitbucket from emacs buffers
+(use-package browse-at-remote)
+
+;; Why was this line changed
+(use-package git-messenger)
 
 ;; View versions of a file
 ;; (use-package git-timemachine)
