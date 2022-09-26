@@ -296,7 +296,7 @@
          (default-directory (projectile-project-root))
          ;; https://emacs.stackexchange.com/questions/45419/get-file-name-relative-to-projectile-root
          (buffile (file-relative-name buffer-file-name (projectile-project-root)))
-         (cmd (format "/opt/homebrew/bin/alt %s" buffile))
+         (cmd (format "alt %s" buffile))
          (output (shell-command-to-string cmd)))
 
     (if (string= output "")
