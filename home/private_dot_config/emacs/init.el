@@ -60,6 +60,9 @@
 ;; OS
 ;; -----------------------------------------------------------------------------
 
+(use-package chezmoi
+  :after magit)
+
 ;; macOS
 
 (setq delete-by-moving-to-trash t)
