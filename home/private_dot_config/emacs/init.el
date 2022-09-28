@@ -82,9 +82,25 @@
 ;; -----------------------------------------------------------------------------
 
 ;; Themes
+(defun theme-by-current-time ()
+  "Get the light or dark THEME based on the current time"
+  (let ((hour (->> (current-time)
+                   (decode-time)
+                   (nth 2))))
+    (if (or (> hour 18) (< hour 5))
+        'spacemacs-dark
+        'spacemacs-light)))
+
+(defun load-theme-by-current-time ()
+  "Load the right theme based on the current time"
+  (load-theme (theme-by-current-time) t))
+
 (use-package spacemacs-theme
   :defer t ; Don't load it immediately
-  :init (load-theme 'spacemacs-light t))
+  :init
+  (load-theme-by-current-time))
+
+(run-with-timer 0 (* 5 60) 'load-theme-by-current-time)
 
 ;; Disabled while I use a different distribution
 ;; (defun my/apply-theme (appearance)
