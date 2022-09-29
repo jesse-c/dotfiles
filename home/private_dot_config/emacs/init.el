@@ -518,6 +518,11 @@
   (global-set-key (kbd "s-b") 'ivy-switch-buffer)  ;; Cmd+b show buffers and recent files
   (global-set-key (kbd "M-s-b") 'ivy-resume))      ;; Alt+Cmd+b resume whatever Ivy was doing
 
+(use-package ivy-posframe
+  :after ivy
+  :init
+  (ivy-posframe-mode 1))
+
 ;; Swiper is a better local finder.
 (use-package swiper
   :config
