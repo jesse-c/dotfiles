@@ -52,9 +52,19 @@
 ;; Server
 ;; -----------------------------------------------------------------------------
 
-;; Hint: emacsclient -n file1 file2 ...
-;;       Use -c to open in a new frame
-;; (server-start)
+;; Hint: emacsclient -n file1 file2 (Use -c to open in a new frame)
+;; Example: emacsclient --socket-name ~/.config/emacs/server/server FILE
+
+; Make the directory if it doesn't exist
+(setq server-socket-path "~/.config/emacs/server")
+(make-directory server-socket-path t)
+(setq server-socket-dir server-socket-path)
+
+(load "server")
+(unless (< emacs-major-version 23)
+    (defun server-ensure-safe-dir (dir) "Noop" t))
+
+(unless (server-running-p) (server-start))
 
 ;; -----------------------------------------------------------------------------
 ;; OS
