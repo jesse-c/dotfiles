@@ -92,7 +92,7 @@
 ;; -----------------------------------------------------------------------------
 
 ;; Themes
-(defun theme-by-current-time ()
+(defun my/theme-by-current-time ()
   "Get the light or dark THEME based on the current time"
   (let ((hour (->> (current-time)
                    (decode-time)
@@ -101,16 +101,16 @@
         'spacemacs-dark
         'spacemacs-light)))
 
-(defun load-theme-by-current-time ()
+(defun my/load-theme-by-current-time ()
   "Load the right theme based on the current time"
-  (load-theme (theme-by-current-time) t))
+  (load-theme (my/theme-by-current-time) t))
 
 (use-package spacemacs-theme
   :defer t ; Don't load it immediately
   :init
-  (load-theme-by-current-time))
+  (my/load-theme-by-current-time))
 
-(run-with-timer 0 (* 5 60) 'load-theme-by-current-time)
+(run-with-timer 0 (* 5 60) 'my/load-theme-by-current-time)
 
 ;; Disabled while I use a different distribution
 ;; (defun my/apply-theme (appearance)
@@ -368,6 +368,13 @@
 ;; Go
 (use-package go-mode)
 
+;; Swift
+(use-package swift-mode)
+(use-package lsp-sourcekit
+  :after (lsp swift-mode))
+(use-package flycheck-swift
+  :after (swift-mode))
+
 ;; JSON
 (use-package json-mode)
 
@@ -441,7 +448,9 @@
 
 (use-package apheleia
   :hook
-  (elixir-mode . apheleia-mode))
+  (elixir-mode . apheleia-mode)
+  (swift-mode . apheleia-mode)
+  (rust-mode . apheleia-mode))
 
 ;; Treesitter
 (use-package tree-sitter
@@ -482,6 +491,7 @@
   (shell-mode . lsp)
   (lua-mode . lsp)
   (clojure-mode . lsp)
+  (swift-mode . lsp)
   :commands lsp)
 
 (use-package lsp-ui :commands lsp-ui-mode)
