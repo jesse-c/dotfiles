@@ -172,14 +172,23 @@
 ;; Use ESC as universal get me out of here command
 (define-key key-translation-map (kbd "ESC") (kbd "C-g"))
 
+;; Tabs
+(setq tab-bar-tab-hints t) ; Show tab numbers
+(setq tab-bar-mode t)
+(setq tab-bar-show nil)
+(setq tab-bar-new-tab-choice "*scratch*")
+
+(global-set-key (kbd "C-<tab>") 'tab-bar-switch-to-tab)
+
 ;; Mode-line
 (use-package doom-modeline
-  :after (all-the-icons)
+  :after all-the-icons
   :init (doom-modeline-mode 1))
-(doom-modeline-mode) ; TODO: This shouldn't be needed
+
+(use-package all-the-icons)
 
 ;; Windows
-(global-set-key (kbd "C-h") 'windmove-left)
+(global-set-key (kbd "C-h") 'windmove-left) ; Use F1 instead of C-h for help-command
 (global-set-key (kbd "C-l") 'windmove-right)
 (global-set-key (kbd "C-k") 'windmove-up)
 (global-set-key (kbd "C-j") 'windmove-down)
@@ -188,9 +197,6 @@
 
 (global-set-key (kbd "C-S-x") 'split-window-below)
 (global-set-key (kbd "C-S-v") 'split-window-right)
-
-;; Tabs
-(setq tab-bar-tab-hints t) ; Show tab numbers
 
 ;; Keymaps
 (use-package hydra)
