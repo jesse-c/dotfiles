@@ -24,6 +24,13 @@ local M = {
     },
     force_inactive = force_inactive,
   },
+  winbar = {
+    components = {
+      active = {},
+      inactive = {},
+    },
+    force_inactive = force_inactive,
+  },
 }
 
 -- Statusline
@@ -219,6 +226,40 @@ M.statusline.components.inactive[1] = {
   },
   -- Empty component to fix the highlight till the end of the statusline
   {},
+}
+
+-- Winbar
+
+M.winbar.components.active[1] = {
+  {
+    provider = {
+      name = "file_info",
+      opts = {
+        type = "unique-short",
+      },
+    },
+    hl = {
+      fg = "skyblue",
+      bg = "NONE",
+      style = "bold",
+    },
+  },
+}
+
+M.winbar.components.inactive[1] = {
+  {
+    provider = {
+      name = "file_info",
+      opts = {
+        type = "unique-short",
+      },
+    },
+    hl = {
+      fg = "white",
+      bg = "NONE",
+      style = "bold",
+    },
+  },
 }
 
 return M

@@ -66,8 +66,6 @@ return packer.startup(function(use)
 
 	-- Performance
 	use("lewis6991/impatient.nvim")
-	use("nathom/filetype.nvim")
-	use("antoinemadec/FixCursorHold.nvim")
 
 	-- Meta
 	use({
@@ -357,6 +355,7 @@ return packer.startup(function(use)
 			local config = require("user.plugins.feline-nvim")
 
 			feline.setup(config.statusline)
+			feline.winbar.setup(config.winbar)
 		end,
 	})
 
