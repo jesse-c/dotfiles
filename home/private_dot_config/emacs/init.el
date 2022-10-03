@@ -179,7 +179,15 @@
 (doom-modeline-mode) ; TODO: This shouldn't be needed
 
 ;; Windows
-(windmove-default-keybindings)
+(global-set-key (kbd "C-h") 'windmove-left)
+(global-set-key (kbd "C-l") 'windmove-right)
+(global-set-key (kbd "C-k") 'windmove-up)
+(global-set-key (kbd "C-j") 'windmove-down)
+
+(global-set-key (kbd "C-q") 'delete-window)
+
+(global-set-key (kbd "C-S-x") 'split-window-below)
+(global-set-key (kbd "C-S-v") 'split-window-right)
 
 ;; Tabs
 (setq tab-bar-tab-hints t) ; Show tab numbers
