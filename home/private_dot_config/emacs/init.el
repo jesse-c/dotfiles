@@ -110,7 +110,8 @@
   :init
   (my/load-theme-by-current-time))
 
-(run-with-timer 0 (* 5 60) 'my/load-theme-by-current-time)
+;; Disabled as AppearanceNotifier is used
+;; (run-with-timer 0 (* 5 60) 'my/load-theme-by-current-time)
 
 ;; Disabled while I use a different distribution
 ;; (defun my/apply-theme (appearance)
@@ -492,6 +493,7 @@
   (lua-mode . lsp)
   (clojure-mode . lsp)
   (swift-mode . lsp)
+  (lsp-mode . lsp-enable-which-key-integration)
   :commands lsp)
 
 (use-package lsp-ui :commands lsp-ui-mode)
