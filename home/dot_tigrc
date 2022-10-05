@@ -20,7 +20,7 @@ bind status 7 !@sh -c "echo %(file) | pbcopy"
 bind main p !git push origin
 
 # Push (force)
-bind main P !git push -f origin
+bind main P !git push --force-with-lease origin
 
 # Absorb
 bind main a !git absorb
