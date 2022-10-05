@@ -47,6 +47,8 @@
 (use-package loop)
 (use-package s)
 (use-package crux)
+(use-package request)
+(use-package restclient)
 
 ;; -----------------------------------------------------------------------------
 ;; Server
@@ -72,6 +74,18 @@
 
 (use-package chezmoi
   :after magit)
+
+(setq straight-versions-path "straight/versions/default.el")
+
+(defun my/straight-versions-path ()
+  (-> user-init-file
+      (file-name-directory)
+      (file-name-concat straight-versions-path)
+      (message)))
+
+(defun my/chezmoi-copy-package-freeze ()
+  (interactive)
+  (copy-file (my/straight-versions-path) (file-name-concat "~/.local/share/chezmoi/home/private_dot_config/emacs" straight-versions-path t)))
 
 ;; macOS
 
@@ -109,6 +123,9 @@
   :defer t ; Don't load it immediately
   :init
   (my/load-theme-by-current-time))
+
+(use-package doom-themes
+  :defer t) ; Don't load it immediately
 
 ;; Disabled as AppearanceNotifier is used
 ;; (run-with-timer 0 (* 5 60) 'my/load-theme-by-current-time)
@@ -204,6 +221,12 @@
 ;; -----------------------------------------------------------------------------
 ;; Editor
 ;; -----------------------------------------------------------------------------
+
+(use-package perspective
+  :custom
+  (persp-mode-prefix-key (kbd "C-c C-z"))
+  :init
+  (persp-mode))
 
 (use-package which-key
   :diminish
@@ -333,22 +356,22 @@
 ;; Programming
 
 ;; Overwrite existing function
-(defun find-alternate-file ()
+(defun my/find-alternate-file ()
   "Find alternate FILE, if any."
   (interactive)
-  (let* (
-         (default-directory (projectile-project-root))
+  (let* ((default-directory (projectile-project-root))
          ;; https://emacs.stackexchange.com/questions/45419/get-file-name-relative-to-projectile-root
          (buffile (file-relative-name buffer-file-name (projectile-project-root)))
          (cmd (format "alt %s" buffile))
          (output (shell-command-to-string cmd)))
-
     (if (string= output "")
         (message "No alternate file found")
       (if (y-or-n-p (format "Found alternate file %s. Open?" output))
        (find-file output (message "Not opening"))))))
 
 ;; Languages
+
+(use-package quickrun)
 
 ;; Rust
 (use-package rust-mode)
@@ -698,6 +721,10 @@
 (use-package treemacs-evil
   :after (treemacs evil))
 
+(use-package treemacs-perspective ;;treemacs-perspective if you use perspective.el vs. persp-mode
+  :after (treemacs perspective) ;;or perspective vs. persp-mode
+  :config (treemacs-set-scope-type 'Perspectives))
+
 (use-package treemacs-projectile
   :after (treemacs projectile))
 
@@ -708,16 +735,11 @@
   :after (treemacs magit))
 
 (use-package lsp-treemacs
-  :after (treemacs magit)
-  :config
-  (lsp-treemacs-sync-mode 1))
-
-(use-package treemacs-persp ;;treemacs-perspective if you use perspective.el vs. persp-mode
-  :after (treemacs persp-mode) ;;or perspective vs. persp-mode
-  :config (treemacs-set-scope-type 'Perspectives))
+  :after (treemacs lsp-mode)
+  :config (lsp-treemacs-sync-mode 1))
 
 (use-package treemacs-tab-bar ;;treemacs-tab-bar if you use tab-bar-mode
-  :after (treemacs)
+  :after treemacs
   :config (treemacs-set-scope-type 'Tabs))
 
 ;; Move file to trash instead of removing.
