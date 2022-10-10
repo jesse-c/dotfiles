@@ -237,6 +237,8 @@
   :config
   (indent-guide-global-mode))
 
+(setq-default indent-tabs-mode nil)
+
 (use-package aggressive-indent
   :hook
   (elixir-mode-hook . aggressive-indent-mode))
