@@ -101,6 +101,15 @@
 (when (memq window-system '(mac ns))
   (setq dired-use-ls-dired nil))
 
+;; https://www.blogbyben.com/2022/05/gotcha-emacs-on-mac-os-too-many-files.html
+(defun my/file-notify-rm-all-watches ()
+  "Remove all existing file notification watches from Emacs."
+  (interactive)
+  (maphash
+   (lambda (key _value)
+     (file-notify-rm-watch key))
+   file-notify-descriptors))
+
 ;; -----------------------------------------------------------------------------
 ;; Terminal
 ;; -----------------------------------------------------------------------------
