@@ -644,6 +644,8 @@
 ;; File system
 ;; -----------------------------------------------------------------------------
 
+(recentf-mode t)
+
 (use-package dirvish)
   ;; :config)
   ;; (dirvish-override-dired-mode))
@@ -773,6 +775,8 @@
 (use-package projectile
   :config
   (projectile-mode +1)
+  (setq projectile-sort-order 'recently-active)
+  (setq projectile-switch-project-action #'projectile-commander)
   ;; Recommended keymap prefix on macOS
   (define-key projectile-mode-map (kbd "s-p") 'projectile-command-map))
 
