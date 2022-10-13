@@ -644,6 +644,9 @@
 ;; File system
 ;; -----------------------------------------------------------------------------
 
+(setq auto-save-file-name-transforms '((".*" "~/.config/emacs/auto-save-list/" t)))
+(setq create-lockfiles nil)
+
 (recentf-mode t)
 
 (use-package dirvish)
