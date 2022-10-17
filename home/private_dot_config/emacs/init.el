@@ -404,6 +404,14 @@
   :config
   (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode)))
 
+;; Java
+(use-package lsp-java
+  :after lsp-mode)
+
+;; Gradle
+(use-package gradle-mode)
+(use-package flycheck-gradle)
+
 ;; Elixir
 (use-package elixir-mode)
 (use-package alchemist)
@@ -646,6 +654,14 @@
 
 (setq auto-save-file-name-transforms '((".*" "~/.config/emacs/auto-save-list/" t)))
 (setq create-lockfiles nil)
+
+(defun my/copy-buffer-name ()
+  (interactive)
+  (kill-new (buffer-file-name)))
+
+(defun my/copy-project-buffer-name ()
+  (interactive)
+  (kill-new (file-relative-name buffer-file-name (projectile-project-root))))
 
 (recentf-mode t)
 
