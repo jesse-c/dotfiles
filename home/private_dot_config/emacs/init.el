@@ -91,6 +91,10 @@
 
 (setq delete-by-moving-to-trash t)
 
+;; https://emacs.stackexchange.com/a/41767
+;; Alternative to try: https://superuser.com/questions/125569/how-to-fix-emacs-popup-dialogs-on-mac-os-x
+(setq use-dialog-box nil)
+
 ;; Ensure PATH is correct when launched as GUI application
 (use-package exec-path-from-shell)
 
