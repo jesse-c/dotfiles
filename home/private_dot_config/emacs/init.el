@@ -448,6 +448,9 @@
 ;; Python
 (use-package python-mode)
 
+;; CSV
+(use-package csv-mode)
+
 ;; Markdown
 (use-package markdown-mode)
 
