@@ -7,3 +7,6 @@
 
 # Vim
 Session.vim
+
+# Elixir
+els_lsp/
