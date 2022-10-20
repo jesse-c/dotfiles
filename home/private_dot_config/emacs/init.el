@@ -260,7 +260,9 @@
 
 (use-package aggressive-indent
   :hook
-  (elixir-mode-hook . aggressive-indent-mode))
+  (elixir-mode-hook . aggressive-indent-mode)
+  (rust-mode-hook . aggressive-indent-mode)
+  (swift-mode-hook . aggressive-indent-mode))
 
 ;; Search
 (use-package anzu
@@ -448,6 +450,9 @@
 ;; Python
 (use-package python-mode)
 
+;; Protobuf
+(use-package protobuf-mode)
+
 ;; CSV
 (use-package csv-mode)
 
@@ -456,9 +461,6 @@
 
 ;; YAML
 (use-package yaml-mode)
-
-;; TOML
-(use-package toml-mode)
 
 ;; Ruby
 (use-package ruby-mode)
@@ -556,7 +558,7 @@
   (go-mode . lsp)
   (markdown-mode . lsp)
   (yaml-mode . lsp)
-  (toml-mode . lsp)
+  (conf-toml-mode . lsp)
   (ruby-mode . lsp)
   (shell-mode . lsp)
   (lua-mode . lsp)
@@ -647,13 +649,13 @@
 (use-package avy)   ;; enable avy for quick navigation
 
 ; Disabled for now due to not being good at fuzzy finding
-;; (use-package prescient)
-;; (use-package ivy-prescient
-;;   :after (ivy prescient)
-;;   :init (ivy-prescient-mode t))
-;; (use-package company-prescient
-;;   :after (company prescient)
-;;   :init (company-prescient-mode t))
+(use-package prescient)
+(use-package ivy-prescient
+  :after (ivy prescient)
+  :init (ivy-prescient-mode t))
+(use-package company-prescient
+  :after (company prescient)
+  :init (company-prescient-mode t))
 
 ;; -----------------------------------------------------------------------------
 ;; File system
