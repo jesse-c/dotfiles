@@ -6,6 +6,9 @@
 (setq custom-file "~/.config/emacs/custom.el")
 (load custom-file 'noerror)
 
+;; TODO Tidy up .emacs.d mess
+;; (use-package no-littering)
+
 ;; -----------------------------------------------------------------------------
 ;; Package management
 ;; -----------------------------------------------------------------------------
@@ -128,6 +131,8 @@
 ;; -----------------------------------------------------------------------------
 ;; GUI
 ;; -----------------------------------------------------------------------------
+
+(fset 'yes-or-no-p 'y-or-n-p)
 
 ;; Setting default coding system
 ;; https://github.com/shfx/emacs.d/blob/8715ced2c49ba2f693ad965f2c0b4c1b44c829c8/README.org#setting-default-coding-system
@@ -273,15 +278,16 @@
 ;; Editor
 ;; -----------------------------------------------------------------------------
 
-(use-package perspective
-  :custom
-  (persp-mode-prefix-key (kbd "C-c C-z"))
-  :init
-  (persp-mode))
-
+;; Bindings
 (use-package which-key
   :diminish
   :init (which-key-mode))
+
+;;; Minibuffer
+(use-package savehist
+  :after no-littering
+  :init
+  (savehist-mode))
 
 ;; Indentation
 (use-package indent-guide
@@ -300,6 +306,20 @@
 (use-package anzu
   :init
   (global-anzu-mode +1))
+
+(use-package perspective
+  :custom
+  (persp-mode-prefix-key (kbd "C-c C-z"))
+  :init
+  (persp-mode))
+
+;; Scratch
+;; TODO https://codeberg.org/emacs-weirdware/scratch
+
+;; Editor Config
+(use-package editorconfig
+  :init
+  (editorconfig-mode 1))
 
 ;; Whitespace
 (add-hook 'before-save-hook 'delete-trailing-whitespace) ; Delete trailing spaces
@@ -331,6 +351,7 @@
   :diminish
   :hook emacs-lisp-mode)
 
+;; Comments
 ;; Comment line or region
 (global-set-key (kbd "s-/") 'comment-line)
 
@@ -520,8 +541,10 @@
 ;; Typescript
 (use-package typescript-mode)
 
-;; Dockerfile
+;; Docker
+(use-package docker)
 (use-package dockerfile-mode)
+(use-package docker-compose-mode)
 
 ;; Emacs Lisp
 (use-package eldoc
