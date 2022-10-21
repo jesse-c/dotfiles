@@ -72,6 +72,11 @@
 ;; OS
 ;; -----------------------------------------------------------------------------
 
+;; Disabling suspend-frame binding
+;; Very annoying binding, lets get rid of it.
+;; https://github.com/shfx/emacs.d/blob/8715ced2c49ba2f693ad965f2c0b4c1b44c829c8/README.org#disabling-suspend-frame-binding
+(global-unset-key (kbd "C-z"))
+
 (use-package chezmoi
   :after magit)
 
@@ -123,6 +128,33 @@
 ;; -----------------------------------------------------------------------------
 ;; GUI
 ;; -----------------------------------------------------------------------------
+
+;; Setting default coding system
+;; https://github.com/shfx/emacs.d/blob/8715ced2c49ba2f693ad965f2c0b4c1b44c829c8/README.org#setting-default-coding-system
+(set-language-environment 'utf-8)
+(set-keyboard-coding-system 'utf-8-mac) ; For old Carbon emacs on OS X only
+(setq locale-coding-system 'utf-8)
+(set-default-coding-systems 'utf-8)
+(set-terminal-coding-system 'utf-8)
+(set-selection-coding-system 'utf-8)
+(prefer-coding-system 'utf-8)
+
+;; Focus new frame
+;; https://github.com/shfx/emacs.d/blob/8715ced2c49ba2f693ad965f2c0b4c1b44c829c8/README.org#focus-new-frame
+(when (featurep 'ns)
+  (defun ns-raise-emacs ()
+    "Raise Emacs."
+    (ns-do-applescript "tell application \"Emacs\" to activate"))
+
+  (defun ns-raise-emacs-with-frame (frame)
+    "Raise Emacs and select the provided frame."
+    (with-selected-frame frame
+      (when (display-graphic-p)
+        (ns-raise-emacs))))
+
+  (add-hook 'after-make-frame-functions 'ns-raise-emacs-with-frame)
+  (when (display-graphic-p)
+    (ns-raise-emacs)))
 
 ;; Themes
 (defun my/theme-by-current-time ()
@@ -593,6 +625,13 @@
   :init (company-statistics-mode))
 (use-package company-box
   :hook (company-mode . company-box-mode))
+(use-package company-shell
+  :after (company shell)
+  :config
+  (add-to-list 'company-backends 'company-shell))
+(use-package company-elixir
+  :disabled t
+  :company elixir-mode)
 
 ;; Menu completion
 ;; Use minimalist Ivy for most things.
@@ -648,7 +687,6 @@
 (use-package flx)   ;; enable fuzzy matching
 (use-package avy)   ;; enable avy for quick navigation
 
-; Disabled for now due to not being good at fuzzy finding
 (use-package prescient)
 (use-package ivy-prescient
   :after (ivy prescient)
