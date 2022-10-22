@@ -39,6 +39,7 @@
  ("eldoc" . "1835c4f2ab0140a9a40fc584757d2a9ca644a20c")
  ("elisp-tree-sitter" . "3cfab8a0e945db9b3df84437f27945746a43cc71")
  ("emacs-aio" . "da93523e235529fa97d6f251319d9e1d6fc24a41")
+ ("emacs-async" . "ffde304480421f497458077bf5d563504e1ba5dd")
  ("emacs-dotenv-mode" . "e3701bf739bde44f6484eb7753deadaf691b73fb")
  ("emacs-elixir" . "4974ff9a83daf50f2f03dc0d6d00871296e088b0")
  ("emacs-flycheck-elixir" . "b57a77a21d6cf9621b3387831cba34135c4fa35d")
@@ -102,6 +103,7 @@
  ("markdown-mode" . "92d037504742cb3e579f1f488bc3fc23c648ff29")
  ("melpa" . "f5f22149f13c361f6657d41f4a22ede651eaaa25")
  ("mix.el" . "bfe61ed4e7dd8cfc0bb2603fbac3eb44b32438bf")
+ ("no-littering" . "71c65c932fd217b882c58851a5cf639755039807")
  ("nongnu-elpa" . "6d76d3c04b1f36a778b78433571c4646c9c229ac")
  ("org" . "98cae03b7d9a612334d5ea461e73ac0b37b0285d")
  ("org-contrib" . "6422b265f1150204f024e33d54f2dcfd8323005c")
@@ -158,5 +160,6 @@
  ("yaml-mode" . "9969207f60b69e42c573a63764faeb9caaccb2bf")
  ("yaml.el" . "73fde9d8fbbaf2596449285df9eb412ae9dd74d9")
  ("yasnippet" . "5cbdbf0d2015540c59ed8ee0fcf4788effdf75b6")
- ("yasnippet-snippets" . "cd665c9cba4bab646f6d50ac098bee63573a4ca5"))
+ ("yasnippet-snippets" . "cd665c9cba4bab646f6d50ac098bee63573a4ca5")
+ ("zoom-window" . "1432687651ccd54c9aeb0c6c5de08fba7116f6c2"))
 :gamma

@@ -1,3 +1,7 @@
+;;; init.el -*- lexical-binding: t; -*-
+;;; Commentary: -
+;;; Code:
+
 ;; -----------------------------------------------------------------------------
 ;; Init
 ;; -----------------------------------------------------------------------------
@@ -6,8 +10,9 @@
 (setq custom-file "~/.config/emacs/custom.el")
 (load custom-file 'noerror)
 
-;; TODO Tidy up .emacs.d mess
-;; (use-package no-littering)
+;; Increase the garbage collection threshold to 500 MB to ease startup
+(setq gc-cons-threshold (* 500 1024 1024))
+(setq read-process-output-max (* 1024 1024))
 
 ;; -----------------------------------------------------------------------------
 ;; Package management
@@ -52,6 +57,8 @@
 (use-package crux)
 (use-package request)
 (use-package restclient)
+(use-package async
+  :commands (async-start))
 
 ;; -----------------------------------------------------------------------------
 ;; Server
@@ -97,6 +104,9 @@
 
 ;; macOS
 
+(when (memq window-system '(mac ns))
+  (setq dired-use-ls-dired nil))
+
 (setq delete-by-moving-to-trash t)
 
 ;; https://emacs.stackexchange.com/a/41767
@@ -122,6 +132,11 @@
      (file-notify-rm-watch key))
    file-notify-descriptors))
 
+;; All
+
+;; Tidy up .emacs.d mess
+(use-package no-littering)
+
 ;; -----------------------------------------------------------------------------
 ;; Terminal
 ;; -----------------------------------------------------------------------------
@@ -133,6 +148,9 @@
 ;; -----------------------------------------------------------------------------
 
 (fset 'yes-or-no-p 'y-or-n-p)
+
+(use-package browse-url
+  :bind ("<s-mouse-1>" . browse-url-at-mouse))
 
 ;; Setting default coding system
 ;; https://github.com/shfx/emacs.d/blob/8715ced2c49ba2f693ad965f2c0b4c1b44c829c8/README.org#setting-default-coding-system
@@ -245,7 +263,7 @@
 ;; Use ESC as universal get me out of here command
 (define-key key-translation-map (kbd "ESC") (kbd "C-g"))
 
-;; Tabs
+;; Tab-bar
 (setq tab-bar-tab-hints t) ; Show tab numbers
 (setq tab-bar-mode t)
 (setq tab-bar-show nil)
@@ -268,8 +286,22 @@
 
 (global-set-key (kbd "C-q") 'delete-window)
 
-(global-set-key (kbd "C-S-x") 'split-window-below)
-(global-set-key (kbd "C-S-v") 'split-window-right)
+(defun my/split-window-below-and-move ()
+  "Make the new split focused."
+  (interactive)
+  (split-window-below)
+  (other-window 1))
+
+(defun my/split-window-right-and-move ()
+  "Make the new split focused."
+  (interactive)
+  (split-window-right)
+  (other-window 1))
+
+(global-set-key (kbd "C-S-x") 'my/split-window-below-and-move)
+(global-set-key (kbd "C-S-v") 'my/split-window-right-and-move)
+
+(use-package zoom-window)
 
 ;; Keymaps
 (use-package hydra)
@@ -277,6 +309,10 @@
 ;; -----------------------------------------------------------------------------
 ;; Editor
 ;; -----------------------------------------------------------------------------
+
+;; By default, Emacs thinks a sentence is a full-stop followed by 2 spaces. Let’s make it full-stop and 1 space.
+;; http://sriramkswamy.github.io/dotemacs/
+(setq sentence-end-double-space nil)
 
 ;; Bindings
 (use-package which-key
@@ -406,6 +442,8 @@
           undo-tree-auto-save-history t
           undo-tree-visualizer-timestamps t
           undo-tree-visualizer-diff t)))
+
+(use-package goto-chg)
 
 ;; Vim
 (use-package evil
@@ -747,6 +785,8 @@
   (kill-new (file-relative-name buffer-file-name (projectile-project-root))))
 
 (recentf-mode t)
+
+(save-place-mode 1)
 
 (use-package dirvish)
   ;; :config)
