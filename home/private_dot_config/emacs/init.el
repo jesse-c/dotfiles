@@ -67,14 +67,13 @@
 ;; Hint: emacsclient -n file1 file2 (Use -c to open in a new frame)
 ;; Example: emacsclient --socket-name ~/.config/emacs/server/server FILE
 
-; Make the directory if it doesn't exist
-(setq server-socket-path "~/.config/emacs/server")
+(setq server-socket-path "~/.config/emacs/server") ; Make the directory if it doesn't exist
 (make-directory server-socket-path t)
 (setq server-socket-dir server-socket-path)
 
 (load "server")
 (unless (< emacs-major-version 23)
-    (defun server-ensure-safe-dir (dir) "Noop" t))
+  (defun server-ensure-safe-dir (_dir) "Noop" t))
 
 (unless (server-running-p) (server-start))
 
@@ -181,7 +180,7 @@
 
 ;; Themes
 (defun my/theme-by-current-time ()
-  "Get the light or dark THEME based on the current time"
+  "Get the light or dark THEME based on the current time."
   (let ((hour (->> (current-time)
                    (decode-time)
                    (nth 2))))
@@ -190,7 +189,7 @@
         'spacemacs-light)))
 
 (defun my/load-theme-by-current-time ()
-  "Load the right theme based on the current time"
+  "Load the right theme based on the current time."
   (load-theme (my/theme-by-current-time) t))
 
 (use-package spacemacs-theme
@@ -451,7 +450,9 @@
   (setq evil-want-integration t) ;; This is optional since it's already set to t by default.
   (setq evil-want-keybinding nil)
   :config
-  (evil-mode 1))
+  (evil-mode 1)
+  (global-unset-key (kbd "C-u"))
+  (global-set-key (kbd "C-u") 'evil-scroll-up))
 
 (use-package evil-collection
   :after evil
@@ -463,7 +464,8 @@
   :config
   (global-evil-surround-mode 1))
 
-(use-package evil-anzu)
+(use-package evil-anzu
+  :after (evil anzu))
 
 (evil-set-undo-system 'undo-tree)
 
@@ -789,8 +791,8 @@
 (save-place-mode 1)
 
 (use-package dirvish)
-  ;; :config)
-  ;; (dirvish-override-dired-mode))
+;; :config)
+;; (dirvish-override-dired-mode))
 
 (use-package treemacs
   :defer t
