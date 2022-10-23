@@ -1,5 +1,4 @@
-;;; init.el -*- lexical-binding: t; -*-
-;;; Commentary: -
+;;; init.el --- My config -*- lexical-binding: t; -*-
 ;;; Code:
 
 ;; -----------------------------------------------------------------------------
@@ -87,6 +86,7 @@
 (global-unset-key (kbd "C-z"))
 
 (use-package chezmoi
+  :defer 1
   :after magit)
 
 (setq straight-versions-path "straight/versions/default.el")
@@ -140,7 +140,8 @@
 ;; Terminal
 ;; -----------------------------------------------------------------------------
 
-(use-package vterm)
+(use-package vterm
+  :defer 1)
 
 ;; -----------------------------------------------------------------------------
 ;; GUI
@@ -149,7 +150,9 @@
 (fset 'yes-or-no-p 'y-or-n-p)
 
 (use-package browse-url
-  :bind ("<s-mouse-1>" . browse-url-at-mouse))
+  :defer 1
+  :bind
+  ("<s-mouse-1>" . browse-url-at-mouse))
 
 ;; Setting default coding system
 ;; https://github.com/shfx/emacs.d/blob/8715ced2c49ba2f693ad965f2c0b4c1b44c829c8/README.org#setting-default-coding-system
@@ -300,7 +303,8 @@
 (global-set-key (kbd "C-S-x") 'my/split-window-below-and-move)
 (global-set-key (kbd "C-S-v") 'my/split-window-right-and-move)
 
-(use-package zoom-window)
+(use-package zoom-window
+  :defer 1)
 
 ;; Keymaps
 (use-package hydra)
@@ -320,12 +324,14 @@
 
 ;;; Minibuffer
 (use-package savehist
+  :defer 1
   :after no-littering
   :init
   (savehist-mode))
 
 ;; Indentation
 (use-package indent-guide
+  :defer 1
   :config
   (indent-guide-global-mode))
 
@@ -353,32 +359,36 @@
 
 ;; Editor Config
 (use-package editorconfig
-  :init
+  :defer 1
+  :diminish
+  :config
   (editorconfig-mode 1))
 
 ;; Whitespace
-(add-hook 'before-save-hook 'delete-trailing-whitespace) ; Delete trailing spaces
-(setq require-final-newline t) ; Add new line in the end of a file on save.
+(use-package whitespace
+  :hook
+  (before-save-hook . delete-trailing-whitespace) ; Delete trailing spaces
+  :config
+  (setq require-final-newline t)) ; Add new line in the end of a file on save.
 
 ;; Pretty parens
 (use-package rainbow-delimiters
   :diminish
-  :config
-  ; Start the mode automatically in most programming modes
-  (add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
+  :hook
+  (prog-mode-hook . rainbow-delimiters-mode))
 
 ;; Smart parens
 (use-package smartparens
-  :config
-  (add-hook 'elixir-mode-hook #'smartparens-mode)
-  (add-hook 'go-mode-hook #'smartparens-mode)
-  (add-hook 'html-mode-hook #'smartparens-mode)
-  (add-hook 'lua-mode-hook #'smartparens-mode)
-  (add-hook 'python-mode-hook #'smartparens-mode)
-  (add-hook 'rust-mode-hook #'smartparens-mode)
-  (add-hook 'ruby-mode-hook #'smartparens-mode)
-  (add-hook 'swift-mode-hook #'smartparens-mode)
-  (add-hook 'clojure-mode-hook #'smartparens-mode))
+  :hook
+  (elixir-mode-hook. smartparens-mode)
+  (go-mode-hook. smartparens-mode)
+  (html-mode-hook. smartparens-mode)
+  (lua-mode-hook. smartparens-mode)
+  (python-mode-hook. smartparens-mode)
+  (rust-mode-hook. smartparens-mode)
+  (ruby-mode-hook. smartparens-mode)
+  (swift-mode-hook. smartparens-mode)
+  (clojure-mode-hook. smartparens-mode))
 
 (require 'smartparens-config)
 
@@ -392,12 +402,19 @@
 
 ;; Spellchecking and thesaurus -------------------------------------------------
 
+(setq ispell-dictionary "australian")    ;set the default dictionary
 ;; Spellchecking requires an external command to be available. Install aspell on your Mac, then make it the default checker for Emacs' ispell. Note that personal dictionary is located at ~/.aspell.LANG.pws by default.
 (setq ispell-program-name "aspell")
 
 ;; Popup window for spellchecking
-(use-package flyspell-correct)
-(use-package flyspell-correct-popup)
+(use-package flyspell
+  :diminish)
+(use-package flyspell-correct
+  :after flyspell)
+(use-package flyspell-correct-popup
+  :after flyspell)
+(use-package flyspell-correct-ivy
+  :after flyspell)
 
 ;; Enable spellcheck on the fly for all text modes. This includes org, latex and LaTeX.
 (add-hook 'text-mode-hook 'flyspell-mode)
@@ -415,13 +432,13 @@
 
 ;; Search for synonyms
 (use-package powerthesaurus
-  :config
-  (global-set-key (kbd "s-|") 'powerthesaurus-lookup-word-dwim)) ;; Cmd+Shift+\ search thesaurus
+  :bind
+  ("s-|" . powerthesaurus-lookup-word-dwim))
 
 ;; Word definition search
 (use-package define-word
-  :config
-  (global-set-key (kbd "M-\\") 'define-word-at-point))
+  :bind
+  ("M-\\" . define-word-at-point))
 
 ;; Highlight current line
 (global-hl-line-mode t)
@@ -493,10 +510,12 @@
 (use-package rust-mode)
 (use-package rustic)
 (use-package cargo
-  :init (add-hook 'rust-mode-hook 'cargo-minor-mode))
+  :hook
+  (rust-mode-hook . cargo-minor-mode))
 (use-package flycheck-rust
   :after (flycheck rust-mode)
-  :config (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
+  :hook
+  (flycheck-mode-hook . flycheck-rust-setup))
 
 ;; Web
 (use-package web-mode
@@ -515,7 +534,8 @@
 (use-package elixir-mode)
 (use-package alchemist)
 (use-package mix
-  :config (add-hook 'elixir-mode-hook 'mix-minor-mode))
+  :hook
+  (elixir-mode-hook . mix-minor-mode))
 (use-package flycheck-credo
   :init
   '(flycheck-credo-setup)
@@ -523,9 +543,11 @@
   (setq flycheck-elixir-credo-strict t))
 (use-package flycheck-elixir
   :after (flycheck elixir-mode)
-  :config (add-hook 'elixir-mode-hook 'flycheck-mode))
+  :hook
+  (elixir-mode-hook . flycheck-mode))
 (use-package exunit
-  :init (add-hook 'elixir-mode-hook 'exunit-mode))
+  :hook
+  (elixir-mode-hook . exunit-mode))
 
 ;; Go
 (use-package go-mode)
@@ -564,8 +586,8 @@
 ;; Shell
 (use-package flymake-shellcheck
   :commands flymake-shellcheck-load
-  :init
-  (add-hook 'sh-mode-hook 'flymake-shellcheck-load))
+  :hook
+  (sh-mode-hook . flymake-shellcheck-load))
 
 ;; Clojure
 (use-package clojure-mode)
@@ -591,6 +613,18 @@
 ;; SASS
 (use-package sass-mode)
 
+;; Javascript
+(use-package npm
+  :ensure t
+  :commands
+  (npm-update
+   npm-run
+   npm-menu
+   npm-init
+   npm-install-menu
+   npm-mode
+   npm))
+
 ;; Typescript
 (use-package typescript-mode)
 
@@ -615,7 +649,9 @@
   :init (global-flycheck-mode))
 
 ;; Formatting
-(use-package format-all)
+(use-package format-all
+  :commands
+  (format-all-buffer format-all-region format-all-mode))
   ; Disabled for now whilst using apheleia
   ;; :init)
   ; Auto-format code on save
@@ -634,21 +670,23 @@
 
 ;; Treesitter
 (use-package tree-sitter
-  :diminish)
+  :defer 1
+  :diminish
+  :config
+  (global-tree-sitter-mode)
+  (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
 (use-package tree-sitter-langs
+  :defer 1
   :diminish)
 
 (require 'tree-sitter)
 (require 'tree-sitter-langs)
 
-(global-tree-sitter-mode)
-(add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode)
-
 (use-package tree-edit)
 (use-package evil-tree-edit
-  :after (tree-edit)
-  :init
-  (add-hook 'python-mode-hook 'evil-tree-edit-mode))
+  :after tree-edit
+  :hook
+  (python-mode-hook . evil-tree-edit-mode))
 
 ;; LSP
 (use-package lsp-mode
@@ -678,15 +716,17 @@
 (use-package lsp-ui :commands lsp-ui-mode)
 
 ;; DAP
-
-(use-package dap-mode)
+(use-package dap-mode
+  :defer 1)
 
 ;; Snippets
-
-(use-package yasnippet)
-(use-package yasnippet-snippets)
+(use-package yasnippet
+  :defer 1)
+(use-package yasnippet-snippets
+  :defer 1)
 (use-package ivy-yasnippet
-  :after (yasnippet yasnippet-snippets ivy))
+  :after (yasnippet yasnippet-snippets ivy)
+  :defer 1)
 (yas-global-mode 1)
 
 ;; Code completion
@@ -723,8 +763,9 @@
       '((swiper . ivy--regex-plus)
         (t      . ivy--regex-fuzzy)))   ;; enable fuzzy searching everywhere except for Swiper
 
-  (global-set-key (kbd "s-b") 'ivy-switch-buffer)  ;; Cmd+b show buffers and recent files
-  (global-set-key (kbd "M-s-b") 'ivy-resume))      ;; Alt+Cmd+b resume whatever Ivy was doing
+  :bind
+  ("s-b" . ivy-switch-buffer)  ;; Cmd+b show buffers and recent files
+  ("M-s-b" . ivy-resume))     ;; Alt+Cmd+b resume whatever Ivy was doing
 
 (use-package ivy-posframe
   :after ivy
@@ -733,10 +774,10 @@
 
 ;; Swiper is a better local finder.
 (use-package swiper
-  :config
-  (global-set-key "\C-s" 'swiper)       ;; Default Emacs Isearch forward...
-  (global-set-key "\C-r" 'swiper)       ;; ... and Isearch backward replaced with Swiper
-  (global-set-key (kbd "s-f") 'swiper)) ;; Cmd+f find text
+  :bind
+  ("\C-s" . swiper) ;; Default Emacs Isearch forward...
+  ("\C-r" . swiper) ;; ... and Isearch backward replaced with Swiper
+  ("s-f" . swiper)) ;; Cmd+f find text
 
 ;; Better menus with Counsel (a layer on top of Ivy)
 (use-package counsel
@@ -786,7 +827,10 @@
   (interactive)
   (kill-new (file-relative-name buffer-file-name (projectile-project-root))))
 
-(recentf-mode t)
+(use-package recentf
+  :defer 1
+  :config
+  (recentf-mode t))
 
 (save-place-mode 1)
 
@@ -924,8 +968,10 @@
   ;; Recommended keymap prefix on macOS
   (define-key projectile-mode-map (kbd "s-p") 'projectile-command-map))
 
-(use-package ripgrep)
-(use-package projectile-ripgrep)
+(use-package ripgrep
+  :defer 1)
+(use-package projectile-ripgrep
+  :defer 1)
 
 (use-package org)
 
@@ -935,8 +981,8 @@
 
 ;; Magit
 (use-package magit
-  :config
-  (global-set-key (kbd "s-g") 'magit-status))
+  :bind
+  ("s-g" . magit-status))
 
 ;; Disable due to performance on large repositories
 ;; (use-package magit-todos
@@ -945,6 +991,7 @@
 
 (use-package forge
   :after magit
+  :defer 1
   :config
   (setq auth-sources '("~/.authinfo")))
 
