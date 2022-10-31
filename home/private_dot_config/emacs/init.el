@@ -59,6 +59,7 @@
 (use-package restclient)
 (use-package async
   :commands (async-start))
+(use-package load-relative)
 
 ;; -----------------------------------------------------------------------------
 ;; Server
@@ -87,8 +88,7 @@
 (global-unset-key (kbd "C-z"))
 
 (use-package chezmoi
-  :defer 1
-  :after magit)
+  :defer 1)
 
 (setq straight-versions-path "straight/versions/default.el")
 
@@ -616,7 +616,6 @@
 
 ;; Javascript
 (use-package npm
-  :ensure t
   :commands
   (npm-update
    npm-run
@@ -956,6 +955,23 @@
 ;; Don't bother with auto save and backups
 (setq auto-save-default nil) ; stop creating #autosave# files
 (setq make-backup-files nil) ; stop creating backup~ files
+
+;; -----------------------------------------------------------------------------
+;; CI/CD
+;; -----------------------------------------------------------------------------
+
+(load "~/.config/emacs/circleci.el")
+
+;; TODO Treat it as a package
+;; (use-package circleci
+;;   :ensure nil
+;;   :load-path "~/.config/emacs/circleci.el"
+;;   :commands
+;;   (my/circleci-get-branch-status
+;;    my/circleci-get-current-branch-status
+;;    my/circleci-get-branch-latest-workflow
+;;    my/circleci-get-current-branch-latest-workflow
+;;    my/circleci-rerun-workflow))
 
 ;; -----------------------------------------------------------------------------
 ;; Process
