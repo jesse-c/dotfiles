@@ -960,7 +960,8 @@
 ;; CI/CD
 ;; -----------------------------------------------------------------------------
 
-(when (string-equal system-name "Knapsack")
+;; It's either the index or nil
+(when (>= 0 (string-match-p "Knapsack" system-name))
   (load "~/.config/emacs/circleci.el"))
 
 ;; TODO Treat it as a package
