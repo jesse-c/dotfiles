@@ -960,7 +960,8 @@
 ;; CI/CD
 ;; -----------------------------------------------------------------------------
 
-(load "~/.config/emacs/circleci.el")
+(when (string-equal system-name "Knapsack")
+  (load "~/.config/emacs/circleci.el"))
 
 ;; TODO Treat it as a package
 ;; (use-package circleci
@@ -998,6 +999,10 @@
 
 ;; Magit
 (use-package magit
+  :config
+  ;; Setting ‘forge-add-default-bindings’ to nil in ‘evil-collection-forge-setup’.
+  ;; To suppress this message you can set this variable to nil in your init.el file.
+  (setq forge-add-default-bindings nil)
   :bind
   ("s-g" . magit-status))
 
