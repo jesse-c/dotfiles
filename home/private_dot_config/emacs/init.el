@@ -1,4 +1,9 @@
 ;;; init.el --- My config -*- lexical-binding: t; -*-
+
+;;; Commentary:
+
+;;; My config.
+
 ;;; Code:
 
 ;; -----------------------------------------------------------------------------
@@ -960,9 +965,10 @@
 ;; CI/CD
 ;; -----------------------------------------------------------------------------
 
-;; It's either the index or nil
-(when (>= 0 (string-match-p "Knapsack" system-name))
-  (load "~/.config/emacs/circleci.el"))
+;; It's either the index, [0, ∞), or nil
+(let ((match (string-match-p "Knapsack" system-name)))
+  (when (or match (eq 0 match))
+    (load "~/.config/emacs/circleci.el")))
 
 ;; TODO Treat it as a package
 ;; (use-package circleci
