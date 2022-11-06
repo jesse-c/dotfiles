@@ -797,7 +797,19 @@
   :config
   (setq projectile-project-search-path '("~/Documents/projects/" ("~/src/" . 3)))
   (setq projectile-auto-discover nil)
-  :init (counsel-projectile-mode))
+  :init (counsel-projectile-mode)
+  (projectile-register-project-type
+   'zola
+   '("config.toml" "content" "static" "templates" "themes")
+   :project-file "config.toml"
+   :compile "zola build"
+   :test "zola check"
+   :run "zola server")
+  (projectile-register-project-type
+   'zig '("build.zig")
+   :project-file "build.zig"
+   :compile "zig build"
+   :run "zig build run"))
 
 ;; Make Ivy a bit more friendly by adding information to ivy buffers, e.g. description of commands in Alt-x, meta info when switching buffers, etc.
 (use-package ivy-rich
