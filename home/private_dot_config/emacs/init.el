@@ -360,6 +360,9 @@
   :init
   (persp-mode))
 
+(use-package comby
+  :defer t)
+
 ;; Scratch
 ;; TODO https://codeberg.org/emacs-weirdware/scratch
 
