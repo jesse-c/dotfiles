@@ -1,0 +1,9 @@
+@commitlint/cli
+@fsouza/prettierd
+commitizen
+neovim
+node-cljfmt
+prettier
+remark
+tree-sitter-cli
+yarn
