@@ -343,11 +343,23 @@
 
 (setq-default indent-tabs-mode nil)
 
+(straight-use-package '(tsi :type git :host github :repo "orzechowskid/tsi.el"))
+
 (use-package aggressive-indent
   :hook
   (elixir-mode-hook . aggressive-indent-mode)
   (rust-mode-hook . aggressive-indent-mode)
   (swift-mode-hook . aggressive-indent-mode))
+
+;; Folding
+(use-package origami
+  :defer t)
+
+(use-package lsp-origami
+  :after (origami lsp-mode)
+  :defer t
+  :hook
+  (lsp-after-open-hook . lsp-origami-try-enable))
 
 ;; Search
 (use-package anzu
@@ -589,6 +601,9 @@
 ;; Ruby
 (use-package ruby-mode)
 
+;; GraphQL
+(use-package graphql-mode)
+
 ;; Lua
 (use-package lua-mode)
 
@@ -635,6 +650,7 @@
 
 ;; Typescript
 (use-package typescript-mode)
+(straight-use-package '(tsx-mode :type git :host github :repo "orzechowskid/tsx-mode.el" :after (tsi)))
 
 ;; Docker
 (use-package docker)
@@ -695,6 +711,10 @@
   :after tree-edit
   :hook
   (python-mode-hook . evil-tree-edit-mode))
+
+;; Testing
+(use-package coverlay
+  :defer t)
 
 ;; LSP
 (use-package lsp-mode
