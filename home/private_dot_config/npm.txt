@@ -1,6 +1,5 @@
-@commitlint/cli
 @fsouza/prettierd
-commitizen
+git-cz
 neovim
 node-cljfmt
 prettier
