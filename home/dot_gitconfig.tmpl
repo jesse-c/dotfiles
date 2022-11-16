@@ -41,6 +41,10 @@
 	st = status
 	# Prune local and remote origin
 	prune-all = "!git prune && git remote prune origin"
+	sw = switch
+	swc = switch -c
+	dft = difftool
+	sync = "!git fetch origin && git rebase origin/main"
 	# The aliases below are from https://gist.github.com/robmiller/6018582
 	#
 	# Get the current branch name (not so useful in itself, but used in
@@ -51,9 +55,6 @@
 	publish = "!git push -u origin $(git branch-name)"
 	# Delete the remote version of the current branch
 	unpublish = "!git push origin :$(git branch-name)"
-	sw = switch
-	swc = switch -c
-	dft = difftool
 [ghq]
 	root = ~/src
 [url "git@github.com:"]
