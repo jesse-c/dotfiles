@@ -601,6 +601,15 @@
 ;; Ruby
 (use-package ruby-mode)
 
+;; HCL
+(use-package hcl-mode)
+
+;; Terraform
+(use-package terraform-mode
+  :after hcl-mode)
+(use-package terraform-doc
+  :after terraform-mode)
+
 ;; GraphQL
 (use-package graphql-mode)
 
@@ -690,7 +699,9 @@
   :hook
   (elixir-mode . apheleia-mode)
   (swift-mode . apheleia-mode)
-  (rust-mode . apheleia-mode))
+  (rust-mode . apheleia-mode)
+  (javascript-mode . apheleia-mode)
+  (sass-mode . apheleia-mode))
 
 ;; Treesitter
 (use-package tree-sitter
@@ -773,6 +784,11 @@
   :after (company shell)
   :config
   (add-to-list 'company-backends 'company-shell))
+(use-package company-terraform
+  :after (company terraform-mode)
+  :config
+  (add-to-list 'company-backends 'company-terraform)
+  (company-terraform-init))
 (use-package company-elixir
   :disabled t
   :company elixir-mode)
