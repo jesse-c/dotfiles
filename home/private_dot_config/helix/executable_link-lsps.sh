@@ -31,6 +31,8 @@ for f in /Users/jesse/.local/share/nvim/mason/bin/*; do
   chmod u+x "$dest"
 done
 
+ls -1 /Users/jesse/.local/share/nvim/mason/bin/ > commands.log
+
 # Example output:
 #
 # Linking bash-language-server
