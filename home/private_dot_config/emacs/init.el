@@ -315,6 +315,14 @@
 ;; Keymaps
 (use-package hydra)
 
+;; Buffers
+(defun my/clean-up-buffers ()
+  "Clean-up buffers that have built up."
+  (interactive)
+  (kill-matching-buffers ".*\.ex" nil t) 
+  (kill-matching-buffers ".*\.exs" nil t) 
+  (kill-matching-buffers ".*\.yaml" nil t)) 
+
 ;; -----------------------------------------------------------------------------
 ;; Editor
 ;; -----------------------------------------------------------------------------
