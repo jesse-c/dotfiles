@@ -201,6 +201,14 @@
   "Load the right theme based on the current time."
   (load-theme (my/theme-by-current-time) t))
 
+(defun disable-all-themes ()
+  "Disable all enabled themes."
+  (interactive)
+  ;; List of enabled Custom Themes, highest precedence
+  ;; first.
+  (dolist (theme custom-enabled-themes)
+    (disable-theme theme)))
+
 (use-package spacemacs-theme
   :defer t ; Don't load it immediately
   :init
