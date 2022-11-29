@@ -65,6 +65,7 @@
 (use-package async
   :commands (async-start))
 (use-package load-relative)
+(use-package f)
 
 ;; -----------------------------------------------------------------------------
 ;; Server
@@ -767,6 +768,22 @@
   (swift-mode . lsp)
   (lsp-mode . lsp-enable-which-key-integration)
   :commands lsp)
+
+(defvar repos-to-ignore '("platform", "platform-b", "platform-c", "platform-d"))
+
+(defun my/lsp--is-big-repo-by-dir (dir)
+    "Return boolean on whether the repository in DIR is considered big or not."
+    (member (car (last (f-split dir))) repos-to-ignore))
+
+;; Example of similar code: https://github.com/emacs-lsp/lsp-mode/issues/713#issuecomment-1173826699
+(defun my/lsp--maybe-ignore-big-repo (orig-fun number-of-directories dir)
+  (if (my/lsp--is-big-repo-by-dir dir)
+    ;; This is a known large repo so ignore it
+    nil
+    (apply orig-fun number-of-directories dir)))
+
+(advice-add 'lsp--ask-about-watching-big-repo
+            :around 'my/lsp--maybe-ignore-big-repo)
 
 (use-package lsp-ui :commands lsp-ui-mode)
 
