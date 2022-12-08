@@ -570,7 +570,9 @@
 
 ;; Elixir
 (use-package elixir-mode)
-(use-package alchemist)
+(straight-use-package '(apprentice :host github
+                                   :repo "Sasanidas/Apprentice"
+                                   :branch "master"))
 (use-package mix
   :hook
   (elixir-mode-hook . mix-minor-mode))
