@@ -1,9 +1,11 @@
 [editor]
 line-number = "relative"
-mouse = false
+mouse = true
 cursorline = true
 color-modes = true
 rulers = [80, 120]
+scroll-lines = 3
+bufferline = "multiple"
 
 [editor.indent-guides]
 render = true
