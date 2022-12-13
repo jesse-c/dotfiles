@@ -1,7 +1,9 @@
 matches:
+  # Personal
   - trigger: ":jc"
     replace: "jesse.claven@me.com"
 
+  # Date-Time
   - trigger: ":date"
     replace: "{{mydate}}"
     vars:
@@ -9,7 +11,6 @@ matches:
         type: date
         params:
           format: "%Y-%m-%d"
-
   - trigger: ":time"
     replace: "{{mydate}}"
     vars:
@@ -17,3 +18,106 @@ matches:
         type: date
         params:
           format: "%H:%M"
+
+  # Packages installed manually due fetching from Espanso Hub failing for me
+
+  # https://hub.espanso.org/logic-symbols
+  - trigger: ":not"
+    replace: "¬"
+  - trigger: ":and"
+    replace: "∧"
+  - trigger: ":or"
+    replace: "∨"
+  - trigger: ":xor"
+    replace: "⊕"
+  - triggers: [":imp", ":if"]
+    replace: "→"
+  - triggers: [":bimp", ":iff"]
+    replace: "↔"
+  - triggers: [":eq", ":def"]
+    replace: "≡"
+  - triggers: [":true", ":top"]
+    replace: "⊤"
+  - triggers: [":false", ":bot"]
+    replace: "⊥"
+  - trigger: ":forall"
+    replace: "∀"
+  - trigger: ":exists"
+    replace: "∃"
+  - trigger: ":proves"
+    replace: "⊢"
+  - trigger: ":models"
+    replace: "⊨"
+  # additions
+  - trigger: ":subset"
+    replace: "⊆"
+
+  # https://hub.espanso.org/mac-symbols
+  - trigger: ":cmd"
+    replace: "⌘"
+  - trigger: ":shift"
+    replace: "⇧"
+  - trigger: ":ctrl"
+    replace: "⌃"
+  - trigger: ":alt"
+    replace: "⌥"
+  - trigger: ":opt"
+    replace: "⌥"
+  - trigger: ":caps_lock"
+    replace: "⇪"
+  - trigger: ":esc"
+    replace: "⎋"
+  - trigger: ":eject"
+    replace: "⏏"
+  - trigger: ":return"
+    replace: "↵"
+  - trigger: ":enter"
+    replace: "⌅"
+  - trigger: ":tab"
+    replace: "⇥"
+  - trigger: ":backtab"
+    replace: "⇤"
+  - trigger: ":pgup"
+    replace: "⇞"
+  - trigger: ":pgdown"
+    replace: "⇟"
+  - trigger: ":home"
+    replace: "↖"
+  - trigger: ":end"
+    replace: "↘"
+  - trigger: ":space"
+    replace: "␣"
+  - trigger: ":del"
+    replace: "⌫"
+  - trigger: ":fdel"
+    replace: "⌦"  
+
+  # https://hub.espanso.org/arrows
+  - trigger: ":--"
+    replace: "—"
+  - trigger: ":mdash"
+    replace: "—"
+  - trigger: ":emdash"
+    replace: "—"
+  - trigger: ":ndash"
+    replace: "–"
+  - trigger: ":endash"
+    replace: "–"
+  - trigger: ":zwsp"
+    replace: "<200b>"
+  - trigger: ":bul"
+    replace: "•"
+  - trigger: ":check"
+    replace: "✓"
+  - trigger: "::sect"
+    replace: "§"
+  - trigger: ":rarrow"
+    replace: "→"
+  - trigger: ":larrow"
+    replace: "←"
+  - trigger: ":uarrow"
+    replace: "↑"
+  - trigger: ":darrow"
+    replace: "↓"
+  - trigger: ":lrarrow"
+    replace: "⟷"
