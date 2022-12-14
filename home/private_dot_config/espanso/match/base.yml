@@ -51,6 +51,8 @@ matches:
   # additions
   - trigger: ":subset"
     replace: "⊆"
+  - trigger: ":infinity"
+    replace: "∞"
 
   # https://hub.espanso.org/mac-symbols
   - trigger: ":cmd"
