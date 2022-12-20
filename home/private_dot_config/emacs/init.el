@@ -685,6 +685,11 @@
 (use-package dockerfile-mode)
 (use-package docker-compose-mode)
 
+;; Caddy
+(use-package caddyfile-mode
+  :mode (("Caddyfile\\'" . caddyfile-mode)
+         ("caddy\\.conf\\'" . caddyfile-mode)))
+
 ;; Emacs Lisp
 (use-package eldoc
   :diminish eldoc-mode
@@ -1121,7 +1126,10 @@
   :init (global-blamer-mode 1))
 
 ;; Create URLs to files and commits in repository hosting services
-(use-package git-link)
+(use-package git-link
+  :defer 1
+  :config
+  (setq git-link-use-commit t))
 
 ;; Browse target page on github/bitbucket from emacs buffers
 (use-package browse-at-remote)
