@@ -162,8 +162,12 @@
 ;; Terminal
 ;; -----------------------------------------------------------------------------
 
-(use-package vterm
-  :defer 1)
+(straight-use-package '(eat :host codeberg
+                                   :repo "akib/emacs-eat"
+                                   :branch "master"
+                                   :defer 1
+                                   :hook
+                                   (eshell-load-hook . eat-eshell-mode)))
 
 ;; -----------------------------------------------------------------------------
 ;; GUI
