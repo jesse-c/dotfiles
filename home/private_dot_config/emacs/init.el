@@ -523,6 +523,23 @@
 ;; Spellchecking requires an external command to be available. Install aspell on your Mac, then make it the default checker for Emacs' ispell. Note that personal dictionary is located at ~/.aspell.LANG.pws by default.
 (setq ispell-program-name "aspell")
 
+(use-package languagetool
+  :defer t
+  :custom
+  (languagetool-java-arguments nil)
+  (languagetool-console-command "languagetool")
+  (languagetool-server-command "languagetool-server")
+  (languagetool-server-host "localhost")
+  (languagetool-server-port 8081)
+  :commands (languagetool-check
+             languagetool-clear-suggestions
+             languagetool-correct-at-point
+             languagetool-correct-buffer
+             languagetool-set-language
+             languagetool-server-mode
+             languagetool-server-start
+             languagetool-server-stop))
+
 (use-package flymake-aspell
   :defer 1
   :hook
