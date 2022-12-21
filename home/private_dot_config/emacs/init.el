@@ -42,6 +42,21 @@
 ;; https://github.com/raxod502/straight.el/blob/develop/README.md#integration-with-use-package
 (straight-use-package 'use-package)
 (setq straight-use-package-by-default t)
+(setq use-package-always-ensure t)
+
+(use-package emacs
+  :init
+  ;; TAB cycle if there are only few candidates
+  (setq completion-cycle-threshold 3)
+
+  ;; Emacs 28: Hide commands in M-x which do not apply to the current mode.
+  ;; Corfu commands are hidden, since they are not supposed to be used via M-x.
+  ;; (setq read-extended-command-predicate
+  ;;       #'command-completion-default-include-p)
+
+  ;; Enable indentation+completion using the TAB key.
+  ;; `completion-at-point' is often bound to M-TAB.
+  (setq tab-always-indent 'complete))
 
 ;; -----------------------------------------------------------------------------
 ;; Org
@@ -360,8 +375,6 @@
 
 (setq-default indent-tabs-mode nil)
 
-(straight-use-package '(tsi :type git :host github :repo "orzechowskid/tsi.el"))
-
 (use-package aggressive-indent
   :hook
   (elixir-mode-hook . aggressive-indent-mode)
@@ -372,16 +385,8 @@
 (use-package origami
   :defer t)
 
-(use-package lsp-origami
-  :after (origami lsp-mode)
-  :defer t
-  :hook
-  (lsp-after-open-hook . lsp-origami-try-enable))
-
 ;; Search
-(use-package anzu
-  :init
-  (global-anzu-mode +1))
+(setq isearch-lazy-count t)
 
 (use-package perspective
   :custom
@@ -392,15 +397,25 @@
 (use-package comby
   :defer t)
 
-;; Scratch
-;; TODO https://codeberg.org/emacs-weirdware/scratch
-
 ;; Editor Config
 (use-package editorconfig
   :defer 1
   :diminish
   :config
   (editorconfig-mode 1))
+
+;; Tree-sitter
+(require 'treesit)
+
+;; LSP
+(use-package eglot
+  ;; It's built-in, so don't load it from an external source
+  :ensure nil
+  :config
+  (add-to-list 'eglot-server-programs
+              `(toml-mode "taplo" "lsp" "stdio"))
+  (add-to-list 'eglot-server-programs
+              `(toml-ts-mode "taplo" "lsp" "stdio")))
 
 ;; Whitespace
 (use-package whitespace
@@ -415,20 +430,15 @@
   :hook
   (prog-mode-hook . rainbow-delimiters-mode))
 
-;; Smart parens
-(use-package smartparens
-  :hook
-  (elixir-mode-hook. smartparens-mode)
-  (go-mode-hook. smartparens-mode)
-  (html-mode-hook. smartparens-mode)
-  (lua-mode-hook. smartparens-mode)
-  (python-mode-hook. smartparens-mode)
-  (rust-mode-hook. smartparens-mode)
-  (ruby-mode-hook. smartparens-mode)
-  (swift-mode-hook. smartparens-mode)
-  (clojure-mode-hook. smartparens-mode))
-
-(require 'smartparens-config)
+;; Structured editing
+(use-package puni
+  :defer t
+  :init
+  ;; The autoloads of Puni are set up so you can enable `puni-mode` or
+  ;; `puni-global-mode` before `puni` is actually loaded. Only after you press
+  ;; any key that calls Puni commands, it's loaded.
+  (puni-global-mode)
+  (add-hook 'term-mode-hook #'puni-disable-puni-mode))
 
 (use-package parinfer-rust-mode
   :diminish
@@ -450,8 +460,6 @@
 (use-package flyspell-correct
   :after flyspell)
 (use-package flyspell-correct-popup
-  :after flyspell)
-(use-package flyspell-correct-ivy
   :after flyspell)
 
 ;; Enable spellcheck on the fly for all text modes. This includes org, latex and LaTeX.
@@ -509,36 +517,23 @@
   (global-unset-key (kbd "C-u"))
   (global-set-key (kbd "C-u") 'evil-scroll-up))
 
-(use-package evil-collection
-  :after evil
-  :config
-  (evil-collection-init))
-
-(use-package evil-surround
-  :after evil
-  :config
-  (global-evil-surround-mode 1))
-
-(use-package evil-anzu
-  :after (evil anzu))
-
 (evil-set-undo-system 'undo-tree)
 
 ;; Programming
 
 ;; Overwrite existing function
-(defun my/find-alternate-file ()
-  "Find alternate FILE, if any."
-  (interactive)
-  (let* ((default-directory (projectile-project-root))
-         ;; https://emacs.stackexchange.com/questions/45419/get-file-name-relative-to-projectile-root
-         (buffile (file-relative-name buffer-file-name (projectile-project-root)))
-         (cmd (format "alt %s" buffile))
-         (output (shell-command-to-string cmd)))
-    (if (string= output "")
-        (message "No alternate file found")
-      (if (y-or-n-p (format "Found alternate file %s. Open?" output))
-       (find-file output (message "Not opening"))))))
+;; (defun my/find-alternate-file ()
+;;   "Find alternate FILE, if any."
+;;   (interactive)
+;;   (let* ((default-directory (projectile-project-root))
+;;          ;; https://emacs.stackexchange.com/questions/45419/get-file-name-relative-to-projectile-root
+;;          (buffile (file-relative-name buffer-file-name (projectile-project-root)))
+;;          (cmd (format "alt %s" buffile))
+;;          (output (shell-command-to-string cmd)))
+;;     (if (string= output "")
+;;         (message "No alternate file found")
+;;       (if (y-or-n-p (format "Found alternate file %s. Open?" output))
+;;        (find-file output (message "Not opening"))))))
 
 ;; Languages
 
@@ -550,23 +545,14 @@
 (use-package cargo
   :hook
   (rust-mode-hook . cargo-minor-mode))
-(use-package flycheck-rust
-  :after (flycheck rust-mode)
-  :hook
-  (flycheck-mode-hook . flycheck-rust-setup))
 
 ;; Web
 (use-package web-mode
   :config
   (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode)))
 
-;; Java
-(use-package lsp-java
-  :after lsp-mode)
-
 ;; Gradle
 (use-package gradle-mode)
-(use-package flycheck-gradle)
 
 ;; Elixir
 (use-package elixir-mode)
@@ -576,15 +562,6 @@
 (use-package mix
   :hook
   (elixir-mode-hook . mix-minor-mode))
-(use-package flycheck-credo
-  :init
-  '(flycheck-credo-setup)
-  :config
-  (setq flycheck-elixir-credo-strict t))
-(use-package flycheck-elixir
-  :after (flycheck elixir-mode)
-  :hook
-  (elixir-mode-hook . flycheck-mode))
 (use-package exunit
   :hook
   (elixir-mode-hook . exunit-mode))
@@ -594,10 +571,6 @@
 
 ;; Swift
 (use-package swift-mode)
-(use-package lsp-sourcekit
-  :after (lsp swift-mode))
-(use-package flycheck-swift
-  :after (swift-mode))
 
 ;; JSON
 (use-package json-mode)
@@ -648,16 +621,7 @@
 (use-package cider
   :defer t
   :config
-  (setq nrepl-log-messages t)
-  (flycheck-clojure-setup)) ;; run setup *after* cider load
-
-(use-package flycheck-clojure
-  :defer t
-  :commands (flycheck-clojure-setup) ;; autoload
-  :config
-  (eval-after-load 'flycheck
-    '(setq flycheck-display-errors-function #'flycheck-pos-tip-error-messages))
-  (add-hook 'after-init-hook #'global-flycheck-mode))
+  (setq nrepl-log-messages t))
 
 ;; .env
 (use-package dotenv-mode)
@@ -678,7 +642,6 @@
 
 ;; Typescript
 (use-package typescript-mode)
-(straight-use-package '(tsx-mode :type git :host github :repo "orzechowskid/tsx-mode.el" :after (tsi)))
 
 ;; Docker
 (use-package docker)
@@ -695,15 +658,6 @@
   :diminish eldoc-mode
   :hook (emacs-lisp-mode . turn-on-eldoc-mode)
         (lisp-interaction-mode . turn-on-eldoc-mode))
-
-;; Writing
-(use-package flycheck-vale
-  :after flycheck
-  :init (flycheck-vale-setup))
-
-;; Syntax
-(use-package flycheck
-  :init (global-flycheck-mode))
 
 ;; Formatting
 (use-package format-all
@@ -727,186 +681,225 @@
   (javascript-mode . apheleia-mode)
   (sass-mode . apheleia-mode))
 
-;; Treesitter
-(use-package tree-sitter
-  :defer 1
-  :diminish
-  :config
-  (global-tree-sitter-mode)
-  (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
-(use-package tree-sitter-langs
-  :defer 1
-  :diminish)
-
-(require 'tree-sitter)
-(require 'tree-sitter-langs)
-
-(use-package tree-edit)
-(use-package evil-tree-edit
-  :after tree-edit
-  :hook
-  (python-mode-hook . evil-tree-edit-mode))
-
 ;; Testing
 (use-package coverlay
   :defer t)
 
-;; LSP
-(use-package lsp-mode
-  :config
-  (setq lsp-elixir-server-command '("elixir-ls"))
-  (setq lsp-clients-lua-language-server-command '("lua-language-server"))
-  :init
-  ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
-  (setq lsp-keymap-prefix "C-c l")
-  :hook
-  (python-mode . lsp)
-  (rust-mode . lsp)
-  (elixir-mode . lsp)
-  (json-mode . lsp)
-  (go-mode . lsp)
-  (markdown-mode . lsp)
-  (yaml-mode . lsp)
-  (conf-toml-mode . lsp)
-  (ruby-mode . lsp)
-  (shell-mode . lsp)
-  (lua-mode . lsp)
-  (clojure-mode . lsp)
-  (swift-mode . lsp)
-  (lsp-mode . lsp-enable-which-key-integration)
-  :commands lsp)
-
-(defvar repos-to-ignore '("platform", "platform-b", "platform-c", "platform-d"))
-
-(defun my/lsp--is-big-repo-by-dir (dir)
-    "Return boolean on whether the repository in DIR is considered big or not."
-    (member (car (last (f-split dir))) repos-to-ignore))
-
-;; Example of similar code: https://github.com/emacs-lsp/lsp-mode/issues/713#issuecomment-1173826699
-(defun my/lsp--maybe-ignore-big-repo (orig-fun number-of-directories dir)
-  (if (my/lsp--is-big-repo-by-dir dir)
-    ;; This is a known large repo so ignore it
-    nil
-    (apply orig-fun number-of-directories dir)))
-
-(advice-add 'lsp--ask-about-watching-big-repo
-            :around 'my/lsp--maybe-ignore-big-repo)
-
-(use-package lsp-ui :commands lsp-ui-mode)
-
-;; DAP
-(use-package dap-mode
-  :defer 1)
-
 ;; Snippets
-(use-package yasnippet
-  :defer 1)
-(use-package yasnippet-snippets
-  :defer 1)
-(use-package ivy-yasnippet
-  :after (yasnippet yasnippet-snippets ivy)
-  :defer 1)
-(yas-global-mode 1)
+(use-package tempel
+  ;; Require trigger prefix before template name when completing.
+  ;; :custom
+  ;; (tempel-trigger-prefix "<")
 
-;; Code completion
-(use-package company
-  :config
-  (add-hook 'after-init-hook 'global-company-mode))
-(use-package company-quickhelp
-  :after (company)
-  :init (company-quickhelp-mode))
-(use-package company-statistics
-  :after (company)
-  :init (company-statistics-mode))
-(use-package company-box
-  :hook (company-mode . company-box-mode))
-(use-package company-shell
-  :after (company shell)
-  :config
-  (add-to-list 'company-backends 'company-shell))
-(use-package company-terraform
-  :after (company terraform-mode)
-  :config
-  (add-to-list 'company-backends 'company-terraform)
-  (company-terraform-init))
-(use-package company-elixir
-  :disabled t
-  :company elixir-mode)
+  :bind (("M-+" . tempel-complete) ;; Alternative tempel-expand
+         ("M-*" . tempel-insert))
 
-;; Menu completion
-;; Use minimalist Ivy for most things.
-(use-package ivy
-  :diminish                             ;; don't show Ivy in minor mode list
-  :config
-  (ivy-mode 1)                          ;; enable Ivy everywhere
-  (setq ivy-use-virtual-buffers t)      ;; show bookmarks and recent files in buffer list
-  (setq ivy-count-format "(%d/%d) ")
-  (setq enable-recursive-minibuffers t)
-
-  (setq ivy-re-builders-alist
-      '((swiper . ivy--regex-plus)
-        (t      . ivy--regex-fuzzy)))   ;; enable fuzzy searching everywhere except for Swiper
-
-  :bind
-  ("s-b" . ivy-switch-buffer)  ;; Cmd+b show buffers and recent files
-  ("M-s-b" . ivy-resume))     ;; Alt+Cmd+b resume whatever Ivy was doing
-
-(use-package ivy-posframe
-  :after ivy
   :init
-  (ivy-posframe-mode 1))
 
-;; Swiper is a better local finder.
-(use-package swiper
-  :bind
-  ("\C-s" . swiper) ;; Default Emacs Isearch forward...
-  ("\C-r" . swiper) ;; ... and Isearch backward replaced with Swiper
-  ("s-f" . swiper)) ;; Cmd+f find text
+  ;; Setup completion at point
+  (defun tempel-setup-capf ()
+    ;; Add the Tempel Capf to `completion-at-point-functions'.
+    ;; `tempel-expand' only triggers on exact matches. Alternatively use
+    ;; `tempel-complete' if you want to see all matches, but then you
+    ;; should also configure `tempel-trigger-prefix', such that Tempel
+    ;; does not trigger too often when you don't expect it. NOTE: We add
+    ;; `tempel-expand' *before* the main programming mode Capf, such
+    ;; that it will be tried first.
+    (setq-local completion-at-point-functions
+                (cons #'tempel-expand
+                      completion-at-point-functions)))
 
-;; Better menus with Counsel (a layer on top of Ivy)
-(use-package counsel
+  (add-hook 'prog-mode-hook 'tempel-setup-capf)
+  (add-hook 'text-mode-hook 'tempel-setup-capf))
+
+  ;; Optionally make the Tempel templates available to Abbrev,
+  ;; either locally or globally. `expand-abbrev' is bound to C-x '.
+  ;; (add-hook 'prog-mode-hook #'tempel-abbrev-mode)
+  ;; (global-tempel-abbrev-mode)
+
+
+;; Optional: Add tempel-collection.
+;; The package is young and doesn't have comprehensive coverage.
+(use-package tempel-collection)
+
+;; Completion
+(use-package consult
+  ;; Replace bindings. Lazily loaded due by `use-package'.
+  :bind (;; C-c bindings (mode-specific-map)
+         ("C-c h" . consult-history)
+         ("C-c m" . consult-mode-command)
+         ("C-c k" . consult-kmacro)
+         ;; C-x bindings (ctl-x-map)
+         ("C-x M-:" . consult-complex-command)     ;; orig. repeat-complex-command
+         ("C-x b" . consult-buffer)                ;; orig. switch-to-buffer
+         ("C-x 4 b" . consult-buffer-other-window) ;; orig. switch-to-buffer-other-window
+         ("C-x 5 b" . consult-buffer-other-frame)  ;; orig. switch-to-buffer-other-frame
+         ("C-x r b" . consult-bookmark)            ;; orig. bookmark-jump
+         ("C-x p b" . consult-project-buffer)      ;; orig. project-switch-to-buffer
+         ;; Custom M-# bindings for fast register access
+         ("M-#" . consult-register-load)
+         ("M-'" . consult-register-store)          ;; orig. abbrev-prefix-mark (unrelated)
+         ("C-M-#" . consult-register)
+         ;; Other custom bindings
+         ("M-y" . consult-yank-pop)                ;; orig. yank-pop
+         ;; M-g bindings (goto-map)
+         ("M-g e" . consult-compile-error)
+         ("M-g f" . consult-flymake)
+         ("M-g g" . consult-goto-line)             ;; orig. goto-line
+         ("M-g M-g" . consult-goto-line)           ;; orig. goto-line
+         ("M-g o" . consult-outline)               ;; Alternative: consult-org-heading
+         ("M-g m" . consult-mark)
+         ("M-g k" . consult-global-mark)
+         ("M-g i" . consult-imenu)
+         ("M-g I" . consult-imenu-multi)
+         ;; M-s bindings (search-map)
+         ("M-s d" . consult-find)
+         ("M-s D" . consult-locate)
+         ("M-s g" . consult-grep)
+         ("M-s G" . consult-git-grep)
+         ("M-s r" . consult-ripgrep)
+         ("M-s l" . consult-line)
+         ("M-s L" . consult-line-multi)
+         ("M-s k" . consult-keep-lines)
+         ("M-s u" . consult-focus-lines)
+         ;; Isearch integration
+         ("M-s e" . consult-isearch-history)
+         :map isearch-mode-map
+         ("M-e" . consult-isearch-history)         ;; orig. isearch-edit-string
+         ("M-s e" . consult-isearch-history)       ;; orig. isearch-edit-string
+         ("M-s l" . consult-line)                  ;; needed by consult-line to detect isearch
+         ("M-s L" . consult-line-multi)            ;; needed by consult-line to detect isearch
+         ;; Minibuffer history
+         :map minibuffer-local-map
+         ("M-s" . consult-history)                 ;; orig. next-matching-history-element
+         ("M-r" . consult-history))                ;; orig. previous-matching-history-element
+
+  ;; Enable automatic preview at point in the *Completions* buffer. This is
+  ;; relevant when you use the default completion UI.
+  :hook (completion-list-mode . consult-preview-at-point-mode)
+
+  ;; The :init configuration is always executed (Not lazy)
+  :init
+
+  ;; Optionally configure the register formatting. This improves the register
+  ;; preview for `consult-register', `consult-register-load',
+  ;; `consult-register-store' and the Emacs built-ins.
+  (setq register-preview-delay 0.5
+        register-preview-function #'consult-register-format)
+
+  ;; Optionally tweak the register preview window.
+  ;; This adds thin lines, sorting and hides the mode line of the window.
+  (advice-add #'register-preview :override #'consult-register-window)
+
+  ;; Use Consult to select xref locations with preview
+  (setq xref-show-xrefs-function #'consult-xref
+        xref-show-definitions-function #'consult-xref)
+
+  ;; Configure other variables and modes in the :config section,
+  ;; after lazily loading the package.
   :config
-  (global-set-key (kbd "M-x") 'counsel-M-x)            ;; Alt+x run command
-  (global-set-key (kbd "s-P") 'counsel-M-x)            ;; Cmd+Shift+p run command
-  (global-set-key (kbd "C-x C-f") 'counsel-find-file)  ;; Replace built-in Emacs 'find file' (open file) with Counsel
-  (global-set-key (kbd "s-o") 'counsel-find-file))     ;; Cmd+o open file
 
-(use-package counsel-projectile
-  :after (counsel projectile)
-  :config
-  (setq projectile-project-search-path '("~/Documents/projects/" ("~/src/" . 3)))
-  (setq projectile-auto-discover nil)
-  :init (counsel-projectile-mode)
-  (projectile-register-project-type
-   'zola
-   '("config.toml" "content" "static" "templates" "themes")
-   :project-file "config.toml"
-   :compile "zola build"
-   :test "zola check"
-   :run "zola server")
-  (projectile-register-project-type
-   'zig '("build.zig")
-   :project-file "build.zig"
-   :compile "zig build"
-   :run "zig build run"))
+  ;; Optionally configure preview. The default value
+  ;; is 'any, such that any key triggers the preview.
+  ;; (setq consult-preview-key 'any)
+  ;; (setq consult-preview-key (kbd "M-."))
+  ;; (setq consult-preview-key (list (kbd "<S-down>") (kbd "<S-up>")))
+  ;; For some commands and buffer sources it is useful to configure the
+  ;; :preview-key on a per-command basis using the `consult-customize' macro.
+  (consult-customize
+   consult-theme :preview-key '(:debounce 0.2 any)
+   consult-ripgrep consult-git-grep consult-grep
+   consult-bookmark consult-recent-file consult-xref
+   consult--source-bookmark consult--source-file-register
+   consult--source-recent-file consult--source-project-recent-file
+   ;; :preview-key (kbd "M-.")
+   :preview-key '(:debounce 0.4 any))
 
-;; Make Ivy a bit more friendly by adding information to ivy buffers, e.g. description of commands in Alt-x, meta info when switching buffers, etc.
-(use-package ivy-rich
+  ;; Optionally configure the narrowing key.
+  ;; Both < and C-+ work reasonably well.
+  (setq consult-narrow-key "<") ;; (kbd "C-+")
+
+  ;; Optionally make narrowing help available in the minibuffer.
+  ;; You may want to use `embark-prefix-help-command' or which-key instead.
+  (define-key consult-narrow-map (vconcat consult-narrow-key "?") #'consult-narrow-help))
+
+(use-package vertico
   :config
-  (ivy-rich-mode 1)
-  (setq ivy-rich-path-style 'abbrev)) ;; Abbreviate paths using abbreviate-file-name (e.g. replace “/home/username” with “~”)
+  (vertico-mode))
+
+(use-package orderless
+  :ensure t
+  :custom
+  (completion-styles '(orderless basic))
+  (completion-category-overrides '((file (styles basic partial-completion)))))
+
+(use-package corfu
+  ;; Optional customizations
+  :custom
+  (corfu-cycle t)                ;; Enable cycling for `corfu-next/previous'
+  (corfu-auto t)                 ;; Enable auto completion
+  (corfu-separator ?\s)          ;; Orderless field separator
+  ;; (corfu-quit-at-boundary nil)   ;; Never quit at completion boundary
+  (corfu-quit-no-match 'separator)      ;; Never quit, even if there is no match
+  ;; (corfu-preview-current nil)    ;; Disable current candidate preview
+  ;; (corfu-preselect-first nil)    ;; Disable candidate preselection
+  ;; (corfu-on-exact-match nil)     ;; Configure handling of exact matches
+  (corfu-scroll-margin 5)        ;; Use scroll margin
+
+  ;; Enable Corfu only for certain modes.
+  ;; :hook ((prog-mode . corfu-mode)
+  ;;        (shell-mode . corfu-mode)
+  ;;        (eshell-mode . corfu-mode))
+
+  ;; Recommended: Enable Corfu globally.
+  ;; This is recommended since Dabbrev can be used globally (M-/).
+  ;; See also `corfu-excluded-modes'.
+  :init
+  (global-corfu-mode))
+
+(use-package cape
+  ;; Bind dedicated completion commands
+  ;; Alternative prefix keys: C-c p, M-p, M-+, ...
+  :bind (("C-c p p" . completion-at-point) ;; capf
+         ("C-c p t" . complete-tag)        ;; etags
+         ("C-c p d" . cape-dabbrev)        ;; or dabbrev-completion
+         ("C-c p h" . cape-history)
+         ("C-c p f" . cape-file)
+         ("C-c p k" . cape-keyword)
+         ("C-c p s" . cape-symbol)
+         ("C-c p a" . cape-abbrev)
+         ("C-c p i" . cape-ispell)
+         ("C-c p l" . cape-line)
+         ("C-c p w" . cape-dict)
+         ("C-c p \\" . cape-tex)
+         ("C-c p _" . cape-tex)
+         ("C-c p ^" . cape-tex)
+         ("C-c p &" . cape-sgml)
+         ("C-c p r" . cape-rfc1345))
+  :init
+  ;; Add `completion-at-point-functions', used by `completion-at-point'.
+  (add-to-list 'completion-at-point-functions #'cape-dabbrev)
+  (add-to-list 'completion-at-point-functions #'cape-file))
+  ;;(add-to-list 'completion-at-point-functions #'cape-history)
+  ;;(add-to-list 'completion-at-point-functions #'cape-keyword)
+  ;;(add-to-list 'completion-at-point-functions #'cape-tex)
+  ;;(add-to-list 'completion-at-point-functions #'cape-sgml)
+  ;;(add-to-list 'completion-at-point-functions #'cape-rfc1345)
+  ;;(add-to-list 'completion-at-point-functions #'cape-abbrev)
+  ;;(add-to-list 'completion-at-point-functions #'cape-ispell)
+  ;;(add-to-list 'completion-at-point-functions #'cape-dict)
+  ;;(add-to-list 'completion-at-point-functions #'cape-symbol)
+  ;;(add-to-list 'completion-at-point-functions #'cape-line)
+
+(use-package kind-icon
+  :after corfu
+  :custom
+  (kind-icon-default-face 'corfu-default) ; to compute blended backgrounds correctly
+  :config
+  (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
 
 (use-package smex)  ;; show recent commands when invoking Alt-x (or Cmd+Shift+p)
-(use-package flx)   ;; enable fuzzy matching
 (use-package avy)   ;; enable avy for quick navigation
-
-(use-package prescient)
-(use-package ivy-prescient
-  :after (ivy prescient)
-  :init (ivy-prescient-mode t))
-(use-package company-prescient
-  :after (company prescient)
-  :init (company-prescient-mode t))
 
 ;; -----------------------------------------------------------------------------
 ;; File system
@@ -919,9 +912,9 @@
   (interactive)
   (kill-new (buffer-file-name)))
 
-(defun my/copy-project-buffer-name ()
-  (interactive)
-  (kill-new (file-relative-name buffer-file-name (projectile-project-root))))
+;; (defun my/copy-project-buffer-name ()
+;;   (interactive)
+;;   (kill-new (file-relative-name buffer-file-name (projectile-project-root))))
 
 (use-package recentf
   :defer 1
@@ -929,10 +922,6 @@
   (recentf-mode t))
 
 (save-place-mode 1)
-
-(use-package dirvish)
-;; :config)
-;; (dirvish-override-dired-mode))
 
 (use-package treemacs
   :defer t
@@ -1028,18 +1017,11 @@
   :after (treemacs perspective) ;;or perspective vs. persp-mode
   :config (treemacs-set-scope-type 'Perspectives))
 
-(use-package treemacs-projectile
-  :after (treemacs projectile))
-
 (use-package treemacs-icons-dired
   :hook (dired-mode . treemacs-icons-dired-enable-once))
 
 (use-package treemacs-magit
   :after (treemacs magit))
-
-(use-package lsp-treemacs
-  :after (treemacs lsp-mode)
-  :config (lsp-treemacs-sync-mode 1))
 
 (use-package treemacs-tab-bar ;;treemacs-tab-bar if you use tab-bar-mode
   :after treemacs
@@ -1076,17 +1058,7 @@
 ;; Process
 ;; -----------------------------------------------------------------------------
 
-(use-package projectile
-  :config
-  (projectile-mode +1)
-  (setq projectile-sort-order 'recently-active)
-  (setq projectile-switch-project-action #'projectile-commander)
-  ;; Recommended keymap prefix on macOS
-  (define-key projectile-mode-map (kbd "s-p") 'projectile-command-map))
-
 (use-package ripgrep
-  :defer 1)
-(use-package projectile-ripgrep
   :defer 1)
 
 (use-package org)
