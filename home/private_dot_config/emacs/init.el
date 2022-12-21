@@ -217,13 +217,19 @@
   "Load the right theme based on the current time."
   (load-theme (my/theme-by-current-time) t))
 
-(defun disable-all-themes ()
+(defun my/disable-all-themes ()
   "Disable all enabled themes."
   (interactive)
   ;; List of enabled Custom Themes, highest precedence
   ;; first.
   (dolist (theme custom-enabled-themes)
     (disable-theme theme)))
+
+(defun my/disable-and-load-theme (theme)
+  "Disable all themes and then load theme THEME"
+  (interactive)
+  (my/disable-all-themes)
+  (load-theme theme))
 
 (use-package spacemacs-theme
   :defer t ; Don't load it immediately
@@ -984,9 +990,9 @@
   (interactive)
   (kill-new (buffer-file-name)))
 
-;; (defun my/copy-project-buffer-name ()
-;;   (interactive)
-;;   (kill-new (file-relative-name buffer-file-name (projectile-project-root))))
+(defun my/copy-project-buffer-name ()
+  (interactive)
+  (kill-new (file-relative-name buffer-file-name (project-root))))
 
 (use-package recentf
   :defer 1
