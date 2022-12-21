@@ -519,9 +519,14 @@
 
 ;; Spellchecking and thesaurus -------------------------------------------------
 
-(setq ispell-dictionary "australian")    ;set the default dictionary
+(setq ispell-dictionary "australian")    ;; set the default dictionary
 ;; Spellchecking requires an external command to be available. Install aspell on your Mac, then make it the default checker for Emacs' ispell. Note that personal dictionary is located at ~/.aspell.LANG.pws by default.
 (setq ispell-program-name "aspell")
+
+(use-package flymake-aspell
+  :defer 1
+  :hook
+  (text-mode-hook . flymake-aspell-setup))
 
 ;; Popup window for spellchecking
 (use-package flyspell
@@ -634,9 +639,19 @@
 (use-package exunit
   :hook
   (elixir-mode-hook . exunit-mode))
+(use-package flymake-elixir
+  :after elixir-mode
+  :defer 1
+  :hook
+  (elixir-mode-hook . flymake-elixir-load))
 
 ;; Go
 (use-package go-mode)
+(use-package flymake-go
+  :after go-mode
+  :defer 1
+  :hook
+  (go-mode-hook . flymake-go))
 
 ;; Swift
 (use-package swift-mode)
@@ -676,6 +691,11 @@
 
 ;; Lua
 (use-package lua-mode)
+(use-package flymake-lua
+  :after lua-mode
+  :defer 1
+  :hook
+  (lua-mode-hook . flymake-lua-load))
 
 ;; Shell
 (use-package flymake-shellcheck
