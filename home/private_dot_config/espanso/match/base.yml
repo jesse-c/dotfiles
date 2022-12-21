@@ -34,7 +34,7 @@ matches:
     replace: "→"
   - triggers: [":bimp", ":iff"]
     replace: "↔"
-  - triggers: [":eq", ":def"]
+  - triggers: [":eq"]
     replace: "≡"
   - triggers: [":true", ":top"]
     replace: "⊤"
