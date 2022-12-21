@@ -894,18 +894,21 @@
   (completion-category-overrides '((eglot (styles orderless)))))
 
 (use-package corfu
+  ;; https://github.com/purplg/dotfiles/blob/04c5217247a738adef11d9bf569a329c7eebae4a/.config/emacs/modules/pg-completion.el
+  :straight (:files (:defaults "extensions/corfu-popupinfo.el"))
   ;; Optional customizations
   :custom
   (corfu-cycle t)                ;; Enable cycling for `corfu-next/previous'
   (corfu-auto t)                 ;; Enable auto completion
+  (corfu-auto-delay 0.2)
+  (corfu-popupinfo-delay 0.4)
   (corfu-separator ?\s)          ;; Orderless field separator
-  ;; (corfu-quit-at-boundary nil)   ;; Never quit at completion boundary
+  (corfu-quit-at-boundary nil)   ;; Never quit at completion boundary
   (corfu-quit-no-match 'separator)      ;; Never quit, even if there is no match
-  ;; (corfu-preview-current nil)    ;; Disable current candidate preview
-  ;; (corfu-preselect-first nil)    ;; Disable candidate preselection
-  ;; (corfu-on-exact-match nil)     ;; Configure handling of exact matches
   (corfu-scroll-margin 5)        ;; Use scroll margin
 
+  :hook
+  (corfu-mode . corfu-popupinfo-mode)
   ;; Enable Corfu only for certain modes.
   ;; :hook ((prog-mode . corfu-mode)
   ;;        (shell-mode . corfu-mode)
@@ -915,7 +918,16 @@
   ;; This is recommended since Dabbrev can be used globally (M-/).
   ;; See also `corfu-excluded-modes'.
   :init
-  (global-corfu-mode))
+  (global-corfu-mode)
+  :bind
+  (:map corfu-map
+        ("M-n" . corfu-popupinfo-scroll-up)
+        ("M-p" . corfu-popupinfo-scroll-down)
+        ("M-a" . corfu-popupinfo-beginning)
+        ("M-e" . corfu-popupinfo-end)
+        ("M-l" . corfu-popupinfo-location)
+        ("M-d" . corfu-popupinfo-documentation)
+        ("M-t" . corfu-popupinfo-toggle)))
 
 (use-package cape
   ;; Bind dedicated completion commands
