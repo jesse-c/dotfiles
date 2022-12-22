@@ -605,10 +605,29 @@ targets."
              languagetool-server-start
              languagetool-server-stop))
 
-(use-package flymake-aspell
+(use-package flycheck-vale
+  :after flycheck
+  :init (flycheck-vale-setup))
+
+(use-package flycheck-aspell
   :defer 1
-  :hook
-  (text-mode-hook . flymake-aspell-setup))
+  :custom
+  ;; If you want to check TeX/LaTeX/ConTeXt buffers
+  (add-to-list 'flycheck-checkers 'tex-aspell-dynamic)
+  ;; If you want to check Markdown/GFM buffers
+  (add-to-list 'flycheck-checkers 'markdown-aspell-dynamic)
+  ;; If you want to check HTML buffers
+  (add-to-list 'flycheck-checkers 'html-aspell-dynamic)
+  ;; If you want to check XML/SGML buffers
+  (add-to-list 'flycheck-checkers 'xml-aspell-dynamic)
+  ;; If you want to check Nroff/Troff/Groff buffers
+  (add-to-list 'flycheck-checkers 'nroff-aspell-dynamic)
+  ;; If you want to check Texinfo buffers
+  (add-to-list 'flycheck-checkers 'texinfo-aspell-dynamic)
+  ;; If you want to check comments and strings for C-like languages
+  (add-to-list 'flycheck-checkers 'c-aspell-dynamic)
+  ;; If you want to check message buffers
+  (add-to-list 'flycheck-checkers 'mail-aspell-dynamic))
 
 ;; Popup window for spellchecking
 (use-package flyspell
@@ -713,6 +732,10 @@ targets."
 (use-package cargo
   :hook
   (rust-mode-hook . cargo-minor-mode))
+(use-package flycheck-rust
+  :after (flycheck rust-mode)
+  :hook
+  (flycheck-mode-hook . flycheck-rust-setup))
 
 ;; Web
 (use-package web-mode
@@ -721,6 +744,7 @@ targets."
 
 ;; Gradle
 (use-package gradle-mode)
+(use-package flycheck-gradle)
 
 ;; Elixir
 (use-package elixir-mode)
@@ -733,22 +757,33 @@ targets."
 (use-package exunit
   :hook
   (elixir-mode-hook . exunit-mode))
-(use-package flymake-elixir
-  :after elixir-mode
+(use-package flycheck-credo
   :defer 1
+  :init
+  '(flycheck-credo-setup)
+  :config
+  (setq flycheck-elixir-credo-strict t))
+(use-package flycheck-elixir
+  :after (flycheck elixir-mode)
   :hook
-  (elixir-mode-hook . flymake-elixir-load))
+  (elixir-mode-hook . flycheck-mode))
+(use-package flycheck-dialyxir
+  :after (flycheck elixir-mode)
+  :hook
+  (elixir-mode-hook . flycheck-mode))
+(use-package flycheck-dialyzer
+  :after (flycheck elixir-mode)
+  :hook
+  (elixir-mode-hook . flycheck-mode))
 
 ;; Go
 (use-package go-mode)
-(use-package flymake-go
-  :after go-mode
-  :defer 1
-  :hook
-  (go-mode-hook . flymake-go))
 
 ;; Swift
 (use-package swift-mode)
+(use-package flycheck-swift
+  :defer 1
+  :after (swift-mode))
 
 ;; JSON
 (use-package json-mode)
@@ -785,17 +820,8 @@ targets."
 
 ;; Lua
 (use-package lua-mode)
-(use-package flymake-lua
-  :after lua-mode
-  :defer 1
-  :hook
-  (lua-mode-hook . flymake-lua-load))
 
 ;; Shell
-(use-package flymake-shellcheck
-  :commands flymake-shellcheck-load
-  :hook
-  (sh-mode-hook . flymake-shellcheck-load))
 
 ;; Clojure
 (use-package clojure-mode)
@@ -804,7 +830,16 @@ targets."
 (use-package cider
   :defer t
   :config
-  (setq nrepl-log-messages t))
+  (setq nrepl-log-messages t)
+  (flycheck-clojure-setup)) ;; run setup *after* cider load
+
+(use-package flycheck-clojure
+  :defer t
+  :commands (flycheck-clojure-setup) ;; autoload
+  :config
+  (eval-after-load 'flycheck
+    '(setq flycheck-display-errors-function #'flycheck-pos-tip-error-messages))
+  (add-hook 'after-init-hook #'global-flycheck-mode))
 
 ;; .env
 (use-package dotenv-mode)
@@ -841,6 +876,10 @@ targets."
   :diminish eldoc-mode
   :hook (emacs-lisp-mode . turn-on-eldoc-mode)
         (lisp-interaction-mode . turn-on-eldoc-mode))
+
+ ;; Syntax
+(use-package flycheck
+  :init (global-flycheck-mode))
 
 ;; Formatting
 (use-package format-all
@@ -927,7 +966,7 @@ targets."
          ("M-y" . consult-yank-pop)                ;; orig. yank-pop
          ;; M-g bindings (goto-map)
          ("M-g e" . consult-compile-error)
-         ("M-g f" . consult-flymake)
+         ("M-g f" . consult-flycheck)
          ("M-g g" . consult-goto-line)             ;; orig. goto-line
          ("M-g M-g" . consult-goto-line)           ;; orig. goto-line
          ("M-g o" . consult-outline)               ;; Alternative: consult-org-heading
@@ -1005,6 +1044,10 @@ targets."
   ;; Optionally make narrowing help available in the minibuffer.
   ;; You may want to use `embark-prefix-help-command' or which-key instead.
   (define-key consult-narrow-map (vconcat consult-narrow-key "?") #'consult-narrow-help))
+
+(use-package consult-flycheck
+  :after consult
+  :defer 1)
 
 (use-package vertico
   :config
