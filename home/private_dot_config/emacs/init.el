@@ -612,7 +612,15 @@
 
 (use-package evil-visual-mark-mode
   :after evil
-  :defer 1)
+  :defer 1
+  :config
+  (evil-visual-mark-mode))
+
+(use-package evil-collection
+  :after evil
+  :defer 1
+  :config
+  (evil-collection-init))
 
 ;; Programming
 
