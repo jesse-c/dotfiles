@@ -610,6 +610,10 @@
 
 (evil-set-undo-system 'undo-tree)
 
+(use-package evil-visual-mark-mode
+  :after evil
+  :defer 1)
+
 ;; Programming
 
 ;; Overwrite existing function
