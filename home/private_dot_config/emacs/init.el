@@ -668,6 +668,8 @@ targets."
 (setq display-line-numbers-type 'relative)
 (global-display-line-numbers-mode)
 
+(setq column-number-mode t)
+
 ;; Undo
 ;; Linear undo and redo.
 (use-package undo-tree
