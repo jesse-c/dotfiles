@@ -114,12 +114,13 @@
 (setq straight-versions-path "straight/versions/default.el")
 
 (defun my/straight-versions-path ()
+  "Return the path of where straight.el's versions file is."
   (-> user-init-file
       (file-name-directory)
-      (file-name-concat straight-versions-path)
-      (message)))
+      (file-name-concat straight-versions-path)))
 
 (defun my/chezmoi-copy-package-freeze ()
+  "Copy straight.el's versions file into Chezmoi."
   (interactive)
   (copy-file (my/straight-versions-path) (file-name-concat "~/.local/share/chezmoi/home/private_dot_config/emacs" straight-versions-path t)))
 
@@ -230,7 +231,7 @@
     (disable-theme theme)))
 
 (defun my/disable-and-load-theme (theme)
-  "Disable all themes and then load theme THEME"
+  "Disable all themes and then load theme THEME."
   (interactive)
   (my/disable-all-themes)
   (load-theme theme))
@@ -353,9 +354,9 @@
 (defun my/clean-up-buffers ()
   "Clean-up buffers that have built up."
   (interactive)
-  (kill-matching-buffers ".*\.ex" nil t) 
-  (kill-matching-buffers ".*\.exs" nil t) 
-  (kill-matching-buffers ".*\.yaml" nil t)) 
+  (kill-matching-buffers ".*\.ex" nil t)
+  (kill-matching-buffers ".*\.exs" nil t)
+  (kill-matching-buffers ".*\.yaml" nil t))
 
 ;; -----------------------------------------------------------------------------
 ;; Editor
@@ -1173,10 +1174,12 @@ targets."
 (setq create-lockfiles nil)
 
 (defun my/copy-buffer-name ()
+  "Copy the buffer name."
   (interactive)
   (kill-new (buffer-file-name)))
 
 (defun my/copy-project-buffer-name ()
+  "Copy the buffer name relative to the project."
   (interactive)
   (kill-new (file-relative-name buffer-file-name (project-root))))
 
@@ -1378,3 +1381,6 @@ targets."
 
 ;; View git blame
 (use-package vc-msg)
+
+(provide 'init)
+;;; init.el ends here
