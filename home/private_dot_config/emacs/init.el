@@ -215,8 +215,8 @@
                    (decode-time)
                    (nth 2))))
     (if (or (> hour 18) (< hour 5))
-        'spacemacs-dark
-        'spacemacs-light)))
+        'modus-vivendi
+        'modus-operandi)))
 
 (defun my/load-theme-by-current-time ()
   "Load the right theme based on the current time."
@@ -241,6 +241,12 @@
   :init
   (my/load-theme-by-current-time))
 
+(use-package modus-themes
+  :defer t
+  :custom
+  (modus-operandi-theme-faint-syntax t)
+  (modus-vivendi-theme-faint-syntax t))
+
 (use-package doom-themes
   :defer t) ; Don't load it immediately
 
@@ -252,8 +258,8 @@
 ;;   "Load theme, taking current system APPEARANCE into consideration."
 ;;   (mapc #'disable-theme custom-enabled-themes)
 ;;   (pcase appearance
-;;     ('light (load-theme 'spacemacs-light t))
-;;     ('dark (load-theme 'spacemacs-dark t))))
+;;     ('light (load-theme 'modus-operandi t))
+;;     ('dark (load-theme 'modus-vivendi t))))
 ;;
 ;; (add-hook 'ns-system-appearance-change-functions #'my/apply-theme)
 
@@ -711,19 +717,18 @@ targets."
 
 ;; Programming
 
-;; Overwrite existing function
-;; (defun my/find-alternate-file ()
-;;   "Find alternate FILE, if any."
-;;   (interactive)
-;;   (let* ((default-directory (projectile-project-root))
-;;          ;; https://emacs.stackexchange.com/questions/45419/get-file-name-relative-to-projectile-root
-;;          (buffile (file-relative-name buffer-file-name (projectile-project-root)))
-;;          (cmd (format "alt %s" buffile))
-;;          (output (shell-command-to-string cmd)))
-;;     (if (string= output "")
-;;         (message "No alternate file found")
-;;       (if (y-or-n-p (format "Found alternate file %s. Open?" output))
-;;        (find-file output (message "Not opening"))))))
+(defun my/find-alternate-file ()
+  "Find alternate FILE, if any."
+  (interactive)
+  (let* ((default-directory (projectile-project-root))
+         ;; https://emacs.stackexchange.com/questions/45419/get-file-name-relative-to-projectile-root
+         (buffile (file-relative-name buffer-file-name (projectile-project-root)))
+         (cmd (format "alt %s" buffile))
+         (output (shell-command-to-string cmd)))
+    (if (string= output "")
+        (message "No alternate file found")
+      (if (y-or-n-p (format "Found alternate file %s. Open?" output))
+       (find-file output (message "Not opening"))))))
 
 ;; Languages
 
@@ -879,6 +884,13 @@ targets."
   :diminish eldoc-mode
   :hook (emacs-lisp-mode . turn-on-eldoc-mode)
         (lisp-interaction-mode . turn-on-eldoc-mode))
+(use-package elsa
+  :defer 1)
+(use-package flycheck-elsa
+  :after (elsa flycheck)
+  :defer 1
+  :hook
+  (emacs-lisp-mode . flycheck-elsa-setup))
 
  ;; Syntax
 (use-package flycheck
@@ -1046,7 +1058,20 @@ targets."
 
   ;; Optionally make narrowing help available in the minibuffer.
   ;; You may want to use `embark-prefix-help-command' or which-key instead.
-  (define-key consult-narrow-map (vconcat consult-narrow-key "?") #'consult-narrow-help))
+  (define-key consult-narrow-map (vconcat consult-narrow-key "?") #'consult-narrow-help)
+
+  ;; By default `consult-project-function' uses `project-root' from project.el.
+  ;; Optionally configure a different project root function.
+  ;; There are multiple reasonable alternatives to chose from.
+  ;;;; 1. project.el (the default)
+  ;; (setq consult-project-function #'consult--default-project--function)
+  ;;;; 2. projectile.el (projectile-project-root)
+  (autoload 'projectile-project-root "projectile")
+  (setq consult-project-function (lambda (_) (projectile-project-root))))
+  ;;;; 3. vc.el (vc-root-dir)
+  ;; (setq consult-project-function (lambda (_) (vc-root-dir)))
+  ;;;; 4. locate-dominating-file
+  ;; (setq consult-project-function (lambda (_) (locate-dominating-file "." ".git")))
 
 (use-package consult-flycheck
   :after consult
@@ -1135,17 +1160,17 @@ targets."
   :init
   ;; Add `completion-at-point-functions', used by `completion-at-point'.
   (add-to-list 'completion-at-point-functions #'cape-dabbrev)
-  (add-to-list 'completion-at-point-functions #'cape-file))
-  ;;(add-to-list 'completion-at-point-functions #'cape-history)
-  ;;(add-to-list 'completion-at-point-functions #'cape-keyword)
-  ;;(add-to-list 'completion-at-point-functions #'cape-tex)
-  ;;(add-to-list 'completion-at-point-functions #'cape-sgml)
-  ;;(add-to-list 'completion-at-point-functions #'cape-rfc1345)
-  ;;(add-to-list 'completion-at-point-functions #'cape-abbrev)
-  ;;(add-to-list 'completion-at-point-functions #'cape-ispell)
-  ;;(add-to-list 'completion-at-point-functions #'cape-dict)
-  ;;(add-to-list 'completion-at-point-functions #'cape-symbol)
-  ;;(add-to-list 'completion-at-point-functions #'cape-line)
+  (add-to-list 'completion-at-point-functions #'cape-file)
+  (add-to-list 'completion-at-point-functions #'cape-history)
+  (add-to-list 'completion-at-point-functions #'cape-keyword)
+  (add-to-list 'completion-at-point-functions #'cape-tex)
+  (add-to-list 'completion-at-point-functions #'cape-sgml)
+  (add-to-list 'completion-at-point-functions #'cape-rfc1345)
+  (add-to-list 'completion-at-point-functions #'cape-abbrev)
+  (add-to-list 'completion-at-point-functions #'cape-ispell)
+  (add-to-list 'completion-at-point-functions #'cape-dict)
+  (add-to-list 'completion-at-point-functions #'cape-symbol)
+  (add-to-list 'completion-at-point-functions #'cape-line))
 
 (use-package kind-icon
   :after corfu
@@ -1290,6 +1315,9 @@ targets."
 (use-package treemacs-magit
   :after (treemacs magit))
 
+(use-package treemacs-projectile
+  :after (treemacs projectile))
+
 (use-package treemacs-tab-bar ;;treemacs-tab-bar if you use tab-bar-mode
   :after treemacs
   :config (treemacs-set-scope-type 'Tabs))
@@ -1325,10 +1353,42 @@ targets."
 ;; Process
 ;; -----------------------------------------------------------------------------
 
+(use-package projectile
+ :custom
+ (projectile-switch-project-action 'projectile-commander)
+ (projectile-sort-order 'recently-active)
+ (projectile-project-search-path '("~/Documents/projects/" ("~/src/" . 3)))
+ (projectile-auto-discover nil)
+ :config
+ (projectile-mode +1)
+ ;; Recommended keymap prefix on macOS
+ (define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
+ ;; Custom project types
+ (projectile-register-project-type
+   'zola
+   '("config.toml" "content" "static" "templates" "themes")
+   :project-file "config.toml"
+   :compile "zola build"
+   :test "zola check"
+   :run "zola server")
+ (projectile-register-project-type
+   'zig
+   '("build.zig")
+   :project-file "build.zig"
+   :compile "zig build"
+   :run "zig build run"))
+
+(use-package consult-projectile
+  :straight (consult-projectile :type git :host gitlab :repo "OlMon/consult-projectile" :branch "master")
+  :custom
+  (consult-projectile-source-projectile-project-action 'projectile-commander))
+
+(use-package flycheck-projectile
+  :defer t
+  :after (flycheck projectile))
+
 (use-package ripgrep
   :defer 1)
-
-(use-package org)
 
 ;; -----------------------------------------------------------------------------
 ;; VCS
