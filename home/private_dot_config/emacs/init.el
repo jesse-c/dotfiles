@@ -736,7 +736,11 @@ targets."
 
 ;; Rust
 (use-package rust-mode)
-(use-package rustic)
+(use-package rustic
+  :custom
+  (rustic-lsp-client 'eglot)
+  :hook
+  (eglot--managed-mode-hook . (lambda () (flymake-mode -1))))
 (use-package cargo
   :hook
   (rust-mode-hook . cargo-minor-mode))
