@@ -289,6 +289,14 @@ return packer.startup(function(use)
 
 	-- UI / Themes
 	use({
+		"ishan9299/modus-theme-vim",
+		config = function()
+			vim.g.modus_faint_syntax = true
+
+			vim.cmd('colorscheme modus-vivendi')
+		end,
+	})
+	use({
 		"projekt0n/github-nvim-theme",
 		config = function()
 			-- Default theme
@@ -313,6 +321,7 @@ return packer.startup(function(use)
 				end,
 			})
 		end,
+		disable = true,
 	})
 
 	-- Buffers
