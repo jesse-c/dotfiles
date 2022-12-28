@@ -274,19 +274,7 @@
   ;; `variable-pitch' face supports it
   (ligature-set-ligatures 'eww-mode '("ff" "fi" "ffi"))
   ;; Enable all Cascadia Code ligatures in programming modes
-  (ligature-set-ligatures 'prog-mode '("|||>" "<|||" "<==>" "<!--" "####" "~~>" "***" "||=" "||>"
-                                       ":::" "::=" "=:=" "===" "==>" "=!=" "=>>" "=<<" "=/=" "!=="
-                                       "!!." ">=>" ">>=" ">>>" ">>-" ">->" "->>" "-->" "---" "-<<"
-                                       "<~~" "<~>" "<*>" "<||" "<|>" "<$>" "<==" "<=>" "<=<" "<->"
-                                       "<--" "<-<" "<<=" "<<-" "<<<" "<+>" "</>" "###" "#_(" "..<"
-                                       "..." "+++" "/==" "///" "_|_" "www" "&&" "^=" "~~" "~@" "~="
-                                       "~>" "~-" "**" "*>" "*/" "||" "|}" "|]" "|=" "|>" "|-" "{|"
-                                       "[|" "]#" "::" ":=" ":>" ":<" "$>" "==" "=>" "!=" "!!" ">:"
-                                       ">=" ">>" ">-" "-~" "-|" "->" "--" "-<" "<~" "<*" "<|" "<:"
-                                       "<$" "<=" "<>" "<-" "<<" "<+" "</" "#{" "#[" "#:" "#=" "#!"
-                                       "##" "#(" "#?" "#_" "%%" ".=" ".-" ".." ".?" "+>" "++" "?:"
-                                       "?=" "?." "??" ";;" "/*" "/=" "/>" "//" "__" "~~" "(*" "*)"
-                                       "\\\\" "://"))
+  (ligature-set-ligatures 'prog-mode '("|||>" "<|||" "<==>" "<!--" "####" "~~>" "***" "||=" "||>" ":::" "::=" "=:=" "===" "==>" "=!=" "=>>" "=<<" "=/=" "!==" "!!." ">=>" ">>=" ">>>" ">>-" ">->" "->>" "-->" "---" "-<<" "<~~" "<~>" "<*>" "<||" "<|>" "<$>" "<==" "<=>" "<=<" "<->" "<--" "<-<" "<<=" "<<-" "<<<" "<+>" "</>" "###" "#_(" "..<" "..." "+++" "/==" "///" "_|_" "www" "&&" "^=" "~~" "~@" "~=" "~>" "~-" "**" "*>" "*/" "||" "|=" "|>" "|-" "]#" "::" ":=" ":>" ":<" "$>" "==" "=>" "!=" "!!" ">:" ">=" ">>" ">-" "-~" "-|" "->" "--" "-<" "<~" "<*" "<|" "<:" "<$" "<=" "<>" "<-" "<<" "<+" "</" "#{" "#[" "#:" "#=" "#!" "##" "#(" "#?" "#_" "%%" ".=" ".-" ".." ".?" "+>" "++" "?:" "?=" "?." "??" ")]}})));;" "/*" "/=" "/>" "//" "__" "~~" "(*" "*)" "\\\\" "://"))
   ;; Enables ligature checks globally in all buffers. You can also do it
   ;; per mode with `ligature-mode'.
   (global-ligature-mode t))
@@ -526,8 +514,8 @@
 
 (use-package embark
   :bind
-  (("C-." . embark-act)         ;; pick some comfortable binding
-   ("C-;" . embark-dwim))        ;; good alternative: M-.
+  (("C-." . embark-act))         ;; pick some comfortable binding
+   ;; ("C-;" . embark-dwim))        ;; good alternative: M-.
    ;; Disabled for now whilst I use C-h for window switching
    ;; ("C-h B" . embark-bindings)) ;; alternative for `describe-bindings'
 
@@ -559,20 +547,20 @@ targets."
   (lambda (&optional keymap targets prefix)
     (if (null keymap)
         (which-key--hide-popup-ignore-command)
-      (which-key--show-keymap
-       (if (eq (plist-get (car targets) :type) 'embark-become)
-           "Become"
-         (format "Act on %s '%s'%s"
-                 (plist-get (car targets) :type)
-                 (embark--truncate-target (plist-get (car targets) :target))
-                 (if (cdr targets) "…" "")))
-       (if prefix
-           (pcase (lookup-key keymap prefix 'accept-default)
-             ((and (pred keymapp) km) km)
-             (_ (key-binding prefix 'accept-default)))
-         keymap)
-       nil nil t (lambda (binding)
-                   (not (string-suffix-p "-argument" (cdr binding))))))))
+        (which-key--show-keymap
+        (if (eq (plist-get (car targets) :type) 'embark-become)
+            "Become"
+        (format "Act on %s '%s'%s"
+                (plist-get (car targets) :type)
+                (embark--truncate-target (plist-get (car targets) :target))
+                (if (cdr targets) "…" "")))
+        (if prefix
+            (pcase (lookup-key keymap prefix 'accept-default)
+            ((and (pred keymapp) km) km)
+            (_ (key-binding prefix 'accept-default)))
+        keymap)
+        nil nil t (lambda (binding)
+                    (not (string-suffix-p "-argument" (cdr binding))))))))
 
 (setq embark-indicators
   '(embark-which-key-indicator
