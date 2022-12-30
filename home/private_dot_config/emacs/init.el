@@ -396,6 +396,8 @@
 (use-package perspective
   :custom
   (persp-mode-prefix-key (kbd "C-c C-z"))
+  (persp-state-default-file (concat user-emacs-directory "persp-state"))
+  (persp-sort 'access)
   :init
   (persp-mode))
 
