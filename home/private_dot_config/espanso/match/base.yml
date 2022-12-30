@@ -19,6 +19,10 @@ matches:
         params:
           format: "%H:%M"
 
+  # Writing
+  - trigger: ":hr"
+    replace: "--------------------------------------------------------------------------------"
+
   # Packages installed manually due fetching from Espanso Hub failing for me
 
   # https://hub.espanso.org/logic-symbols
