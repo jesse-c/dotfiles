@@ -461,6 +461,8 @@
               `(yaml-mode "yaml-language-server" "--stdio"))
   (add-to-list 'eglot-server-programs
               `(terraform-mode "terraform-ls" "serve"))
+  (add-to-list 'eglot-server-programs
+              `(swift-mode "sourcekit-lsp"))
   :hook
   (toml-mode-hook . 'eglot-ensure)
   (elixir-mode-hook . 'eglot-ensure)
@@ -481,7 +483,8 @@
   (css-mode-hook . 'eglot-ensure)
   (json-mode-hook . 'eglot-ensure)
   (yaml-mode-hook . 'eglot-ensure)
-  (terraform-mode-hook . 'eglot-ensure))
+  (terraform-mode-hook . 'eglot-ensure)
+  (swift-mode-hook . 'eglot-ensure))
 
 ;; Whitespace
 (use-package whitespace
