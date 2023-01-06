@@ -164,11 +164,11 @@
 ;; -----------------------------------------------------------------------------
 
 (straight-use-package '(eat :host codeberg
-                                   :repo "akib/emacs-eat"
-                                   :branch "master"
-                                   :defer 1
-                                   :hook
-                                   (eshell-load-hook . eat-eshell-mode)))
+                            :repo "akib/emacs-eat"
+                            :branch "master"
+                            :defer 1
+                            :hook
+                            (eshell-load-hook . eat-eshell-mode)))
 
 ;; -----------------------------------------------------------------------------
 ;; GUI
@@ -216,7 +216,7 @@
                    (nth 2))))
     (if (or (> hour 18) (< hour 5))
         'modus-vivendi
-        'modus-operandi)))
+      'modus-operandi)))
 
 (defun my/load-theme-by-current-time ()
   "Load the right theme based on the current time."
@@ -266,6 +266,8 @@
 ;; Font
 (set-frame-font "JetBrains Mono 12" nil t)
 
+(load "~/.config/emacs/ligatures.el")
+
 (use-package ligature
   :config
   ;; Enable the "www" ligature in every possible major mode
@@ -274,7 +276,7 @@
   ;; `variable-pitch' face supports it
   (ligature-set-ligatures 'eww-mode '("ff" "fi" "ffi"))
   ;; Enable all Cascadia Code ligatures in programming modes
-  (ligature-set-ligatures 'prog-mode '("|||>" "<|||" "<==>" "<!--" "####" "~~>" "***" "||=" "||>" ":::" "::=" "=:=" "===" "==>" "=!=" "=>>" "=<<" "=/=" "!==" "!!." ">=>" ">>=" ">>>" ">>-" ">->" "->>" "-->" "---" "-<<" "<~~" "<~>" "<*>" "<||" "<|>" "<$>" "<==" "<=>" "<=<" "<->" "<--" "<-<" "<<=" "<<-" "<<<" "<+>" "</>" "###" "#_(" "..<" "..." "+++" "/==" "///" "_|_" "www" "&&" "^=" "~~" "~@" "~=" "~>" "~-" "**" "*>" "*/" "||" "|=" "|>" "|-" "]#" "::" ":=" ":>" ":<" "$>" "==" "=>" "!=" "!!" ">:" ">=" ">>" ">-" "-~" "-|" "->" "--" "-<" "<~" "<*" "<|" "<:" "<$" "<=" "<>" "<-" "<<" "<+" "</" "#{" "#[" "#:" "#=" "#!" "##" "#(" "#?" "#_" "%%" ".=" ".-" ".." ".?" "+>" "++" "?:" "?=" "?." "??" ")]}})));;" "/*" "/=" "/>" "//" "__" "~~" "(*" "*)" "\\\\" "://"))
+  (ligature-set-ligatures 'prog-mode jetbrains-ligature-mode--ligatures)
   ;; Enables ligature checks globally in all buffers. You can also do it
   ;; per mode with `ligature-mode'.
   (global-ligature-mode t))
@@ -421,48 +423,48 @@
   ;; See: https://github.com/neovim/nvim-lspconfig/tree/89a19315ef4064a144b3d7d1c9a7eefd0e91e51b/lua/lspconfig/server_configurations
   :config
   (add-to-list 'eglot-server-programs
-              `(toml-mode "taplo" "lsp" "stdio"))
+               `(toml-mode "taplo" "lsp" "stdio"))
   (add-to-list 'eglot-server-programs
-              `(elixir-mode "elixir-ls"))
+               `(elixir-mode "elixir-ls"))
   (add-to-list 'eglot-server-programs
-              `(xml-mode "lemminx"))
+               `(xml-mode "lemminx"))
   (add-to-list 'eglot-server-programs
-              `(go-mode "gopls"))
+               `(go-mode "gopls"))
   (add-to-list 'eglot-server-programs
-              `(bash-mode "bash-language-server" "start"))
+               `(bash-mode "bash-language-server" "start"))
   (add-to-list 'eglot-server-programs
-              `(clojure-mode "clojure-lsp"))
+               `(clojure-mode "clojure-lsp"))
   (add-to-list 'eglot-server-programs
-              `(latex-mode "ltex-ls"))
+               `(latex-mode "ltex-ls"))
   (add-to-list 'eglot-server-programs
-              `(lua-mode "lua-language-server"))
+               `(lua-mode "lua-language-server"))
   (add-to-list 'eglot-server-programs
-              `(markdown-mode "prosemd-lsp" "--stdio"))
+               `(markdown-mode "prosemd-lsp" "--stdio"))
   (add-to-list 'eglot-server-programs
-              `(python-mode "pylsp"))
+               `(python-mode "pylsp"))
   (add-to-list 'eglot-server-programs
-              `(rust-mode "rust-analyzer"))
+               `(rust-mode "rust-analyzer"))
   ;; And/Or Sorbet for Ruby?
   (add-to-list 'eglot-server-programs
-              `(ruby-mode "solargraph" "stdio"))
+               `(ruby-mode "solargraph" "stdio"))
   (add-to-list 'eglot-server-programs
-              `(sql-mode "sqls"))
+               `(sql-mode "sqls"))
   (add-to-list 'eglot-server-programs
-              `(typescript-mode "typescript-language-server" "--stdio"))
+               `(typescript-mode "typescript-language-server" "--stdio"))
   (add-to-list 'eglot-server-programs
-              `(html-mode "vscode-html-language-server" "--stdio"))
+               `(html-mode "vscode-html-language-server" "--stdio"))
   (add-to-list 'eglot-server-programs
-              `(web-mode "vscode-html-language-server" "--stdio"))
+               `(web-mode "vscode-html-language-server" "--stdio"))
   (add-to-list 'eglot-server-programs
-              `(css-mode "vscode-cs-language-server" "--stdio"))
+               `(css-mode "vscode-cs-language-server" "--stdio"))
   (add-to-list 'eglot-server-programs
-              `(json-mode "vscode-json-language-server" "--stdio"))
+               `(json-mode "vscode-json-language-server" "--stdio"))
   (add-to-list 'eglot-server-programs
-              `(yaml-mode "yaml-language-server" "--stdio"))
+               `(yaml-mode "yaml-language-server" "--stdio"))
   (add-to-list 'eglot-server-programs
-              `(terraform-mode "terraform-ls" "serve"))
+               `(terraform-mode "terraform-ls" "serve"))
   (add-to-list 'eglot-server-programs
-              `(swift-mode "sourcekit-lsp"))
+               `(swift-mode "sourcekit-lsp"))
   :hook
   (toml-mode-hook . 'eglot-ensure)
   (elixir-mode-hook . 'eglot-ensure)
@@ -520,9 +522,9 @@
 (use-package embark
   :bind
   (("C-." . embark-act))         ;; pick some comfortable binding
-   ;; ("C-;" . embark-dwim))        ;; good alternative: M-.
-   ;; Disabled for now whilst I use C-h for window switching
-   ;; ("C-h B" . embark-bindings)) ;; alternative for `describe-bindings'
+  ;; ("C-;" . embark-dwim))        ;; good alternative: M-.
+  ;; Disabled for now whilst I use C-h for window switching
+  ;; ("C-h B" . embark-bindings)) ;; alternative for `describe-bindings'
 
   :init
 
@@ -546,38 +548,38 @@
 ;; https://github.com/oantolin/embark/wiki/Additional-Configuration#use-which-key-like-a-key-menu-prompt
 (defun embark-which-key-indicator ()
   "An embark indicator that displays keymaps using which-key.
-The which-key help message will show the type and value of the
-current target followed by an ellipsis if there are further
-targets."
+ The which-key help message will show the type and value of the
+ current target followed by an ellipsis if there are further
+ targets."
   (lambda (&optional keymap targets prefix)
     (if (null keymap)
         (which-key--hide-popup-ignore-command)
-        (which-key--show-keymap
-        (if (eq (plist-get (car targets) :type) 'embark-become)
-            "Become"
-        (format "Act on %s '%s'%s"
-                (plist-get (car targets) :type)
-                (embark--truncate-target (plist-get (car targets) :target))
-                (if (cdr targets) "…" "")))
-        (if prefix
-            (pcase (lookup-key keymap prefix 'accept-default)
-            ((and (pred keymapp) km) km)
-            (_ (key-binding prefix 'accept-default)))
-        keymap)
-        nil nil t (lambda (binding)
-                    (not (string-suffix-p "-argument" (cdr binding))))))))
+      (which-key--show-keymap
+       (if (eq (plist-get (car targets) :type) 'embark-become)
+           "Become"
+         (format "Act on %s '%s'%s"
+                 (plist-get (car targets) :type)
+                 (embark--truncate-target (plist-get (car targets) :target))
+                 (if (cdr targets) "…" "")))
+       (if prefix
+           (pcase (lookup-key keymap prefix 'accept-default)
+             ((and (pred keymapp) km) km)
+             (_ (key-binding prefix 'accept-default)))
+         keymap)
+       nil nil t (lambda (binding)
+                   (not (string-suffix-p "-argument" (cdr binding))))))))
 
 (setq embark-indicators
-  '(embark-which-key-indicator
-    embark-highlight-indicator
-    embark-isearch-highlight-indicator))
+      '(embark-which-key-indicator
+        embark-highlight-indicator
+        embark-isearch-highlight-indicator))
 
 (defun embark-hide-which-key-indicator (fn &rest args)
   "Hide the which-key indicator immediately when using the completing-read prompter."
   (which-key--hide-popup-ignore-command)
   (let ((embark-indicators
          (remq #'embark-which-key-indicator embark-indicators)))
-      (apply fn args)))
+    (apply fn args)))
 
 (advice-add #'embark-completing-read-prompter
             :around #'embark-hide-which-key-indicator)
@@ -721,7 +723,7 @@ targets."
     (if (string= output "")
         (message "No alternate file found")
       (if (y-or-n-p (format "Found alternate file %s. Open?" output))
-       (find-file output (message "Not opening"))))))
+          (find-file output (message "Not opening"))))))
 
 ;; Languages
 
@@ -880,7 +882,7 @@ targets."
 (use-package eldoc
   :diminish eldoc-mode
   :hook (emacs-lisp-mode . turn-on-eldoc-mode)
-        (lisp-interaction-mode . turn-on-eldoc-mode))
+  (lisp-interaction-mode . turn-on-eldoc-mode))
 (use-package elsa
   :defer 1)
 (use-package flycheck-elsa
@@ -889,7 +891,7 @@ targets."
   :hook
   (emacs-lisp-mode . flycheck-elsa-setup))
 
- ;; Syntax
+;; Syntax
 (use-package flycheck
   :init (global-flycheck-mode))
 
@@ -897,15 +899,15 @@ targets."
 (use-package format-all
   :commands
   (format-all-buffer format-all-region format-all-mode))
-  ; Disabled for now whilst using apheleia
-  ;; :init)
-  ; Auto-format code on save
-  ;; (add-hook 'elixir-mode-hook 'format-all-mode)
-  ;; (add-hook 'rust-mode-hook 'format-all-mode)
-  ;; (add-hook 'python-mode-hook 'format-all-mode)
-  ;; (add-hook 'lua-mode-hook 'format-all-mode)
-  ;; (add-hook 'go-mode-hook 'format-all-mode)
-  ;; (add-hook 'clojure-mode-hook 'format-all-mode))
+                                        ; Disabled for now whilst using apheleia
+;; :init)
+                                        ; Auto-format code on save
+;; (add-hook 'elixir-mode-hook 'format-all-mode)
+;; (add-hook 'rust-mode-hook 'format-all-mode)
+;; (add-hook 'python-mode-hook 'format-all-mode)
+;; (add-hook 'lua-mode-hook 'format-all-mode)
+;; (add-hook 'go-mode-hook 'format-all-mode)
+;; (add-hook 'clojure-mode-hook 'format-all-mode))
 
 (use-package apheleia
   :hook
@@ -946,10 +948,10 @@ targets."
   (add-hook 'prog-mode-hook 'tempel-setup-capf)
   (add-hook 'text-mode-hook 'tempel-setup-capf))
 
-  ;; Optionally make the Tempel templates available to Abbrev,
-  ;; either locally or globally. `expand-abbrev' is bound to C-x '.
-  ;; (add-hook 'prog-mode-hook #'tempel-abbrev-mode)
-  ;; (global-tempel-abbrev-mode)
+;; Optionally make the Tempel templates available to Abbrev,
+;; either locally or globally. `expand-abbrev' is bound to C-x '.
+;; (add-hook 'prog-mode-hook #'tempel-abbrev-mode)
+;; (global-tempel-abbrev-mode)
 
 
 ;; Optional: Add tempel-collection.
@@ -1066,9 +1068,9 @@ targets."
   (autoload 'projectile-project-root "projectile")
   (setq consult-project-function (lambda (_) (projectile-project-root))))
   ;;;; 3. vc.el (vc-root-dir)
-  ;; (setq consult-project-function (lambda (_) (vc-root-dir)))
+;; (setq consult-project-function (lambda (_) (vc-root-dir)))
   ;;;; 4. locate-dominating-file
-  ;; (setq consult-project-function (lambda (_) (locate-dominating-file "." ".git")))
+;; (setq consult-project-function (lambda (_) (locate-dominating-file "." ".git")))
 
 (use-package consult-flycheck
   :after consult
@@ -1082,8 +1084,8 @@ targets."
 (use-package marginalia
   ;; Either bind `marginalia-cycle' globally or only in the minibuffer
   :bind (("M-A" . marginalia-cycle))
-         ;; :map minibuffer-local-map)
-         ;; ("M-A" . marginalia-cycle))
+  ;; :map minibuffer-local-map)
+  ;; ("M-A" . marginalia-cycle))
 
   ;; The :init configuration is always executed (Not lazy!)
   :init
@@ -1351,24 +1353,24 @@ targets."
 ;; -----------------------------------------------------------------------------
 
 (use-package projectile
- :custom
- (projectile-switch-project-action 'projectile-commander)
- (projectile-sort-order 'recently-active)
- (projectile-project-search-path '("~/Documents/projects/" ("~/src/" . 3)))
- (projectile-auto-discover nil)
- :config
- (projectile-mode +1)
- ;; Recommended keymap prefix on macOS
- (define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
- ;; Custom project types
- (projectile-register-project-type
+  :custom
+  (projectile-switch-project-action 'projectile-commander)
+  (projectile-sort-order 'recently-active)
+  (projectile-project-search-path '("~/Documents/projects/" ("~/src/" . 3)))
+  (projectile-auto-discover nil)
+  :config
+  (projectile-mode +1)
+  ;; Recommended keymap prefix on macOS
+  (define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
+  ;; Custom project types
+  (projectile-register-project-type
    'zola
    '("config.toml" "content" "static" "templates" "themes")
    :project-file "config.toml"
    :compile "zola build"
    :test "zola check"
    :run "zola server")
- (projectile-register-project-type
+  (projectile-register-project-type
    'zig
    '("build.zig")
    :project-file "build.zig"
