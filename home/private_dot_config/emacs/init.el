@@ -452,6 +452,12 @@
   (add-to-list 'eglot-server-programs
                `(typescript-mode "typescript-language-server" "--stdio"))
   (add-to-list 'eglot-server-programs
+               `(typescript-ts-mode "typescript-language-server" "--stdio"))
+  (add-to-list 'eglot-server-programs
+               `(tsx-mode "typescript-language-server" "--stdio"))
+  (add-to-list 'eglot-server-programs
+               `(tsx-ts-mode "typescript-language-server" "--stdio"))
+  (add-to-list 'eglot-server-programs
                `(html-mode "vscode-html-language-server" "--stdio"))
   (add-to-list 'eglot-server-programs
                `(web-mode "vscode-html-language-server" "--stdio"))
@@ -480,6 +486,9 @@
   (ruby-mode-hook . 'eglot-ensure)
   (sql-mode-hook . 'eglot-ensure)
   (typescript-mode-hook . 'eglot-ensure)
+  (typescript-ts-mode-hook . 'eglot-ensure)
+  (tsx-mode-hook . 'eglot-ensure)
+  (tsx-ts-mode-hook . 'eglot-ensure)
   (html-mode-hook . 'eglot-ensure)
   (web-mode-hook . 'eglot-ensure)
   (css-mode-hook . 'eglot-ensure)
@@ -867,6 +876,13 @@
 
 ;; Typescript
 (use-package typescript-mode)
+(use-package tsx-mode
+  :straight (:type git :host github :repo "jesse-c/tsx-mode.el" :branch "emacs29")
+  :after (eglot)
+  :requires eglot
+  :defer t
+  :init
+  (setq tsx-mode-use-lsp true))
 
 ;; Docker
 (use-package docker)
@@ -910,12 +926,19 @@
 ;; (add-hook 'clojure-mode-hook 'format-all-mode))
 
 (use-package apheleia
+  :config
+  (add-to-list 'apheleia-mode-alist
+               `(tsx-mode . prettier-typescript))
+  (add-to-list 'apheleia-mode-alist
+               `(tsx-ts-mode . prettier-typescript))
   :hook
   (elixir-mode . apheleia-mode)
   (swift-mode . apheleia-mode)
   (rust-mode . apheleia-mode)
   (javascript-mode . apheleia-mode)
-  (sass-mode . apheleia-mode))
+  (sass-mode . apheleia-mode)
+  (typescript-mode . apheleia-mode)
+  (tsx-mode . apheleia-mode))
 
 ;; Testing
 (use-package coverlay
@@ -1095,7 +1118,6 @@
   (marginalia-mode))
 
 (use-package orderless
-  :ensure t
   :custom
   (completion-styles '(orderless basic))
   (completion-category-overrides '((file (styles basic partial-completion))))
