@@ -1,4 +1,4 @@
-;;; early-init.el -*- lexical-binding: t; -*-
+;;; early-init.el --- Emacs early init -*- lexical-binding: t; -*-
 
 ;;; Code:
 
@@ -12,7 +12,7 @@
 
 (defvar my/gc-cons-threshold 16777216 ; 16mb
   "The default value to use for `gc-cons-threshold'. If you experience freezing,
-decrease this. If you experience stuttering, increase this.")
+ decrease this. If you experience stuttering, increase this.")
 
 (defvar my/gc-cons-upper-limit 536870912 ; 512mb
   "The temporary value for `gc-cons-threshold' to defer it.")
@@ -21,8 +21,7 @@ decrease this. If you experience stuttering, increase this.")
 (setq file-name-handler-alist nil)
 
 (defun my/restore-startup-optimizations ()
-  "Resets garbage collection settings to reasonable defaults (a large
-`gc-cons-threshold' can cause random freezes otherwise)."
+  "Resets garbage collection settings to reasonable defaults (a large `gc-cons-threshold' can cause random freezes otherwise)."
 
   ;; Do this on idle timer to defer a possible GC pause that could result; also
   ;; allows deferred packages to take advantage of these optimizations.
@@ -54,3 +53,7 @@ decrease this. If you experience stuttering, increase this.")
 (setq file-name-handler-alist nil)
 ;; Not restoring these to their defaults will cause stuttering/freezes.
 (add-hook 'after-init-hook #'my/restore-startup-optimizations)
+
+(provide 'early-init)
+
+;;; early-init.el ends here
