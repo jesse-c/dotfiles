@@ -40,6 +40,14 @@ matches:
     replace: "↔"
   - triggers: [":eq"]
     replace: "≡"
+  - triggers: [":gteq"]
+    replace: "≥"
+  - triggers: [":geq"]
+    replace: ">"
+  - triggers: [":lteq"]
+    replace: "≤"
+  - triggers: [":leq"]
+    replace: "<"
   - triggers: [":true", ":top"]
     replace: "⊤"
   - triggers: [":false", ":bot"]
@@ -57,6 +65,8 @@ matches:
     replace: "⊆"
   - trigger: ":infinity"
     replace: "∞"
+  - trigger: ":cartesian"
+    replace: "×"
 
   # https://hub.espanso.org/mac-symbols
   - trigger: ":cmd"
