@@ -163,12 +163,14 @@
 ;; Terminal
 ;; -----------------------------------------------------------------------------
 
-(straight-use-package '(eat :host codeberg
-                            :repo "akib/emacs-eat"
-                            :branch "master"
-                            :defer 1
-                            :hook
-                            (eshell-load-hook . eat-eshell-mode)))
+(use-package eat
+  :straight (:type git
+                   :host codeberg
+                   :repo "akib/emacs-eat"
+                   :branch "master")
+  :defer 1
+  :hook
+  (eshell-load-hook . eat-eshell-mode))
 
 ;; -----------------------------------------------------------------------------
 ;; GUI
@@ -764,9 +766,11 @@
 
 ;; Elixir
 (use-package elixir-mode)
-(straight-use-package '(apprentice :host github
-                                   :repo "Sasanidas/Apprentice"
-                                   :branch "master"))
+(use-package apprentice
+  :straight (:type git
+                   :host github
+                   :repo "Sasanidas/Apprentice"
+                   :branch "master"))
 (use-package mix
   :hook
   (elixir-mode-hook . mix-minor-mode))
