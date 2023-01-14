@@ -18,6 +18,8 @@ export CLICOLOR=1
 
 # Applications -----------------------------------------------------------------
 
+fish_add_path ~/.local/bin
+
 # Git
 alias g='git'
 alias gsw='git checkout (git branch | fzf | cut -c 3-)'
