@@ -37,6 +37,7 @@ hs.fnutils.each({
   { key = 't', appname = 'TablePlus'},
   { key = 'y', appname = '/Applications/Orion.app'},
   { key = 'e', appname = 'Minimalist'},
+  { key = 'x', appname = 'Xcode'},
 }, function(object)
   k:bind({}, object.key, function() launch(object.appname); k:exit(); end)
 end)
