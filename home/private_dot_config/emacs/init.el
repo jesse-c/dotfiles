@@ -418,6 +418,11 @@
 ;; Tree-sitter
 (require 'treesit)
 
+(use-package treesit-auto
+  :config
+  (setq treesit-auto-install 'prompt)
+  (global-treesit-auto-mode))
+
 ;; LSP
 (use-package eglot
   ;; It's built-in, so don't load it from an external source
@@ -521,6 +526,17 @@
   ;; any key that calls Puni commands, it's loaded.
   (puni-global-mode)
   (add-hook 'term-mode-hook #'puni-disable-puni-mode))
+
+(use-package combobulate
+  :straight (:type git :host github :repo "mickeynp/combobulate" :branch "master")
+  :defer t
+  :hook
+  (python-ts-mode . combobulate-mode)
+  (js-ts-mode . combobulate-mode)
+  (css-ts-mode . combobulate-mode)
+  (yaml-ts-mode . combobulate-mode)
+  (typescript-ts-mode . combobulate-mode)
+  (tsx-ts-mode . combobulate-mode))
 
 (use-package parinfer-rust-mode
   :diminish
@@ -1239,6 +1255,8 @@
   (recentf-mode t))
 
 (save-place-mode 1)
+
+(setq dired-kill-when-opening-new-dired-buffer t)
 
 (use-package treemacs
   :defer t
