@@ -25,38 +25,47 @@
 (setq package-archives '(("melpa" . "http://melpa.org/packages/")
                          ("gnu" . "http://elpa.gnu.org/packages/")))
 
-(defvar bootstrap-version)
-(let ((bootstrap-file
-       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
-      (bootstrap-version 6))
-  (unless (file-exists-p bootstrap-file)
-    (with-current-buffer
-        (url-retrieve-synchronously
-         "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
-         'silent 'inhibit-cookies)
-      (goto-char (point-max))
-      (eval-print-last-sexp)))
-  (load bootstrap-file nil 'nomessage))
+(defvar elpaca-directory (expand-file-name "elpaca/" user-emacs-directory))
+(defvar elpaca-builds-directory (expand-file-name "builds/" elpaca-directory))
+(defvar elpaca-order '(elpaca :repo "https://github.com/progfolio/elpaca.git"
+                              :ref nil
+                              :files (:defaults (:exclude "extensions"))
+                              :build (:not elpaca--activate-package)))
+(when-let ((repo  (expand-file-name "repos/elpaca/" elpaca-directory))
+           (build (expand-file-name "elpaca/" elpaca-builds-directory))
+           (order (cdr elpaca-order))
+           ((add-to-list 'load-path (if (file-exists-p build) build repo)))
+           ((not (file-exists-p repo))))
+  (condition-case-unless-debug err
+      (if-let ((buffer (pop-to-buffer-same-window "*elpaca-bootstrap*"))
+               ((zerop (call-process "git" nil buffer t "clone"
+                                     (plist-get order :repo) repo)))
+               (default-directory repo)
+               ((zerop (call-process "git" nil buffer t "checkout"
+                                     (or (plist-get order :ref) "--")))))
+          (progn
+            (byte-recompile-directory repo 0 'force)
+            (require 'elpaca)
+            (and (fboundp 'elpaca-generate-autoloads)
+                 (elpaca-generate-autoloads "elpaca" repo))
+            (kill-buffer buffer))
+        (error "%s" (with-current-buffer buffer (buffer-string))))
+    ((error)
+     (warn "%s" err)
+     (delete-directory repo 'recursive))))
+(require 'elpaca-autoloads)
+(add-hook 'after-init-hook #'elpaca-process-queues)
+(elpaca `(,@elpaca-order))
 
-;; Effectively replace use-package with straight-use-package
-;; https://github.com/raxod502/straight.el/blob/develop/README.md#integration-with-use-package
-(straight-use-package 'use-package)
-(setq straight-use-package-by-default t)
-(setq use-package-always-ensure t)
+;; Install use-package support
+(elpaca elpaca-use-package
+  ;; Enable :elpaca use-package keyword.
+  (elpaca-use-package-mode)
+  ;; Assume :elpaca t unless otherwise specified.
+  (setq elpaca-use-package-by-default t))
 
-(use-package emacs
-  :init
-  ;; TAB cycle if there are only few candidates
-  (setq completion-cycle-threshold 3)
-
-  ;; Emacs 28: Hide commands in M-x which do not apply to the current mode.
-  ;; Corfu commands are hidden, since they are not supposed to be used via M-x.
-  ;; (setq read-extended-command-predicate
-  ;;       #'command-completion-default-include-p)
-
-  ;; Enable indentation+completion using the TAB key.
-  ;; `completion-at-point' is often bound to M-TAB.
-  (setq tab-always-indent 'complete))
+;; Block until current queue processed.
+(elpaca-wait)
 
 ;; -----------------------------------------------------------------------------
 ;; Org
@@ -111,19 +120,6 @@
 (use-package chezmoi
   :defer 1)
 
-(setq straight-versions-path "straight/versions/default.el")
-
-(defun my/straight-versions-path ()
-  "Return the path of where straight.el's versions file is."
-  (-> user-init-file
-      (file-name-directory)
-      (file-name-concat straight-versions-path)))
-
-(defun my/chezmoi-copy-package-freeze ()
-  "Copy straight.el's versions file into Chezmoi."
-  (interactive)
-  (copy-file (my/straight-versions-path) (file-name-concat "~/.local/share/chezmoi/home/private_dot_config/emacs" straight-versions-path t)))
-
 ;; macOS
 
 (when (memq window-system '(mac ns))
@@ -136,11 +132,11 @@
 (setq use-dialog-box nil)
 
 ;; Ensure PATH is correct when launched as GUI application
-(use-package exec-path-from-shell)
-
-(when (memq window-system '(mac ns))
-  (require 'exec-path-from-shell)
-  (exec-path-from-shell-initialize))
+(use-package exec-path-from-shell
+  :config
+  (when (memq window-system '(mac ns))
+    (require 'exec-path-from-shell)
+    (exec-path-from-shell-initialize)))
 
 (when (memq window-system '(mac ns))
   (setq dired-use-ls-dired nil))
@@ -156,21 +152,27 @@
 
 ;; All
 
+(setq confirm-kill-emacs nil)
+(setq confirm-kill-processes nil)
+
 ;; Tidy up .emacs.d mess
-(use-package no-littering)
+(use-package no-littering
+  :config
+  ;;; Minibuffer
+  (savehist-mode))
 
 ;; -----------------------------------------------------------------------------
 ;; Terminal
 ;; -----------------------------------------------------------------------------
 
-(use-package eat
-  :straight (:type git
-                   :host codeberg
-                   :repo "akib/emacs-eat"
-                   :branch "master")
-  :defer 1
-  :hook
-  (eshell-load-hook . eat-eshell-mode))
+;; (elpaca
+;;     (eat
+;;      :host "codeberg.org"
+;;      :repo "akib/emacs-eat.git"
+;;      :protocol ssh
+;;      :branch "master"
+;;      :hook
+;;      (eshell-load-hook . eat-eshell-mode)))
 
 ;; -----------------------------------------------------------------------------
 ;; GUI
@@ -178,10 +180,7 @@
 
 (fset 'yes-or-no-p 'y-or-n-p)
 
-(use-package browse-url
-  :defer 1
-  :bind
-  ("<s-mouse-1>" . browse-url-at-mouse))
+(global-set-key (kbd "<s-mouse-1>") 'browse-url-at-mouse)
 
 ;; Setting default coding system
 ;; https://github.com/shfx/emacs.d/blob/8715ced2c49ba2f693ad965f2c0b4c1b44c829c8/README.org#setting-default-coding-system
@@ -317,8 +316,6 @@
   :after all-the-icons
   :init (doom-modeline-mode 1))
 
-(use-package all-the-icons)
-
 ;; Windows
 (global-set-key (kbd "C-h") 'windmove-left) ; Use F1 instead of C-h for help-command
 (global-set-key (kbd "C-l") 'windmove-right)
@@ -368,13 +365,6 @@
 (use-package which-key
   :diminish
   :init (which-key-mode))
-
-;;; Minibuffer
-(use-package savehist
-  :defer 1
-  :after no-littering
-  :init
-  (savehist-mode))
 
 ;; Indentation
 (use-package indent-guide
@@ -505,11 +495,8 @@
   (swift-mode-hook . 'eglot-ensure))
 
 ;; Whitespace
-(use-package whitespace
-  :hook
-  (before-save-hook . delete-trailing-whitespace) ; Delete trailing spaces
-  :config
-  (setq require-final-newline t)) ; Add new line in the end of a file on save.
+(setq-default require-final-newline t) ; Add new line in the end of a file on save.
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
 
 ;; Pretty parens
 (use-package rainbow-delimiters
@@ -527,16 +514,19 @@
   (puni-global-mode)
   (add-hook 'term-mode-hook #'puni-disable-puni-mode))
 
-(use-package combobulate
-  :straight (:type git :host github :repo "mickeynp/combobulate" :branch "master")
-  :defer t
-  :hook
-  (python-ts-mode . combobulate-mode)
-  (js-ts-mode . combobulate-mode)
-  (css-ts-mode . combobulate-mode)
-  (yaml-ts-mode . combobulate-mode)
-  (typescript-ts-mode . combobulate-mode)
-  (tsx-ts-mode . combobulate-mode))
+(elpaca
+    (combobulate
+     :host github
+     :repo "mickeynp/combobulate"
+     :branch "master"
+     :defer t
+     :hook
+     (python-ts-mode . combobulate-mode)
+     (js-ts-mode . combobulate-mode)
+     (css-ts-mode . combobulate-mode)
+     (yaml-ts-mode . combobulate-mode)
+     (typescript-ts-mode . combobulate-mode)
+     (tsx-ts-mode . combobulate-mode)))
 
 (use-package parinfer-rust-mode
   :diminish
@@ -659,8 +649,7 @@
   (add-to-list 'flycheck-checkers 'mail-aspell-dynamic))
 
 ;; Popup window for spellchecking
-(use-package flyspell
-  :diminish)
+(require 'flyspell)
 (use-package flyspell-correct
   :after flyspell)
 (use-package flyspell-correct-popup
@@ -721,9 +710,8 @@
   :config
   (evil-mode 1)
   (global-unset-key (kbd "C-u"))
-  (global-set-key (kbd "C-u") 'evil-scroll-up))
-
-(evil-set-undo-system 'undo-tree)
+  (global-set-key (kbd "C-u") 'evil-scroll-up)
+  (evil-set-undo-system 'undo-tree))
 
 (use-package evil-visual-mark-mode
   :after evil
@@ -782,11 +770,11 @@
 
 ;; Elixir
 (use-package elixir-mode)
-(use-package apprentice
-  :straight (:type git
-                   :host github
-                   :repo "Sasanidas/Apprentice"
-                   :branch "master"))
+(elpaca
+    (apprentice
+     :host github
+     :repo "Sasanidas/Apprentice"
+     :branch "master"))
 (use-package mix
   :hook
   (elixir-mode-hook . mix-minor-mode))
@@ -838,9 +826,6 @@
 
 ;; YAML
 (use-package yaml-mode)
-
-;; Ruby
-(use-package ruby-mode)
 
 ;; HCL
 (use-package hcl-mode)
@@ -896,13 +881,11 @@
 
 ;; Typescript
 (use-package typescript-mode)
-(use-package tsx-mode
-  :straight (:type git :host github :repo "jesse-c/tsx-mode.el" :branch "emacs29")
-  :after (eglot)
-  :requires eglot
-  :defer t
-  :init
-  (setq tsx-mode-use-lsp true))
+;; (elpaca
+;;     (tsx-mode
+;;      :host github
+;;      :repo "orzechowskid/tsx-mode.el"
+;;      :branch "emacs29"))
 
 ;; Docker
 (use-package docker)
@@ -919,13 +902,13 @@
   :diminish eldoc-mode
   :hook (emacs-lisp-mode . turn-on-eldoc-mode)
   (lisp-interaction-mode . turn-on-eldoc-mode))
-(use-package elsa
-  :defer 1)
-(use-package flycheck-elsa
-  :after (elsa flycheck)
-  :defer 1
-  :hook
-  (emacs-lisp-mode . flycheck-elsa-setup))
+;; (use-package elsa
+;;   :defer 1)
+;; (use-package flycheck-elsa
+;;   :after (elsa flycheck)
+;;   :defer 1
+;;   :hook
+;;   (emacs-lisp-mode . flycheck-elsa-setup))
 
 ;; Syntax
 (use-package flycheck
@@ -1143,41 +1126,36 @@
   (completion-category-overrides '((file (styles basic partial-completion))))
   (completion-category-overrides '((eglot (styles orderless)))))
 
-(use-package corfu
-  ;; https://github.com/purplg/dotfiles/blob/04c5217247a738adef11d9bf569a329c7eebae4a/.config/emacs/modules/pg-completion.el
-  :straight (:files (:defaults "extensions/corfu-popupinfo.el"))
-  ;; Optional customizations
-  :custom
-  (corfu-cycle t)                ;; Enable cycling for `corfu-next/previous'
-  (corfu-auto t)                 ;; Enable auto completion
-  (corfu-auto-delay 0.2)
-  (corfu-popupinfo-delay 0.4)
-  (corfu-separator ?\s)          ;; Orderless field separator
-  (corfu-quit-at-boundary nil)   ;; Never quit at completion boundary
-  (corfu-quit-no-match 'separator)      ;; Never quit, even if there is no match
-  (corfu-scroll-margin 5)        ;; Use scroll margin
-
-  :hook
-  (corfu-mode . corfu-popupinfo-mode)
-  ;; Enable Corfu only for certain modes.
-  ;; :hook ((prog-mode . corfu-mode)
-  ;;        (shell-mode . corfu-mode)
-  ;;        (eshell-mode . corfu-mode))
-
-  ;; Recommended: Enable Corfu globally.
-  ;; This is recommended since Dabbrev can be used globally (M-/).
-  ;; See also `corfu-excluded-modes'.
-  :init
-  (global-corfu-mode)
-  :bind
-  (:map corfu-map
-        ("M-n" . corfu-popupinfo-scroll-up)
-        ("M-p" . corfu-popupinfo-scroll-down)
-        ("M-a" . corfu-popupinfo-beginning)
-        ("M-e" . corfu-popupinfo-end)
-        ("M-l" . corfu-popupinfo-location)
-        ("M-d" . corfu-popupinfo-documentation)
-        ("M-t" . corfu-popupinfo-toggle)))
+(elpaca
+    (corfu
+     ;; https://github.com/purplg/dotfiles/blob/04c5217247a738adef11d9bf569a329c7eebae4a/.config/emacs/modules/pg-completion.el
+     :files (:defaults "extensions/corfu-popupinfo.el")
+     ;; Optional customizations
+     :custom
+     (corfu-cycle t)                ;; Enable cycling for `corfu-next/previous'
+     (corfu-auto t)                 ;; Enable auto completion
+     (corfu-auto-delay 0.2)
+     (corfu-popupinfo-delay 0.4)
+     (corfu-separator ?\s)          ;; Orderless field separator
+     (corfu-quit-at-boundary nil)   ;; Never quit at completion boundary
+     (corfu-quit-no-match 'separator)      ;; Never quit, even if there is no match
+     (corfu-scroll-margin 5)        ;; Use scroll margin
+     :hook
+     (corfu-mode . corfu-popupinfo-mode)
+     ;; Recommended: Enable Corfu globally.
+     ;; This is recommended since Dabbrev can be used globally (M-/).
+     ;; See also `corfu-excluded-modes'.
+     :init
+     (global-corfu-mode)
+     :bind
+     (:map corfu-map
+           ("M-n" . corfu-popupinfo-scroll-up)
+           ("M-p" . corfu-popupinfo-scroll-down)
+           ("M-a" . corfu-popupinfo-beginning)
+           ("M-e" . corfu-popupinfo-end)
+           ("M-l" . corfu-popupinfo-location)
+           ("M-d" . corfu-popupinfo-documentation)
+           ("M-t" . corfu-popupinfo-toggle))))
 
 (use-package cape
   ;; Bind dedicated completion commands
@@ -1249,10 +1227,7 @@
   (interactive)
   (kill-new (file-relative-name buffer-file-name (project-root))))
 
-(use-package recentf
-  :defer 1
-  :config
-  (recentf-mode t))
+(recentf-mode 1)
 
 (save-place-mode 1)
 
@@ -1421,10 +1396,13 @@
    :compile "zig build"
    :run "zig build run"))
 
-(use-package consult-projectile
-  :straight (consult-projectile :type git :host gitlab :repo "OlMon/consult-projectile" :branch "master")
-  :custom
-  (consult-projectile-source-projectile-project-action 'projectile-commander))
+(elpaca
+    (consult-projectile
+     :host gitlab
+     :repo "OlMon/consult-projectile"
+     :branch "master"
+     :custom
+     (consult-projectile-source-projectile-project-action 'projectile-commander)))
 
 (use-package flycheck-projectile
   :defer t
