@@ -57,39 +57,23 @@
 (add-hook 'after-init-hook #'elpaca-process-queues)
 (elpaca `(,@elpaca-order))
 
-;; Install use-package support
-(elpaca elpaca-use-package
-  ;; Enable :elpaca use-package keyword.
-  (elpaca-use-package-mode)
-  ;; Assume :elpaca t unless otherwise specified.
-  (setq elpaca-use-package-by-default t))
-
 ;; Block until current queue processed.
 (elpaca-wait)
-
-;; -----------------------------------------------------------------------------
-;; Org
-;; -----------------------------------------------------------------------------
-
-(use-package org)
-(use-package org-contrib)
-(use-package org-journal)
 
 ;; -----------------------------------------------------------------------------
 ;; Common
 ;; -----------------------------------------------------------------------------
 
-(use-package ht)
-(use-package dash)
-(use-package loop)
-(use-package s)
-(use-package crux)
-(use-package request)
-(use-package restclient)
-(use-package async
-  :commands (async-start))
-(use-package load-relative)
-(use-package f)
+(elpaca ht)
+(elpaca dash (require 'dash))
+(elpaca loop)
+(elpaca s)
+(elpaca crux)
+(elpaca request)
+(elpaca restclient)
+(elpaca async)
+(elpaca load-relative)
+(elpaca f)
 
 ;; -----------------------------------------------------------------------------
 ;; Server
@@ -117,8 +101,7 @@
 ;; https://github.com/shfx/emacs.d/blob/8715ced2c49ba2f693ad965f2c0b4c1b44c829c8/README.org#disabling-suspend-frame-binding
 (global-unset-key (kbd "C-z"))
 
-(use-package chezmoi
-  :defer 1)
+(elpaca chezmoi)
 
 ;; macOS
 
@@ -132,11 +115,11 @@
 (setq use-dialog-box nil)
 
 ;; Ensure PATH is correct when launched as GUI application
-(use-package exec-path-from-shell
-  :config
-  (when (memq window-system '(mac ns))
-    (require 'exec-path-from-shell)
-    (exec-path-from-shell-initialize)))
+(elpaca
+  exec-path-from-shell
+    (when (memq window-system '(mac ns))
+      (require 'exec-path-from-shell)
+      (exec-path-from-shell-initialize)))
 
 (when (memq window-system '(mac ns))
   (setq dired-use-ls-dired nil))
@@ -156,23 +139,8 @@
 (setq confirm-kill-processes nil)
 
 ;; Tidy up .emacs.d mess
-(use-package no-littering
-  :config
-  ;;; Minibuffer
-  (savehist-mode))
-
-;; -----------------------------------------------------------------------------
-;; Terminal
-;; -----------------------------------------------------------------------------
-
-;; (elpaca
-;;     (eat
-;;      :host "codeberg.org"
-;;      :repo "akib/emacs-eat.git"
-;;      :protocol ssh
-;;      :branch "master"
-;;      :hook
-;;      (eshell-load-hook . eat-eshell-mode)))
+(elpaca no-littering)
+(savehist-mode)
 
 ;; -----------------------------------------------------------------------------
 ;; GUI
@@ -237,19 +205,16 @@
   (my/disable-all-themes)
   (load-theme theme))
 
-(use-package spacemacs-theme
-  :defer t ; Don't load it immediately
-  :init
-  (my/load-theme-by-current-time))
+(elpaca spacemacs-theme)
+  ;; (my/load-theme-by-current-time))
 
-(use-package modus-themes
-  :defer t
-  :custom
-  (modus-operandi-theme-faint-syntax t)
-  (modus-vivendi-theme-faint-syntax t))
+(elpaca
+  modus-themes
+    (setq modus-operandi-theme-faint-syntax t)
+    (setq modus-vivendi-theme-faint-syntax t)
+    (my/load-theme-by-current-time))
 
-(use-package doom-themes
-  :defer t) ; Don't load it immediately
+(elpaca doom-themes)
 
 ;; Disabled as AppearanceNotifier is used
 ;; (run-with-timer 0 (* 5 60) 'my/load-theme-by-current-time)
@@ -269,18 +234,18 @@
 
 (load "~/.config/emacs/ligatures.el")
 
-(use-package ligature
-  :config
-  ;; Enable the "www" ligature in every possible major mode
-  (ligature-set-ligatures 't '("www"))
-  ;; Enable traditional ligature support in eww-mode, if the
-  ;; `variable-pitch' face supports it
-  (ligature-set-ligatures 'eww-mode '("ff" "fi" "ffi"))
-  ;; Enable all Cascadia Code ligatures in programming modes
-  (ligature-set-ligatures 'prog-mode jetbrains-ligature-mode--ligatures)
-  ;; Enables ligature checks globally in all buffers. You can also do it
-  ;; per mode with `ligature-mode'.
-  (global-ligature-mode t))
+(elpaca
+  (ligature
+    ;; Enable the "www" ligature in every possible major mode
+    (ligature-set-ligatures 't '("www"))
+    ;; Enable traditional ligature support in eww-mode, if the
+    ;; `variable-pitch' face supports it
+    (ligature-set-ligatures 'eww-mode '("ff" "fi" "ffi"))
+    ;; Enable all Cascadia Code ligatures in programming modes
+    (ligature-set-ligatures 'prog-mode jetbrains-ligature-mode--ligatures)
+    ;; Enables ligature checks globally in all buffers. You can also do it
+    ;; per mode with `ligature-mode'.
+    (global-ligature-mode t)))
 
 ;; Default frame size
 (add-to-list 'default-frame-alist '(height . 100))
@@ -312,9 +277,9 @@
 (global-set-key (kbd "C-<tab>") 'tab-bar-switch-to-tab)
 
 ;; Mode-line
-(use-package doom-modeline
-  :after all-the-icons
-  :init (doom-modeline-mode 1))
+(elpaca
+  (doom-modeline
+    (doom-modeline-mode 1)))
 
 ;; Windows
 (global-set-key (kbd "C-h") 'windmove-left) ; Use F1 instead of C-h for help-command
@@ -339,11 +304,10 @@
 (global-set-key (kbd "C-S-x") 'my/split-window-below-and-move)
 (global-set-key (kbd "C-S-v") 'my/split-window-right-and-move)
 
-(use-package zoom-window
-  :defer 1)
+(elpaca zoom-window)
 
 ;; Keymaps
-(use-package hydra)
+(elpaca hydra)
 
 ;; Buffers
 (defun my/clean-up-buffers ()
@@ -362,63 +326,49 @@
 (setq sentence-end-double-space nil)
 
 ;; Bindings
-(use-package which-key
-  :diminish
-  :init (which-key-mode))
+(elpaca
+  which-key
+    (which-key-mode))
 
 ;; Indentation
-(use-package indent-guide
-  :defer 1
-  :config
-  (indent-guide-global-mode))
+(elpaca
+  indent-guide
+    (indent-guide-global-mode))
 
 (setq-default indent-tabs-mode nil)
 
-(use-package aggressive-indent
-  :hook
-  (elixir-mode-hook . aggressive-indent-mode)
-  (rust-mode-hook . aggressive-indent-mode)
-  (swift-mode-hook . aggressive-indent-mode))
+(elpaca
+  aggressive-indent
+    (add-hook 'elixir-mode-hook #'aggressive-indent-mode)
+    (add-hook 'rust-mode-hook #'aggressive-indent-mode)
+    (add-hook 'swift-mode-hook #'aggressive-indent-mode))
 
 ;; Folding
-(use-package origami
-  :defer t)
+(elpaca origami)
 
 ;; Search
 (setq isearch-lazy-count t)
 
-(use-package perspective
-  :custom
-  (persp-mode-prefix-key (kbd "C-c C-z"))
-  (persp-state-default-file (concat user-emacs-directory "persp-state"))
-  (persp-sort 'access)
-  :init
-  (persp-mode))
+(elpaca
+  perspective
+    (setq persp-mode-prefix-key (kbd "C-c C-z"))
+    (setq persp-state-default-file (concat user-emacs-directory "persp-state"))
+    (setq persp-sort 'access)
+    (persp-mode))
 
-(use-package comby
-  :defer t)
-
-;; Editor Config
-(use-package editorconfig
-  :defer 1
-  :diminish
-  :config
-  (editorconfig-mode 1))
+(elpaca comby)
 
 ;; Tree-sitter
-(require 'treesit)
-
-(use-package treesit-auto
-  :config
-  (setq treesit-auto-install 'prompt)
-  (global-treesit-auto-mode))
+(elpaca
+  treesit-auto
+    (setq treesit-auto-install 'prompt)
+    (global-treesit-auto-mode))
 
 ;; LSP
-(use-package eglot
-  ;; It's built-in, so don't load it from an external source
-  :ensure nil
+(elpaca
+  nil
+  (require 'eglot)
   ;; See: https://github.com/neovim/nvim-lspconfig/tree/89a19315ef4064a144b3d7d1c9a7eefd0e91e51b/lua/lspconfig/server_configurations
-  :config
   (add-to-list 'eglot-server-programs
                `(toml-mode "taplo" "lsp" "stdio"))
   (add-to-list 'eglot-server-programs
@@ -468,46 +418,43 @@
                `(terraform-mode "terraform-ls" "serve"))
   (add-to-list 'eglot-server-programs
                `(swift-mode "sourcekit-lsp"))
-  :hook
-  (toml-mode-hook . 'eglot-ensure)
-  (elixir-mode-hook . 'eglot-ensure)
-  (xml-mode-hook . 'eglot-ensure)
-  (go-mode-hook . 'eglot-ensure)
-  (bash-mode-hook . 'eglot-ensure)
-  (clojure-mode-hook . 'eglot-ensure)
-  (latex-mode-hook . 'eglot-ensure)
-  (lua-mode-hook . 'eglot-ensure)
-  (markdown-mode-hook . 'eglot-ensure)
-  (python-mode-hook . 'eglot-ensure)
-  (rust-mode-hook . 'eglot-ensure)
-  (ruby-mode-hook . 'eglot-ensure)
-  (sql-mode-hook . 'eglot-ensure)
-  (typescript-mode-hook . 'eglot-ensure)
-  (typescript-ts-mode-hook . 'eglot-ensure)
-  (tsx-mode-hook . 'eglot-ensure)
-  (tsx-ts-mode-hook . 'eglot-ensure)
-  (html-mode-hook . 'eglot-ensure)
-  (web-mode-hook . 'eglot-ensure)
-  (css-mode-hook . 'eglot-ensure)
-  (json-mode-hook . 'eglot-ensure)
-  (yaml-mode-hook . 'eglot-ensure)
-  (terraform-mode-hook . 'eglot-ensure)
-  (swift-mode-hook . 'eglot-ensure))
+  (add-hook 'toml-mode-hook #'eglot-ensure)
+  (add-hook 'elixir-mode-hook #'eglot-ensure)
+  (add-hook 'xml-mode-hook #'eglot-ensure)
+  (add-hook 'go-mode-hook #'eglot-ensure)
+  (add-hook 'bash-mode-hook #'eglot-ensure)
+  (add-hook 'clojure-mode-hook #'eglot-ensure)
+  (add-hook 'latex-mode-hook #'eglot-ensure)
+  (add-hook 'lua-mode-hook #'eglot-ensure)
+  (add-hook 'markdown-mode-hook #'eglot-ensure)
+  (add-hook 'python-mode-hook #'eglot-ensure)
+  (add-hook 'rust-mode-hook #'eglot-ensure)
+  (add-hook 'ruby-mode-hook #'eglot-ensure)
+  (add-hook 'sql-mode-hook #'eglot-ensure)
+  (add-hook 'typescript-mode-hook #'eglot-ensure)
+  (add-hook 'typescript-ts-mode-hook #'eglot-ensure)
+  (add-hook 'tsx-mode-hook #'eglot-ensure)
+  (add-hook 'tsx-ts-mode-hook #'eglot-ensure)
+  (add-hook 'html-mode-hook #'eglot-ensure)
+  (add-hook 'web-mode-hook #'eglot-ensure)
+  (add-hook 'css-mode-hook #'eglot-ensure)
+  (add-hook 'json-mode-hook #'eglot-ensure)
+  (add-hook 'yaml-mode-hook #'eglot-ensure)
+  (add-hook 'terraform-mode-hook #'eglot-ensure)
+  (add-hook 'swift-mode-hook #'eglot-ensure))
 
 ;; Whitespace
 (setq-default require-final-newline t) ; Add new line in the end of a file on save.
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 
 ;; Pretty parens
-(use-package rainbow-delimiters
-  :diminish
-  :hook
-  (prog-mode-hook . rainbow-delimiters-mode))
+(elpaca
+  rainbow-delimiters
+  (add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
 
 ;; Structured editing
-(use-package puni
-  :defer t
-  :init
+(elpaca
+  puni
   ;; The autoloads of Puni are set up so you can enable `puni-mode` or
   ;; `puni-global-mode` before `puni` is actually loaded. Only after you press
   ;; any key that calls Puni commands, it's loaded.
@@ -515,41 +462,34 @@
   (add-hook 'term-mode-hook #'puni-disable-puni-mode))
 
 (elpaca
-    (combobulate
+  (combobulate
      :host github
      :repo "mickeynp/combobulate"
-     :branch "master"
-     :defer t
-     :hook
-     (python-ts-mode . combobulate-mode)
-     (js-ts-mode . combobulate-mode)
-     (css-ts-mode . combobulate-mode)
-     (yaml-ts-mode . combobulate-mode)
-     (typescript-ts-mode . combobulate-mode)
-     (tsx-ts-mode . combobulate-mode)))
+     :branch "master")
 
-(use-package parinfer-rust-mode
-  :diminish
-  :hook emacs-lisp-mode)
+  (add-hook 'python-ts-mode #'combobulate-mode)
+  (add-hook 'js-ts-mode #'combobulate-mode)
+  (add-hook 'css-ts-mode #'combobulate-mode)
+  (add-hook 'yaml-ts-mode #'combobulate-mode)
+  (add-hook 'typescript-ts-mode #'combobulate-mode)
+  (add-hook 'tsx-ts-mode #'combobulate-mode))
+
+(elpaca
+  parinfer-rust-mode
+  (add-hook 'emacs-lisp-mode #'parinfer-rust-mode))
 
 ;; Comments
 ;; Comment line or region
 (global-set-key (kbd "s-/") 'comment-line)
 
-(use-package embark
-  :bind
-  (("C-." . embark-act))         ;; pick some comfortable binding
+(elpaca
+  embark
+  (global-set-key (kbd "C-.") 'embark-act)         ;; pick some comfortable binding
   ;; ("C-;" . embark-dwim))        ;; good alternative: M-.
   ;; Disabled for now whilst I use C-h for window switching
   ;; ("C-h B" . embark-bindings)) ;; alternative for `describe-bindings'
-
-  :init
-
   ;; Optionally replace the key help with a completing-read interface
   (setq prefix-help-command #'embark-prefix-help-command)
-
-  :config
-
   ;; Hide the mode line of the Embark live/completions buffers
   (add-to-list 'display-buffer-alist
                '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
@@ -557,10 +497,9 @@
                  (window-parameters (mode-line-format . none)))))
 
 ;; Consult users will also want the embark-consult package.
-(use-package embark-consult
-  :ensure t ; only need to install it, embark loads it after consult if found
-  :hook
-  (embark-collect-mode . consult-preview-at-point-mode))
+(elpaca
+  embark-consult
+  (add-hook 'embark-collect-mode #'consult-preview-at-point-mode))
 
 ;; https://github.com/oantolin/embark/wiki/Additional-Configuration#use-which-key-like-a-key-menu-prompt
 (defun embark-which-key-indicator ()
@@ -607,30 +546,20 @@
 ;; Spellchecking requires an external command to be available. Install aspell on your Mac, then make it the default checker for Emacs' ispell. Note that personal dictionary is located at ~/.aspell.LANG.pws by default.
 (setq ispell-program-name "aspell")
 
-(use-package languagetool
-  :defer t
-  :custom
-  (languagetool-java-arguments nil)
-  (languagetool-console-command "languagetool")
-  (languagetool-server-command "languagetool-server")
-  (languagetool-server-host "localhost")
-  (languagetool-server-port 8081)
-  :commands (languagetool-check
-             languagetool-clear-suggestions
-             languagetool-correct-at-point
-             languagetool-correct-buffer
-             languagetool-set-language
-             languagetool-server-mode
-             languagetool-server-start
-             languagetool-server-stop))
+(elpaca
+  languagetool
+  (setq languagetool-java-arguments nil)
+  (setq languagetool-console-command "languagetool")
+  (setq languagetool-server-command "languagetool-server")
+  (setq languagetool-server-host "localhost")
+  (setq languagetool-server-port 8081))
 
-(use-package flycheck-vale
-  :after flycheck
-  :init (flycheck-vale-setup))
+(elpaca
+  flycheck-vale
+  (flycheck-vale-setup))
 
-(use-package flycheck-aspell
-  :defer 1
-  :custom
+(elpaca
+  flycheck-aspell
   ;; If you want to check TeX/LaTeX/ConTeXt buffers
   (add-to-list 'flycheck-checkers 'tex-aspell-dynamic)
   ;; If you want to check Markdown/GFM buffers
@@ -650,10 +579,8 @@
 
 ;; Popup window for spellchecking
 (require 'flyspell)
-(use-package flyspell-correct
-  :after flyspell)
-(use-package flyspell-correct-popup
-  :after flyspell)
+(elpaca flyspell-correct)
+(elpaca flyspell-correct-popup)
 
 ;; Enable spellcheck on the fly for all text modes. This includes org, latex and LaTeX.
 (add-hook 'text-mode-hook 'flyspell-mode)
@@ -670,14 +597,15 @@
 (define-key flyspell-mode-map (kbd "C-s-\\") 'ispell-word)                          ;; Ctrl+Cmd+\ spellcheck word using built UI
 
 ;; Search for synonyms
-(use-package powerthesaurus
-  :bind
-  ("s-|" . powerthesaurus-lookup-word-dwim))
+(elpaca
+  powerthesaurus
+  (global-set-key (kbd "s-|") 'powerthesaurus-lookup-word-dwim))
 
 ;; Word definition search
-(use-package define-word
+(elpaca
+  define-word
   :bind
-  ("M-\\" . define-word-at-point))
+  (global-set-key (kbd "M-\\") 'define-word-at-point))
 
 ;; Highlight current line
 (global-hl-line-mode t)
@@ -690,9 +618,8 @@
 
 ;; Undo
 ;; Linear undo and redo.
-(use-package undo-tree
-  :diminish undo-tree-mode
-  :init
+(elpaca
+  undo-tree
   (progn
     (global-undo-tree-mode)
     (setq undo-tree-history-directory-alist '(("." . "~/.config/emacs/tmp/undo"))
@@ -700,29 +627,24 @@
           undo-tree-visualizer-timestamps t
           undo-tree-visualizer-diff t)))
 
-(use-package goto-chg)
+(elpaca goto-chg)
 
 ;; Vim
-(use-package evil
-  :init
+(elpaca
+  evil
   (setq evil-want-integration t) ;; This is optional since it's already set to t by default.
   (setq evil-want-keybinding nil)
-  :config
   (evil-mode 1)
   (global-unset-key (kbd "C-u"))
   (global-set-key (kbd "C-u") 'evil-scroll-up)
   (evil-set-undo-system 'undo-tree))
 
-(use-package evil-visual-mark-mode
-  :after evil
-  :defer 1
-  :config
+(elpaca
+  evil-visual-mark-mode
   (evil-visual-mark-mode))
 
-(use-package evil-collection
-  :after evil
-  :defer 1
-  :config
+(elpaca
+  evil-collection
   (evil-collection-init))
 
 ;; Programming
@@ -742,145 +664,122 @@
 
 ;; Languages
 
-(use-package quickrun)
+(elpaca quickrun)
 
 ;; Rust
-(use-package rust-mode)
-(use-package rustic
-  :custom
-  (rustic-lsp-client 'eglot)
-  :hook
-  (eglot--managed-mode-hook . (lambda () (flymake-mode -1))))
-(use-package cargo
-  :hook
-  (rust-mode-hook . cargo-minor-mode))
-(use-package flycheck-rust
-  :after (flycheck rust-mode)
-  :hook
-  (flycheck-mode-hook . flycheck-rust-setup))
+(elpaca rust-mode)
+(elpaca rustic
+  (setq rustic-lsp-client 'eglot)
+  (add-hook 'eglot--managed-mode-hook (lambda () (flymake-mode -1))))
+(elpaca cargo
+  (add-hook 'rust-mode-hook #'cargo-minor-mode))
+(elpaca
+  flycheck-rust
+  (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
 
 ;; Web
-(use-package web-mode
-  :config
+(elpaca
+  web-mode
   (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode)))
 
 ;; Gradle
-(use-package gradle-mode)
-(use-package flycheck-gradle)
+(elpaca gradle-mode)
+(elpaca flycheck-gradle)
 
 ;; Elixir
-(use-package elixir-mode)
+(elpaca elixir-mode)
 (elpaca
     (apprentice
      :host github
      :repo "Sasanidas/Apprentice"
      :branch "master"))
-(use-package mix
-  :hook
-  (elixir-mode-hook . mix-minor-mode))
-(use-package exunit
-  :hook
-  (elixir-mode-hook . exunit-mode))
-(use-package flycheck-credo
-  :defer 1
-  :init
-  '(flycheck-credo-setup)
-  :config
+(elpaca
+  mix
+  (add-hook 'elixir-mode-hook #'mix-minor-mode))
+(elpaca
+  exunit
+  (add-hook 'elixir-mode-hook #'exunit-mode))
+(elpaca
+  flycheck-credo
+  (flycheck-credo-setup)
   (setq flycheck-elixir-credo-strict t))
-(use-package flycheck-elixir
-  :after (flycheck elixir-mode)
-  :hook
-  (elixir-mode-hook . flycheck-mode))
-(use-package flycheck-dialyxir
-  :after (flycheck elixir-mode)
-  :hook
-  (elixir-mode-hook . flycheck-mode))
-(use-package flycheck-dialyzer
-  :after (flycheck elixir-mode)
-  :hook
-  (elixir-mode-hook . flycheck-mode))
+(elpaca
+  flycheck-elixir
+  (add-hook 'elixir-mode-hook #'flycheck-mode))
+(elpaca
+  flycheck-dialyxir
+  (add-hook 'elixir-mode-hook #'flycheck-mode))
+(elpaca
+  flycheck-dialyzer
+  (add-hook 'elixir-mode-hook #'flycheck-mode))
 
 ;; Go
-(use-package go-mode)
+(elpaca go-mode)
 
 ;; Swift
-(use-package swift-mode)
-(use-package flycheck-swift
-  :defer 1
-  :after (swift-mode))
+(elpaca swift-mode)
+(elpaca flycheck-swift)
 
 ;; JSON
-(use-package json-mode)
+(elpaca json-mode)
 
 ;; Python
-(use-package python-mode)
+(elpaca python-mode)
 
 ;; Protobuf
-(use-package protobuf-mode)
+(elpaca protobuf-mode)
 
 ;; CSV
-(use-package csv-mode)
+(elpaca csv-mode)
 
 ;; Markdown
-(use-package markdown-mode)
+(elpaca markdown-mode)
 
 ;; YAML
-(use-package yaml-mode)
+(elpaca yaml-mode)
 
 ;; HCL
-(use-package hcl-mode)
+(elpaca hcl-mode)
 
 ;; Terraform
-(use-package terraform-mode
-  :after hcl-mode)
-(use-package terraform-doc
-  :after terraform-mode)
+(elpaca terraform-mode)
+(elpaca terraform-doc)
 
 ;; GraphQL
-(use-package graphql-mode)
+(elpaca graphql-mode)
 
 ;; Lua
-(use-package lua-mode)
+(elpaca lua-mode)
 
 ;; Shell
 
 ;; Clojure
-(use-package clojure-mode)
-(use-package clojure-snippets)
+(elpaca clojure-mode)
+(elpaca clojure-snippets)
 
-(use-package cider
-  :defer t
-  :config
+(elpaca
+  cider
   (setq nrepl-log-messages t)
-  (flycheck-clojure-setup)) ;; run setup *after* cider load
+  (eval-after-load 'cider
+    (flycheck-clojure-setup))) ;; run setup *after* cider load
 
-(use-package flycheck-clojure
-  :defer t
-  :commands (flycheck-clojure-setup) ;; autoload
-  :config
+(elpaca
+  flycheck-clojure
   (eval-after-load 'flycheck
     '(setq flycheck-display-errors-function #'flycheck-pos-tip-error-messages))
   (add-hook 'after-init-hook #'global-flycheck-mode))
 
 ;; .env
-(use-package dotenv-mode)
+(elpaca dotenv-mode)
 
 ;; SASS
-(use-package sass-mode)
+(elpaca sass-mode)
 
 ;; Javascript
-(use-package npm
-  :commands
-  (npm-update
-   npm-run
-   npm-menu
-   npm-init
-   npm-install-menu
-   npm-mode
-   npm))
+(elpaca npm)
 
 ;; Typescript
-(use-package typescript-mode)
+(elpaca typescript-mode)
 ;; (elpaca
 ;;     (tsx-mode
 ;;      :host github
@@ -888,75 +787,57 @@
 ;;      :branch "emacs29"))
 
 ;; Docker
-(use-package docker)
-(use-package dockerfile-mode)
-(use-package docker-compose-mode)
+(elpaca docker)
+(elpaca dockerfile-mode)
+(elpaca docker-compose-mode)
 
 ;; Caddy
-(use-package caddyfile-mode
-  :mode (("Caddyfile\\'" . caddyfile-mode)
-         ("caddy\\.conf\\'" . caddyfile-mode)))
+(elpaca
+  caddyfile-mode)
+  ;; (("Caddyfile\\'" . caddyfile-mode))
+  ;; ("caddy\\.conf\\'" . caddyfile-mode))
 
 ;; Emacs Lisp
-(use-package eldoc
-  :diminish eldoc-mode
-  :hook (emacs-lisp-mode . turn-on-eldoc-mode)
-  (lisp-interaction-mode . turn-on-eldoc-mode))
-;; (use-package elsa
-;;   :defer 1)
-;; (use-package flycheck-elsa
-;;   :after (elsa flycheck)
-;;   :defer 1
-;;   :hook
-;;   (emacs-lisp-mode . flycheck-elsa-setup))
+(elpaca
+  eldoc
+  (add-hook 'emacs-lisp-mode #'turn-on-eldoc-mode)
+  (add-hook 'lisp-interaction-mode #'turn-on-eldoc-mode))
 
 ;; Syntax
-(use-package flycheck
-  :init (global-flycheck-mode))
+(elpaca
+  flycheck
+  (global-flycheck-mode))
 
 ;; Formatting
-(use-package format-all
-  :commands
-  (format-all-buffer format-all-region format-all-mode))
-                                        ; Disabled for now whilst using apheleia
-;; :init)
-                                        ; Auto-format code on save
-;; (add-hook 'elixir-mode-hook 'format-all-mode)
-;; (add-hook 'rust-mode-hook 'format-all-mode)
-;; (add-hook 'python-mode-hook 'format-all-mode)
-;; (add-hook 'lua-mode-hook 'format-all-mode)
-;; (add-hook 'go-mode-hook 'format-all-mode)
-;; (add-hook 'clojure-mode-hook 'format-all-mode))
+;; Preferring apheleia
+(elpaca format-all)
 
-(use-package apheleia
-  :config
+(elpaca
+  apheleia
+  (require 'apheleia)
   (add-to-list 'apheleia-mode-alist
                `(tsx-mode . prettier-typescript))
   (add-to-list 'apheleia-mode-alist
                `(tsx-ts-mode . prettier-typescript))
-  :hook
-  (elixir-mode . apheleia-mode)
-  (swift-mode . apheleia-mode)
-  (rust-mode . apheleia-mode)
-  (javascript-mode . apheleia-mode)
-  (sass-mode . apheleia-mode)
-  (typescript-mode . apheleia-mode)
-  (tsx-mode . apheleia-mode))
+  (add-hook 'elixir-mode #'apheleia-mode)
+  (add-hook 'swift-mode #'apheleia-mode)
+  (add-hook 'rust-mode #'apheleia-mode)
+  (add-hook 'javascript-mode #'apheleia-mode)
+  (add-hook 'sass-mode #'apheleia-mode)
+  (add-hook 'typescript-mode #'apheleia-mode)
+  (add-hook 'tsx-mode #'apheleia-mode))
 
 ;; Testing
-(use-package coverlay
-  :defer t)
+(elpaca coverlay)
 
 ;; Snippets
-(use-package tempel
+(elpaca tempel
   ;; Require trigger prefix before template name when completing.
   ;; :custom
   ;; (tempel-trigger-prefix "<")
 
-  :bind (("M-+" . tempel-complete) ;; Alternative tempel-expand
-         ("M-*" . tempel-insert))
-
-  :init
+  (global-set-key (kbd "M-+") 'tempel-complete) ;; Alternative tempel-expand
+  (global-set-key (kbd "M-*") 'tempel-insert)
 
   ;; Setup completion at point
   (defun tempel-setup-capf ()
@@ -972,76 +853,69 @@
                       completion-at-point-functions)))
 
   (add-hook 'prog-mode-hook 'tempel-setup-capf)
-  (add-hook 'text-mode-hook 'tempel-setup-capf))
+  (add-hook 'text-mode-hook 'tempel-setup-capf)
 
-;; Optionally make the Tempel templates available to Abbrev,
-;; either locally or globally. `expand-abbrev' is bound to C-x '.
-;; (add-hook 'prog-mode-hook #'tempel-abbrev-mode)
-;; (global-tempel-abbrev-mode)
+  ;; Optionally make the Tempel templates available to Abbrev,
+  ;; either locally or globally. `expand-abbrev' is bound to C-x '.
+  (add-hook 'prog-mode-hook #'tempel-abbrev-mode)
+  (global-tempel-abbrev-mode))
 
-
-;; Optional: Add tempel-collection.
 ;; The package is young and doesn't have comprehensive coverage.
-(use-package tempel-collection)
+(elpaca tempel-collection)
 
 ;; Completion
-(use-package consult
-  ;; Replace bindings. Lazily loaded due by `use-package'.
-  :bind (;; C-c bindings (mode-specific-map)
-         ("C-c h" . consult-history)
-         ("C-c m" . consult-mode-command)
-         ("C-c k" . consult-kmacro)
-         ;; C-x bindings (ctl-x-map)
-         ("C-x M-:" . consult-complex-command)     ;; orig. repeat-complex-command
-         ("C-x b" . consult-buffer)                ;; orig. switch-to-buffer
-         ("C-x 4 b" . consult-buffer-other-window) ;; orig. switch-to-buffer-other-window
-         ("C-x 5 b" . consult-buffer-other-frame)  ;; orig. switch-to-buffer-other-frame
-         ("C-x r b" . consult-bookmark)            ;; orig. bookmark-jump
-         ("C-x p b" . consult-project-buffer)      ;; orig. project-switch-to-buffer
-         ;; Custom M-# bindings for fast register access
-         ("M-#" . consult-register-load)
-         ("M-'" . consult-register-store)          ;; orig. abbrev-prefix-mark (unrelated)
-         ("C-M-#" . consult-register)
-         ;; Other custom bindings
-         ("M-y" . consult-yank-pop)                ;; orig. yank-pop
-         ;; M-g bindings (goto-map)
-         ("M-g e" . consult-compile-error)
-         ("M-g f" . consult-flycheck)
-         ("M-g g" . consult-goto-line)             ;; orig. goto-line
-         ("M-g M-g" . consult-goto-line)           ;; orig. goto-line
-         ("M-g o" . consult-outline)               ;; Alternative: consult-org-heading
-         ("M-g m" . consult-mark)
-         ("M-g k" . consult-global-mark)
-         ("M-g i" . consult-imenu)
-         ("M-g I" . consult-imenu-multi)
-         ;; M-s bindings (search-map)
-         ("M-s d" . consult-find)
-         ("M-s D" . consult-locate)
-         ("M-s g" . consult-grep)
-         ("M-s G" . consult-git-grep)
-         ("M-s r" . consult-ripgrep)
-         ("M-s l" . consult-line)
-         ("M-s L" . consult-line-multi)
-         ("M-s k" . consult-keep-lines)
-         ("M-s u" . consult-focus-lines)
-         ;; Isearch integration
-         ("M-s e" . consult-isearch-history)
-         :map isearch-mode-map
-         ("M-e" . consult-isearch-history)         ;; orig. isearch-edit-string
-         ("M-s e" . consult-isearch-history)       ;; orig. isearch-edit-string
-         ("M-s l" . consult-line)                  ;; needed by consult-line to detect isearch
-         ("M-s L" . consult-line-multi)            ;; needed by consult-line to detect isearch
-         ;; Minibuffer history
-         :map minibuffer-local-map
-         ("M-s" . consult-history)                 ;; orig. next-matching-history-element
-         ("M-r" . consult-history))                ;; orig. previous-matching-history-element
+(elpaca
+  consult
+  ;; C-c bindings (mode-specific-map)
+  (global-set-key (kbd "C-c h") 'consult-history)
+  (global-set-key (kbd "C-c m") 'consult-mode-command)
+  (global-set-key (kbd "C-c k") 'consult-kmacro)
+  ;; C-x bindings (ctl-x-map)
+  (global-set-key (kbd "C-x M-:") 'consult-complex-command)     ;; orig. repeat-complex-command
+  (global-set-key (kbd "C-x b") 'consult-buffer)                ;; orig. switch-to-buffer
+  (global-set-key (kbd "C-x 4 b") 'consult-buffer-other-window) ;; orig. switch-to-buffer-other-window
+  (global-set-key (kbd "C-x 5 b") 'consult-buffer-other-frame)  ;; orig. switch-to-buffer-other-frame
+  (global-set-key (kbd "C-x r b") 'consult-bookmark)            ;; orig. bookmark-jump
+  (global-set-key (kbd "C-x p b") 'consult-project-buffer)      ;; orig. project-switch-to-buffer
+  ;; Custom M-# bindings for fast register access
+  (global-set-key (kbd "M-#") 'consult-register-load)
+  (global-set-key (kbd "M-'") 'consult-register-store)          ;; orig. abbrev-prefix-mark (unrelated)
+  (global-set-key (kbd "C-M-#") 'consult-register)
+  ;; Other custom bindings
+  (global-set-key (kbd "M-y") 'consult-yank-pop)                ;; orig. yank-pop
+  ;; M-g bindings (goto-map)
+  (global-set-key (kbd "M-g e") 'consult-compile-error)
+  (global-set-key (kbd "M-g f") 'consult-flycheck)
+  (global-set-key (kbd "M-g g") 'consult-goto-line)             ;; orig. goto-line
+  (global-set-key (kbd "M-g M-g") 'consult-goto-line)           ;; orig. goto-line
+  (global-set-key (kbd "M-g o") 'consult-outline)               ;; Alternative: consult-org-heading
+  (global-set-key (kbd "M-g m") 'consult-mark)
+  (global-set-key (kbd "M-g k") 'consult-global-mark)
+  (global-set-key (kbd "M-g i") 'consult-imenu)
+  (global-set-key (kbd "M-g I") 'consult-imenu-multi)
+  ;; M-s bindings (search-map)
+  (global-set-key (kbd "M-s d") 'consult-find)
+  (global-set-key (kbd "M-s D") 'consult-locate)
+  (global-set-key (kbd "M-s g") 'consult-grep)
+  (global-set-key (kbd "M-s G") 'consult-git-grep)
+  (global-set-key (kbd "M-s r") 'consult-ripgrep)
+  (global-set-key (kbd "M-s l") 'consult-line)
+  (global-set-key (kbd "M-s L") 'consult-line-multi)
+  (global-set-key (kbd "M-s k") 'consult-keep-lines)
+  (global-set-key (kbd "M-s u") 'consult-focus-lines)
+  ;; Isearch integration
+  (global-set-key (kbd "M-s e") 'consult-isearch-history)
+  (global-set-key (kbd "M-e") 'consult-isearch-history)         ;; orig. isearch-edit-string
+  (global-set-key (kbd "M-s e") 'consult-isearch-history)       ;; orig. isearch-edit-string
+  (global-set-key (kbd "M-s l") 'consult-line)                  ;; needed by consult-line to detect isearch
+  (global-set-key (kbd "M-s L") 'consult-line-multi)            ;; needed by consult-line to detect isearch
+  ;; Minibuffer history
+  (global-set-key (kbd "M-s") 'consult-history)                 ;; orig. next-matching-history-element
+  (global-set-key (kbd "M-r") 'consult-history)                ;; orig. previous-matching-history-element
 
   ;; Enable automatic preview at point in the *Completions* buffer. This is
   ;; relevant when you use the default completion UI.
-  :hook (completion-list-mode . consult-preview-at-point-mode)
-
-  ;; The :init configuration is always executed (Not lazy)
-  :init
+  (add-hook 'completion-list-mode #'consult-preview-at-point-mode)
 
   ;; Optionally configure the register formatting. This improves the register
   ;; preview for `consult-register', `consult-register-load',
@@ -1057,10 +931,6 @@
   (setq xref-show-xrefs-function #'consult-xref
         xref-show-definitions-function #'consult-xref)
 
-  ;; Configure other variables and modes in the :config section,
-  ;; after lazily loading the package.
-  :config
-
   ;; Optionally configure preview. The default value
   ;; is 'any, such that any key triggers the preview.
   ;; (setq consult-preview-key 'any)
@@ -1068,6 +938,7 @@
   ;; (setq consult-preview-key (list (kbd "<S-down>") (kbd "<S-up>")))
   ;; For some commands and buffer sources it is useful to configure the
   ;; :preview-key on a per-command basis using the `consult-customize' macro.
+  (require 'consult) 
   (consult-customize
    consult-theme :preview-key '(:debounce 0.2 any)
    consult-ripgrep consult-git-grep consult-grep
@@ -1094,89 +965,82 @@
   (autoload 'projectile-project-root "projectile")
   (setq consult-project-function (lambda (_) (projectile-project-root))))
   ;;;; 3. vc.el (vc-root-dir)
-;; (setq consult-project-function (lambda (_) (vc-root-dir)))
+  ;; (setq consult-project-function (lambda (_) (vc-root-dir)))
   ;;;; 4. locate-dominating-file
-;; (setq consult-project-function (lambda (_) (locate-dominating-file "." ".git")))
+  ;; (setq consult-project-function (lambda (_) (locate-dominating-file "." ".git")))
 
-(use-package consult-flycheck
-  :after consult
-  :defer 1)
+(elpaca consult-flycheck)
 
-(use-package vertico
-  :config
+(elpaca
+  vertico
   (vertico-mode))
 
 ;; Enable rich annotations using the Marginalia package
-(use-package marginalia
+(elpaca
+  marginalia
   ;; Either bind `marginalia-cycle' globally or only in the minibuffer
-  :bind (("M-A" . marginalia-cycle))
+  (global-set-key (kbd "M-A") 'marginalia-cycle)
   ;; :map minibuffer-local-map)
   ;; ("M-A" . marginalia-cycle))
-
-  ;; The :init configuration is always executed (Not lazy!)
-  :init
-
   ;; Must be in the :init section of use-package such that the mode gets
   ;; enabled right away. Note that this forces loading the package.
   (marginalia-mode))
 
-(use-package orderless
-  :custom
-  (completion-styles '(orderless basic))
-  (completion-category-overrides '((file (styles basic partial-completion))))
-  (completion-category-overrides '((eglot (styles orderless)))))
+(elpaca
+  orderless
+  (setq completion-styles '(orderless basic))
+  (setq completion-category-overrides '((file (styles basic partial-completion))))
+  (setq completion-category-overrides '((eglot (styles orderless)))))
 
 (elpaca
-    (corfu
+  corfu
      ;; https://github.com/purplg/dotfiles/blob/04c5217247a738adef11d9bf569a329c7eebae4a/.config/emacs/modules/pg-completion.el
-     :files (:defaults "extensions/corfu-popupinfo.el")
+     ;; :files (:defaults "extensions/corfu-popupinfo.el")
      ;; Optional customizations
-     :custom
-     (corfu-cycle t)                ;; Enable cycling for `corfu-next/previous'
-     (corfu-auto t)                 ;; Enable auto completion
-     (corfu-auto-delay 0.2)
-     (corfu-popupinfo-delay 0.4)
-     (corfu-separator ?\s)          ;; Orderless field separator
-     (corfu-quit-at-boundary nil)   ;; Never quit at completion boundary
-     (corfu-quit-no-match 'separator)      ;; Never quit, even if there is no match
-     (corfu-scroll-margin 5)        ;; Use scroll margin
-     :hook
-     (corfu-mode . corfu-popupinfo-mode)
-     ;; Recommended: Enable Corfu globally.
-     ;; This is recommended since Dabbrev can be used globally (M-/).
-     ;; See also `corfu-excluded-modes'.
-     :init
-     (global-corfu-mode)
-     :bind
-     (:map corfu-map
-           ("M-n" . corfu-popupinfo-scroll-up)
-           ("M-p" . corfu-popupinfo-scroll-down)
-           ("M-a" . corfu-popupinfo-beginning)
-           ("M-e" . corfu-popupinfo-end)
-           ("M-l" . corfu-popupinfo-location)
-           ("M-d" . corfu-popupinfo-documentation)
-           ("M-t" . corfu-popupinfo-toggle))))
+  (setq corfu-cycle t)                ;; Enable cycling for `corfu-next/previous'
+  (setq corfu-auto t)                 ;; Enable auto completion
+  (setq corfu-auto-delay 0.2)
+  (setq corfu-popupinfo-delay 0.4)
+  (setq corfu-separator ?\s)          ;; Orderless field separator
+  (setq corfu-quit-at-boundary nil)   ;; Never quit at completion boundary
+  (setq corfu-quit-no-match 'separator)      ;; Never quit, even if there is no match
+  (setq corfu-scroll-margin 5)        ;; Use scroll margin
+  ;; :hook
+  ;; (corfu-mode . corfu-popupinfo-mode)
+  ;; Recommended: Enable Corfu globally.
+  ;; This is recommended since Dabbrev can be used globally (M-/).
+  ;; See also `corfu-excluded-modes'.
+  (global-corfu-mode))
+  ;; :bind
+  ;; (:map corfu-map
+  ;;       ("M-n" . corfu-popupinfo-scroll-up)
+  ;;       ("M-p" . corfu-popupinfo-scroll-down)
+  ;;       ("M-a" . corfu-popupinfo-beginning)
+  ;;       ("M-e" . corfu-popupinfo-end)
+  ;;       ("M-l" . corfu-popupinfo-location)
+  ;;       ("M-d" . corfu-popupinfo-documentation)
+  ;;       ("M-t" . corfu-popupinfo-toggle)))
 
-(use-package cape
+(elpaca
+  cape
   ;; Bind dedicated completion commands
   ;; Alternative prefix keys: C-c p, M-p, M-+, ...
-  :bind (("C-c p p" . completion-at-point) ;; capf
-         ("C-c p t" . complete-tag)        ;; etags
-         ("C-c p d" . cape-dabbrev)        ;; or dabbrev-completion
-         ("C-c p h" . cape-history)
-         ("C-c p f" . cape-file)
-         ("C-c p k" . cape-keyword)
-         ("C-c p s" . cape-symbol)
-         ("C-c p a" . cape-abbrev)
-         ("C-c p i" . cape-ispell)
-         ("C-c p l" . cape-line)
-         ("C-c p w" . cape-dict)
-         ("C-c p \\" . cape-tex)
-         ("C-c p _" . cape-tex)
-         ("C-c p ^" . cape-tex)
-         ("C-c p &" . cape-sgml)
-         ("C-c p r" . cape-rfc1345))
-  :init
+  (global-set-key (kbd "C-c p p") 'completion-at-point) ;; capf
+  (global-set-key (kbd "C-c p t") 'complete-tag)        ;; etags
+  (global-set-key (kbd "C-c p d") 'cape-dabbrev)        ;; or dabbrev-completion
+  (global-set-key (kbd "C-c p h") 'cape-history)
+  (global-set-key (kbd "C-c p f") 'cape-file)
+  (global-set-key (kbd "C-c p k") 'cape-keyword)
+  (global-set-key (kbd "C-c p s") 'cape-symbol)
+  (global-set-key (kbd "C-c p a") 'cape-abbrev)
+  (global-set-key (kbd "C-c p i") 'cape-ispell)
+  (global-set-key (kbd "C-c p l") 'cape-line)
+  (global-set-key (kbd "C-c p w") 'cape-dict)
+  (global-set-key (kbd "C-c p \\") 'cape-tex)
+  (global-set-key (kbd "C-c p _") 'cape-tex)
+  (global-set-key (kbd "C-c p ^") 'cape-tex)
+  (global-set-key (kbd "C-c p &") 'cape-sgml)
+  (global-set-key (kbd "C-c p r") 'cape-rfc1345)
   ;; Add `completion-at-point-functions', used by `completion-at-point'.
   (add-to-list 'completion-at-point-functions #'cape-dabbrev)
   (add-to-list 'completion-at-point-functions #'cape-file)
@@ -1191,24 +1055,20 @@
   (add-to-list 'completion-at-point-functions #'cape-symbol)
   (add-to-list 'completion-at-point-functions #'cape-line))
 
-(use-package kind-icon
-  :after corfu
-  :custom
-  (kind-icon-default-face 'corfu-default) ; to compute blended backgrounds correctly
-  :config
+(elpaca
+  kind-icon
+  (setq kind-icon-default-face 'corfu-default) ; to compute blended backgrounds correctly
   (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
 
-(use-package all-the-icons
-  :if (display-graphic-p))
+(elpaca all-the-icons)
 
-(use-package all-the-icons-completion
-  :after (marginalia all-the-icons)
-  :hook (marginalia-mode . all-the-icons-completion-marginalia-setup)
-  :init
+(elpaca
+  all-the-icons-completion
+  (add-hook 'marginalia-mode #'all-the-icons-completion-marginalia-setup)
   (all-the-icons-completion-mode))
 
-(use-package smex)  ;; show recent commands when invoking Alt-x (or Cmd+Shift+p)
-(use-package avy)   ;; enable avy for quick navigation
+(elpaca smex)  ;; show recent commands when invoking Alt-x (or Cmd+Shift+p)
+(elpaca avy)   ;; enable avy for quick navigation
 
 ;; -----------------------------------------------------------------------------
 ;; File system
@@ -1233,112 +1093,107 @@
 
 (setq dired-kill-when-opening-new-dired-buffer t)
 
-(use-package treemacs
-  :defer t
-  :init
+(elpaca
+  treemacs
   (with-eval-after-load 'winum
     (define-key winum-keymap (kbd "M-0") #'treemacs-select-window))
-  :config
-  (progn
-    (setq treemacs-collapse-dirs                   (if treemacs-python-executable 3 0)
-          treemacs-deferred-git-apply-delay        0.5
-          treemacs-directory-name-transformer      #'identity
-          treemacs-display-in-side-window          t
-          treemacs-eldoc-display                   'simple
-          treemacs-file-event-delay                2000
-          treemacs-file-extension-regex            treemacs-last-period-regex-value
-          treemacs-file-follow-delay               0.2
-          treemacs-file-name-transformer           #'identity
-          treemacs-follow-after-init               t
-          treemacs-expand-after-init               t
-          treemacs-find-workspace-method           'find-for-file-or-pick-first
-          treemacs-git-command-pipe                ""
-          treemacs-goto-tag-strategy               'refetch-index
-          treemacs-header-scroll-indicators        '(nil . "^^^^^^")
-          treemacs-hide-dot-git-directory          t
-          treemacs-indentation                     2
-          treemacs-indentation-string              " "
-          treemacs-is-never-other-window           nil
-          treemacs-max-git-entries                 5000
-          treemacs-missing-project-action          'ask
-          treemacs-move-forward-on-expand          nil
-          treemacs-no-png-images                   nil
-          treemacs-no-delete-other-windows         t
-          treemacs-project-follow-cleanup          nil
-          treemacs-persist-file                    (expand-file-name ".cache/treemacs-persist" user-emacs-directory)
-          treemacs-position                        'left
-          treemacs-read-string-input               'from-child-frame
-          treemacs-recenter-distance               0.1
-          treemacs-recenter-after-file-follow      nil
-          treemacs-recenter-after-tag-follow       nil
-          treemacs-recenter-after-project-jump     'always
-          treemacs-recenter-after-project-expand   'on-distance
-          treemacs-litter-directories              '("/node_modules" "/.venv" "/.cask")
-          treemacs-show-cursor                     nil
-          treemacs-show-hidden-files               t
-          treemacs-silent-filewatch                nil
-          treemacs-silent-refresh                  nil
-          treemacs-sorting                         'alphabetic-asc
-          treemacs-select-when-already-in-treemacs 'move-back
-          treemacs-space-between-root-nodes        t
-          treemacs-tag-follow-cleanup              t
-          treemacs-tag-follow-delay                1.5
-          treemacs-text-scale                      nil
-          treemacs-user-mode-line-format           nil
-          treemacs-user-header-line-format         nil
-          treemacs-wide-toggle-width               70
-          treemacs-width                           35
-          treemacs-width-increment                 1
-          treemacs-width-is-initially-locked       t
-          treemacs-workspace-switch-cleanup        nil)
+  (with-eval-after-load 'treemacs
+    (progn
+      (setq treemacs-collapse-dirs                   (if treemacs-python-executable 3 0)
+            treemacs-deferred-git-apply-delay        0.5
+            treemacs-directory-name-transformer      #'identity
+            treemacs-display-in-side-window          t
+            treemacs-eldoc-display                   'simple
+            treemacs-file-event-delay                2000
+            treemacs-file-extension-regex            treemacs-last-period-regex-value
+            treemacs-file-follow-delay               0.2
+            treemacs-file-name-transformer           #'identity
+            treemacs-follow-after-init               t
+            treemacs-expand-after-init               t
+            treemacs-find-workspace-method           'find-for-file-or-pick-first
+            treemacs-git-command-pipe                ""
+            treemacs-goto-tag-strategy               'refetch-index
+            treemacs-header-scroll-indicators        '(nil . "^^^^^^")
+            treemacs-hide-dot-git-directory          t
+            treemacs-indentation                     2
+            treemacs-indentation-string              " "
+            treemacs-is-never-other-window           nil
+            treemacs-max-git-entries                 5000
+            treemacs-missing-project-action          'ask
+            treemacs-move-forward-on-expand          nil
+            treemacs-no-png-images                   nil
+            treemacs-no-delete-other-windows         t
+            treemacs-project-follow-cleanup          nil
+            treemacs-persist-file                    (expand-file-name ".cache/treemacs-persist" user-emacs-directory)
+            treemacs-position                        'left
+            treemacs-read-string-input               'from-child-frame
+            treemacs-recenter-distance               0.1
+            treemacs-recenter-after-file-follow      nil
+            treemacs-recenter-after-tag-follow       nil
+            treemacs-recenter-after-project-jump     'always
+            treemacs-recenter-after-project-expand   'on-distance
+            treemacs-litter-directories              '("/node_modules" "/.venv" "/.cask")
+            treemacs-show-cursor                     nil
+            treemacs-show-hidden-files               t
+            treemacs-silent-filewatch                nil
+            treemacs-silent-refresh                  nil
+            treemacs-sorting                         'alphabetic-asc
+            treemacs-select-when-already-in-treemacs 'move-back
+            treemacs-space-between-root-nodes        t
+            treemacs-tag-follow-cleanup              t
+            treemacs-tag-follow-delay                1.5
+            treemacs-text-scale                      nil
+            treemacs-user-mode-line-format           nil
+            treemacs-user-header-line-format         nil
+            treemacs-wide-toggle-width               70
+            treemacs-width                           35
+            treemacs-width-increment                 1
+            treemacs-width-is-initially-locked       t
+            treemacs-workspace-switch-cleanup        nil)
 
-    ;; The default width and height of the icons is 22 pixels. If you are
-    ;; using a Hi-DPI display, uncomment this to double the icon size.
-    ;;(treemacs-resize-icons 44)
+      ;; The default width and height of the icons is 22 pixels. If you are
+      ;; using a Hi-DPI display, uncomment this to double the icon size.
+      ;;(treemacs-resize-icons 44)
 
-    (treemacs-follow-mode t)
-    (treemacs-filewatch-mode t)
-    (treemacs-fringe-indicator-mode 'always)
-    (when treemacs-python-executable
-      (treemacs-git-commit-diff-mode t))
+      (treemacs-follow-mode t)
+      (treemacs-filewatch-mode t)
+      (treemacs-fringe-indicator-mode 'always)
+      (when treemacs-python-executable
+        (treemacs-git-commit-diff-mode t))
 
-    (pcase (cons (not (null (executable-find "git")))
-                 (not (null treemacs-python-executable)))
-      (`(t . t)
-       (treemacs-git-mode 'deferred))
-      (`(t . _)
-       (treemacs-git-mode 'simple)))
+      (pcase (cons (not (null (executable-find "git")))
+                   (not (null treemacs-python-executable)))
+        (`(t . t)
+         (treemacs-git-mode 'deferred))
+        (`(t . _)
+         (treemacs-git-mode 'simple)))
 
-    (treemacs-hide-gitignored-files-mode nil))
-  :bind
-  (:map global-map
-        ("M-0"       . treemacs-select-window)
-        ("C-x t 1"   . treemacs-delete-other-windows)
-        ("C-x t t"   . treemacs)
-        ("C-x t d"   . treemacs-select-directory)
-        ("C-x t B"   . treemacs-bookmark)
-        ("C-x t C-t" . treemacs-find-file)
-        ("C-x t M-t" . treemacs-find-tag)))
+      (treemacs-hide-gitignored-files-mode nil)
+      (global-set-key (kbd "M-0") 'treemacs-select-window)
+      (global-set-key (kbd "C-x t 1") 'treemacs-delete-other-windows)
+      (global-set-key (kbd "C-x t t") 'treemacs)
+      (global-set-key (kbd "C-x t d") 'treemacs-select-directory)
+      (global-set-key (kbd "C-x t B") 'treemacs-bookmark)
+      (global-set-key (kbd "C-x t C-t") 'treemacs-find-file)
+      (global-set-key (kbd "C-x t M-t") 'treemacs-find-tag))))
 
-(use-package treemacs-evil
-  :after (treemacs evil))
+(elpaca treemacs-evil)
 
-(use-package treemacs-perspective ;;treemacs-perspective if you use perspective.el vs. persp-mode
-  :after (treemacs perspective) ;;or perspective vs. persp-mode
-  :config (treemacs-set-scope-type 'Perspectives))
+(elpaca
+  treemacs-perspective ;;treemacs-perspective if you use perspective.el vs. persp-mode
+  (setq treemacs-set-scope-type 'Perspectives))
 
-(use-package treemacs-icons-dired
-  :hook (dired-mode . treemacs-icons-dired-enable-once))
+(elpaca
+  treemacs-icons-dired
+  (add-hook 'dired-mode #'treemacs-icons-dired-enable-once))
 
-(use-package treemacs-magit
-  :after (treemacs magit))
+(elpaca treemacs-magit)
 
-(use-package treemacs-projectile
-  :after (treemacs projectile))
+(elpaca treemacs-projectile)
 
-(use-package treemacs-tab-bar ;;treemacs-tab-bar if you use tab-bar-mode
-  :after treemacs
-  :config (treemacs-set-scope-type 'Tabs))
+(elpaca
+  treemacs-tab-bar ;;treemacs-tab-bar if you use tab-bar-mode
+  (setq treemacs-set-scope-type 'Tabs))
 
 ;; Move file to trash instead of removing.
 (setq-default delete-by-moving-to-trash t)
@@ -1371,13 +1226,12 @@
 ;; Process
 ;; -----------------------------------------------------------------------------
 
-(use-package projectile
-  :custom
-  (projectile-switch-project-action 'projectile-commander)
-  (projectile-sort-order 'recently-active)
-  (projectile-project-search-path '("~/Documents/projects/" ("~/src/" . 3)))
-  (projectile-auto-discover nil)
-  :config
+(elpaca
+  projectile
+  (setq projectile-switch-project-action 'projectile-commander)
+  (setq projectile-sort-order 'recently-active)
+  (setq projectile-project-search-path '("~/Documents/projects/" ("~/src/" . 3)))
+  (setq projectile-auto-discover nil)
   (projectile-mode +1)
   ;; Recommended keymap prefix on macOS
   (define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
@@ -1397,71 +1251,70 @@
    :run "zig build run"))
 
 (elpaca
-    (consult-projectile
-     :host gitlab
-     :repo "OlMon/consult-projectile"
-     :branch "master"
-     :custom
-     (consult-projectile-source-projectile-project-action 'projectile-commander)))
+  (consult-projectile
+   :host gitlab
+   :repo "OlMon/consult-projectile"
+   :branch "master")
+  (setq consult-projectile-source-projectile-project-action 'projectile-commander))
 
-(use-package flycheck-projectile
-  :defer t
-  :after (flycheck projectile))
+(elpaca flycheck-projectile)
 
-(use-package ripgrep
-  :defer 1)
+(elpaca ripgrep)
 
 ;; -----------------------------------------------------------------------------
 ;; VCS
 ;; -----------------------------------------------------------------------------
 
 ;; Magit
-(use-package magit
-  :config
+(elpaca
+  magit
   ;; Setting ‘forge-add-default-bindings’ to nil in ‘evil-collection-forge-setup’.
   ;; To suppress this message you can set this variable to nil in your init.el file.
   (setq forge-add-default-bindings nil)
-  :bind
-  ("s-g" . magit-status))
+  (global-set-key (kbd "s-g") 'magit-status))
 
 ;; Disable due to performance on large repositories
 ;; (use-package magit-todos
 ;;   :after magit
 ;;   :init (magit-todos-mode))
 
-(use-package forge
-  :after magit
-  :defer 1
-  :config
+(elpaca
+  forge
   (setq auth-sources '("~/.authinfo")))
 
 ;; Show changes in the gutter
-(use-package git-gutter
-  :diminish
-  :config
+(elpaca
+  git-gutter
   (global-git-gutter-mode +1))
 
 ;; Show author
-(use-package blamer
-  :init (global-blamer-mode 1))
+(elpaca
+  blamer
+  (global-blamer-mode 1))
 
 ;; Create URLs to files and commits in repository hosting services
-(use-package git-link
-  :defer 1
-  :config
+(elpaca git-link
   (setq git-link-use-commit t))
 
 ;; Browse target page on github/bitbucket from emacs buffers
-(use-package browse-at-remote)
+(elpaca browse-at-remote)
 
 ;; Why was this line changed
-(use-package git-messenger)
+(elpaca git-messenger)
 
 ;; View versions of a file
 ;; (use-package git-timemachine)
 
 ;; View git blame
-(use-package vc-msg)
+(elpaca vc-msg)
+
+;; -----------------------------------------------------------------------------
+;; Org
+;; -----------------------------------------------------------------------------
+
+(elpaca org)
+(elpaca org-contrib)
+(elpaca org-journal)
 
 (provide 'init)
 ;;; init.el ends here
