@@ -101,7 +101,32 @@
 ;; https://github.com/shfx/emacs.d/blob/8715ced2c49ba2f693ad965f2c0b4c1b44c829c8/README.org#disabling-suspend-frame-binding
 (global-unset-key (kbd "C-z"))
 
-(elpaca chezmoi)
+(elpaca
+    chezmoi
+  (require 'chezmoi)
+  (defun chezmoi--evil-insert-state-enter ()
+    "Run after evil-insert-state-entry."
+    (chezmoi-template-buffer-display nil (point))
+    (remove-hook 'after-change-functions #'chezmoi-template--after-change 1)
+
+    (defun chezmoi--evil-insert-state-exit ())
+    "Run after evil-insert-state-exit."
+    (chezmoi-template-buffer-display nil)
+    (chezmoi-template-buffer-display t)
+    (add-hook 'after-change-functions #'chezmoi-template--after-change nil 1)
+
+    (defun chezmoi-evil ())
+    (if chezmoi-mode
+        (progn
+          (add-hook 'evil-insert-state-entry-hook #'chezmoi--evil-insert-state-enter nil 1)
+          (add-hook 'evil-insert-state-exit-hook #'chezmoi--evil-insert-state-exit nil 1))
+      (progn)
+      (remove-hook 'evil-insert-state-entry-hook #'chezmoi--evil-insert-state-enter 1)
+      (remove-hook 'evil-insert-state-exit-hook #'chezmoi--evil-insert-state-exit 1)))
+  (add-hook 'chezmoi-mode-hook #'chezmoi-evil)
+  ;; Turn off ligatures because they show up poorly.
+  (add-hook 'chezmoi-mode-hook #'(lambda () (when (require 'ligature)
+                                              (ligature-mode (if chezmoi-mode 0 1))))))
 
 ;; macOS
 
@@ -116,10 +141,10 @@
 
 ;; Ensure PATH is correct when launched as GUI application
 (elpaca
-  exec-path-from-shell
-    (when (memq window-system '(mac ns))
-      (require 'exec-path-from-shell)
-      (exec-path-from-shell-initialize)))
+    exec-path-from-shell
+  (when (memq window-system '(mac ns))
+    (require 'exec-path-from-shell)
+    (exec-path-from-shell-initialize)))
 
 (when (memq window-system '(mac ns))
   (setq dired-use-ls-dired nil))
@@ -206,13 +231,13 @@
   (load-theme theme))
 
 (elpaca spacemacs-theme)
-  ;; (my/load-theme-by-current-time))
+;; (my/load-theme-by-current-time))
 
 (elpaca
-  modus-themes
-    (setq modus-operandi-theme-faint-syntax t)
-    (setq modus-vivendi-theme-faint-syntax t)
-    (my/load-theme-by-current-time))
+    modus-themes
+  (setq modus-operandi-theme-faint-syntax t)
+  (setq modus-vivendi-theme-faint-syntax t)
+  (my/load-theme-by-current-time))
 
 (elpaca doom-themes)
 
@@ -235,17 +260,17 @@
 (load "~/.config/emacs/ligatures.el")
 
 (elpaca
-  (ligature
-    ;; Enable the "www" ligature in every possible major mode
-    (ligature-set-ligatures 't '("www"))
-    ;; Enable traditional ligature support in eww-mode, if the
-    ;; `variable-pitch' face supports it
-    (ligature-set-ligatures 'eww-mode '("ff" "fi" "ffi"))
-    ;; Enable all Cascadia Code ligatures in programming modes
-    (ligature-set-ligatures 'prog-mode jetbrains-ligature-mode--ligatures)
-    ;; Enables ligature checks globally in all buffers. You can also do it
-    ;; per mode with `ligature-mode'.
-    (global-ligature-mode t)))
+    ligature
+  ;; Enable the "www" ligature in every possible major mode
+  (ligature-set-ligatures 't '("www"))
+  ;; Enable traditional ligature support in eww-mode, if the
+  ;; `variable-pitch' face supports it
+  (ligature-set-ligatures 'eww-mode '("ff" "fi" "ffi"))
+  ;; Enable all Cascadia Code ligatures in programming modes
+  (ligature-set-ligatures 'prog-mode jetbrains-ligature-mode--ligatures)
+  ;; Enables ligature checks globally in all buffers. You can also do it
+  ;; per mode with `ligature-mode'.
+  (global-ligature-mode t))
 
 ;; Default frame size
 (add-to-list 'default-frame-alist '(height . 100))
@@ -278,8 +303,8 @@
 
 ;; Mode-line
 (elpaca
-  (doom-modeline
-    (doom-modeline-mode 1)))
+    (doom-modeline
+     (doom-modeline-mode 1)))
 
 ;; Windows
 (global-set-key (kbd "C-h") 'windmove-left) ; Use F1 instead of C-h for help-command
@@ -325,23 +350,28 @@
 ;; http://sriramkswamy.github.io/dotemacs/
 (setq sentence-end-double-space nil)
 
+;; Scratch files
+(elpaca
+    persistent-scratch
+  (add-hook 'after-init #'persistent-scratch-setup-default))
+
 ;; Bindings
 (elpaca
-  which-key
-    (which-key-mode))
+    which-key
+  (which-key-mode))
 
 ;; Indentation
 (elpaca
-  indent-guide
-    (indent-guide-global-mode))
+    indent-guide
+  (indent-guide-global-mode))
 
 (setq-default indent-tabs-mode nil)
 
 (elpaca
-  aggressive-indent
-    (add-hook 'elixir-mode-hook #'aggressive-indent-mode)
-    (add-hook 'rust-mode-hook #'aggressive-indent-mode)
-    (add-hook 'swift-mode-hook #'aggressive-indent-mode))
+    aggressive-indent
+  (add-hook 'elixir-mode-hook #'aggressive-indent-mode)
+  (add-hook 'rust-mode-hook #'aggressive-indent-mode)
+  (add-hook 'swift-mode-hook #'aggressive-indent-mode))
 
 ;; Folding
 (elpaca origami)
@@ -350,23 +380,23 @@
 (setq isearch-lazy-count t)
 
 (elpaca
-  perspective
-    (setq persp-mode-prefix-key (kbd "C-c C-z"))
-    (setq persp-state-default-file (concat user-emacs-directory "persp-state"))
-    (setq persp-sort 'access)
-    (persp-mode))
+    perspective
+  (setq persp-mode-prefix-key (kbd "C-c C-z"))
+  (setq persp-state-default-file (concat user-emacs-directory "persp-state"))
+  (setq persp-sort 'access)
+  (persp-mode))
 
 (elpaca comby)
 
 ;; Tree-sitter
 (elpaca
-  treesit-auto
-    (setq treesit-auto-install 'prompt)
-    (global-treesit-auto-mode))
+    treesit-auto
+  (setq treesit-auto-install 'prompt)
+  (global-treesit-auto-mode))
 
 ;; LSP
 (elpaca
-  nil
+    nil
   (require 'eglot)
   ;; See: https://github.com/neovim/nvim-lspconfig/tree/89a19315ef4064a144b3d7d1c9a7eefd0e91e51b/lua/lspconfig/server_configurations
   (add-to-list 'eglot-server-programs
@@ -449,12 +479,12 @@
 
 ;; Pretty parens
 (elpaca
-  rainbow-delimiters
+    rainbow-delimiters
   (add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
 
 ;; Structured editing
 (elpaca
-  puni
+    puni
   ;; The autoloads of Puni are set up so you can enable `puni-mode` or
   ;; `puni-global-mode` before `puni` is actually loaded. Only after you press
   ;; any key that calls Puni commands, it's loaded.
@@ -462,7 +492,7 @@
   (add-hook 'term-mode-hook #'puni-disable-puni-mode))
 
 (elpaca
-  (combobulate
+    (combobulate
      :host github
      :repo "mickeynp/combobulate"
      :branch "master")
@@ -475,7 +505,7 @@
   (add-hook 'tsx-ts-mode #'combobulate-mode))
 
 (elpaca
-  parinfer-rust-mode
+    parinfer-rust-mode
   (add-hook 'emacs-lisp-mode #'parinfer-rust-mode))
 
 ;; Comments
@@ -483,7 +513,7 @@
 (global-set-key (kbd "s-/") 'comment-line)
 
 (elpaca
-  embark
+    embark
   (global-set-key (kbd "C-.") 'embark-act)         ;; pick some comfortable binding
   ;; ("C-;" . embark-dwim))        ;; good alternative: M-.
   ;; Disabled for now whilst I use C-h for window switching
@@ -498,7 +528,7 @@
 
 ;; Consult users will also want the embark-consult package.
 (elpaca
-  embark-consult
+    embark-consult
   (add-hook 'embark-collect-mode #'consult-preview-at-point-mode))
 
 ;; https://github.com/oantolin/embark/wiki/Additional-Configuration#use-which-key-like-a-key-menu-prompt
@@ -547,7 +577,7 @@
 (setq ispell-program-name "aspell")
 
 (elpaca
-  languagetool
+    languagetool
   (setq languagetool-java-arguments nil)
   (setq languagetool-console-command "languagetool")
   (setq languagetool-server-command "languagetool-server")
@@ -555,11 +585,11 @@
   (setq languagetool-server-port 8081))
 
 (elpaca
-  flycheck-vale
+    flycheck-vale
   (flycheck-vale-setup))
 
 (elpaca
-  flycheck-aspell
+    flycheck-aspell
   ;; If you want to check TeX/LaTeX/ConTeXt buffers
   (add-to-list 'flycheck-checkers 'tex-aspell-dynamic)
   ;; If you want to check Markdown/GFM buffers
@@ -598,12 +628,12 @@
 
 ;; Search for synonyms
 (elpaca
-  powerthesaurus
+    powerthesaurus
   (global-set-key (kbd "s-|") 'powerthesaurus-lookup-word-dwim))
 
 ;; Word definition search
 (elpaca
-  define-word
+    define-word
   :bind
   (global-set-key (kbd "M-\\") 'define-word-at-point))
 
@@ -619,7 +649,7 @@
 ;; Undo
 ;; Linear undo and redo.
 (elpaca
-  undo-tree
+    undo-tree
   (progn
     (global-undo-tree-mode)
     (setq undo-tree-history-directory-alist '(("." . "~/.config/emacs/tmp/undo"))
@@ -631,7 +661,7 @@
 
 ;; Vim
 (elpaca
-  evil
+    evil
   (setq evil-want-integration t) ;; This is optional since it's already set to t by default.
   (setq evil-want-keybinding nil)
   (evil-mode 1)
@@ -640,11 +670,11 @@
   (evil-set-undo-system 'undo-tree))
 
 (elpaca
-  evil-visual-mark-mode
+    evil-visual-mark-mode
   (evil-visual-mark-mode))
 
 (elpaca
-  evil-collection
+    evil-collection
   (evil-collection-init))
 
 ;; Programming
@@ -674,12 +704,12 @@
 (elpaca cargo
   (add-hook 'rust-mode-hook #'cargo-minor-mode))
 (elpaca
-  flycheck-rust
+    flycheck-rust
   (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
 
 ;; Web
 (elpaca
-  web-mode
+    web-mode
   (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode)))
 
 ;; Gradle
@@ -694,23 +724,23 @@
      :repo "Sasanidas/Apprentice"
      :branch "master"))
 (elpaca
-  mix
+    mix
   (add-hook 'elixir-mode-hook #'mix-minor-mode))
 (elpaca
-  exunit
+    exunit
   (add-hook 'elixir-mode-hook #'exunit-mode))
 (elpaca
-  flycheck-credo
+    flycheck-credo
   (flycheck-credo-setup)
   (setq flycheck-elixir-credo-strict t))
 (elpaca
-  flycheck-elixir
+    flycheck-elixir
   (add-hook 'elixir-mode-hook #'flycheck-mode))
 (elpaca
-  flycheck-dialyxir
+    flycheck-dialyxir
   (add-hook 'elixir-mode-hook #'flycheck-mode))
 (elpaca
-  flycheck-dialyzer
+    flycheck-dialyzer
   (add-hook 'elixir-mode-hook #'flycheck-mode))
 
 ;; Go
@@ -758,13 +788,13 @@
 (elpaca clojure-snippets)
 
 (elpaca
-  cider
+    cider
   (setq nrepl-log-messages t)
   (eval-after-load 'cider
     (flycheck-clojure-setup))) ;; run setup *after* cider load
 
 (elpaca
-  flycheck-clojure
+    flycheck-clojure
   (eval-after-load 'flycheck
     '(setq flycheck-display-errors-function #'flycheck-pos-tip-error-messages))
   (add-hook 'after-init-hook #'global-flycheck-mode))
@@ -793,19 +823,19 @@
 
 ;; Caddy
 (elpaca
-  caddyfile-mode)
-  ;; (("Caddyfile\\'" . caddyfile-mode))
-  ;; ("caddy\\.conf\\'" . caddyfile-mode))
+    caddyfile-mode)
+;; (("Caddyfile\\'" . caddyfile-mode))
+;; ("caddy\\.conf\\'" . caddyfile-mode))
 
 ;; Emacs Lisp
 (elpaca
-  eldoc
+    eldoc
   (add-hook 'emacs-lisp-mode #'turn-on-eldoc-mode)
   (add-hook 'lisp-interaction-mode #'turn-on-eldoc-mode))
 
 ;; Syntax
 (elpaca
-  flycheck
+    flycheck
   (global-flycheck-mode))
 
 ;; Formatting
@@ -813,7 +843,7 @@
 (elpaca format-all)
 
 (elpaca
-  apheleia
+    apheleia
   (require 'apheleia)
   (add-to-list 'apheleia-mode-alist
                `(tsx-mode . prettier-typescript))
@@ -865,7 +895,7 @@
 
 ;; Completion
 (elpaca
-  consult
+    consult
   ;; C-c bindings (mode-specific-map)
   (global-set-key (kbd "C-c h") 'consult-history)
   (global-set-key (kbd "C-c m") 'consult-mode-command)
@@ -894,6 +924,8 @@
   (global-set-key (kbd "M-g i") 'consult-imenu)
   (global-set-key (kbd "M-g I") 'consult-imenu-multi)
   ;; M-s bindings (search-map)
+  (define-prefix-command 'consult-search-map)
+  (global-set-key (kbd "M-s") 'consult-search-map)
   (global-set-key (kbd "M-s d") 'consult-find)
   (global-set-key (kbd "M-s D") 'consult-locate)
   (global-set-key (kbd "M-s g") 'consult-grep)
@@ -938,7 +970,7 @@
   ;; (setq consult-preview-key (list (kbd "<S-down>") (kbd "<S-up>")))
   ;; For some commands and buffer sources it is useful to configure the
   ;; :preview-key on a per-command basis using the `consult-customize' macro.
-  (require 'consult) 
+  (require 'consult)
   (consult-customize
    consult-theme :preview-key '(:debounce 0.2 any)
    consult-ripgrep consult-git-grep consult-grep
@@ -965,19 +997,19 @@
   (autoload 'projectile-project-root "projectile")
   (setq consult-project-function (lambda (_) (projectile-project-root))))
   ;;;; 3. vc.el (vc-root-dir)
-  ;; (setq consult-project-function (lambda (_) (vc-root-dir)))
+;; (setq consult-project-function (lambda (_) (vc-root-dir)))
   ;;;; 4. locate-dominating-file
-  ;; (setq consult-project-function (lambda (_) (locate-dominating-file "." ".git")))
+;; (setq consult-project-function (lambda (_) (locate-dominating-file "." ".git")))
 
 (elpaca consult-flycheck)
 
 (elpaca
-  vertico
+    vertico
   (vertico-mode))
 
 ;; Enable rich annotations using the Marginalia package
 (elpaca
-  marginalia
+    marginalia
   ;; Either bind `marginalia-cycle' globally or only in the minibuffer
   (global-set-key (kbd "M-A") 'marginalia-cycle)
   ;; :map minibuffer-local-map)
@@ -987,16 +1019,16 @@
   (marginalia-mode))
 
 (elpaca
-  orderless
+    orderless
   (setq completion-styles '(orderless basic))
   (setq completion-category-overrides '((file (styles basic partial-completion))))
   (setq completion-category-overrides '((eglot (styles orderless)))))
 
 (elpaca
-  corfu
-     ;; https://github.com/purplg/dotfiles/blob/04c5217247a738adef11d9bf569a329c7eebae4a/.config/emacs/modules/pg-completion.el
-     ;; :files (:defaults "extensions/corfu-popupinfo.el")
-     ;; Optional customizations
+    corfu
+  ;; https://github.com/purplg/dotfiles/blob/04c5217247a738adef11d9bf569a329c7eebae4a/.config/emacs/modules/pg-completion.el
+  ;; :files (:defaults "extensions/corfu-popupinfo.el")
+  ;; Optional customizations
   (setq corfu-cycle t)                ;; Enable cycling for `corfu-next/previous'
   (setq corfu-auto t)                 ;; Enable auto completion
   (setq corfu-auto-delay 0.2)
@@ -1011,18 +1043,18 @@
   ;; This is recommended since Dabbrev can be used globally (M-/).
   ;; See also `corfu-excluded-modes'.
   (global-corfu-mode))
-  ;; :bind
-  ;; (:map corfu-map
-  ;;       ("M-n" . corfu-popupinfo-scroll-up)
-  ;;       ("M-p" . corfu-popupinfo-scroll-down)
-  ;;       ("M-a" . corfu-popupinfo-beginning)
-  ;;       ("M-e" . corfu-popupinfo-end)
-  ;;       ("M-l" . corfu-popupinfo-location)
-  ;;       ("M-d" . corfu-popupinfo-documentation)
-  ;;       ("M-t" . corfu-popupinfo-toggle)))
+;; :bind
+;; (:map corfu-map
+;;       ("M-n" . corfu-popupinfo-scroll-up)
+;;       ("M-p" . corfu-popupinfo-scroll-down)
+;;       ("M-a" . corfu-popupinfo-beginning)
+;;       ("M-e" . corfu-popupinfo-end)
+;;       ("M-l" . corfu-popupinfo-location)
+;;       ("M-d" . corfu-popupinfo-documentation)
+;;       ("M-t" . corfu-popupinfo-toggle)))
 
 (elpaca
-  cape
+    cape
   ;; Bind dedicated completion commands
   ;; Alternative prefix keys: C-c p, M-p, M-+, ...
   (global-set-key (kbd "C-c p p") 'completion-at-point) ;; capf
@@ -1056,14 +1088,14 @@
   (add-to-list 'completion-at-point-functions #'cape-line))
 
 (elpaca
-  kind-icon
+    kind-icon
   (setq kind-icon-default-face 'corfu-default) ; to compute blended backgrounds correctly
   (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
 
 (elpaca all-the-icons)
 
 (elpaca
-  all-the-icons-completion
+    all-the-icons-completion
   (add-hook 'marginalia-mode #'all-the-icons-completion-marginalia-setup)
   (all-the-icons-completion-mode))
 
@@ -1094,7 +1126,7 @@
 (setq dired-kill-when-opening-new-dired-buffer t)
 
 (elpaca
-  treemacs
+    treemacs
   (with-eval-after-load 'winum
     (define-key winum-keymap (kbd "M-0") #'treemacs-select-window))
   (with-eval-after-load 'treemacs
@@ -1180,11 +1212,11 @@
 (elpaca treemacs-evil)
 
 (elpaca
-  treemacs-perspective ;;treemacs-perspective if you use perspective.el vs. persp-mode
+    treemacs-perspective ;;treemacs-perspective if you use perspective.el vs. persp-mode
   (setq treemacs-set-scope-type 'Perspectives))
 
 (elpaca
-  treemacs-icons-dired
+    treemacs-icons-dired
   (add-hook 'dired-mode #'treemacs-icons-dired-enable-once))
 
 (elpaca treemacs-magit)
@@ -1192,7 +1224,7 @@
 (elpaca treemacs-projectile)
 
 (elpaca
-  treemacs-tab-bar ;;treemacs-tab-bar if you use tab-bar-mode
+    treemacs-tab-bar ;;treemacs-tab-bar if you use tab-bar-mode
   (setq treemacs-set-scope-type 'Tabs))
 
 ;; Move file to trash instead of removing.
@@ -1227,7 +1259,7 @@
 ;; -----------------------------------------------------------------------------
 
 (elpaca
-  projectile
+    projectile
   (setq projectile-switch-project-action 'projectile-commander)
   (setq projectile-sort-order 'recently-active)
   (setq projectile-project-search-path '("~/Documents/projects/" ("~/src/" . 3)))
@@ -1251,10 +1283,10 @@
    :run "zig build run"))
 
 (elpaca
-  (consult-projectile
-   :host gitlab
-   :repo "OlMon/consult-projectile"
-   :branch "master")
+    (consult-projectile
+     :host gitlab
+     :repo "OlMon/consult-projectile"
+     :branch "master")
   (setq consult-projectile-source-projectile-project-action 'projectile-commander))
 
 (elpaca flycheck-projectile)
@@ -1267,7 +1299,7 @@
 
 ;; Magit
 (elpaca
-  magit
+    magit
   ;; Setting ‘forge-add-default-bindings’ to nil in ‘evil-collection-forge-setup’.
   ;; To suppress this message you can set this variable to nil in your init.el file.
   (setq forge-add-default-bindings nil)
@@ -1279,17 +1311,17 @@
 ;;   :init (magit-todos-mode))
 
 (elpaca
-  forge
+    forge
   (setq auth-sources '("~/.authinfo")))
 
 ;; Show changes in the gutter
 (elpaca
-  git-gutter
+    git-gutter
   (global-git-gutter-mode +1))
 
 ;; Show author
 (elpaca
-  blamer
+    blamer
   (global-blamer-mode 1))
 
 ;; Create URLs to files and commits in repository hosting services

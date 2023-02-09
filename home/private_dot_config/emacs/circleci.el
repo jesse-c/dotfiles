@@ -1,6 +1,8 @@
 ;;; circleci.el --- Manage CircleCI -*- lexical-binding: t; -*-
 ;;; Code:
 
+(require 'auth-source)
+
 ;; https://github.com/technomancy/circleci.el/blob/master/circleci.el
 (defun circleci--get-token ()
   (let* ((auth-sources '("~/.authinfo"))
