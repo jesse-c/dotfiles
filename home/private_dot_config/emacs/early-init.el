@@ -2,7 +2,14 @@
 
 ;;; Code:
 
+;; Don't use package.el
 (setq package-enable-at-startup nil)
+
+;; Suppress native compilation warnings and errors
+(setq native-comp-async-report-warnings-errors nil
+      native-comp-async-query-on-exit t
+      native-comp-deferred-compilation nil)
+(setq load-prefer-newer noninteractive)
 
 ;; Don't resize the frame to preserve the number of columns or lines
 ;; being displayed when setting font, menu bar, tool bar, tab bar,
@@ -53,6 +60,38 @@
 (setq file-name-handler-alist nil)
 ;; Not restoring these to their defaults will cause stuttering/freezes.
 (add-hook 'after-init-hook #'my/restore-startup-optimizations)
+
+(unless (or (daemonp) noninteractive)
+
+  ;; Improves startup speed by not looking a bunch of file handlers
+  ;; for every require statement.
+  ;; NOTE: Breaks systems that use *.el.gz rather than byte-compiling.
+  (let ((old-file-name-handler-alist file-name-handler-alist))
+    (setq-default file-name-handler-alist nil)
+    (defun doom-reset-file-handler-alist-h ()
+      (setq file-name-handler-alist
+            (delete-dups (append file-name-handler-alist
+                                 old-file-name-handler-alist))))
+    (add-hook 'emacs-startup-hook #'doom-reset-file-handler-alist-h 101))
+
+  ;; Premature redisplays can substantially affect startup times and produce
+  ;; ugly flashes of unstyled Emacs.
+  (setq-default inhibit-redisplay t
+                inhibit-message t)
+  (add-hook 'window-setup-hook
+            (lambda ()
+              (setq-default inhibit-redisplay nil
+                            inhibit-message nil)
+              (redisplay)))
+
+  ;; Report how long it took to load.
+  (add-hook 'emacs-startup-hook
+            (lambda ()
+              (message "Emacs ready in %s with %d garbage collections."
+                       (format "%.2f seconds"
+                               (float-time
+                                (time-subtract after-init-time before-init-time)))
+                       gcs-done))))
 
 (provide 'early-init)
 
