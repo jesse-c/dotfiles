@@ -11,7 +11,7 @@
 (defun my/copy-project-buffer-name ()
   "Copy the buffer name relative to the project."
   (interactive)
-  (kill-new (file-relative-name buffer-file-name (project-root))))
+  (kill-new (file-relative-name buffer-file-name (projectile-project-root))))
 
 (recentf-mode t)
 
