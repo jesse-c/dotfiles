@@ -14,7 +14,7 @@
 ;; It's either the index, [0, ∞), or nil
 (let ((match (string-match-p "Knapsack" system-name)))
   (when (or match (eq 0 match))
-    (load "~/.config/emacs/circleci.el")))
+    (require 'circleci)))
 
 ;; TODO Treat it as a package
 ;; (use-package circleci

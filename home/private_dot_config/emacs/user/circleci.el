@@ -1,6 +1,8 @@
 ;;; circleci.el --- Manage CircleCI -*- lexical-binding: t; -*-
 ;;; Code:
 
+(require 'auth-source)
+
 ;; https://github.com/technomancy/circleci.el/blob/master/circleci.el
 (defun circleci--get-token ()
   (let* ((auth-sources '("~/.authinfo"))
@@ -93,3 +95,7 @@
   "Rerun the latest workflow for the current branch from failed."
   (interactive)
   (my/circleci-rerun-workflow (my/circleci-get-current-branch-latest-workflow)))
+
+(provide 'circleci)
+
+;;; circleci.el ends here
