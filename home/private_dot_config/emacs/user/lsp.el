@@ -4,19 +4,23 @@
   :ensure nil
   :commands eglot eglot-ensure
   :bind (:map eglot-mode-map
-	            ("C-c l r" . eglot-rename)
-	            ("C-c l a" . eglot-code-actions)
-	            ("C-c l k" . eldoc)
-	            ("C-c l f" . eglot-format-buffer)
-	            ("C-c l t r" . eglot-reconnect)
-	            ("C-c l t s" . eglot-shutdown)
-	            ("C-c l t S" . eglot-shutdown-all))
+                ("C-c l r" . eglot-rename)
+                ("C-c l a" . eglot-code-actions)
+                ("C-c l k" . eldoc)
+                ("C-c l f" . eglot-format-buffer)
+                ("C-c l t r" . eglot-reconnect)
+                ("C-c l t s" . eglot-shutdown)
+                ("C-c l t S" . eglot-shutdown-all))
   :config
   ;; See: https://github.com/neovim/nvim-lspconfig/tree/89a19315ef4064a144b3d7d1c9a7eefd0e91e51b/lua/lspconfig/server_configurations
   (add-to-list 'eglot-server-programs
                `(toml-mode "taplo" "lsp" "stdio"))
   (add-to-list 'eglot-server-programs
                `(elixir-mode "elixir-ls"))
+  (add-to-list 'eglot-server-programs
+               `(elixir-ts-mode "elixir-ls"))
+  (add-to-list 'eglot-server-programs
+               `(heex-ts-mode "elixir-ls"))
   (add-to-list 'eglot-server-programs
                `(xml-mode "lemminx"))
   (add-to-list 'eglot-server-programs
@@ -65,6 +69,8 @@
   :hook
   (toml-mode-hook . eglot-ensure)
   (elixir-mode-hook . eglot-ensure)
+  (elixir-ts-mode-hook . eglot-ensure)
+  (heex-ts-mode-hook . eglot-ensure)
   (xml-mode-hook . eglot-ensure)
   (go-mode-hook . eglot-ensure)
   (bash-mode-hook . eglot-ensure)
@@ -87,11 +93,13 @@
   (yaml-mode-hook . eglot-ensure)
   (terraform-mode-hook . eglot-ensure)
   (swift-mode-hook . eglot-ensure)
-	(rust-mode . eglot-ensure)
-	(rustic-mode . eglot-ensure))
-
+  (rust-mode . eglot-ensure)
+  (rust-ts-mode . eglot-ensure)
+  (rustic-mode . eglot-ensure))
 
 (use-package consult-eglot)
+
+(use-package consult-lsp)
 
 (provide 'lsp)
 

@@ -54,7 +54,11 @@
    :compile "zig build"
    :run "zig build run"))
 
+(use-package ibuffer-projectile
+  :after projectile)
+
 (use-package consult-projectile
+  :after projectile
   :elpaca
   (consult-projectile :type git :host gitlab :repo "OlMon/consult-projectile" :branch "master")
   :custom

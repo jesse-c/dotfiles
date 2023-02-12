@@ -199,6 +199,11 @@
 
 (setq column-number-mode t)
 
+(use-package recursion-indicator
+  :demand t
+  :config
+  (recursion-indicator-mode))
+
 (provide 'ui)
 
 ;;; ui.el ends here

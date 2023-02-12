@@ -29,6 +29,8 @@
   :config
   (global-git-gutter-mode +1))
 
+(use-package git-modes)
+
 ;; Show author
 (use-package blamer
   :init (global-blamer-mode 1))

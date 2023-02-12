@@ -38,6 +38,7 @@
 (require 'lang-rust)
 (require 'lang-java)
 (require 'lang-elixir)
+(require 'lang-erlang)
 (require 'lang-go)
 (require 'lang-swift)
 (require 'lang-json)
@@ -56,5 +57,7 @@
 (require 'lang-docker)
 (require 'lang-caddy)
 (require 'lang-emacs-lisp)
+(require 'lang-racket)
+(require 'lang-nix)
 
 ;;; init.el ends here

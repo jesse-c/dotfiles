@@ -19,6 +19,9 @@
 (use-package flycheck
   :init (global-flycheck-mode))
 
+;; Debugging
+(use-package dap-mode)
+
 ;; Testing
 (use-package coverlay
   :defer t)

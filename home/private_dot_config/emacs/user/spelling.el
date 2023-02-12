@@ -16,14 +16,15 @@
   (languagetool-server-command "languagetool-server")
   (languagetool-server-host "localhost")
   (languagetool-server-port 8081)
-  :commands (languagetool-check
-             languagetool-clear-suggestions
-             languagetool-correct-at-point
-             languagetool-correct-buffer
-             languagetool-set-language
-             languagetool-server-mode
-             languagetool-server-start
-             languagetool-server-stop))
+  :commands
+  (languagetool-check
+   languagetool-clear-suggestions
+   languagetool-correct-at-point
+   languagetool-correct-buffer
+   languagetool-set-language
+   languagetool-server-mode
+   languagetool-server-start
+   languagetool-server-stop))
 
 (use-package flycheck-vale
   :after flycheck

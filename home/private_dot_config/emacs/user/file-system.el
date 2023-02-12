@@ -133,6 +133,15 @@
 (setq auto-save-default nil) ; stop creating #autosave# files
 (setq make-backup-files nil) ; stop creating backup~ files
 
+(use-package file-info
+  :config
+  (setq hydra-hint-display-type 'posframe)
+  (setq hydra-posframe-show-params `(:poshandler posframe-poshandler-frame-center
+                                                 :internal-border-width 2
+                                                 :internal-border-color "#61AFEF"
+                                                 :left-fringe 16
+                                                 :right-fringe 16)))
+
 (provide 'file-system)
 
 ;;; file-system.el ends here
