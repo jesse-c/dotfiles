@@ -32,6 +32,7 @@
 (require 'projects)
 (require 'spelling)
 (require 'modal)
+(require 'notes)
 (require 'completion)
 (require 'file-system)
 (require 'lang-all)

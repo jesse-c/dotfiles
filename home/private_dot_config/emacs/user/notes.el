@@ -1,0 +1,42 @@
+;;; notes.el --- -*- lexical-binding: t; -*-
+
+(defvar org-dir "~/Documents/org/")
+
+(setq org-log-done t)
+
+(use-package org-journal
+  :defer t
+  :init
+  ;; Change default prefix key; needs to be set before loading org-journal
+  (setq org-journal-prefix-key "C-c j ")
+  :custom
+  (org-journal-dir (concat org-dir "journal"))
+  (org-journal-date-format "%y-%m-%d %a"))
+
+(use-package org-projectile
+  :after org
+  :bind
+  (("C-c n p" . org-projectile-project-todo-completing-read)
+   ("C-c c" . org-capture))
+  :custom
+  (org-projectile-per-project-filepath "TODO.org")
+  (org-projectile-projects-file (concat org-dir "projects/TODOS.org"))
+  :config
+  (org-projectile-per-project)
+  (progn
+    (setq org-agenda-files (append org-agenda-files (org-projectile-todo-files)))
+    (push (org-projectile-project-todo-entry) org-capture-templates)))
+
+(use-package org-pomodoro)
+
+(use-package org-modern)
+
+(defun my/open-project-notes ()
+  "Open the project's notes."
+  (interactive)
+  (let* ((notes-file-name (concat (projectile-project-root) "NOTES.org")))
+    (find-file notes-file-name)))
+
+(provide 'notes)
+
+;;; notes.el ends here
