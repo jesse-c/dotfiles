@@ -5,7 +5,8 @@
 ;; https://github.com/shfx/emacs.d/blob/8715ced2c49ba2f693ad965f2c0b4c1b44c829c8/README.org#disabling-suspend-frame-binding
 (global-unset-key (kbd "C-z"))
 
-(use-package chezmoi)
+(use-package chezmoi
+  :after magit)
 
 ;; macOS
 

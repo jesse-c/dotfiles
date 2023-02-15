@@ -155,6 +155,8 @@
 ;; (add-hook 'clojure-mode-hook 'format-all-mode))
 
 (use-package apheleia
+  :elpaca
+  (:type git :host github :repo "jesse-c/apheleia" :branch "add-elixir-ts-modes")
   :config
   (add-to-list 'apheleia-mode-alist
                `(tsx-mode . prettier-typescript))
