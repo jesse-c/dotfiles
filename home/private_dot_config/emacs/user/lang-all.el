@@ -32,11 +32,11 @@
   ;; :custom
   ;; (tempel-trigger-prefix "<")
 
-  :bind (("M-+" . tempel-complete) ;; Alternative tempel-expand
-         ("M-*" . tempel-insert))
+  :bind
+  ("M-+" . tempel-complete) ;; Alternative tempel-expand
+  ("M-*" . tempel-insert)
 
   :init
-
   ;; Setup completion at point
   (defun tempel-setup-capf ()
     ;; Add the Tempel Capf to `completion-at-point-functions'.

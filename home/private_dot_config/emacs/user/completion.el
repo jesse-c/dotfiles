@@ -148,9 +148,11 @@
   ;; Optional customizations
   :custom
   (corfu-cycle t)                ;; Enable cycling for `corfu-next/previous'
+  (corfu-preselect 'prompt)      ;; Always preselect the prompt
   (corfu-auto t)                 ;; Enable auto completion
+  (corfu-preview-current t)      ;; Disable current candidate preview
   (corfu-auto-delay 0.2)
-  (corfu-popupinfo-delay 0.4)
+  (corfu-popupinfo-delay 0.2)
   (corfu-separator ?\s)          ;; Orderless field separator
   (corfu-quit-at-boundary nil)   ;; Never quit at completion boundary
   (corfu-quit-no-match 'separator)      ;; Never quit, even if there is no match
@@ -170,13 +172,19 @@
   (global-corfu-mode)
   :bind
   (:map corfu-map
+        ;; Display candidate documentation or source in a popup next to the candidate menu.
         ("M-n" . corfu-popupinfo-scroll-up)
         ("M-p" . corfu-popupinfo-scroll-down)
         ("M-a" . corfu-popupinfo-beginning)
         ("M-e" . corfu-popupinfo-end)
         ("M-l" . corfu-popupinfo-location)
         ("M-d" . corfu-popupinfo-documentation)
-        ("M-t" . corfu-popupinfo-toggle)))
+        ("M-t" . corfu-popupinfo-toggle)
+        ;; Use TAB for cycling, default is `corfu-complete'.
+        ("TAB" . corfu-next)
+        ([tab] . corfu-next)
+        ("S-TAB" . corfu-previous)
+        ([backtab] . corfu-previous)))
 
 (use-package cape
   ;; Bind dedicated completion commands

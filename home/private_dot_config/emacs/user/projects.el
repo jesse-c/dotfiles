@@ -9,6 +9,13 @@
   :config
   (persp-mode))
 
+(use-package perspective-tabs
+  :elpaca
+  (:type git :host sourcehut :repo "woozong/perspective-tabs")
+  :after perspective
+  :config
+  (perspective-tabs-mode +1))
+
 ;; CI/CD -----------------------------------------------------------------------
 
 ;; It's either the index, [0, ∞), or nil

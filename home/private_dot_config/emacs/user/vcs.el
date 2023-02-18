@@ -19,39 +19,44 @@
 
 (use-package forge
   :after magit
-  :defer 1
-  :config
-  (setq auth-sources '("~/.authinfo")))
+  :defer 1)
 
 ;; Show changes in the gutter
 (use-package git-gutter
+  :after magit
   :diminish
   :config
   (global-git-gutter-mode +1))
 
-(use-package git-modes)
+(use-package git-modes
+  :after magit)
 
 ;; Show author
 (use-package blamer
+  :after magit
   :init (global-blamer-mode 1))
 
 ;; Create URLs to files and commits in repository hosting services
 (use-package git-link
+  :after magit
   :defer 1
   :config
   (setq git-link-use-commit t))
 
 ;; Browse target page on github/bitbucket from emacs buffers
-(use-package browse-at-remote)
+(use-package browse-at-remote
+  :after magit)
 
 ;; Why was this line changed
-(use-package git-messenger)
+(use-package git-messenger
+  :after magit)
 
 ;; View versions of a file
 ;; (use-package git-timemachine)
 
 ;; View git blame
-(use-package vc-msg)
+(use-package vc-msg
+  :after magit)
 
 (provide 'vcs)
 

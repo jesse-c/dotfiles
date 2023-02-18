@@ -1,5 +1,16 @@
 ;;; os.el --- -*- lexical-binding: t; -*-
 
+;; All
+
+(setq confirm-kill-emacs nil)
+(setq confirm-kill-processes nil)
+
+(setq auth-sources '("~/.authinfo"))
+
+;; Tidy up .emacs.d mess
+(use-package no-littering)
+(savehist-mode)
+
 ;; Disabling suspend-frame binding
 ;; Very annoying binding, lets get rid of it.
 ;; https://github.com/shfx/emacs.d/blob/8715ced2c49ba2f693ad965f2c0b4c1b44c829c8/README.org#disabling-suspend-frame-binding
@@ -38,15 +49,6 @@
    (lambda (key _value)
      (file-notify-rm-watch key))
    file-notify-descriptors))
-
-;; All
-
-(setq confirm-kill-emacs nil)
-(setq confirm-kill-processes nil)
-
-;; Tidy up .emacs.d mess
-(use-package no-littering)
-(savehist-mode)
 
 (provide 'os)
 

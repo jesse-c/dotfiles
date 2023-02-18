@@ -131,7 +131,7 @@
 ;; Tab-bar
 (setq tab-bar-tab-hints t) ; Show tab numbers
 (setq tab-bar-mode t)
-(setq tab-bar-show nil)
+(setq tab-bar-show t)
 (setq tab-bar-new-tab-choice "*scratch*")
 
 (global-set-key (kbd "C-<tab>") 'tab-bar-switch-to-tab)
@@ -141,6 +141,14 @@
   doom-modeline
   :config
   (doom-modeline-mode 1))
+
+;; (use-package moody
+;;   :custom
+;;   (x-underline-at-descent-line t)
+;;   :config
+;;   (moody-replace-mode-line-buffer-identification)
+;;   (moody-replace-vc-mode)
+;;   (moody-replace-eldoc-minibuffer-message-function))
 
 ;; Windows
 (global-set-key (kbd "C-h") 'windmove-left) ; Use F1 instead of C-h for help-command

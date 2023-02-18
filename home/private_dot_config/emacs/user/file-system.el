@@ -122,7 +122,7 @@
 (use-package treemacs-projectile
   :after (treemacs projectile))
 
-(use-package treemacs-tab-bar ;;treemacs-tab-bar if you use tab-bar-mode
+(use-package treemacs-tab-bar
   :after treemacs
   :config (treemacs-set-scope-type 'Tabs))
 
