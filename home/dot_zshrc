@@ -61,9 +61,9 @@ alias emacs="/usr/local/Cellar/emacs-mac/emacs-26.3-z-mac-7.7/bin/emacs"
 HOMEBREW_NO_ANALYTICS=1
 
 # ASDF
-autoload -Uz compinit && compinit
-. $HOME/.asdf/asdf.sh
-. $HOME/.asdf/completions/asdf.bash
+// autoload -Uz compinit && compinit
+// . $HOME/.asdf/asdf.sh
+// . $HOME/.asdf/completions/asdf.bash
 
 # Bindings ---------------------------------------------------------------------
 

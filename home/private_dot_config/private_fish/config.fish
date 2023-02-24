@@ -51,10 +51,13 @@ export HOMEBREW_NO_ANALYTICS=1
 export HOMEBREW_NO_ENV_HINTS=1
 
 # asdf
-source (brew --prefix asdf)/libexec/asdf.fish
+# source (brew --prefix asdf)/libexec/asdf.fish
+
+# rtx
+rtx activate fish | source
 
 # direnv
-direnv hook fish | source
+# direnv hook fish | source
 
 # Rust
 # source $HOME/.cargo/env
@@ -146,3 +149,4 @@ end
 if test -e ~/local.sh
   source ~/local.sh
 end
+
