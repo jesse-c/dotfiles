@@ -5,7 +5,6 @@ Host *
   PasswordAuthentication no
   ChallengeResponseAuthentication no
   HashKnownHosts yes
-
-Host hurin
-  HostName hurin.local
-  User jesse
+{{ if .hosts}}
+{{ .hosts }}
+{{ end }}
