@@ -1,7 +1,7 @@
 Host *
   AddKeysToAgent yes
   UseKeychain yes
-  IdentityFile ~/.ssh/id_rsa
+  IdentityFile {{ .identity_file }}
   PasswordAuthentication no
   ChallengeResponseAuthentication no
   HashKnownHosts yes
