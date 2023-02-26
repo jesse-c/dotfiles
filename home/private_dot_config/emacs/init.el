@@ -17,7 +17,7 @@
 ;; Where the user config is kept
 (add-to-list 'load-path (expand-file-name user-dir user-emacs-directory))
 
-(require 'package)
+(require 'external)
 
 ;;; User -----------------------------------------------------------------------
 

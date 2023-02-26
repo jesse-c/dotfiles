@@ -1,4 +1,4 @@
-;;; package.el --- -*- lexical-binding: t; -*-
+;;; external.el --- -*- lexical-binding: t; -*-
 
 (defvar elpaca-installer-version 0.2)
 (defvar elpaca-directory (expand-file-name "elpaca/" user-emacs-directory))
@@ -42,6 +42,6 @@
 ;; Block until current queue processed.
 (elpaca-wait)
 
-(provide 'package)
+(provide 'external)
 
-;;; package.el ends here
+;;; external.el ends here
