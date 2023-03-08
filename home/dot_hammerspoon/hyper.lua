@@ -28,7 +28,7 @@ hs.fnutils.each({
   { key = 'm', appname = 'Mail'},
   { key = 'a', appname = 'Safari'},
   { key = 'p', appname = 'Spotify'},
-  { key = 'w', appname = 'Paw'},
+  { key = 'w', appname = 'RapidAPI'},
   { key = 'z', appname = 'zoom.us'},
   { key = 's', appname = 'Slack'},
   { key = 'n', appname = 'Notion'},
