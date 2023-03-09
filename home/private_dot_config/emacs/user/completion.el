@@ -229,6 +229,29 @@
   :custom
   (copilot-enable-predicates '(evil-insert-state-p)))
 
+(require 'auth-source)
+
+(defun my/get-password (hostname username)
+  "Return the password for the given HOSTNAME and USERNAME from .authinfo file."
+  (interactive "sHostname: \nsUsername: ")
+  (require 'auth-source)
+  (let ((match (auth-source-search :host hostname
+                                   :user username
+                                   :require '(:secret)
+                                   :max 1)))
+    (if match
+        (funcall (plist-get (car match) :secret))
+      (error "No password found for %s@%s in .authinfo" username hostname))))
+
+(use-package chatgpt-arcana
+  :elpaca
+  (:host github :repo "CarlQLange/ChatGPT-Arcana.el" :files ("*.el"))
+  :custom
+  (chatgpt-arcana-api-key (my/get-password "api.openai.com" "me"))
+  :config
+  (add-to-list 'all-the-icons-mode-icon-alist
+               '(chatgpt-arcana-chat-mode all-the-icons-octicon "comment-discussion" :height 1.0 :v-adjust -0.1 :face all-the-icons-purple)))
+
 (use-package kind-icon
   :after corfu
   :custom
