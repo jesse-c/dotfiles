@@ -220,6 +220,15 @@
   (add-to-list 'completion-at-point-functions #'cape-symbol)
   (add-to-list 'completion-at-point-functions #'cape-line))
 
+(use-package copilot
+  :elpaca
+  (:host github :repo "zerolfx/copilot.el" :files ("dist" "*.el"))
+  :hook
+  (prog-mode-hook . copilot-mode)
+  (text-mode-hook . copilot-mode)
+  :custom
+  (copilot-enable-predicates '(evil-insert-state-p)))
+
 (use-package kind-icon
   :after corfu
   :custom
