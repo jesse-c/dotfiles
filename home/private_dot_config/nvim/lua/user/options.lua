@@ -55,8 +55,8 @@ vim.o.inccommand = "nosplit"
 local f = io.open("~/.config/nvim/local.vim", "r")
 
 if f ~= nil then
-	io.close(f)
-	vim.cmd([[ source ~/.config/nvim/local.vim ]])
+    io.close(f)
+    vim.cmd([[ source ~/.config/nvim/local.vim ]])
 end
 --------
 -- Folds

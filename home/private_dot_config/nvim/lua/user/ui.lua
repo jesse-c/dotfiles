@@ -10,23 +10,23 @@ vim.cmd([[ filetype plugin indent on ]])
 vim.cmd([[ syntax enable ]])
 vim.g.indent_blankline_enabled = true
 vim.g.indent_blankline_char = "┆"
-vim.g.indent_blankline_char_list = { "|", "¦", "┆", "┊" }
+vim.g.indent_blankline_char_list = {"|", "¦", "┆", "┊"}
 vim.g.indent_blankline_use_treesitter = true
 vim.g.indent_blankline_show_first_indent_level = false
 ----------------------
 -- Splits
 ----------------------
 vim.api.nvim_create_autocmd("VimResized", {
-	pattern = "*",
-	callback = function(_args)
-		vim.cmd([[ wincmd = ]])
-	end,
-	desc = "Auto resize splits when window is resized",
+    pattern = "*",
+    callback = function(_args) vim.cmd([[ wincmd = ]]) end,
+    desc = "Auto resize splits when window is resized"
 })
 vim.o.splitbelow = true
 vim.o.splitright = true
-vim.api.nvim_set_keymap("n", "<C-X>", "<cmd>split<cr>", { silent = true, noremap = true })
-vim.api.nvim_set_keymap("n", "<C-V>", "<cmd>vsplit<cr>", { silent = true, noremap = true })
+vim.api.nvim_set_keymap("n", "<C-X>", "<cmd>split<cr>",
+                        {silent = true, noremap = true})
+vim.api.nvim_set_keymap("n", "<C-V>", "<cmd>vsplit<cr>",
+                        {silent = true, noremap = true})
 ------------
 -- Scrolling
 ------------
@@ -49,14 +49,14 @@ vim.o.cmdheight = 0
 
 -- Temporary fix: https://www.reddit.com/r/neovim/comments/vfn99v/psa_macros_w_cmdheight_0/
 function _G.ToggleCmdline()
-	if vim.o.cmdheight == 1 then
-		vim.o.cmdheight = 0
-	else
-		vim.o.cmdheight = 1
-	end
+    if vim.o.cmdheight == 1 then
+        vim.o.cmdheight = 0
+    else
+        vim.o.cmdheight = 1
+    end
 end
 
-vim.keymap.set("n", "<C-e>", ToggleCmdline, { desc = "Toggle command-line" })
+vim.keymap.set("n", "<C-e>", ToggleCmdline, {desc = "Toggle command-line"})
 ------------------------------
 -- Column marker
 ------------------------------
