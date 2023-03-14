@@ -1,5 +1,6 @@
 return {
-    "neovim/nvim-lspconfig", {
+    "neovim/nvim-lspconfig",
+     {
         "williamboman/mason-lspconfig.nvim",
         dependencies = {
             "williamboman/mason.nvim", "neovim/nvim-lspconfig",
@@ -16,7 +17,8 @@ return {
                 }
             })
         end
-    }, -- vscode-like pictograms for neovim lsp completion items
+    },
+    -- vscode-like pictograms for neovim lsp completion items
     "onsails/lspkind.nvim",
     -- Use Neovim as a language server to inject LSP diagnostics, code actions, and more via Lua
     {
@@ -29,12 +31,14 @@ return {
         "folke/trouble.nvim",
         dependencies = "kyazdani42/nvim-web-devicons",
         config = function() require("trouble").setup() end
-    }, -- Neovim plugin for a code outline window
+    },
+    -- Neovim plugin for a code outline window
     {
         "stevearc/aerial.nvim",
         dependencies = "stevearc/stickybuf.nvim",
         config = function() require("aerial").setup() end
-    }, -- Standalone UI for nvim-lsp progress. Eye candy for the impatient.
+    },
+    -- Standalone UI for nvim-lsp progress. Eye candy for the impatient.
     {
         "j-hui/fidget.nvim",
         dependencies = "neovim/nvim-lspconfig",
