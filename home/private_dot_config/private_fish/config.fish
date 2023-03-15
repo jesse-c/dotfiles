@@ -56,6 +56,9 @@ export HOMEBREW_NO_ENV_HINTS=1
 # rtx
 rtx activate fish | source
 
+# Raycast
+ray completion fish | source
+
 # direnv
 # direnv hook fish | source
 
