@@ -1,6 +1,11 @@
 ;;; lang-clojure.el --- -*- lexical-binding: t; -*-
 
 (use-package clojure-mode)
+
+(use-package clojure-ts-mode
+  :elpaca
+  (:type git :host github :repo "clojure-emacs/clojure-ts-mode" :branch "main"))
+
 (use-package clojure-snippets)
 
 (use-package cider
