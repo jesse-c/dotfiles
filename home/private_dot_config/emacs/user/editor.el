@@ -160,6 +160,7 @@
                `(tsx-ts-mode . prettier-typescript))
   :hook
   (elixir-mode . apheleia-mode)
+  (elixir-ts-mode . apheleia-mode)
   (swift-mode . apheleia-mode)
   (rust-mode . apheleia-mode)
   (javascript-mode . apheleia-mode)
