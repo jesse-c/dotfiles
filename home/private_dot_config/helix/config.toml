@@ -7,14 +7,18 @@ rulers = [80, 120]
 scroll-lines = 3
 bufferline = "multiple"
 
+[editor.soft-wrap]
+enable = true
+
 [editor.indent-guides]
 render = true
 
 [editor.lsp]
 display-messages = true
+display-inlay-hints = true
 
 [editor.statusline]
-left = ["mode", "file-name", "file-type"]
+left = ["mode", "file-name", "file-type", "version-control"]
 center= ["spinner", "diagnostics"]
 right= ["selections", "position", "position-percentage"]
 
