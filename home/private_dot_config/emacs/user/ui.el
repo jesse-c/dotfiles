@@ -10,6 +10,10 @@
 
 (global-set-key (kbd "<s-mouse-1>") 'browse-url-at-mouse)
 
+;; Soft wrapping
+(setq visual-line-fringe-indicators '(left-curly-arrow right-curly-arrow))
+(add-hook 'org-mode-hook 'visual-line-mode)
+
 ;; Setting default coding system
 ;; https://github.com/shfx/emacs.d/blob/8715ced2c49ba2f693ad965f2c0b4c1b44c829c8/README.org#setting-default-coding-system
 (set-language-environment 'utf-8)
