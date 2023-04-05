@@ -39,7 +39,7 @@ hs.fnutils.each({
   { key = 'e', appname = 'Minimalist'},
   { key = 'x', appname = 'Xcode'},
   { key = 'u', appname = 'Proxyman'},
-  { key = 'o', appname = 'Anybox'},
+  { key = 'o', appname = '/Applications/Anybox.app'},
 }, function(object)
   k:bind({}, object.key, function() launch(object.appname); k:exit(); end)
 end)
