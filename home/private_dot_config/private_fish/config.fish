@@ -60,6 +60,12 @@ rtx activate fish | source
 set nodejs_bin "$(rtx where nodejs)/bin/ray"
 $nodejs_bin completion fish | source
 
+# Chezmoi
+chezmoi completion fish | source
+
+# Himalya
+himalaya completion fish | source
+
 # direnv
 # direnv hook fish | source
 
