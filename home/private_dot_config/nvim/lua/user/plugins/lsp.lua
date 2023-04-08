@@ -9,11 +9,25 @@ return {
         config = function()
             require("mason-lspconfig").setup({
                 ensure_installed = {
-                    "bashls", "clojure_lsp", "elixirls", "erlangls", "html",
-                    "gopls", "jsonls", "lemminx", "ltex", "prosemd_lsp",
-                    "pylsp", "rust_analyzer", "solargraph", "sorbet",
+                    "bashls", 
+                    "clojure_lsp",
+                    "elixirls",
+                    "erlangls",
+                    "html",
+                    "gopls",
+                    "jsonls",
+                    "lemminx",
+                    "ltex",
+                    "prosemd_lsp",
+                    "pylsp",
+                    "rust_analyzer",
+                    "solargraph",
+                    "sorbet",
                     -- "sourcekit",
-                    "sqls", "lua_ls", "tsserver", "yamlls"
+                    "sqlls",
+                    "lua_ls",
+                    "tsserver",
+                    "yamlls"
                 }
             })
         end

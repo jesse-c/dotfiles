@@ -101,11 +101,10 @@ tsserver_opts["cmd"] = {"typescript-language-server", "--stdio"}
 local bashls_opts = shallowcopy(opts)
 bashls_opts["cmd"] = {"bash-language-server", "start"}
 
-local sqls_opts = shallowcopy(opts)
-sqls_opts["cmd"] = {"sqls"}
-sqls_opts["on_attach"] = function(client, bufnr)
+local sqlls_opts = shallowcopy(opts)
+sqlls_opts["on_attach"] = function(client, bufnr)
     -- This is currently overriding the default on_attach function
-    require("sqls").on_attach(client, bufnr)
+    require("sqlls").on_attach(client, bufnr)
 end
 
 local prosemd_lsp_opts = shallowcopy(opts)
@@ -156,7 +155,7 @@ lspconfig.sourcekit.setup(opts)
 lspconfig.prosemd_lsp.setup(prosemd_lsp_opts)
 lspconfig.sorbet.setup(sorbet_opts)
 lspconfig.solargraph.setup(solargraph_opts)
-lspconfig.sqls.setup(sqls_opts)
+lspconfig.sqlls.setup(sqlls_opts)
 lspconfig.lua_ls.setup(sumenko_opts)
 lspconfig.tsserver.setup(tsserver_opts)
 lspconfig.yamlls.setup(yamlls_opts)

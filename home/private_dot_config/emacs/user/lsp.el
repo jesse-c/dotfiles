@@ -43,7 +43,7 @@
   (add-to-list 'eglot-server-programs
                `(ruby-mode "solargraph" "stdio"))
   (add-to-list 'eglot-server-programs
-               `(sql-mode "sqls"))
+               `(sql-mode "sql-language-server", "up", "--method", "stdio"))
   (add-to-list 'eglot-server-programs
                `(typescript-mode "typescript-language-server" "--stdio"))
   (add-to-list 'eglot-server-programs

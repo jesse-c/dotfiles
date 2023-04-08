@@ -30,7 +30,4 @@ return {
       "rafcamlet/nvim-luapad",
       config = function() require("luapad").setup({}) end
   },
-  -- SQL
-  -- Neovim plugin for sqls that leverages the built-in LSP client
-  "nanotee/sqls.nvim"
 }
