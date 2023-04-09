@@ -16,6 +16,10 @@ imap-notify-cmd = "{{ .himalya.imap_notify_cmd }}"
 sender = "smtp"
 smtp-host = "smtp.mail.me.com"
 smtp-port = 587
-smtp-ssl = true
+smtp-starttls = true
 smtp-login = "{{ .email }}"
 smtp-passwd-cmd = "{{ .himalya.smtp_passwd_cmd }}"
+
+[Personal.folder-aliases]
+sent = "Sent Messages"
+trash = "Deleted Messages"
