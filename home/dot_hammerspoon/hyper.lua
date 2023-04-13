@@ -2,7 +2,7 @@
 
 -- A global variable for the Hyper Mode
 -- Creates a sort of namespace
-local k = hs.hotkey.modal.new({}, "F17")
+local k = hs.hotkey.modal.new({}, nil)
 
 -- Trigger existing hyper key shortcuts
 -- Example:
