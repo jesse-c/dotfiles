@@ -1,20 +1,18 @@
--- require("hs.fnutils")
-
 -- https://gist.github.com/ttscoff/cce98a711b5476166792d5e6f1ac5907
 
 -- A global variable for the Hyper Mode
 -- Creates a sort of namespace
-k = hs.hotkey.modal.new({}, "F17")
+local k = hs.hotkey.modal.new({}, "F17")
 
 -- Trigger existing hyper key shortcuts
 -- Example:
 -- k:bind({}, 'm', nil, function() hs.eventtap.keyStroke({"cmd","alt","shift","ctrl"}, 'm') end)
 
 -- Build your own
-launch = function(appname)
+local launch = function(appname)
   hs.application.launchOrFocus(appname)
-  if name == 'Finder' then
-      hs.appfinder.appFromName(name):activate()
+  if appname == 'Finder' then
+      hs.appfinder.appFromName(appname):activate()
   end
   k.triggered = true
 end
@@ -45,7 +43,7 @@ hs.fnutils.each({
 end)
 
 -- Shortcut to reload config
-ofun = function()
+local ofun = function()
   hs.reload()
   hs.alert.show("Config loaded")
   k.triggered = true
@@ -53,14 +51,14 @@ end
 k:bind({}, 'o', nil, ofun)
 
 -- Enter Hyper Mode when F18 (Hyper/Capslock) is pressed
-pressedF18 = function()
+local pressedF18 = function()
   k.triggered = false
   k:enter()
 end
 
 -- Leave Hyper Mode when F18 (Hyper/Capslock) is pressed, send ESCAPE if no
 -- other keys are pressed.
-releasedF18 = function()
+local releasedF18 = function()
   k:exit()
   if not k.triggered then
     hs.eventtap.keyStroke({}, 'ESCAPE')
@@ -68,7 +66,7 @@ releasedF18 = function()
 end
 
 -- Bind the Hyper key
-f18 = hs.hotkey.bind({}, 'F18', pressedF18, releasedF18)
+hs.hotkey.bind({}, 'F18', pressedF18, releasedF18)
 
 -- Window management -----------------------------------------------------------
 

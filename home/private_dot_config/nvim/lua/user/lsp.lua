@@ -20,7 +20,7 @@ end
 
 local lspconfig = require("lspconfig")
 
-local capabilities = require('cmp_nvim_lsp').default_capabilities()
+-- local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
 local opts = {}
 
@@ -89,7 +89,17 @@ sumenko_opts["settings"] = {
     -- Get the language server to recognize the `vim` global
     -- https://www.reddit.com/r/neovim/comments/khk335/lua_configuration_global_vim_is_undefined/
     -- https://neovim.discourse.group/t/how-to-suppress-warning-undefined-global-vim/1882/8
-    Lua = {diagnostics = {globals = {"vim"}}}
+    Lua = {
+        completion = {enable = true},
+        diagnostics = {enable = true, globals = {"vim", "hs"}},
+        workspace = {
+            library = {
+                ['/Applications/Hammerspoon.app/Contents/Resources/extensions/hs/'] = true,
+                [vim.fn.expand('$VIMRUNTIME/lua')] = true,
+                [vim.fn.expand('$VIMRUNTIME/lua/vim/lsp')] = true,
+            }
+        }
+    }
 }
 
 local pylsp_opts = shallowcopy(opts)
