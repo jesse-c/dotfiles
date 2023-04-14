@@ -153,11 +153,8 @@
 ;; (add-hook 'clojure-mode-hook 'format-all-mode))
 
 (use-package apheleia
-  :config
-  (add-to-list 'apheleia-mode-alist
-               `(tsx-mode . prettier-typescript))
-  (add-to-list 'apheleia-mode-alist
-               `(tsx-ts-mode . prettier-typescript))
+  ;; :config
+  ;; (setf (alist-get 'mix-format apheleia-formatters) '("mix" "format" "--dot-formatter" "/Users/jesse/src/github.com/duffelhq/platform/.formatter.exs" "-"))
   :hook
   (elixir-mode . apheleia-mode)
   (elixir-ts-mode . apheleia-mode)
