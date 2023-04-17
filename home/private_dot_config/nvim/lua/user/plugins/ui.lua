@@ -1,5 +1,6 @@
 return {
-    "nvim-lua/popup.nvim", "nvim-lua/plenary.nvim",
+    "nvim-lua/popup.nvim",
+    "nvim-lua/plenary.nvim",
     -- ✅ highlight, list and search todo comments in your projects
     {
         "folke/todo-comments.nvim",
@@ -32,7 +33,8 @@ return {
         "lukas-reineke/indent-blankline.nvim",
         branch = "master",
         event = "BufRead"
-    }, "jeffkreeftmeijer/vim-numbertoggle", -- Peek lines just when you intend
+    }, "jeffkreeftmeijer/vim-numbertoggle",
+    -- Peek lines just when you intend
     {
         "nacro90/numb.nvim",
         event = "BufRead",
@@ -43,7 +45,8 @@ return {
         disable = true
     },
     {"VonHeikemen/fine-cmdline.nvim", dependencies = {"MunifTanjim/nui.nvim"}},
-    "sindrets/winshift.nvim", {
+    "sindrets/winshift.nvim",
+    {
         "voldikss/vim-floaterm",
         branch = "master",
         config = function()

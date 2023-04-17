@@ -1,5 +1,4 @@
 return {
-    -- A completion plugin for neovim coded in Lua.
     {
         "hrsh7th/nvim-cmp",
         dependencies = {"neovim/nvim-lspconfig", "onsails/lspkind.nvim"},

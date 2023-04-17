@@ -9,7 +9,7 @@ return {
         config = function()
             require("mason-lspconfig").setup({
                 ensure_installed = {
-                    "bashls", 
+                    "bashls",
                     "clojure_lsp",
                     "elixirls",
                     "erlangls",
