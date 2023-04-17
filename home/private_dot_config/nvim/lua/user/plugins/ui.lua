@@ -109,6 +109,7 @@ return {
     	"ishan9299/modus-theme-vim",
     	config = function()
     		vim.g.modus_faint_syntax = true
+        vim.g.modus_dim_inactive_window = false
 
     		vim.cmd('colorscheme modus-vivendi')
     	end,
