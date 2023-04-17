@@ -1,7 +1,7 @@
 display-name = "{{ .name }}"
 
 [Personal]
-email = "{{ .email }}"
+email = "{{ .personal.email }}"
 default = true
 sync = false
 
@@ -9,16 +9,16 @@ backend = "imap"
 imap-host = "imap.mail.me.com"
 imap-port = 993
 imap-ssl = true
-imap-login = "{{ .email }}"
-imap-passwd-cmd = "{{ .himalya.imap_passwd_cmd }}"
-imap-notify-cmd = "{{ .himalya.imap_notify_cmd }}"
+imap-login = "{{ .personal.email }}"
+imap-passwd-cmd = "{{ .personal.himalaya.imap_passwd_cmd }}"
+imap-notify-cmd = "{{ .personal.himalaya.imap_notify_cmd }}"
 
 sender = "smtp"
 smtp-host = "smtp.mail.me.com"
 smtp-port = 587
 smtp-starttls = true
-smtp-login = "{{ .email }}"
-smtp-passwd-cmd = "{{ .himalya.smtp_passwd_cmd }}"
+smtp-login = "{{ .personal.email }}"
+smtp-passwd-cmd = "{{ .personal.himalaya.smtp_passwd_cmd }}"
 
 [Personal.folder-aliases]
 sent = "Sent Messages"
