@@ -50,9 +50,6 @@ end
 export HOMEBREW_NO_ANALYTICS=1
 export HOMEBREW_NO_ENV_HINTS=1
 
-# asdf
-# source (brew --prefix asdf)/libexec/asdf.fish
-
 # rtx
 rtx activate fish | source
 
