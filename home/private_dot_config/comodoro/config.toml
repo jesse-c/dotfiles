@@ -2,8 +2,9 @@ work-duration = 1500
 short-break-duration = 300
 long-break-duration = 900
 
-# timer-started-hook = "notify-send '🍅 Pomodoro' 'Timer started!'"
+timer-started-hook = "terminal-notifier -group 'comodoro-notify' -message 'Timer started'"
+timer-stopped-hook = "terminal-notifier -group 'comodoro-notify' -message 'Timer stopped'"
 
 [tcp]
 host = "localhost"
-port = 9999
+port = 9090
