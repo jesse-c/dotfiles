@@ -63,7 +63,7 @@ $nodejs_bin completion fish | source
 # Chezmoi
 chezmoi completion fish | source
 
-# Himalya
+# Himalaya
 himalaya completion fish | source
 
 # direnv
