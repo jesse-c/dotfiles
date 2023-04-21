@@ -66,6 +66,9 @@ chezmoi completion fish | source
 # Himalaya
 himalaya completion fish | source
 
+# Comodoro
+comodoro completion fish | source
+
 # direnv
 # direnv hook fish | source
 
