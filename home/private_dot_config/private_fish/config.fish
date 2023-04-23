@@ -58,13 +58,19 @@ set nodejs_bin "$(rtx where nodejs)/bin/ray"
 $nodejs_bin completion fish | source
 
 # Chezmoi
-chezmoi completion fish | source
+if type -q chezmoi
+  chezmoi completion fish | source
+end
 
 # Himalaya
-himalaya completion fish | source
+if type -q himalaya
+  himalaya completion fish | source
+end
 
 # Comodoro
-comodoro completion fish | source
+if type -q comdoro
+  comdoro completion fish | source
+end
 
 # direnv
 # direnv hook fish | source
