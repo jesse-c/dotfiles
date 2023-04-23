@@ -53,25 +53,6 @@ export HOMEBREW_NO_ENV_HINTS=1
 # rtx
 rtx activate fish | source
 
-# Raycast
-set nodejs_bin "$(rtx where nodejs)/bin/ray"
-$nodejs_bin completion fish | source
-
-# Chezmoi
-if type -q chezmoi
-  chezmoi completion fish | source
-end
-
-# Himalaya
-if type -q himalaya
-  himalaya completion fish | source
-end
-
-# Comodoro
-if type -q comdoro
-  comdoro completion fish | source
-end
-
 # direnv
 # direnv hook fish | source
 
