@@ -2,8 +2,54 @@ work-duration = 1500
 short-break-duration = 300
 long-break-duration = 900
 
+server-started-hook = "terminal-notifier -group 'comodoro-notify' -message 'Server started'"
+server-stopping-hook = "terminal-notifier -group 'comodoro-notify' -message 'Server stopping'"
+server-stopped-hook = "terminal-notifier -group 'comodoro-notify' -message 'Server stopped'"
+
 timer-started-hook = "terminal-notifier -group 'comodoro-notify' -message 'Timer started'"
 timer-stopped-hook = "terminal-notifier -group 'comodoro-notify' -message 'Timer stopped'"
+
+work-began-hook = "terminal-notifier -group 'comodoro-notify' -message 'Work began'"
+# work-running-hook = "terminal-notifier -group 'comodoro-notify' -message 'Work running'"
+work-paused-hook = "terminal-notifier -group 'comodoro-notify' -message 'Work paused'"
+work-resumed-hook = "terminal-notifier -group 'comodoro-notify' -message 'Work resumed'"
+work-ended-hook = "terminal-notifier -group 'comodoro-notify' -message 'Work ended'"
+
+first-work-began-hook = "terminal-notifier -group 'comodoro-notify' -message 'First work began'"
+# first-work-running-hook = "terminal-notifier -group 'comodoro-notify' -message 'First work running'"
+first-work-paused-hook = "terminal-notifier -group 'comodoro-notify' -message 'First work paused'"
+first-work-resumed-hook = "terminal-notifier -group 'comodoro-notify' -message 'First work resumed'"
+first-work-ended-hook = "terminal-notifier -group 'comodoro-notify' -message 'First work ended'"
+
+second-work-began-hook = "terminal-notifier -group 'comodoro-notify' -message 'Second work began'"
+# second-work-running-hook = "terminal-notifier -group 'comodoro-notify' -message 'Second work running'"
+second-work-paused-hook = "terminal-notifier -group 'comodoro-notify' -message 'Second work paused'"
+second-work-resumed-hook = "terminal-notifier -group 'comodoro-notify' -message 'Second work resumed'"
+second-work-ended-hook = "terminal-notifier -group 'comodoro-notify' -message 'Second work ended'"
+
+short-break-began-hook = "terminal-notifier -group 'comodoro-notify' -message 'Short break began'"
+# short-break-running-hook = "terminal-notifier -group 'comodoro-notify' -message 'Short break running'"
+short-break-paused-hook = "terminal-notifier -group 'comodoro-notify' -message 'Short break paused'"
+short-break-resumed-hook = "terminal-notifier -group 'comodoro-notify' -message 'Short break resumed'"
+short-break-ended-hook = "terminal-notifier -group 'comodoro-notify' -message 'Short break ended'"
+
+first-short-break-began-hook = "terminal-notifier -group 'comodoro-notify' -message 'First short break began'"
+# first-short-break-running-hook = "terminal-notifier -group 'comodoro-notify' -message 'First short break running'"
+first-short-break-paused-hook = "terminal-notifier -group 'comodoro-notify' -message 'First short break paused'"
+first-short-break-resumed-hook = "terminal-notifier -group 'comodoro-notify' -message 'First short break resumed'"
+first-short-break-ended-hook = "terminal-notifier -group 'comodoro-notify' -message 'First short break ended'"
+
+second-short-break-began-hook = "terminal-notifier -group 'comodoro-notify' -message 'Second short break-began'"
+# second-short-break-running-hook = "terminal-notifier -group 'comodoro-notify' -message 'Second short break running'"
+second-short-break-paused-hook = "terminal-notifier -group 'comodoro-notify' -message 'Second short break paused'"
+second-short-break-resumed-hook = "terminal-notifier -group 'comodoro-notify' -message 'Second short break resumed'"
+second-short-break-ended-hook = "terminal-notifier -group 'comodoro-notify' -message 'Second short break ended'"
+
+long-break-began-hook = "terminal-notifier -group 'comodoro-notify' -message 'Long break began'"
+# long-break-running-hook = "terminal-notifier -group 'comodoro-notify' -message 'Long break running'"
+long-break-paused-hook = "terminal-notifier -group 'comodoro-notify' -message 'Long break paused'"
+long-break-resumed-hook = "terminal-notifier -group 'comodoro-notify' -message 'Long break resumed'"
+long-break-ended-hook = "terminal-notifier -group 'comodoro-notify' -message 'Long break ended'"
 
 [tcp]
 host = "localhost"
