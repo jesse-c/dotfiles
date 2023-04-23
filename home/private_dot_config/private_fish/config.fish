@@ -154,6 +154,9 @@ function fish_prompt
     fish_prompt_original;
 end
 
+bind \cg forget # Normal mode
+bind -M insert \cg forget # Insert mode
+
 # Local ------------------------------------------------------------------------
 
 if test -e ~/local.sh
