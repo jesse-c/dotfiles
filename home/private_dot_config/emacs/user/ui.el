@@ -94,6 +94,9 @@
 
 ;; Font
 (set-frame-font "JetBrains Mono 12" nil t)
+;; Ideally the Nerd Font variant would be used. The ligatures setup
+;; would need to be changed to work with it.
+;; (set-frame-font "JetBrainsMono Nerd Font" nil t)
 
 (require 'ligatures)
 
