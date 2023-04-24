@@ -41,6 +41,18 @@
   :hook
   (elixir-mode-hook . flycheck-mode))
 
+(defun my/strip-ecto-field ()
+  "Strip Elixir Ecto field syntax."
+  (interactive)
+  (when (use-region-p)
+    (let ((region-start (region-beginning))
+          (region-end (region-end)))
+      (save-restriction
+        (narrow-to-region region-start region-end)
+        (goto-char (point-min))
+        (while (re-search-forward "field\(\\(:[a-z_?]+\\),.*\)" nil t)
+          (replace-match "\\1" nil nil))))))
+
 (provide 'lang-elixir)
 
 ;;; lang-elixir.el ends here
