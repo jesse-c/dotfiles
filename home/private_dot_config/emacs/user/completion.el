@@ -244,6 +244,7 @@
       (error "No password found for %s@%s in .authinfo" username hostname))))
 
 (use-package chatgpt-arcana
+  :after all-the-icons
   :elpaca
   (:host github :repo "CarlQLange/ChatGPT-Arcana.el" :files ("*.el"))
   :custom

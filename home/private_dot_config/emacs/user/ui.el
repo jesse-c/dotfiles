@@ -143,9 +143,19 @@
 
 (global-set-key (kbd "C-<tab>") 'tab-bar-switch-to-tab)
 
+(use-package nerd-icons
+  :custom
+  (nerd-icons-font-family "Symbols Nerd Font Mono"))
+
+(use-package nerd-icons-completion
+  :after nerd-icons
+  :config
+  (nerd-icons-completion-mode))
+
 ;; Mode-line
 (use-package
   doom-modeline
+  :after nerd-icons
   :config
   (doom-modeline-mode 1))
 
