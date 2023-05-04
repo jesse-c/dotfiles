@@ -53,4 +53,4 @@ long-break-ended-hook = "terminal-notifier -sound default -group 'comodoro-notif
 
 [tcp]
 host = "localhost"
-port = 9090
+port = 9191
