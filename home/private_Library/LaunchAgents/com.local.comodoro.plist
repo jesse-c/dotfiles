@@ -9,6 +9,7 @@
 		<string>/Users/jesse/.local/share/rtx/installs/rust/1.69.0/bin/comodoro</string>
 		<string>server</string>
 		<string>start</string>
+		<string>pomodoro</string>
 	</array>
 	<key>RunAtLoad</key>
 	<true/>
