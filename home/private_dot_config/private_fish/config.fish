@@ -146,6 +146,6 @@ bind -M insert \cg forget # Insert mode
 
 # Local ------------------------------------------------------------------------
 
-if test -e ~/local.sh
-  source ~/local.sh
+if test -e ~/config/.fish/local.fish
+  source ~/config/.fish/local.fish
 end
