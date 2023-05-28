@@ -163,7 +163,9 @@
   (javascript-mode . apheleia-mode)
   (sass-mode . apheleia-mode)
   (typescript-mode . apheleia-mode)
-  (tsx-mode . apheleia-mode))
+  (tsx-mode . apheleia-mode)
+  (go-mode . apheleia-mode)
+  (go-ts-mode . apheleia-mode))
 
 (provide 'editor)
 

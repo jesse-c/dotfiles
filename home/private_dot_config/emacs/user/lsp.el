@@ -73,6 +73,7 @@
   (heex-ts-mode-hook . eglot-ensure)
   (xml-mode-hook . eglot-ensure)
   (go-mode-hook . eglot-ensure)
+  (go-ts-mode-hook . eglot-ensure)
   (bash-mode-hook . eglot-ensure)
   (clojure-mode-hook . eglot-ensure)
   (latex-mode-hook . eglot-ensure)
