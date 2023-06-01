@@ -9,6 +9,6 @@ on-server-stopping = "terminal-notifier -sound default -group 'comodoro-notify' 
 on-server-stop  = "terminal-notifier -sound default -group 'comodoro-notify' -message 'Server stopped'"
 
 on-timer-start = "terminal-notifier -sound default -group 'comodoro-notify' -message 'Timer started'"
-on-timer-stop = "terminal-notifier -sound default -group 'comodoro-notify' -message 'Timer stopped'"
+on-timer-stop = "terminal-notifier -sound default -group 'comodoro-notify' -message 'Timer stopped'; comodoro stop pomodoro tcp"
 
 on-work-pause = "terminal-notifier -sound default -group 'comodoro-notify' -message 'Timer paused'"
