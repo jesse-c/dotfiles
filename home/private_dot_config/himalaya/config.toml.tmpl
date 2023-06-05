@@ -1,4 +1,5 @@
 display-name = "{{ .name }}"
+downloads-dir = "~/Downloads"
 
 [Personal]
 email = "{{ .personal.email }}"
@@ -9,16 +10,18 @@ backend = "imap"
 imap-host = "imap.mail.me.com"
 imap-port = 993
 imap-ssl = true
+imap-auth = "passwd"
+imap-passwd.cmd = "{{ .personal.himalaya.imap_passwd_cmd }}"
 imap-login = "{{ .personal.email }}"
-imap-passwd-cmd = "{{ .personal.himalaya.imap_passwd_cmd }}"
 imap-notify-cmd = "{{ .personal.himalaya.imap_notify_cmd }}"
 
 sender = "smtp"
 smtp-host = "smtp.mail.me.com"
 smtp-port = 587
 smtp-starttls = true
+smtp-auth = "passwd"
+smtp-passwd.cmd = "{{ .personal.himalaya.smtp_passwd_cmd }}"
 smtp-login = "{{ .personal.email }}"
-smtp-passwd-cmd = "{{ .personal.himalaya.smtp_passwd_cmd }}"
 
 [Personal.folder-aliases]
 sent = "Sent Messages"
