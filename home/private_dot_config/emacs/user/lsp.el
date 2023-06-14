@@ -66,6 +66,8 @@
                `(terraform-mode "terraform-ls" "serve"))
   (add-to-list 'eglot-server-programs
                `(swift-mode "sourcekit-lsp"))
+  (add-to-list 'eglot-server-programs
+               `(php "phpactor"))
   :hook
   (toml-mode-hook . eglot-ensure)
   (elixir-mode-hook . eglot-ensure)
@@ -96,7 +98,8 @@
   (swift-mode-hook . eglot-ensure)
   (rust-mode . eglot-ensure)
   (rust-ts-mode . eglot-ensure)
-  (rustic-mode . eglot-ensure))
+  (rustic-mode . eglot-ensure)
+  (php-mode . eglot-ensure))
 
 (use-package consult-eglot)
 
