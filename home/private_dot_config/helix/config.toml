@@ -46,3 +46,7 @@ C-h = "jump_view_left"
 C-j = "jump_view_down"
 C-k = "jump_view_up"
 C-l = "jump_view_right"
+
+# Use one escape key for all uses
+# https://www.youtube.com/watch?v=aiSI6vdZWgE
+esc = ["collapse_selection", "keep_primary_selection"]
