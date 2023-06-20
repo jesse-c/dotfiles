@@ -39,6 +39,7 @@ hs.fnutils.each({
   { key = 'u', appname = 'Proxyman'},
   { key = 'o', appname = '/Applications/Anybox.app'},
   { key = 'v', appname = 'Beeper'},
+  { key = ',', appname = 'Obsidian'},
 }, function(object)
   k:bind({}, object.key, function() launch(object.appname); k:exit(); end)
 end)
