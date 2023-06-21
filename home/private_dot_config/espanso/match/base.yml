@@ -69,6 +69,8 @@ matches:
     replace: "∞"
   - trigger: ":cartesian"
     replace: "×"
+  - trigger: ":therefore"
+    replace: "∴"
 
   # https://hub.espanso.org/mac-symbols
   - trigger: ":cmd"
