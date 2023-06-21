@@ -63,6 +63,8 @@ matches:
   # additions
   - trigger: ":subset"
     replace: "⊆"
+  - trigger: ":element"
+    replace: "∈"
   - trigger: ":infinity"
     replace: "∞"
   - trigger: ":cartesian"
