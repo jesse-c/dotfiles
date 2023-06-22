@@ -1,3 +1,5 @@
+theme = "catppuccin_mocha"
+
 [editor]
 line-number = "relative"
 mouse = true
@@ -23,9 +25,9 @@ center= ["spinner", "diagnostics"]
 right= ["selections", "position", "position-percentage"]
 
 [editor.whitespace.render]
-space = "all"
+space = "none"
 tab = "all"
-newline = "none"
+newline = "all"
 
 [editor.whitespace.characters]
 space = "·"

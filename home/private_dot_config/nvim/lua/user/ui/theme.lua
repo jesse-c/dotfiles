@@ -1,1 +1,1 @@
-return 'modus-vivendi'
+return 'catppuccin-mocha'

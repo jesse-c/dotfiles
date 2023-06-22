@@ -48,12 +48,14 @@
                    (decode-time)
                    (nth 2))))
     (if (or (> hour 18) (< hour 5))
-        'modus-vivendi
-      'modus-operandi)))
+        'mocha
+      'latte)))
 
 (defun my/load-theme-by-current-time ()
   "Load the right theme based on the current time."
-  (load-theme (my/theme-by-current-time) t))
+  (progn
+    (setq catppuccin-flavor (my/theme-by-current-time))
+    (load-theme 'catppuccin t)))
 
 (defun my/disable-all-themes ()
   "Disable all enabled themes."
@@ -69,11 +71,15 @@
   (my/disable-all-themes)
   (load-theme theme))
 
-(use-package
-  modus-themes
-  :custom
-  (modus-operandi-theme-faint-syntax t)
-  (modus-vivendi-theme-faint-syntax t)
+;; (use-package
+;;   modus-themes
+;;   :custom
+;;   (modus-operandi-theme-faint-syntax t)
+;;   (modus-vivendi-theme-faint-syntax t)
+;;   :config
+;;   (my/load-theme-by-current-time))
+
+(use-package catppuccin-theme
   :config
   (my/load-theme-by-current-time))
 
