@@ -71,6 +71,13 @@
   (my/disable-all-themes)
   (load-theme theme))
 
+(defun my/catppuccin-set-and-reload (flavour)
+  "Sets the Catppuccin FLAVOUR and then reloads the theme."
+  (interactive)
+  (progn
+    (setq catppuccin-flavor flavour)
+    (catppuccin-reload)))
+
 ;; (use-package
 ;;   modus-themes
 ;;   :custom
