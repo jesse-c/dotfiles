@@ -203,6 +203,8 @@
 (global-set-key (kbd "C-S-x") 'my/split-window-below-and-move)
 (global-set-key (kbd "C-S-v") 'my/split-window-right-and-move)
 
+(global-set-key (kbd "M-o") 'ace-window)
+
 (use-package zoom-window)
 
 ;; Keymaps
