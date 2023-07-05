@@ -1,8 +1,9 @@
 return {
     -- magit for neovim
     {
-        "TimUntersberger/neogit",
+        "NeogitOrg/neogit",
         event = "BufRead",
+        branch = "master",
         dependencies = {"nvim-lua/plenary.nvim", "sindrets/diffview.nvim"},
         config = function()
             require("neogit").setup({integrations = {diffview = true}})
