@@ -18,29 +18,9 @@ local launch = function(appname)
 end
 
 -- Single keybinding for app launch
-hs.fnutils.each({
-  { key = 'q', appname = '/Applications/Things3.app'},
-  { key = 'b', appname = '/Applications/Emacs.app'},
-  { key = 'g', appname = 'kitty'},
-  { key = 'f', appname = 'Firefox Nightly'},
-  { key = 'm', appname = 'Mail'},
-  { key = 'a', appname = 'Safari'},
-  { key = 'p', appname = 'Spotify'},
-  { key = 'w', appname = 'RapidAPI'},
-  { key = 'z', appname = 'zoom.us'},
-  { key = 's', appname = 'Slack'},
-  { key = 'n', appname = 'Notion'},
-  { key = 'r', appname = 'Raycast'},
-  { key = 'd', appname = 'Dash'},
-  { key = 't', appname = 'TablePlus'},
-  { key = 'y', appname = '/Applications/Orion.app'},
-  { key = 'e', appname = 'Minimalist'},
-  { key = 'x', appname = 'Xcode'},
-  { key = 'u', appname = 'Proxyman'},
-  { key = 'o', appname = '/Applications/Anybox.app'},
-  { key = 'v', appname = 'Beeper'},
-  { key = ',', appname = 'Obsidian'},
-}, function(object)
+hs.fnutils.each(
+   hs.json.read("~/.hammerspoon/hyper.json")["apps"],
+   function(object)
   k:bind({}, object.key, function() launch(object.appname); k:exit(); end)
 end)
 
