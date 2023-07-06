@@ -16,11 +16,11 @@
   (add-to-list 'eglot-server-programs
                `(toml-mode "taplo" "lsp" "stdio"))
   (add-to-list 'eglot-server-programs
-               `(elixir-mode "elixir-ls"))
+               `(elixir-mode "nextls" "--stdio=true"))
   (add-to-list 'eglot-server-programs
-               `(elixir-ts-mode "elixir-ls"))
+               `(elixir-ts-mode "nextls" "--stdio=true"))
   (add-to-list 'eglot-server-programs
-               `(heex-ts-mode "elixir-ls"))
+               `(heex-ts-mode "nextls" "--stdio=true"))
   (add-to-list 'eglot-server-programs
                `(xml-mode "lemminx"))
   (add-to-list 'eglot-server-programs

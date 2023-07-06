@@ -1,0 +1,15 @@
+[[language]]
+name = "elixir"
+language-servers = ["nextls", "credo"]
+
+[language-server.nextls]
+command = "nextls"
+args = ["--stdio=true", "--port=9011"]
+
+[language-server.elixir-ls]
+command = "elixir-ls"
+config = { elixirLS.dialyzerEnabled = true }
+
+[language-server.credo]
+command = "credo-language-server"
+args = ["--stdio=true", "--port=9010"]
