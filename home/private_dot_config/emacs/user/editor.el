@@ -7,8 +7,15 @@
 ;; Bindings
 (use-package
   which-key
+  :custom
+  (which-key-enable-god-mode-support t)
   :config
   (which-key-mode))
+
+(use-package god-mode
+  :after (evil evil-collection)
+  :commands
+  god-execute-with-current-bindings)
 
 (use-package
   aggressive-indent
