@@ -138,8 +138,7 @@
 (use-package orderless
   :custom
   (completion-styles '(orderless basic))
-  (completion-category-overrides '((file (styles basic partial-completion))))
-  (completion-category-overrides '((eglot (styles orderless)))))
+  (completion-category-overrides '((file (styles basic partial-completion)))))
 
 (use-package corfu
   ;; https://github.com/purplg/dotfiles/blob/04c5217247a738adef11d9bf569a329c7eebae4a/.config/emacs/modules/pg-completion.el

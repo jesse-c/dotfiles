@@ -3,9 +3,7 @@
 (use-package rust-mode)
 (use-package rustic
   :custom
-  (rustic-lsp-client 'eglot)
-  :hook
-  (eglot--managed-mode-hook . (lambda () (flymake-mode -1))))
+  (rustic-lsp-client 'lsp-mode))
 (use-package cargo
   :hook
   (rust-mode-hook . cargo-minor-mode))
