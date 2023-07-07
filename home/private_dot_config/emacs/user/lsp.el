@@ -3,6 +3,8 @@
 (use-package lsp-mode
   :custom
   (lsp-keymap-prefix "C-c l")
+  (lsp-elixir-ls-version "v0.15.1")
+  (lsp-elixir-local-server-command "/Users/jesse/src/github.com/elixir-lsp/elixir-ls/rel/language_server.sh")
   :hook
   (;; Languages
    (elixir-mode . lsp)
