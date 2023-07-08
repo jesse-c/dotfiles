@@ -5,6 +5,11 @@
 ;; Don't use package.el
 (setq package-enable-at-startup nil)
 
+;; Disable warning [1]
+;;
+;; [1] https://memopixel.com/fix-package-cl-is-deprecated-warning-for-emacs
+(setq byte-compile-warnings '(cl-functions))
+
 ;; Suppress native compilation warnings and errors
 (setq native-comp-async-report-warnings-errors nil
       native-comp-async-query-on-exit t
