@@ -33,6 +33,8 @@
 ;; Ensure PATH is correct when launched as GUI application
 (use-package
   exec-path-from-shell
+  :init
+  (setq exec-path-from-shell-debug t)
   :config
   (when (memq window-system '(mac ns))
     (require 'exec-path-from-shell)
