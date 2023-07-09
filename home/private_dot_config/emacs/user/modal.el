@@ -11,15 +11,24 @@
   (global-unset-key (kbd "C-u"))
   (global-set-key (kbd "C-u") 'evil-scroll-up))
 
+(use-package evil-surround
+  :after evil
+  :defer 1
+  :commands global-evil-surround-mode
+  :config
+  (global-evil-surround-mode 1))
+
 (use-package evil-visual-mark-mode
   :after evil
   :defer 1
+  :commands evil-visual-mark-mode
   :config
   (evil-visual-mark-mode))
 
 (use-package evil-collection
   :after evil
   :defer 1
+  :commands evil-collection-init
   :config
   (evil-collection-init))
 
