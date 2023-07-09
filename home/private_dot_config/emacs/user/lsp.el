@@ -5,8 +5,14 @@
   (lsp-keymap-prefix "C-c l")
   (lsp-elixir-ls-version "v0.15.1")
   (lsp-elixir-local-server-command "/Users/jesse/src/github.com/elixir-lsp/elixir-ls/rel/language_server.sh")
+  (lsp-completion-provider :none) ;; we use Corfu!
+  :init
+  (defun my/lsp-mode-setup-completion ()
+    (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
+          '(orderless))) ;; Configure orderless
   :hook
-  (;; Languages
+  ((lsp-completion-mode . my/lsp-mode-setup-completion)
+   ;; Languages
    (elixir-mode . lsp)
    (elixir-ts-mode . lsp)
    (heex-ts-mode . lsp)
