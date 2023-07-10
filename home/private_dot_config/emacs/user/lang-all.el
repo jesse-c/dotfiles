@@ -75,6 +75,8 @@
 ;; The package is young and doesn't have comprehensive coverage.
 (use-package tempel-collection)
 
+(use-package ox-pandoc)
+
 (provide 'lang-all)
 
 ;;; lang-all.el ends here
