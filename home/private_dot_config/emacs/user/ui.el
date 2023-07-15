@@ -78,6 +78,16 @@
     (setq catppuccin-flavor flavour)
     (catppuccin-reload)))
 
+(defun my/catppuccin-latte ()
+  "Set the Catppuccin latte flavour and then reloads the theme."
+  (interactive)
+  (my/catppuccin-set-and-reload 'latte))
+
+(defun my/catppuccin-mocha ()
+  "Set the Catppuccin mocha flavour and then reloads the theme."
+  (interactive)
+  (my/catppuccin-set-and-reload 'mocha))
+
 ;; (use-package
 ;;   modus-themes
 ;;   :custom
