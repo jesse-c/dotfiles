@@ -37,6 +37,9 @@
   (let* ((notes-file-name (concat (projectile-project-root) "NOTES.org")))
     (find-file notes-file-name)))
 
+(use-package annotate
+  :custom (annotate-file "~/Documents/annotations/"))
+
 (provide 'notes)
 
 ;;; notes.el ends here
