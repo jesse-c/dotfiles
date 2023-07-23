@@ -31,7 +31,7 @@ export GPG_TTY=(tty)
 export GO111MODULE=on
 
 # Emacs
-export EMACS_USER_DIRECTORY=~/.emacs.d
+export EMACS_USER_DIRECTORY=~/.config/emacs
 
 # https://github.com/akermu/emacs-libvterm#shell-side-configuration
 function vterm_printf;
