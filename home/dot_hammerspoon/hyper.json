@@ -2,10 +2,9 @@
   "apps": [
     { "key": "q", "appname": "/Applications/Things3.app" },
     { "key": "g", "appname": "kitty" },
-    { "key": "q", "appname": "/Applications/Things3.app" },
     { "key": "b", "appname": "/Applications/Emacs.app" },
     { "key": "g", "appname": "kitty" },
-    { "key": "f", "appname": "Firefox Nightly" },
+    { "key": "f", "appname": "Firefox" },
     { "key": "m", "appname": "Mail" },
     { "key": "a", "appname": "Safari" },
     { "key": "p", "appname": "Spotify" },
