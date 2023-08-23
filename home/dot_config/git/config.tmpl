@@ -1,7 +1,9 @@
 [user]
 	name = Jesse Claven
+	{{- if ne .chezmoi.os "darwin" }}
 	email = {{ .email | quote }}
 	signingkey = {{ .signingkey | quote }}
+	{{- end }}
 [github]
 	user = jesse-c
 [color]
