@@ -17,3 +17,6 @@ ocaml = 'latest'
 ruby = 'latest'
 haskell = '9.0.1'
 php = '8.2.7'
+
+[settings]
+experimental = true
