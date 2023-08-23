@@ -19,6 +19,9 @@ home/dot_config/pgcli
 home/dot_config/pip.txt
 home/dot_config/qutebrowser
 home/dot_config/sync.sh
+home/dot_config/fish/completions/run_onchange_completion_comodoro.sh.tmpl
+home/dot_config/fish/completions/run_onchange_completion_himalaya.sh.tmpl
+home/dot_config/fish/completions/run_onchange_completion_ray.sh.tmpl
 {{- end }}
 {{- if ne .chezmoi.os "linux" }}
 {{- end }}
