@@ -1,9 +1,7 @@
 [user]
-	name = Jesse Claven
-	{{- if ne .chezmoi.os "darwin" }}
+	name = {{ .name | quote }}
 	email = {{ .email | quote }}
 	signingkey = {{ .signingkey | quote }}
-	{{- end }}
 [github]
 	user = jesse-c
 [color]
@@ -39,20 +37,12 @@
 [difftool "difftastic"]
 	cmd = difft "$LOCAL" "$REMOTE"
 [alias]
-	ks = difftool -y -t Kaleidoscope
-	st = status
 	# Prune local and remote origin
 	prune-all = "!git prune && git remote prune origin"
-	# Stage 0..n files
-	gs = "!git ls-files -m -o --exclude-standard | fzf --multi --preview=\"git --no-pager diff {}\" | xargs git add"
-	# Unstage 0..n staged files
-	gu = "!git diff --name-only --cached | fzf --multi --preview=\"git --no-pager diff {}\" | xargs git reset --"
-	# Delete 0..n branches
-	bd = "!git branch | cut -c 3- | fzf --multi --preview=\"git log {} --\" | xargs git branch --delete --force"
-	sw = switch
-	swc = switch -c
-	dft = difftool
 	sync = "!git fetch origin && git rebase origin/main"
+	root = "rev-parse --show-toplevel"
+  bs = "!git checkout $(git branch | fzf | cut -c 3-)"
+  bd = "!git branch -D $(git branch | fzf | cut -c 3-)"
 	# The aliases below are from https://gist.github.com/robmiller/6018582
 	#
 	# Get the current branch name (not so useful in itself, but used in
@@ -69,15 +59,18 @@
 	insteadOf = https://github.com/
 [rebase]
 	autosquash = true
+{{- if eq .chezmoi.os "darwin" }}
 [gpg]
 	program = gpg
+{{- end }}
+{{- if eq .chezmoi.os "linux" }}
+[gpg]
+	format = ssh
+[gpg "ssh"]
+	program = /opt/1Password/op-ssh-sign
+{{- end }}
 [init]
 	defaultBranch = main
 [delta]
 	navigate = true    # use n and N to move between diff sections
 	light = false      # set to true if you're in a terminal w/ a light background color (e.g. the default macOS terminal)
-[filter "lfs"]
-       required = true
-       clean = git-lfs clean -- %f
-       smudge = git-lfs smudge -- %f
-       process = git-lfs filter-process

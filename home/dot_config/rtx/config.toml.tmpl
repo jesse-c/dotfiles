@@ -1,3 +1,4 @@
+{{- if eq .chezmoi.os "darwin" }}
 [env]
 SCHEME = 'racket'
 
@@ -17,6 +18,19 @@ ocaml = 'latest'
 ruby = 'latest'
 haskell = '9.0.1'
 php = '8.2.7'
+{{- end }}
+
+{{- if eq .chezmoi.os "linux" }}
+[tools]
+rust = "latest"
+python = "3.10.12"
+go = "latest"
+lua = "latest"
+node = "latest"
+ruby = "latest"
+erlang = "latest"
+elixir = "latest"
+{{- end }}
 
 [settings]
 experimental = true

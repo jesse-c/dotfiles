@@ -1,0 +1,29 @@
+README.md
+
+{{- if ne .chezmoi.os "darwin" }}
+Library
+.ssh
+.gnupg
+.clojure
+.hammerspoon
+.mackup.cfg
+.config/Brewfile
+.config/MailMate
+.config/comodoro
+.config/fontconfig
+.config/himalaya
+.config/homebrew
+.config/macos
+.config/newsboat
+.config/npm.txt
+.config/pgcli
+.config/pip.txt
+.config/qutebrowser
+.config/sync.sh
+.config/fish/completions/run_onchange_completion_comodoro.sh.tmpl
+.config/fish/completions/run_onchange_completion_himalaya.sh.tmpl
+.config/fish/completions/run_onchange_completion_ray.sh.tmpl
+{{- end }}
+
+{{- if ne .chezmoi.os "linux" }}
+{{- end }}

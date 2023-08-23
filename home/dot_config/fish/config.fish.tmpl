@@ -1,0 +1,93 @@
+if status is-interactive
+  set --universal fish_greeting ""
+
+  set -gx EDITOR nvim
+
+  fish_vi_key_bindings
+
+  # Visual -----------------------------------------------------------------------
+
+  alias cls='clear && printf "\e[3J"'
+
+  export CLICOLOR=1
+
+  # Applications -----------------------------------------------------------------
+
+  fish_add_path ~/.local/bin
+
+  rtx activate fish | source
+
+  op completion fish | source
+
+  zoxide init fish | source
+
+  gh completion -s fish | source
+
+  kubectl completion fish | source
+  alias k='kubectl'
+
+  helm completion fish | source
+  alias h='helm'
+
+  # kind completion fish | source
+
+  export GO111MODULE=on
+
+  alias g='git'
+
+  export EMACS_USER_DIRECTORY=~/.config/emacs
+
+  # https://github.com/akermu/emacs-libvterm#shell-side-configuration
+  function vterm_printf;
+      if begin; [  -n "$TMUX" ]  ; and  string match -q -r "screen|tmux" "$TERM"; end
+          # tell tmux to pass the escape sequences through
+          printf "\ePtmux;\e\e]%s\007\e\\" "$argv"
+      else if string match -q -- "screen*" "$TERM"
+          # GNU screen (screen, screen-256color, screen-256color-bce)
+          printf "\eP\e]%s\007\e\\" "$argv"
+      else
+          printf "\e]%s\e\\" "$argv"
+      end
+  end
+
+  {{- if eq .chezmoi.os "darwin" }}
+  set -gx HOMEBREW_PREFIX "/opt/homebrew";
+  set -gx HOMEBREW_CELLAR "/opt/homebrew/Cellar";
+  set -gx HOMEBREW_REPOSITORY "/opt/homebrew";
+  set -gx HOMEBREW_SHELLENV_PREFIX "/opt/homebrew";
+  set -q PATH; or set PATH ''; set -gx PATH "/opt/homebrew/bin" "/opt/homebrew/sbin" $PATH;
+  set -q MANPATH; or set MANPATH ''; set -gx MANPATH "/opt/homebrew/share/man" $MANPATH;
+  set -q INFOPATH; or set INFOPATH ''; set -gx INFOPATH "/opt/homebrew/share/info" $INFOPATH;
+
+  export HOMEBREW_NO_ANALYTICS=1
+  export HOMEBREW_NO_ENV_HINTS=1
+
+  export GPG_TTY=(tty)
+
+  # ShellHistory
+  fish_add_path "/Applications/ShellHistory.app/Contents/Helpers"
+
+  if [ ! -n "$__shhist_session" ]
+      if [ -n "$TERM_SESSION_ID" ]
+          set __shhist_session $TERM_SESSION_ID
+      else
+          set __shhist_session (random)-$fish_pid
+      end
+  end
+  {{- end }}
+
+  {{- if eq .chezmoi.os "linux" }}
+  /home/linuxbrew/.linuxbrew/bin/brew shellenv | source
+  {{- end }}
+
+  # History ------------------------------------------------------------------
+
+  bind \cg forget # Normal mode
+  bind -M insert \cg forget # Insert mode
+
+  # Local ------------------------------------------------------------------------
+
+  if test -e ~/config/.fish/local.fish
+    source ~/config/.fish/local.fish
+  end
+end
