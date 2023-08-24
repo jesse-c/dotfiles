@@ -1,30 +1,30 @@
 {{- if eq .chezmoi.os "darwin" }}
 [env]
-SCHEME = 'racket'
+SCHEME = "racket"
 
 [tools]
-nim = 'latest'
-python = 'latest'
-clojure = 'latest'
-erlang = 'ref:OTP-25.3.2.2'
-elixir = 'ref:v1.14.5'
-go = 'latest'
-zig = 'latest'
-rust = 'latest'
-racket = 'latest'
-node = 'latest'
-lua = 'latest'
-ocaml = 'latest'
-ruby = 'latest'
-haskell = '9.0.1'
-php = '8.2.7'
+nim = "latest"
+python = "latest"
+clojure = "latest"
+erlang = "ref:OTP-25.3.2.2"
+elixir = "ref:v1.14.5"
+go = "latest"
+zig = "latest"
+rust = "latest"
+racket = "latest"
+node = "latest"
+lua = "latest"
+ocaml = "latest"
+ruby = "latest"
+haskell = "9.0.1"
+php = "8.2.7"
 {{- end }}
 
 {{- if eq .chezmoi.os "linux" }}
 [tools]
 rust = "latest"
 python = "3.10.12"
-go = "latest"
+go = "1.19.12"
 lua = "latest"
 node = "latest"
 ruby = "latest"
