@@ -1,6 +1,11 @@
 ;;; notes.el --- -*- lexical-binding: t; -*-
 
+{{- if eq .chezmoi.os "darwin"}}
 (defvar org-dir "~/Documents/org/")
+{{- end}}
+{{- if eq .chezmoi.os "linux"}}
+(defvar org-dir "~/Dropbox/org/")
+{{- end}}
 
 (setq org-log-done t)
 
