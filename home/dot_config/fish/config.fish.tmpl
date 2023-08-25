@@ -1,6 +1,23 @@
 if status is-interactive
   set --universal fish_greeting ""
 
+  {{- if eq .chezmoi.os "darwin" }}
+  set -gx HOMEBREW_PREFIX "/opt/homebrew";
+  set -gx HOMEBREW_CELLAR "/opt/homebrew/Cellar";
+  set -gx HOMEBREW_REPOSITORY "/opt/homebrew";
+  set -gx HOMEBREW_SHELLENV_PREFIX "/opt/homebrew";
+  set -q PATH; or set PATH ''; set -gx PATH "/opt/homebrew/bin" "/opt/homebrew/sbin" $PATH;
+  set -q MANPATH; or set MANPATH ''; set -gx MANPATH "/opt/homebrew/share/man" $MANPATH;
+  set -q INFOPATH; or set INFOPATH ''; set -gx INFOPATH "/opt/homebrew/share/info" $INFOPATH;
+
+  export HOMEBREW_NO_ANALYTICS=1
+  export HOMEBREW_NO_ENV_HINTS=1
+  {{- end }}
+
+  {{- if eq .chezmoi.os "linux" }}
+  /home/linuxbrew/.linuxbrew/bin/brew shellenv | source
+  {{- end }}
+
   set -gx EDITOR nvim
 
   # Bindings -------------------------------------------------------------------
@@ -25,14 +42,6 @@ if status is-interactive
 
   gh completion -s fish | source
 
-  kubectl completion fish | source
-  alias k='kubectl'
-
-  helm completion fish | source
-  alias h='helm'
-
-  # kind completion fish | source
-
   set -gx GO111MODULE on
   set -gx GOBIN $HOME/.local/bin
 
@@ -54,17 +63,6 @@ if status is-interactive
   end
 
   {{- if eq .chezmoi.os "darwin" }}
-  set -gx HOMEBREW_PREFIX "/opt/homebrew";
-  set -gx HOMEBREW_CELLAR "/opt/homebrew/Cellar";
-  set -gx HOMEBREW_REPOSITORY "/opt/homebrew";
-  set -gx HOMEBREW_SHELLENV_PREFIX "/opt/homebrew";
-  set -q PATH; or set PATH ''; set -gx PATH "/opt/homebrew/bin" "/opt/homebrew/sbin" $PATH;
-  set -q MANPATH; or set MANPATH ''; set -gx MANPATH "/opt/homebrew/share/man" $MANPATH;
-  set -q INFOPATH; or set INFOPATH ''; set -gx INFOPATH "/opt/homebrew/share/info" $INFOPATH;
-
-  export HOMEBREW_NO_ANALYTICS=1
-  export HOMEBREW_NO_ENV_HINTS=1
-
   export GPG_TTY=(tty)
 
   # ShellHistory
@@ -80,7 +78,13 @@ if status is-interactive
   {{- end }}
 
   {{- if eq .chezmoi.os "linux" }}
-  /home/linuxbrew/.linuxbrew/bin/brew shellenv | source
+  helm completion fish | source
+  alias h='helm'
+
+  # kind completion fish | source
+
+  kubectl completion fish | source
+  alias k='kubectl'
   {{- end }}
 
   # History --------------------------------------------------------------------

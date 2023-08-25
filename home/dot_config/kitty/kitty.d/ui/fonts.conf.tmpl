@@ -1,4 +1,4 @@
-#: Fonts {{{
+#: Fonts
 
 #: kitty has very powerful font management. You can configure
 #: individual font faces and even specify special fonts for particular
@@ -26,7 +26,13 @@ macos_thicken_font 0
 
 #: Draw an extra border around the font with the given width, to increase legibility at small font sizes on macOS.
 
+{{- if eq .chezmoi.os "darwin" }}
+font_size 11.0
+{{- end }}
+
+{{- if eq .chezmoi.os "linux" }}
 font_size 9.0
+{{- end }}
 
 #: Font size (in pts)
 
@@ -61,5 +67,3 @@ symbol_map U+f101-U+f208 JetBrainsMono Nerd Font Mono
 #: characters These values are in pts. They will be scaled by the
 #: monitor DPI to arrive at a pixel value. There must be four values
 #: corresponding to thin, normal, thick, and very thick lines.
-
-#: }}}
