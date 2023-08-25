@@ -40,8 +40,8 @@
 (use-package git-link
   :after magit
   :defer 1
-  :config
-  (setq git-link-use-commit t))
+  :custom
+  (git-link-use-commit t))
 
 ;; Browse target page on github/bitbucket from emacs buffers
 (use-package browse-at-remote
