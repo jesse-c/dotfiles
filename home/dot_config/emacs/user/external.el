@@ -47,6 +47,12 @@
 ;; Block until current queue processed.
 (elpaca-wait)
 
+(require 'package)
+
+;; Add MELPA repository
+(add-to-list 'package-archives
+             '("melpa" . "https://melpa.org/packages/") t)
+
 (provide 'external)
 
 ;;; external.el ends here
