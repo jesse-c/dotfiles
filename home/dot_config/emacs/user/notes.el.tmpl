@@ -9,6 +9,15 @@
 
 (setq org-log-done t)
 
+(use-package org)
+
+(use-package org-babel
+  :after org
+  :custom
+  (org-confirm-babel-evaluate nil)
+  :config
+  (org-babel-do-load-languages 'org-babel-load-languages '((verb . t) (restclient . t) (python . t))))
+
 (use-package org-journal
   :defer t
   :init

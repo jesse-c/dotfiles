@@ -36,6 +36,7 @@
 (require 'completion)
 (require 'file-system)
 (require 'lang-all)
+(require 'lang-http)
 (require 'lang-rust)
 (require 'lang-java)
 (require 'lang-elixir)
