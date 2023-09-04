@@ -14,6 +14,7 @@
 
 (use-package ob-restclient
   :after (org org-babel restclient)
+  :custom
   (org-babel-do-load-languages 'org-babel-load-languages '((restclient . t))))
 
 (provide 'lang-http)
