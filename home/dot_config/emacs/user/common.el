@@ -5,8 +5,6 @@
 (use-package loop)
 (use-package s)
 (use-package crux)
-(use-package request)
-(use-package restclient)
 (use-package async
   :commands (async-start))
 (use-package load-relative)

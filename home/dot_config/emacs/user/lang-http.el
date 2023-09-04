@@ -1,5 +1,7 @@
 ;;; lang-http.el --- -*- lexical-binding: t; -*-
 
+(use-package request)
+
 (use-package verb
   :after (org org-babel)
   :commands (verb-command-map)
