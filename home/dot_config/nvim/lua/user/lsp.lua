@@ -24,47 +24,6 @@ local lspconfig = require("lspconfig")
 
 local opts = {}
 
--- local has_aerial, aerial = pcall(require, "aerial")
--- if has_aerial then
--- 	local on_attach = function(client, bufnr)
--- 		aerial.on_attach(client, bufnr)
--- 		-- Formatting
--- 		if client.server_capabilities.documentFormattingProvider then
--- 			vim.keymap.set(
--- 				"n",
--- 				"<Space>af",
--- 				"<CMD>lua vim.lsp.buf.format({ async = true })<CR>",
--- 				{ desc = "Format", buffer = bufnr }
--- 			)
--- 		end
---
--- 		-- Code lens
--- 		if client.server_capabilities.codeLensProvider then
--- 			-- Do an initial refresh
--- 			vim.lsp.codelens.refresh()
---
--- 			-- Setup auto-refreshing
---
--- 			-- https://github.com/hydeik/dotfiles/blob/022763feec5aa50383474f161dbe7cc111d22bd5/private_dot_config/nvim/lua/rc/config/lsp/code_lens.lua
--- 			vim.api.nvim_create_augroup("ConfigLspCodeLens", { clear = true })
---
--- 			vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "CursorHold", "InsertLeave", "TextChanged" }, {
--- 				group = "ConfigLspCodeLens",
--- 				buffer = bufnr,
--- 				callback = function()
--- 					vim.lsp.codelens.refresh()
--- 				end,
--- 				desc = "[LSP] Refresh the codelens for the current buffer.",
--- 			})
--- 		end
--- 	end
---
--- 	opts = {
--- 		capabilities = capabilities,
--- 		on_attach = on_attach,
--- 	}
--- end
-
 -- Source: http://lua-users.org/wiki/CopyTable (22-05-12)
 local function shallowcopy(orig)
     local orig_type = type(orig)
@@ -169,33 +128,3 @@ lspconfig.sqlls.setup(sqlls_opts)
 lspconfig.lua_ls.setup(sumenko_opts)
 lspconfig.tsserver.setup(tsserver_opts)
 lspconfig.yamlls.setup(yamlls_opts)
-
-local has_null_ls, null_ls = pcall(require, "null-ls")
-if not has_null_ls then return end
-
-null_ls.setup({
-    sources = {
-        -- Diagnostics
-        null_ls.builtins.diagnostics.credo,
-        null_ls.builtins.diagnostics.flake8,
-        null_ls.builtins.diagnostics.proselint,
-        null_ls.builtins.diagnostics.shellcheck,
-        null_ls.builtins.diagnostics.vale,
-        -- Code actions
-        null_ls.builtins.code_actions.gitsigns,
-        null_ls.builtins.code_actions.proselint,
-        null_ls.builtins.code_actions.shellcheck,
-        -- Formatters
-        null_ls.builtins.formatting.prettier,
-        null_ls.builtins.formatting.joker,
-        null_ls.builtins.formatting.stylua,
-        null_ls.builtins.formatting.swiftformat,
-        null_ls.builtins.formatting.black,
-        null_ls.builtins.formatting.isort,
-        null_ls.builtins.formatting.erlfmt,
-        null_ls.builtins.formatting.fish_indent,
-        null_ls.builtins.formatting.fnlfmt,
-        null_ls.builtins.formatting.shfmt,
-        null_ls.builtins.formatting.shellharden
-    }
-})

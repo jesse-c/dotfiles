@@ -21,7 +21,6 @@ telescope.load_extension("fzf")
 telescope.load_extension("notify")
 telescope.load_extension("zoxide")
 telescope.load_extension("file_browser")
-telescope.load_extension("aerial")
 telescope.load_extension("lsp_handlers")
 
 -- Multiple leader keys to for groups of like operations AKA minor modes
@@ -113,7 +112,6 @@ vim.keymap.set("n", "<Space>hls", vim.lsp.buf.signature_help,
                {desc = "Signature help"})
 vim.keymap.set("n", "<Space>hle", vim.diagnostic.open_float,
                {desc = "Diagnostics"})
-vim.keymap.set("n", "<Space>hlt", "<CMD>AerialToggle<CR>", {desc = "Outline"})
 
 -- Minor mode: Open
 space("o", "Open")
