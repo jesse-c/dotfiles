@@ -1,5 +1,7 @@
 ;;; completion.el --- -*- lexical-binding: t; -*-
 
+(setq completions-detailed t)
+
 (use-package consult
   ;; Replace bindings. Lazily loaded due by `use-package'.
   :bind (;; C-c bindings (mode-specific-map)
@@ -269,7 +271,11 @@
   (all-the-icons-completion-mode))
 
 (use-package smex)  ;; show recent commands when invoking Alt-x (or Cmd+Shift+p)
-(use-package avy)   ;; enable avy for quick navigation
+
+(use-package avy   ;; enable avy for quick navigation
+  :commands (avy-goto- avy-goto-char-timerline)
+  :bind (("C-c j" . avy-goto-line)
+         ("s-j"   . avy-goto-char-timer)))
 
 (provide 'completion)
 

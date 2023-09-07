@@ -1,10 +1,11 @@
-;;; ui.el --- -*- lexical-binding: t; -*-
+;;; ui.el --- -*- lexical-binding: t; mode: emacs-lisp; -*-
 
 ;;; Whitespace
 (setq-default indent-tabs-mode nil)
 (setq-default tab-width 2)
 (setq require-final-newline t) ; Add new line in the end of a file on save.
 (add-hook 'before-save-hook #'delete-trailing-whitespace) ; Delete trailing spaces
+(setq-default show-trailing-whitespace nil) ; By default, don't underline trailing spaces
 
 (fset 'yes-or-no-p 'y-or-n-p)
 
@@ -13,6 +14,9 @@
 ;; Soft wrapping
 (setq visual-line-fringe-indicators '(left-curly-arrow right-curly-arrow))
 (add-hook 'org-mode-hook 'visual-line-mode)
+
+;; Copy/Paste
+(define-key minibuffer-local-map (kbd "C-v") 'yank)
 
 ;; Setting default coding system
 ;; https://github.com/shfx/emacs.d/blob/8715ced2c49ba2f693ad965f2c0b4c1b44c829c8/README.org#setting-default-coding-system
@@ -160,6 +164,9 @@
 
 (setq confirm-kill-emacs 'y-or-n-p) ; y and n instead of yes and no when quitting
 
+;; Scrolling
+(pixel-scroll-precision-mode)                    ; Smooth scrolling
+
 ;; Use ESC as universal get me out of here command
 (define-key key-translation-map (kbd "ESC") (kbd "C-g"))
 
@@ -226,6 +233,9 @@
 (use-package hydra)
 
 ;; Buffers
+(setq switch-to-buffer-obey-display-actions t)   ; Make switching buffers more consistent
+(setq-default indicate-buffer-boundaries 'left)  ; Show buffer top and bottom in the margin
+
 (defun my/clean-up-buffers ()
   "Clean-up buffers that have built up."
   (interactive)
@@ -258,6 +268,9 @@
   :demand t
   :config
   (recursion-indicator-mode))
+
+;; Misc.
+(setq x-underline-at-descent-line nil)           ; Prettier underlines
 
 (provide 'ui)
 

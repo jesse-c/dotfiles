@@ -1,4 +1,4 @@
-;;; notes.el --- -*- lexical-binding: t; -*-
+;;; notes.el --- -*- lexical-binding: t; mode: emacs-lisp; -*-
 
 {{- if eq .chezmoi.os "darwin"}}
 (defvar org-dir "~/Documents/org/")
@@ -13,7 +13,12 @@
   :custom
   (org-confirm-babel-evaluate nil)
   :config
-  (org-babel-do-load-languages 'org-babel-load-languages '((verb . t) (restclient . t) (python . t))))
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((verb . t)
+     (restclient . t)
+     (python . t)
+     (go . t))))
 
 (use-package org-journal
   :defer t
@@ -41,6 +46,10 @@
 (use-package org-pomodoro)
 
 (use-package org-modern)
+
+(use-package ob-go
+  :elpaca
+  (:type git :host github :repo "pope/ob-go" :branch "master"))
 
 (defun my/open-project-notes ()
   "Open the project's notes."

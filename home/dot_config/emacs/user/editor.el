@@ -39,6 +39,16 @@
   (editorconfig-mode 1))
 
 ;; Structured editing
+(setq major-mode-remap-alist
+      '((yaml-mode . yaml-ts-mode)
+        (bash-mode . bash-ts-mode)
+        (go-mode . go-ts-mode)
+        (js2-mode . js-ts-mode)
+        (typescript-mode . typescript-ts-mode)
+        (json-mode . json-ts-mode)
+        (css-mode . css-ts-mode)
+        (python-mode . python-ts-mode)))
+
 (use-package puni
   :defer t
   :config
@@ -69,7 +79,9 @@
 (global-set-key (kbd "s-/") 'comment-line)
 
 (use-package embark
-  :after (evil evil-collection)
+  :after (evil evil-collection avy)
+  :commands (embark-act)
+  :bind (("C-c a" . embark-act))
 
   :init
   ;; Optionally replace the key help with a completing-read interface
