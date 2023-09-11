@@ -1,1 +1,1 @@
-Here are my simple dotfiles for macOS, shared across multiple machines.
+Here are my simple dotfiles, shared across multiple machines.
