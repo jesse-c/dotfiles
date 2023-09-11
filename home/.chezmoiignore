@@ -26,4 +26,7 @@ Library
 {{- end }}
 
 {{- if ne .chezmoi.os "linux" }}
+.config/regolith2
+.config/regolith3
+.config/swhkd
 {{- end }}
