@@ -1,0 +1,4 @@
+profile {
+	output "Unknown HP Z27k G3 CN42040D2F" mode 3840x2160@60.000Hz position 2560,0 transform normal scale 1
+	output "Unknown 0x160B 0x00000000" disable 
+}

@@ -1,0 +1,3 @@
+sudo apt remove regolith-sway-control-center-regolith
+sudo apt remove regolith-wm-resize
+sudo apt remove regolith-wm-workspace-config

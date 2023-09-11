@@ -1,0 +1,6 @@
+###############################################################################
+# System Management
+###############################################################################
+
+exec_always --no-startup-id "setxkbmap -model \"pc105\" -layout \"us\" -option caps:swapescape -option compose:ralt"
+exec_always --no-startup-id "setxkbmap -model \"pc105\" -layout \"au,gb\" -option caps:swapescape -option compose:rctrl"

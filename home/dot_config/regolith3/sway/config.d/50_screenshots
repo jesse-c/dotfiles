@@ -1,0 +1,5 @@
+# bindsym $mod+p       exec shotman --capture window
+# bindsym $mod+Shift+p exec shotman --capture region
+# bindsym $mod+Ctrl+p  exec shotman --capture output
+
+# for_window [title="shotman"] floating enable

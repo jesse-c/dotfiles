@@ -1,0 +1,4 @@
+profile {
+	output "BenQ Corporation BenQ LCD 53M03438019" mode 2560x1440@59.951Hz position 2560,0 transform normal scale 1
+	output "Unknown 0x160B 0x00000000" mode 2560x1600@165.019Hz position 0,0 transform normal scale 1
+}

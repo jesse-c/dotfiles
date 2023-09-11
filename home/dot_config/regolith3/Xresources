@@ -1,0 +1,14 @@
+wm.gaps.inner.size: 10
+wm.gaps.outer.size: 0
+wm.gaps.smart: off
+wm.bar.position: top
+
+gnome.terminal.audible-bell: false
+gnome.terminal.font: JetBrainsMono Nerd Font Mono 9
+
+regolith.wallpaper.file: /usr/share/backgrounds/codioful-formerly-gradienta-G084bO4wGDA-unsplash.jpg
+regolith.lockscreen.wallpaper.file: /usr/share/backgrounds/codioful-formerly-gradienta-G084bO4wGDA-unsplash.jpg
+!regolith.wallpaper.file: /usr/share/desktop-base/futureprototype-theme/wallpaper/gnome-background.xml
+!regolith.lockscreen.wallpaper.file: /usr/share/desktop-base/futureprototype-theme/wallpaper/gnome-background.xml
+!regolith.look.path: /usr/share/regolith-look/ayu
+regolith.look.path: /usr/share/regolith-look/ayu-dark

@@ -1,0 +1,3 @@
+profile {
+	output "Unknown 0x160B 0x00000000" mode 2560x1600@60.000Hz position 0,0 transform normal scale 1
+}

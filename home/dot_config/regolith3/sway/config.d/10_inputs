@@ -1,0 +1,6 @@
+# "1452:591:Keychron_K3"
+
+input * {
+   xkb_layout au
+   xkb_options "compose:rctrl,caps:escape"
+}
