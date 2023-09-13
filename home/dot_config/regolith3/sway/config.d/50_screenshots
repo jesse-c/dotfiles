@@ -1,5 +1,2 @@
-# bindsym $mod+p       exec shotman --capture window
-# bindsym $mod+Shift+p exec shotman --capture region
-# bindsym $mod+Ctrl+p  exec shotman --capture output
-
-# for_window [title="shotman"] floating enable
+bindsym $mod+p       exec wayshot -f "/home/$(whoami)/Screenshots/$(date +'%y-%m-%d_%H-%M-%S').png"
+bindsym $mod+Shift+p exec wayshot -s "$(slurp)" -f "/home/$(whoami)/Screenshots/$(date +'%y-%m-%d_%H-%M-%S').png"
