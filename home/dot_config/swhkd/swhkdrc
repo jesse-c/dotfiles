@@ -1,0 +1,5 @@
+super + p
+  wayshot -f "/home/$(whoami)/Screenshots/$(date +'%y-%m-%d_%H-%M-%S').png"
+
+super + shift + p
+  wayshot -s "$(slurp)" -f "/home/$(whoami)/Screenshots/$(date +'%y-%m-%d_%H-%M-%S').png"
