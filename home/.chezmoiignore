@@ -29,4 +29,5 @@ Library
 .config/regolith2
 .config/regolith3
 .config/swhkd
+.config/ocr
 {{- end }}

@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+# script: {{ output "base64" "-i" "./ocr" | trim }}
+# desktop entry: {{ output "base64" "-i" "./ocr.desktop" | trim }}
+
+sudo cp -f ./ocr /usr/local/bin/ocr
+sudo cp -f ./ocr.desktop /usr/share/applications/ocr.desktop
