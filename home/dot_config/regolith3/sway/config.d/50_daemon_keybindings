@@ -1,2 +1,2 @@
 exec swhks &
-exec pkexec swhkd -c "$HOME"/.config/swhkd/swhkdrc
+exec pkexec swhkd -c "$HOME"/.config/swhkd/swhkdrc &
