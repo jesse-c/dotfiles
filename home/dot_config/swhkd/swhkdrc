@@ -5,7 +5,7 @@ super + shift + p
   wayshot -s "$(slurp)" -f "/home/$(whoami)/Screenshots/$(date +'%y-%m-%d_%H-%M-%S').png"
 
 super + shift + x
-  cliphist list | ilia -p textlist | cliphist delete
+  cliphist list | wofi --show dmenu | cliphist delete
 
 super + shift + v
-  cliphist list | ilia -p textlist | cliphist decode | wl-copy
+  cliphist list | wofi --show dmenu  | cliphist decode | wl-copy
