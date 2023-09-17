@@ -28,6 +28,11 @@ Library
 {{- if ne .chezmoi.os "linux" }}
 .config/regolith2
 .config/regolith3
+.config/scripts
+.config/kanshi
+.config/wofi
+.config/dunst
+.config/sway
 .config/swhkd
 .config/ocr
 {{- end }}

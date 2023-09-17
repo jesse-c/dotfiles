@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+# script: {{ output "base64" "-i" "./notifications" | trim }}
+
+sudo cp -f ./notifications /usr/local/bin/notifications

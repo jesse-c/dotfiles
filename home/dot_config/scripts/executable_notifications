@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+dunstctl history | jq -r '.data[] | .[] | .appname.data + ": " + .body.data' | wofi --show dmenu
