@@ -1,1 +1,3 @@
+about:profiles
+
 /Users/jesse/Library/Application Support/Firefox/Profiles/nh72tw27.dev-edition-default/chrome
