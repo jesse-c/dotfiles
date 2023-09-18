@@ -22,6 +22,7 @@ set $browser firefox
 # on the original workspace that the command was run on.
 # set $menu dmenu_path | dmenu | xargs swaymsg exec --
 set $menu wofi --show run
+set $lock swaylock --screenshots --clock --indicator --indicator-radius 100 --indicator-thickness 7 --effect-blur 7x5 --effect-vignette 0.5:0.5 --ring-color bb00cc --key-hl-color 880033 --line-color 00000000 --inside-color 00000088 --separator-color 00000000
 
 ### Output configuration
 #
@@ -40,9 +41,10 @@ output * bg /usr/share/backgrounds/sway/custom/magicpattern-87PP9Zd7MNo-unsplash
 # Example configuration:
 #
 exec swayidle -w \
-         timeout 300 'swaylock -f -c 000000' \
+         timeout 300 $lock \
          timeout 600 'swaymsg "output * power off"' resume 'swaymsg "output * power on"' \
-         before-sleep 'swaylock -f -c 000000'
+         before-sleep $lock
+
 #
 # This will lock your screen after 300 seconds of inactivity, then turn off
 # your displays after another 300 seconds, and turn your screens back on when
@@ -140,6 +142,8 @@ input type:touchpad {
     bindsym $mod+9 workspace number 9
     bindsym $mod+0 workspace number 10
     # Move focused container to workspace
+    # Note: workspaces can have any name you want, not just numbers.
+    # We just use 1-10 as the default.
     bindsym $mod+Shift+1 move container to workspace number 1
     bindsym $mod+Shift+2 move container to workspace number 2
     bindsym $mod+Shift+3 move container to workspace number 3
@@ -150,8 +154,11 @@ input type:touchpad {
     bindsym $mod+Shift+8 move container to workspace number 8
     bindsym $mod+Shift+9 move container to workspace number 9
     bindsym $mod+Shift+0 move container to workspace number 10
-    # Note: workspaces can have any name you want, not just numbers.
-    # We just use 1-10 as the default.
+    # Move workspace to another output
+    bindsym $mod+Control+$left move workspace to output left
+    bindsym $mod+Control+$right move workspace to output right
+    bindsym $mod+Control+Left move workspace to output left
+    bindsym $mod+Control+Right move workspace to output right
 #
 # Layout stuff:
 #
@@ -220,11 +227,11 @@ bindsym $mod+r mode "resize"
 # Read `man 5 sway-bar` for more information about this section.
 # bar {
 #     position top
-# 
+#
 #     # When the status_command prints a new line to stdout, swaybar updates.
 #     # The default just shows the current date and time.
 #     status_command while date +'%Y-%m-%d %I:%M:%S %p'; do sleep 1; done
-# 
+#
 #     colors {
 #         statusline #ffffff
 #         background #323232
@@ -236,28 +243,13 @@ gaps inner 5
 
 bar swaybar_command waybar
 
+for_window [class="Beeper"] floating enable, resize set 1400 900
 for_window [class="1Password"] floating enable
 for_window [app_id="blueman-manager"] floating enable
 for_window [app_id="pavucontrol"] floating enable
 # https://github.com/folke/dot/blob/d2bf2a937053ecb698b7a62d779b349a1edfa6c1/config/sway/config#L285
 for_window [title="Picture in picture"] floating enable, sticky enable
 for_window [app_id="nwg-look"] floating enable
-
-# exec --no-startup-id ~/.config/scripts/hotkeys.sh
-# exec killall swhks
-# exec swhks
-# exec killall swhkd
-# exec pkexec swhkd -c "$HOME"/.config/swhkd/swhkdrc
-exec --no-startup-id autotiling-rs
-exec --no-startup-id 1password
-exec --no-startup-id gnome-keyring-daemon --start --components=pkcs11,secrets,ssh
-exec --no-startup-id kanshi
-set $WOBSOCK $XDG_RUNTIME_DIR/wob.sock
-exec --no-startup-id rm -f $WOBSOCK && mkfifo $WOBSOCK && tail -f $WOBSOCK | wob
-exec --no-startup-id wl-paste --watch cliphist store &
-exec --no-startup-id zoom &
-exec --no-startup-id dropbox start &
-exec --no-startup-id blueman-tray
 
 bindsym XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5% && pactl get-sink-volume @DEFAULT_SINK@ | head -n 1| awk '{print substr($5, 1, length($5)-1)}' > $WOBSOCK
 bindsym XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -5% && pactl get-sink-volume @DEFAULT_SINK@ | head -n 1 | awk '{print substr($5, 1, length($5)-1)}' > $WOBSOCK
@@ -269,6 +261,8 @@ bindsym XF86AudioPrev exec playerctl previous
 
 bindsym XF86MonBrightnessDown exec brightnessctl set 5%- | sed -En 's/.*\(([0-9]+)%\).*/\1/p' > $WOBSOCK
 bindsym XF86MonBrightnessUp exec brightnessctl set +5% | sed -En 's/.*\(([0-9]+)%\).*/\1/p' > $WOBSOCK
+
+bindsym $mod+Escape exec $lock
 
 include "$HOME"/.config/sway/config.d/*
 

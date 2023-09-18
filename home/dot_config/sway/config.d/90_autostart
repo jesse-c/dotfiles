@@ -1,0 +1,10 @@
+exec 1password
+
+exec_always gnome-keyring-daemon --start --components=pkcs11,secrets,ssh
+exec_always kanshi
+set $WOBSOCK $XDG_RUNTIME_DIR/wob.sock
+exec_always rm -f $WOBSOCK && mkfifo $WOBSOCK && tail -f $WOBSOCK | wob
+exec_always wl-paste --watch cliphist store &
+exec_always dropbox start &
+exec_always blueman-tray
+exec_always --no-startup-id autotiling
