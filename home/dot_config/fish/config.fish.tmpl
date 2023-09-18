@@ -46,6 +46,9 @@ if status is-interactive
 
   direnv hook fish | source
 
+  set -gx MCFLY_KEY_SCHEME vim
+  set -gx MCFLY_FUZZY 2
+  set -gx MCFLY_INTERFACE_VIEW BOTTOM
   mcfly init fish | source
 
   set -gx GO111MODULE on
