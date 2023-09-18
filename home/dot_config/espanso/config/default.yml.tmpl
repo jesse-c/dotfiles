@@ -1,0 +1,16 @@
+secure_input_notification: false
+auto_restart: true
+{{- if eq .chezmoi.os "darwin"}}
+show_icon: false
+{{- end}}
+{{- if eq .chezmoi.os "linux"}}
+show_icon: true
+{{- end}}
+show_notifications: true
+toggle_key: off
+search_shortcut: off
+search_trigger: off
+{{- if eq .chezmoi.os "linux"}}
+keyboard_layout:
+  layout: "au"
+{{- end}}
