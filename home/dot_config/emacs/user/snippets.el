@@ -35,4 +35,6 @@
 ;; The package is young and doesn't have comprehensive coverage.
 (use-package tempel-collection)
 
+(provide 'snippets)
+
 ;;; snippets.el ends here
