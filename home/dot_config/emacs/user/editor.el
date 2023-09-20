@@ -39,16 +39,6 @@
   (editorconfig-mode 1))
 
 ;; Structured editing
-(setq major-mode-remap-alist
-      '((yaml-mode . yaml-ts-mode)
-        (bash-mode . bash-ts-mode)
-        (go-mode . go-ts-mode)
-        (js2-mode . js-ts-mode)
-        (typescript-mode . typescript-ts-mode)
-        (json-mode . json-ts-mode)
-        (css-mode . css-ts-mode)
-        (python-mode . python-ts-mode)))
-
 (use-package puni
   :defer t
   :config
@@ -179,9 +169,11 @@
   (elixir-ts-mode . apheleia-mode)
   (swift-mode . apheleia-mode)
   (rust-mode . apheleia-mode)
+  (rust-ts-mode . apheleia-mode)
   (javascript-mode . apheleia-mode)
   (sass-mode . apheleia-mode)
   (typescript-mode . apheleia-mode)
+  (typescript-ts-mode . apheleia-mode)
   (tsx-mode . apheleia-mode)
   (go-mode . apheleia-mode)
   (go-ts-mode . apheleia-mode))
