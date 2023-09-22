@@ -1,8 +1,10 @@
 ;;; lang-emacs-lisp.el --- -*- lexical-binding: t; -*-
 
 (use-package eldoc
+  :elpaca nil
   :diminish eldoc-mode
-  :hook (emacs-lisp-mode . turn-on-eldoc-mode)
+  :hook
+  (emacs-lisp-mode . turn-on-eldoc-mode)
   (lisp-interaction-mode . turn-on-eldoc-mode))
 
 (provide 'lang-emacs-lisp)
