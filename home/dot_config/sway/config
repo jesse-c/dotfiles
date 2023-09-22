@@ -27,7 +27,7 @@ set $lock swaylock --screenshots --clock --indicator --indicator-radius 100 --in
 ### Output configuration
 #
 # Default wallpaper (more resolutions are available in /usr/share/backgrounds/sway/)
-output * bg /usr/share/backgrounds/sway/custom/magicpattern-87PP9Zd7MNo-unsplash.jpg fill
+output * bg /usr/share/backgrounds/sway/custom/magicpattern-65O4Dw6-xLg-unsplash.jpg fill
 
 #
 # Example configuration:
