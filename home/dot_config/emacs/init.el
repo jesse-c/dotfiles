@@ -46,6 +46,7 @@
 (require 'lang-swift)
 (require 'lang-json)
 (require 'lang-python)
+(require 'lang-protobuf)
 (require 'lang-csv)
 (require 'lang-markdown)
 (require 'lang-yaml)

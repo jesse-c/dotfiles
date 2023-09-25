@@ -52,7 +52,13 @@
   :commands lsp
   :config
   (add-to-list 'lsp-disabled-clients 'credo-ls)
-  (add-to-list 'lsp-disabled-clients 'semgrep-ls))
+  (add-to-list 'lsp-disabled-clients 'semgrep-ls)
+  (add-to-list 'lsp-language-id-configuration '(protobuf-mode . "protobuf"))
+  (add-to-list 'lsp-language-id-configuration '(protobuf-ts-mode . "protobuf"))
+  (lsp-register-client
+    (make-lsp-client :new-connection (lsp-stdio-connection '("bufls" "serve"))
+                     :major-modes '(protobuf-mode protobuf-ts-mode)
+                     :server-id 'protobuf-ls)))
 
 (use-package lsp-ui :commands lsp-ui-mode)
 (use-package consult-lsp :commands (consult-lsp-diagnostics consult-lsp-symbols consult-lsp-file-symbols))
