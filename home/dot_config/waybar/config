@@ -23,7 +23,7 @@
     "disk",
     "bluetooth",
     "backlight",
-    "keyboard-state",
+    // "keyboard-state",
     "sway/language",
     "battery",
     "battery#bat2",
