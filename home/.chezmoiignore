@@ -35,4 +35,5 @@ Library
 .config/sway
 .config/swhkd
 .config/ocr
+.config/autostart
 {{- end }}
