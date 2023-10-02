@@ -51,7 +51,7 @@
    (lsp-mode . lsp-enable-which-key-integration))
   :commands lsp
   :config
-  (add-to-list 'lsp-disabled-clients 'credo-ls)
+  (add-to-list 'lsp-disabled-clients 'credo-language-server)
   (add-to-list 'lsp-disabled-clients 'semgrep-ls)
   (add-to-list 'lsp-language-id-configuration '(protobuf-mode . "protobuf"))
   (add-to-list 'lsp-language-id-configuration '(protobuf-ts-mode . "protobuf"))
@@ -63,7 +63,11 @@
   (lsp-register-client
     (make-lsp-client :new-connection (lsp-stdio-connection '("sourcekit-lsp"))
                      :major-modes '(swift-mode)
-                     :server-id 'swift-ls)))
+                     :server-id 'swift-ls))
+  (lsp-register-client
+    (make-lsp-client :new-connection (lsp-stdio-connection '("next-ls" "--stdio"))
+                     :major-modes '(elixir-mode elixir-ts-mode)
+                     :server-id 'elixir-ls)))
 
 (use-package lsp-ui :commands lsp-ui-mode)
 (use-package consult-lsp :commands (consult-lsp-diagnostics consult-lsp-symbols consult-lsp-file-symbols))
