@@ -3,5 +3,5 @@ set $WOBSOCK $XDG_RUNTIME_DIR/wob.sock
 exec_always rm -f $WOBSOCK && mkfifo $WOBSOCK && tail -f $WOBSOCK | wob
 exec_always wl-paste --watch cliphist store
 exec_always autotiling
-exec_always ~/.config/scripts/swhkd.sh $HOME
+# exec_always ~/.config/scripts/swhkd.sh $HOME
 exec dex --autostart

@@ -243,6 +243,10 @@ gaps inner 5
 
 bar swaybar_command waybar
 
+for_window [class="Todoist"] move scratchpad
+for_window [class="Spotify"] → 2
+for_window [class="Thunderbird"] → 2
+for_window [class="Slack"] → 2
 for_window [class="Beeper"] floating enable, resize set 1400 900
 for_window [class="1Password"] floating enable
 for_window [app_id="blueman-manager"] floating enable
