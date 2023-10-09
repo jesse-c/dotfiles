@@ -8,13 +8,15 @@ bind status + !git commit --amend
 bind main - !git commit --fixup %(commit)
 
 # Copy commit ID to clipboard
-bind main 9 !@sh -c "echo %(commit) | pbcopy"
+bind main 9 @sh -c "echo %(commit) | {{ .cmd_copy }}"
 
 # Rebase onto current commit
 bind main 8 !git rebase -i  %(commit)
 
 # Copy file path to clipboard
-bind status 7 !@sh -c "echo %(file) | pbcopy"
+bind status 7 @sh -c "echo %(file) | {{ .cmd_copy }}"
+
+bind main 6 @sh -c "git log --oneline --format=%B %(commit) | head -n 1 | {{ .cmd_copy }}"
 
 # Push
 bind main p !git push origin
