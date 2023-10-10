@@ -24,7 +24,7 @@ vim.o.encoding = "utf-8"
 ------------
 -- Clipboard
 ------------
-vim.o.clipboard = "unnamed"
+vim.o.clipboard = "unnamedplus"
 -----------------------
 -- Format
 -----------------------
