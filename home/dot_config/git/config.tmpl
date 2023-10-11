@@ -36,6 +36,8 @@
 	prompt = false
 [difftool "difftastic"]
 	cmd = difft "$LOCAL" "$REMOTE"
+[difftool "diffsitter"]
+	cmd = diffsitter --color on "$LOCAL" "$REMOTE"
 [alias]
 	# Prune local and remote origin
 	prune-all = "!git prune && git remote prune origin"
