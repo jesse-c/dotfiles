@@ -266,6 +266,11 @@ bindsym XF86AudioPrev exec playerctl previous
 bindsym XF86MonBrightnessDown exec brightnessctl set 5%- | sed -En 's/.*\(([0-9]+)%\).*/\1/p' > $WOBSOCK
 bindsym XF86MonBrightnessUp exec brightnessctl set +5% | sed -En 's/.*\(([0-9]+)%\).*/\1/p' > $WOBSOCK
 
+bindsym $mod+p exec wayshot -f "/home/$(whoami)/Screenshots/$(date +'%y-%m-%d_%H-%M-%S').png"
+bindsym $mod+Shift+p exec wayshot -s "$(slurp)" -f "/home/$(whoami)/Screenshots/$(date +'%y-%m-%d_%H-%M-%S').png"
+bindsym $mod+Shift+x exec cliphist list | wofi --show dmenu | cliphist delete
+bindsym $mod+Shift+v exec cliphist list | wofi --show dmenu  | cliphist decode | wl-copy
+
 bindsym $mod+Escape exec $lock
 
 include "$HOME"/.config/sway/config.d/*
