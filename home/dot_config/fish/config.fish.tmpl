@@ -92,12 +92,14 @@ if status is-interactive
 
   # kind completion fish | source
 
+  fish_add_path $HOME/.krew/bin
+
   kubectl completion fish | source
   alias k='kubectl'
 
   set -x K9S_CONFIG_PATH "$HOME/.config/k9s"
 
-  fish_add_path /var/lib/snapd/snap/bin/ 
+  fish_add_path /var/lib/snapd/snap/bin/
   {{- end }}
 
   # History --------------------------------------------------------------------
