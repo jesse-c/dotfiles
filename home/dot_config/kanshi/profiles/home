@@ -1,4 +1,4 @@
 profile {
 	output eDP-1 disable 
-	output DP-5 mode 3840x2160@59.997Hz position 0,0 transform normal scale 1
+	output DP-5 mode 3840x2160@60Hz position 0,0 transform normal scale 1
 }
