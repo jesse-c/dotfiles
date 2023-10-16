@@ -6,7 +6,6 @@ local config = {}
 -- Typography
 local font = require('font')
 
-config.font = font.font
 config.font_size = font.size
 
 -- Appearance

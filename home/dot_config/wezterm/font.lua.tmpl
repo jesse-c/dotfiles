@@ -1,0 +1,13 @@
+local M = {}
+
+-- > WezTerm bundles JetBrains Mono, Nerd Font Symbols and Noto Color Emoji
+-- > fonts and uses those for the default font configuration.
+
+{{- if eq .chezmoi.os "darwin"}}
+M.size = 12.0
+{{- end}}
+{{- if eq .chezmoi.os "linux"}}
+M.size = 9.0
+{{- end}}
+
+return M
