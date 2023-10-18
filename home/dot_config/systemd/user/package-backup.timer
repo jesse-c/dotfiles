@@ -1,0 +1,10 @@
+[Unit]
+Description=Backup Installed Packages
+
+[Timer]
+OnCalendar=daily
+Persistent=true
+Unit=package-backup.service
+
+[Install]
+WantedBy=default.target

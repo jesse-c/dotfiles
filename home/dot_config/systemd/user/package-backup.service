@@ -1,0 +1,9 @@
+[Unit]
+Description=Backup Installed Packages
+
+[Service]
+WorkingDirectory=%h
+ExecStart=%h/.config/scripts/package-backup.sh
+
+[Install]
+WantedBy=timers.target
