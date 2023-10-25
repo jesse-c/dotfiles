@@ -230,7 +230,10 @@
 (use-package zoom-window)
 
 ;; Keymaps
-(use-package hydra)
+(use-package lv)
+
+(use-package hydra
+  :after lv)
 
 ;; Buffers
 (defun my/clean-up-buffers ()

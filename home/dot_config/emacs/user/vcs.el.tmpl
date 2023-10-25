@@ -41,9 +41,9 @@
   :after magit
   :defer 1
   :custom
-  {{- if eq .chezmoi.os "linux" }}
+  {{- if eq .chezmoi.os "linux"}}
   (git-link-default-remote "upstream")
-  {{- end }}
+  {{- end}}
   (git-link-use-commit t))
 
 ;; Browse target page on github/bitbucket from emacs buffers

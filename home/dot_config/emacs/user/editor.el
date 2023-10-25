@@ -178,6 +178,14 @@
   (go-mode . apheleia-mode)
   (go-ts-mode . apheleia-mode))
 
+(use-package xref
+  :ensure nil
+  :hook ((xref-after-return xref-after-jump) . recenter)
+  :custom
+  (xref-history-storage 'xref-window-local-history)
+  (xref-show-xrefs-function #'xref-show-definitions-completing-read)
+  (xref-show-definitions-function #'xref-show-definitions-completing-read))
+
 (provide 'editor)
 
 ;;; editor.el ends here

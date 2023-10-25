@@ -78,6 +78,11 @@
 (use-package ripgrep
   :defer 1)
 
+(use-package rg
+  :defer 1
+  :config
+  (rg-enable-menu))
+
 (provide 'projects)
 
 ;;; projects.el ends here

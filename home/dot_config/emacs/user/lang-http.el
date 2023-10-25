@@ -5,6 +5,7 @@
 (use-package verb
   :after (org org-babel)
   :commands (verb-command-map)
+  :custom (url-debug t)
   :config
   (define-key org-mode-map (kbd "C-c C-r") verb-command-map)
   (org-babel-do-load-languages 'org-babel-load-languages '((verb . t))))
