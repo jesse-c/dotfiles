@@ -39,11 +39,16 @@ return {
     "nacro90/numb.nvim",
     event = "BufRead",
     config = function() require("numb").setup() end
-  }, "linty-org/key-menu.nvim", {
+  },
+  -- {
+  --   "linty-org/key-menu.nvim",
+  --   disable = true,
+  -- },
+  {
   "folke/which-key.nvim",
   config = function() require("which-key").setup() end,
   disable = true
-},
+  },
   { "VonHeikemen/fine-cmdline.nvim", dependencies = { "MunifTanjim/nui.nvim" } },
   "sindrets/winshift.nvim",
   {
