@@ -2,8 +2,8 @@
 
 local spotifyMenu = hs.menubar.new()
 
-local spotifyLogger = hs.logger.new('spotifyMenu','debug')
-spotifyLogger.i('Initializing')
+local spotifyLogger = hs.logger.new("spotifyMenu", "debug")
+spotifyLogger.i("Initializing")
 
 local function hideSpotifyMenu()
   if spotifyMenu:isInMenuBar() then
@@ -19,17 +19,17 @@ local function showSpotifyMenu()
 end
 
 local function updateSpotifyMenu()
-  spotifyLogger.i('callback')
+  spotifyLogger.i("callback")
   if hs.spotify.isRunning() then
     if hs.spotify.getPlaybackState() == hs.spotify.state_playing then
-      spotifyLogger.i('playing')
+      spotifyLogger.i("playing")
       local currentArtist = hs.spotify.getCurrentArtist()
       local currentTrack = hs.spotify.getCurrentTrack()
       spotifyMenu:setTitle(currentArtist .. " — " .. currentTrack)
 
       showSpotifyMenu()
     else
-      spotifyLogger.i('not playing')
+      spotifyLogger.i("not playing")
       hideSpotifyMenu()
     end
   else
@@ -38,4 +38,3 @@ local function updateSpotifyMenu()
 end
 
 -- DISABLED hs.timer.doEvery(1, updateSpotifyMenu)
-

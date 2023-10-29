@@ -3,7 +3,7 @@
 local next = 0
 local prev = 1
 
-local mouseMoveMods = {'cmd', 'ctrl'}
+local mouseMoveMods = { "cmd", "ctrl" }
 
 local function moveMouseToScreen(direction)
   local screen = hs.mouse.getCurrentScreen()
@@ -29,6 +29,5 @@ local function moveMouseToPrevScreen()
   moveMouseToScreen(prev)
 end
 
-hs.hotkey.bind(mouseMoveMods, 'h', moveMouseToPrevScreen)
-hs.hotkey.bind(mouseMoveMods, 'l', moveMouseToNextScreen)
-
+hs.hotkey.bind(mouseMoveMods, "h", moveMouseToPrevScreen)
+hs.hotkey.bind(mouseMoveMods, "l", moveMouseToNextScreen)

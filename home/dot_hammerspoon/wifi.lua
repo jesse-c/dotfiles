@@ -1,13 +1,13 @@
 wifiWatcher = nil
 homeSSID = "DADF Hyperoptic 1GB Fibre 5Ghz"
-workSSIDs = {"Duffel Crew"}
+workSSIDs = { "Duffel Crew" }
 lastSSID = hs.wifi.currentNetwork()
 wifiMenu = hs.menubar.new()
 
 function ssidMenuMessage(newSSID)
   if newSSID then
     return newSSID
-  else 
+  else
     return "Not connected"
   end
 end
@@ -31,9 +31,9 @@ function ssidChangedCallback()
 
   -- When at work
   for _, v in ipairs(workSSIDs) do
-      if v == newSSID then
-        -- Do nothing
-      end
+    if v == newSSID then
+      -- Do nothing
+    end
   end
 
   lastSSID = newSSID
@@ -44,4 +44,3 @@ end
 
 wifiWatcher = hs.wifi.watcher.new(ssidChangedCallback)
 wifiWatcher:start()
-

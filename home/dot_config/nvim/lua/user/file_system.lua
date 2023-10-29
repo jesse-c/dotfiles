@@ -1,17 +1,19 @@
 local ok, nvim_tree = pcall(require, "nvim-tree")
-if not ok then return end
+if not ok then
+  return
+end
 
 nvim_tree.setup({
-	view = {
-		width = 60,
-	},
-	renderer = {
-		group_empty = true,
-	},
-	filters = {
-		dotfiles = false,
-		git_clean = false,
-	},
+  view = {
+    width = 60,
+  },
+  renderer = {
+    group_empty = true,
+  },
+  filters = {
+    dotfiles = false,
+    git_clean = false,
+  },
   git = {
     ignore = false,
   },
@@ -21,7 +23,6 @@ nvim_tree.setup({
 })
 
 local function open_nvim_tree(data)
-
   -- buffer is a [No Name]
   local no_name = data.file == "" and vim.bo[data.buf].buftype == ""
 

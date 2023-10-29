@@ -11,17 +11,18 @@ local k = hs.hotkey.modal.new({}, nil)
 -- Build your own
 local launch = function(appname)
   hs.application.launchOrFocus(appname)
-  if appname == 'Finder' then
-      hs.appfinder.appFromName(appname):activate()
+  if appname == "Finder" then
+    hs.appfinder.appFromName(appname):activate()
   end
   k.triggered = true
 end
 
 -- Single keybinding for app launch
-hs.fnutils.each(
-   hs.json.read("~/.hammerspoon/hyper.json")["apps"],
-   function(object)
-  k:bind({}, object.key, function() launch(object.appname); k:exit(); end)
+hs.fnutils.each(hs.json.read("~/.hammerspoon/hyper.json")["apps"], function(object)
+  k:bind({}, object.key, function()
+    launch(object.appname)
+    k:exit()
+  end)
 end)
 
 -- Shortcut to reload config
@@ -30,7 +31,7 @@ local ofun = function()
   hs.alert.show("Config loaded")
   k.triggered = true
 end
-k:bind({}, 'o', nil, ofun)
+k:bind({}, "o", nil, ofun)
 
 -- Enter Hyper Mode when F18 (Hyper/Capslock) is pressed
 local pressedF18 = function()
@@ -43,12 +44,12 @@ end
 local releasedF18 = function()
   k:exit()
   if not k.triggered then
-    hs.eventtap.keyStroke({}, 'ESCAPE')
+    hs.eventtap.keyStroke({}, "ESCAPE")
   end
 end
 
 -- Bind the Hyper key
-hs.hotkey.bind({}, 'F18', pressedF18, releasedF18)
+hs.hotkey.bind({}, "F18", pressedF18, releasedF18)
 
 -- Window management -----------------------------------------------------------
 
@@ -56,7 +57,19 @@ hs.hotkey.bind({}, 'F18', pressedF18, releasedF18)
 -- Hyper binding.
 
 -- http://larryhynes.net/2015/04/a-minor-update-to-my-hammerspoon-config.html
-k:bind({}, 'h', function() hs.window.focusedWindow():focusWindowWest(); k:exit(); end)
-k:bind({}, 'j', function() hs.window.focusedWindow():focusWindowNorth(); k:exit(); end)
-k:bind({}, 'k', function() hs.window.focusedWindow():focusWindowSouth(); k:exit(); end)
-k:bind({}, 'l', function() hs.window.focusedWindow():focusWindowEast(); k:exit(); end)
+k:bind({}, "h", function()
+  hs.window.focusedWindow():focusWindowWest()
+  k:exit()
+end)
+k:bind({}, "j", function()
+  hs.window.focusedWindow():focusWindowNorth()
+  k:exit()
+end)
+k:bind({}, "k", function()
+  hs.window.focusedWindow():focusWindowSouth()
+  k:exit()
+end)
+k:bind({}, "l", function()
+  hs.window.focusedWindow():focusWindowEast()
+  k:exit()
+end)

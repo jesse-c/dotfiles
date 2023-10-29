@@ -1,1 +1,1 @@
-return {"troydm/zoomwintab.vim"}
+return { "troydm/zoomwintab.vim" }

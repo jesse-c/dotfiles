@@ -1,8 +1,10 @@
 return {
-    {
-        "williamboman/mason.nvim",
-        cmd = "Mason",
-        config = function() require("mason").setup() end,
-        lazy = true
-    }
+  {
+    "williamboman/mason.nvim",
+    cmd = "Mason",
+    config = function()
+      require("mason").setup()
+    end,
+    lazy = true,
+  },
 }

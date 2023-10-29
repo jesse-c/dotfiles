@@ -16,7 +16,7 @@
 --     tell application "Mail"
 --       set msgs to (get the messages 1 thru 10 of inbox)
 --       set unreadMsgsIDs to {}
-      
+
 --       repeat with msg in msgs
 --         if read status of msg is false then
 --           set end of unreadMsgsIDs to (get id of msg)
@@ -32,7 +32,7 @@
 --     local subjects = {}
 
 --     for _,id in pairs(result) do
---       local readFn = function(id) 
+--       local readFn = function(id)
 --         return function (keys, item)
 --           -- TODO Do something after run
 --           local _, _, _ = hs.osascript.applescript("tell application \"Mail\" to set read status of (first message of inbox whose id is equal to " .. id .. ") to true")
@@ -45,7 +45,7 @@
 --           local _, _, _ = hs.osascript.applescript("tell application \"Mail\" to delete (first message of inbox whose id is equal to " .. id .. ")")
 --         end
 --       end
-      
+
 --       local succeededSubject, subject, _ = hs.osascript.applescript("tell application \"Mail\" to get subject of (first message of inbox whose id is equal to " .. id .. ")")
 --       local succeededSender, sender, _ = hs.osascript.applescript("tell application \"Mail\" to get sender of (first message of inbox whose id is equal to " .. id .. ")")
 --       -- TODO Date sent
