@@ -1,2 +1,4 @@
 machine api.github.com login {{ .forge_github_username }} password {{ .forge_github_password }}
-machine api.openai.com login {{ .openai_username }} password {{ .openai_password }}
+{{range $user := .openai_username -}}
+machine api.openai.com login {{$user}} password {{ $.openai_password }}
+{{end -}}

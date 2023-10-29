@@ -254,6 +254,10 @@
   (add-to-list 'all-the-icons-mode-icon-alist
                '(chatgpt-arcana-chat-mode all-the-icons-octicon "comment-discussion" :height 1.0 :v-adjust -0.1 :face all-the-icons-purple)))
 
+(use-package gptel
+  :custom
+  (gptel-model "gpt-4"))
+
 (use-package kind-icon
   :after corfu
   :custom
