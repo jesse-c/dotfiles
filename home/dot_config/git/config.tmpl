@@ -10,7 +10,6 @@
 	editor = nvim
 	excludesfile = ~/.gitignore_global
 	autocrlf = input
-	pager = delta
 [stash]
 	showPatch = true
 [merge]
@@ -32,6 +31,7 @@
 	compactionHeuristic = true
 	indentHeuristic = on
 	tool = difftastic
+	external = difft
 [difftool]
 	prompt = false
 [difftool "difftastic"]
@@ -39,6 +39,8 @@
 [difftool "diffsitter"]
 	cmd = diffsitter --color on "$LOCAL" "$REMOTE"
 [alias]
+	dft = difftool
+	dlog = "!f() { GIT_EXTERNAL_DIFF=difft git log -p --ext-diff; }; f"
 	# Prune local and remote origin
 	prune-all = "!git prune && git remote prune origin"
 	sync = "!git fetch origin && git rebase origin/main"
