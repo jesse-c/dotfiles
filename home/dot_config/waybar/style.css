@@ -29,7 +29,7 @@
 }
 
 #mode, #clock, #memory, #temperature, #cpu, #custom-weather,
-#mpd, #idle_inhibitor, #backlight, #pulseaudio, #network, 
+#mpd, #idle_inhibitor, #backlight, #pulseaudio, #network,
 #battery, #custom-powermenu, #custom-cava-internal,
 #custom-launcher, #tray, #disk, #custom-pacman, #custom-scratchpad-indicator {
   padding-left: .6rem;
@@ -136,6 +136,20 @@ tooltip label {
 #clock {
   color: @rosewater;
 }
+/* sway/language */
+#language {
+  color: @rosewater;
+}
+/* sway/window */
+#window {
+  color: @rosewater;
+}
+#user {
+  color: @rosewater;
+}
+#bluetooth {
+  color: @rosewater;
+}
 #idle_inhibitor {
   color: @green;
 }
@@ -166,4 +180,3 @@ tooltip label {
 #custom-weather {
   color: @red;
 }
-
