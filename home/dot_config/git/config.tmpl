@@ -43,7 +43,7 @@
 	dlog = "!f() { GIT_EXTERNAL_DIFF=difft git log -p --ext-diff; }; f"
 	# Prune local and remote origin
 	prune-all = "!git prune && git remote prune origin"
-	sync = "!git fetch origin && git rebase origin/main"
+	sync = "!git fetch origin && git rebase origin/$(git remote show origin | sed -n '/HEAD branch/s/.*: //p')"
 	root = "rev-parse --show-toplevel"
 	bs = "!git checkout $(git branch | sk -m | cut -c 3-)"
 	bd = "!git branch -D $(git branch | sk -m | cut -c 3-)"
