@@ -274,6 +274,9 @@ bindsym $mod+Shift+v exec cliphist list | wofi --show dmenu  | cliphist decode |
 
 bindsym $alt+$mod+Space exec com.tomjwatson.Emote
 
+bindsym $mod+Shift+bracketleft exec "$HOME"/.config/scripts/ratio.sh 2
+bindsym $mod+Shift+bracketright exec "$HOME"/.config/scripts/ratio.sh 3
+
 bindsym $mod+Escape exec $lock
 
 include "$HOME"/.config/sway/config.d/*
