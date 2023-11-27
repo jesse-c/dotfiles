@@ -8,27 +8,7 @@ return {
     },
     config = function()
       require("mason-lspconfig").setup({
-        ensure_installed = {
-          "bashls",
-          "clojure_lsp",
-          "elixirls",
-          "erlangls",
-          "html",
-          "gopls",
-          "jsonls",
-          "lemminx",
-          "ltex",
-          "prosemd_lsp",
-          "pylsp",
-          "rust_analyzer",
-          "solargraph",
-          "sorbet",
-          -- "sourcekit",
-          "sqlls",
-          "lua_ls",
-          "tsserver",
-          "yamlls",
-        },
+        ensure_installed = {},
       })
     end,
   },
