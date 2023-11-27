@@ -2,7 +2,8 @@
 
 (use-package protobuf-mode)
 
-(use-package protobuf-ts-mode)
+;; Disabled 21-11-23 due to website (https://git.ookami.one/cgit/protobuf-ts-mode) being down
+;; (use-package protobuf-ts-mode)
 
 (provide 'lang-protobuf)
 
