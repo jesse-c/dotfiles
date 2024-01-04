@@ -79,6 +79,7 @@
   :defer 1)
 
 (use-package rg
+  :after transient
   :defer 1
   :config
   (rg-enable-menu))

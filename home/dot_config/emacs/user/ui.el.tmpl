@@ -92,6 +92,11 @@
   (interactive)
   (my/catppuccin-set-and-reload 'mocha))
 
+(use-package transient
+  :after seq)
+
+(use-package hl-todo)
+
 ;; (use-package
 ;;   modus-themes
 ;;   :custom

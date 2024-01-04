@@ -1,6 +1,7 @@
 ;;; lang-nix.el --- -*- lexical-binding: t; -*-
 
-(use-package nix-mode)
+(use-package nix-mode
+  :after transient)
 
 (provide 'lang-nix)
 

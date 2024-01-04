@@ -1,6 +1,7 @@
 ;;; lang-docker.el --- -*- lexical-binding: t; -*-
 
-(use-package docker)
+(use-package docker
+  :after transient)
 (use-package dockerfile-mode)
 (use-package docker-compose-mode)
 

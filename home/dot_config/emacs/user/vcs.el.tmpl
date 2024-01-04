@@ -2,6 +2,7 @@
 
 ;; Magit
 (use-package magit
+  :after transient
   :commands
   (magit-status magit-blame)
   :custom
@@ -29,11 +30,11 @@
   :hook (magit-mode . magit-delta-mode))
 
 (use-package magit-todos
-  :after magit
+  :after (magit transient hl-todo)
   :config (magit-todos-mode))
 
 (use-package forge
-  :after magit
+  :after (magit transient)
   :defer 1)
 
 ;; Show changes in the gutter
@@ -70,14 +71,15 @@
   :after magit)
 
 ;; View versions of a file
-(use-package git-timemachine)
+(use-package git-timemachine
+  :after transient)
 
 ;; View git blame
 (use-package vc-msg
   :after magit)
 
 (use-package difftastic
-  :after magit
+  :after (magit transient)
   :bind (:map magit-blame-read-only-mode-map
          ("D" . difftastic-magit-show)
          ("S" . difftastic-magit-show))

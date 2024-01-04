@@ -9,12 +9,14 @@
 (use-package clojure-snippets)
 
 (use-package cider
+  :after transient
   :defer t
   :config
   (setq nrepl-log-messages t)
   (flycheck-clojure-setup)) ;; run setup *after* cider load
 
 (use-package flycheck-clojure
+  :after transient
   :defer t
   :commands (flycheck-clojure-setup) ;; autoload
   :config

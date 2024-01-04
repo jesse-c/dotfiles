@@ -1,6 +1,7 @@
 ;;; lang-javascript.el --- -*- lexical-binding: t; -*-
 
 (use-package npm
+  :after transient
   :commands
   (npm-update
    npm-run

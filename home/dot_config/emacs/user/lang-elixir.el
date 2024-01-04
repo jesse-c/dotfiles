@@ -16,6 +16,7 @@
   (elixir-mode-hook . mix-minor-mode))
 
 (use-package exunit
+  :after transient
   :hook
   (elixir-mode-hook . exunit-mode))
 
