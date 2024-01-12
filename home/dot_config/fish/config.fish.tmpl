@@ -85,11 +85,17 @@ if status is-interactive
           set __shhist_session (random)-$fish_pid
       end
   end
+
+  alias copy='pbcopy'
+  alias paste='pbpaste'
   {{- end }}
 
   {{- if eq .chezmoi.os "linux" }}
   helm completion fish | source
   alias h='helm'
+
+  alias copy='wl-copy'
+  alias paste='wl-paste'
 
   # kind completion fish | source
 
