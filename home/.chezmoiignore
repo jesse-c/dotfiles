@@ -36,4 +36,6 @@ Library
 .config/swhkd
 .config/ocr
 .config/autostart
+.config/fish/completions/run_onchange_completion_kind.sh.tmpl
+.config/fish/completions/run_onchange_completion_helm.sh.tmpl
 {{- end }}

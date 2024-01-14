@@ -1,0 +1,5 @@
+#!/bin/bash
+
+# kind version: {{ output "kind" "--version" | trim }}
+
+kind completion fish > "$HOME/.config/fish/completions/kind.fish"

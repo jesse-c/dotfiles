@@ -42,11 +42,7 @@ if status is-interactive
 
   alias c='chezmoi'
 
-  op completion fish | source
-
   zoxide init fish | source
-
-  gh completion -s fish | source
 
   direnv hook fish | source
 
@@ -97,17 +93,13 @@ if status is-interactive
   {{- end }}
 
   {{- if eq .chezmoi.os "linux" }}
-  helm completion fish | source
   alias h='helm'
 
   alias copy='wl-copy'
   alias paste='wl-paste'
 
-  # kind completion fish | source
-
   fish_add_path $HOME/.krew/bin
 
-  kubectl completion fish | source
   alias k='kubectl'
 
   set -x K9S_CONFIG_PATH "$HOME/.config/k9s"
