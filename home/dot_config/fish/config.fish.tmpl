@@ -34,6 +34,17 @@ if status is-interactive
 
   # Applications ---------------------------------------------------------------
 
+  if type -q bat
+    abbr --add cat bat
+  end
+
+  # https://github.com/gf3/dotfiles/blob/75298b4c801c9228283a6bf6dce42ec251c3a113/.config/fish/config.fish#L9-L13
+  # https://github.com/maxmilton/dotfiles/blob/6e8ec6ff576f233d2ab1442dd5d7e1991740cfda/private_dot_config/fish/oneshot-config.fish.tmpl#L142-L144
+  if type -q eza
+    abbr --add ls eza -l
+    alias ll="eza --all --icons=always --long --group-directories-first"
+  end
+
   alias root='cd (git root)'
 
   fish_add_path $HOME/.local/bin
@@ -44,7 +55,9 @@ if status is-interactive
 
   zoxide init fish | source
 
-  direnv hook fish | source
+  if type -q direnv
+    direnv hook fish | source
+  end
 
   atuin init fish | source
 
@@ -95,6 +108,8 @@ if status is-interactive
   {{- if eq .chezmoi.os "linux" }}
   alias h='helm'
 
+  alias hx='helix'
+
   alias copy='wl-copy'
   alias paste='wl-paste'
 
@@ -105,6 +120,8 @@ if status is-interactive
   set -x K9S_CONFIG_PATH "$HOME/.config/k9s"
 
   fish_add_path /var/lib/snapd/snap/bin/
+
+  source /opt/miniconda3/etc/fish/conf.d/conda.fish
   {{- end }}
 
   # History --------------------------------------------------------------------
