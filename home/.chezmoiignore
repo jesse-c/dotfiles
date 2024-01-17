@@ -38,4 +38,5 @@ Library
 .config/autostart
 .config/fish/completions/run_onchange_completion_kind.sh.tmpl
 .config/fish/completions/run_onchange_completion_helm.sh.tmpl
+.config/swaylock
 {{- end }}
