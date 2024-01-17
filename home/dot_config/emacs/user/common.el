@@ -9,7 +9,6 @@
   :commands (async-start))
 (use-package load-relative)
 (use-package f)
-(use-package seq)
 
 (provide 'common)
 
