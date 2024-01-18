@@ -21,6 +21,10 @@ local keyboard = require("keyboard")
 
 config.keys = keyboard.keys
 
+-- Scrollback
+config.scrollback_lines = 100000
+config.enable_scroll_bar = true
+
 -- Meta
 require("meta").setup()
 
