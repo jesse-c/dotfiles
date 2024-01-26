@@ -1,14 +1,15 @@
 return {
   {
-    "nvim-neo-tree/neo-tree.nvim",
-    branch = "v3.x",
+    "nvim-tree/nvim-tree.lua",
     event = { "BufRead" },
-    cmd = "Neotree",
+    version = "*",
     dependencies = {
-      "nvim-lua/plenary.nvim",
       "nvim-tree/nvim-web-devicons",
-      "MunifTanjim/nui.nvim",
-      "3rd/image.nvim",
     },
+    opts = {},
+    cmd = { "NvimTreeToggle", "NvimTreeFocus" },
+    config = function(_, opts)
+      require("nvim-tree").setup(opts)
+    end,
   },
 }

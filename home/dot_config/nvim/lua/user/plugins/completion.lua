@@ -1,6 +1,7 @@
 return {
   {
     "hrsh7th/nvim-cmp",
+    version = false,
     dependencies = {
       "hrsh7th/cmp-nvim-lua",
       "hrsh7th/cmp-buffer",

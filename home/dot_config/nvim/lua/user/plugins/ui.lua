@@ -22,13 +22,19 @@ return {
           notify = true,
           treesitter = true,
           which_key = true,
+          dropbar = {
+            enabled = false,
+            color_mode = true, -- enable color for kind's texts, not just kind's icons
+          },
+          fidget = true,
+          neotest = true,
+          lsp_trouble = true,
         },
       })
     end,
   },
   {
-    "windwp/nvim-autopairs",
-    event = "InsertEnter",
-    opts = {}, -- this is equalent to setup({}) function
+    "Bekaboo/dropbar.nvim",
+    event = { "BufRead" },
   },
 }

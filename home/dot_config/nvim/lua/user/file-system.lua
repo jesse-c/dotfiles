@@ -4,3 +4,6 @@ vim.o.writebackup = false
 
 -- Do not create swap files
 vim.o.swapfile = false
+
+-- Encoding
+vim.o.encoding = "utf-8"
