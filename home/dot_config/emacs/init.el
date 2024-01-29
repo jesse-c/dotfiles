@@ -64,5 +64,6 @@
 (require 'lang-emacs-lisp)
 (require 'lang-racket)
 (require 'lang-nix)
+(require 'lang-fish)
 
 ;;; init.el ends here
