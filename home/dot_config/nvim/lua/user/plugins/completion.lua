@@ -10,12 +10,30 @@ return {
       "neovim/nvim-lspconfig",
       "saadparwaiz1/cmp_luasnip",
       "L3MON4D3/LuaSnip",
+      "onsails/lspkind.nvim",
     },
     event = { "InsertEnter", "CmdlineEnter" },
     config = function()
       local cmp = require("cmp")
 
+      local lspkind = require("lspkind")
+
       cmp.setup({
+        formatting = {
+          format = lspkind.cmp_format({
+            -- show only symbol annotations
+            mode = "symbol",
+            -- prevent the popup from showing more than provided characters (e.g 50 will not show more than 50 characters)
+            -- can also be a function to dynamically calculate max width such as
+            -- maxwidth = function() return math.floor(0.45 * vim.o.columns) end,
+            maxwidth = 50,
+            -- when popup menu exceed maxwidth, the truncated part would show ellipsis_char instead (must define maxwidth first)
+            ellipsis_char = "...",
+            -- show labelDetails in menu. Disabled by default
+            show_labelDetails = true,
+          }),
+        },
+
         snippet = {
           expand = function(args)
             require("luasnip").lsp_expand(args.body) -- For `luasnip` users.
@@ -74,5 +92,9 @@ return {
       -- 	capabilities = capabilities,
       -- })
     end,
+  },
+  {
+    "onsails/lspkind.nvim",
+    event = { "BufRead" },
   },
 }
