@@ -1,3 +1,7 @@
+-- Commands
+
+vim.o.cmdheight = 0
+
 -- Line numbers
 
 vim.o.number = true
