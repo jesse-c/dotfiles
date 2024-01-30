@@ -1,0 +1,27 @@
+[pomodoro]
+preset = "pomodoro"
+
+tcp-host = "localhost"
+tcp-port = 9090
+
+{{- if eq .chezmoi.os "darwin" }}
+on-server-start = "terminal-notifier -sound default -group 'comodoro-notify' -title '🍅 Pomodoro' -message 'Server started'"
+on-server-stopping = "terminal-notifier -sound default -group 'comodoro-notify' -title '🍅 Pomodoro' -message 'Server stopping'"
+on-server-stop ="terminal-notifier -sound default -group 'comodoro-notify' -title '🍅 Pomodoro' -message 'Server stopped'"
+
+on-timer-start = "terminal-notifier -sound default -group 'comodoro-notify' -title '🍅 Pomodoro' -message 'Timer started'"
+on-timer-stop = "terminal-notifier -sound default -group 'comodoro-notify' -title '🍅 Pomodoro' -message 'Timer stopped'; comodoro stop pomodoro tcp"
+
+on-work-pause = "terminal-notifier -sound default -group 'comodoro-notify' -title '🍅 Pomodoro' -message 'Timer paused'"
+{{- end }}
+
+{{- if eq .chezmoi.os "linux" }}
+on-server-start = "dunstify -h string:x-dunst-stack-tag:pomodoro '🍅 Pomodoro' 'Server started'"
+on-server-stopping = "dunstify -h string:x-dunst-stack-tag:pomodoro '🍅 Pomodoro' 'Server stopping'"
+on-server-stop = "dunstify -h string:x-dunst-stack-tag:pomodoro '🍅 Pomodoro' 'Server stopped'"
+
+on-timer-start = "dunstify -h string:x-dunst-stack-tag:pomodoro '🍅 Pomodoro' 'Timer started'"
+on-timer-stop = "dunstify -h string:x-dunst-stack-tag:pomodoro '🍅 Pomodoro' 'Timer stopped'; comodoro stop pomodoro tcp"
+
+on-work-pause = "dunstify -h string:x-dunst-stack-tag:pomodoro '🍅 Pomodoro' 'Timer paused'"
+{{- end }}
