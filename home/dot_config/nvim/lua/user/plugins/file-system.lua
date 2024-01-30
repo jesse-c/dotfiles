@@ -12,4 +12,20 @@ return {
       require("nvim-tree").setup(opts)
     end,
   },
+  {
+    "tpope/vim-eunuch",
+    event = { "BufRead" },
+    cmd = {
+      "Remove",
+      "Delete",
+      "Move",
+      "Rename",
+      "Copy",
+      "Duplicate",
+      "Chmod",
+      "Mkdir",
+      "SudoWrite",
+      "SudoEdit",
+    },
+  },
 }
