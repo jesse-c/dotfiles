@@ -36,6 +36,7 @@
 (require 'completion)
 (require 'file-system)
 (require 'snippets)
+(require 'terminal)
 (require 'lang-all)
 (require 'lang-http)
 (require 'lang-rust)
