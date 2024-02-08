@@ -51,7 +51,10 @@
   (setq org-journal-prefix-key "C-c j ")
   :custom
   (org-journal-dir (concat org-dir "journal"))
-  (org-journal-date-format "%y-%m-%d %a"))
+  (org-journal-date-format "%y-%m-%d %a")
+  (org-agenda-files (concat org-dir "agenda"))
+  (org-agenda-start-with-log-mode t)
+  (org-log-intro-drawer t))
 
 (use-package org-projectile
   :after org
