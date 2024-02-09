@@ -222,6 +222,7 @@
   (add-to-list 'completion-at-point-functions #'cape-line))
 
 (use-package copilot
+  :after jsonrpc
   :elpaca
   (:host github :repo "zerolfx/copilot.el" :files ("dist" "*.el"))
   :hook

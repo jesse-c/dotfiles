@@ -9,6 +9,7 @@
   :commands (async-start))
 (use-package load-relative)
 (use-package f)
+(use-package jsonrpc)
 
 (provide 'common)
 
