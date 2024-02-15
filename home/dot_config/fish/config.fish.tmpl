@@ -43,6 +43,7 @@ if status is-interactive
   if type -q eza
     abbr --add ls eza -l
     alias ll="eza --all --icons=always --long --group-directories-first"
+    alias lr="eza --all --icons=always --long --group-directories-first --sort=created"
   end
 
   alias root='cd (git root)'
