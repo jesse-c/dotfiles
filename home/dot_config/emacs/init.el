@@ -66,5 +66,6 @@
 (require 'lang-racket)
 (require 'lang-nix)
 (require 'lang-fish)
+(require 'lang-epub)
 
 ;;; init.el ends here
