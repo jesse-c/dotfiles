@@ -8,7 +8,7 @@
 	ui = true
 [core]
 	editor = nvim
-	excludesfile = ~/.gitignore_global
+	excludesfile = ~/.gitignore
 	autocrlf = input
 [stash]
 	showPatch = true
@@ -16,12 +16,16 @@
 	conflictstyle = zdiff3
 [diff]
 	colorMoved = default
+[fetch]
+	prune = true
+	prunetags = true
 [interactive]
 	diffFilter = delta --color-only
 [add.interactive]
 	useBuiltin = false # required for git 2.37.0
 [push]
 	default = upstream
+	followtags = true
 [commit]
 	verbose = true
 	gpgsign = true
@@ -63,6 +67,7 @@
 	insteadOf = https://github.com/
 [rebase]
 	autosquash = true
+	autostash = true
 {{- if eq .chezmoi.os "darwin" }}
 [gpg]
 	program = gpg
@@ -76,8 +81,12 @@
 {{- end }}
 [init]
 	defaultBranch = main
+[branch]
+	sort = -committerdate
 [delta]
 	navigate = true    # use n and N to move between diff sections
 	light = false      # set to true if you're in a terminal w/ a light background color (e.g. the default macOS terminal)
+[log]
+	date = iso
 [include]
 	path = ./local.inc
