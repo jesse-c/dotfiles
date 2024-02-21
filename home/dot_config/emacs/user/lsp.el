@@ -2,8 +2,8 @@
 
 (use-package lsp-mode
   :custom
-  (lsp-elixir-ls-version "v0.15.1")
-  (lsp-elixir-local-server-command "/Users/jesse/src/github.com/elixir-lsp/elixir-ls/rel/language_server.sh")
+  (lsp-elixir-ls-version "v0.20.0")
+  (lsp-elixir-local-server-command "~/.cache/elixir-ls/language_server.sh")
   (lsp-completion-provider :none) ;; we use Corfu!
   :init
   (setq lsp-keymap-prefix "C-c l")
@@ -63,11 +63,11 @@
   (lsp-register-client
     (make-lsp-client :new-connection (lsp-stdio-connection '("sourcekit-lsp"))
                      :major-modes '(swift-mode)
-                     :server-id 'swift-ls))
-  (lsp-register-client
-    (make-lsp-client :new-connection (lsp-stdio-connection '("next-ls" "--stdio"))
-                     :major-modes '(elixir-mode elixir-ts-mode)
-                     :server-id 'elixir-ls)))
+                     :server-id 'swift-ls)))
+  ;; (lsp-register-client
+  ;;   (make-lsp-client :new-connection (lsp-stdio-connection '("next-ls" "--stdio"))
+  ;;                    :major-modes '(elixir-mode elixir-ts-mode)
+  ;;                    :server-id 'elixir-ls)))
 
 (use-package lsp-ui :commands lsp-ui-mode)
 (use-package consult-lsp :commands (consult-lsp-diagnostics consult-lsp-symbols consult-lsp-file-symbols))
