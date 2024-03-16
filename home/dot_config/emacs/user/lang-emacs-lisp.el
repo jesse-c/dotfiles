@@ -1,7 +1,7 @@
 ;;; lang-emacs-lisp.el --- -*- lexical-binding: t; -*-
 
 (use-package eldoc
-  :elpaca nil
+  :ensure nil
   :diminish eldoc-mode
   :hook
   (emacs-lisp-mode . turn-on-eldoc-mode)

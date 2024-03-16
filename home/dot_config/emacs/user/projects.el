@@ -10,7 +10,7 @@
   (persp-mode))
 
 (use-package perspective-tabs
-  :elpaca
+  :ensure
   (:type git :host sourcehut :repo "woozong/perspective-tabs")
   :after perspective
   :config
@@ -66,7 +66,7 @@
 
 (use-package consult-projectile
   :after projectile
-  :elpaca
+  :ensure
   (consult-projectile :type git :host gitlab :repo "OlMon/consult-projectile" :branch "master")
   :custom
   (consult-projectile-source-projectile-project-action 'projectile-commander))

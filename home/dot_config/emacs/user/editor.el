@@ -50,7 +50,7 @@
   (term-mode-hook . puni-disable-puni-mode))
 
 (use-package combobulate
-  :elpaca
+  :ensure
   (:type git :host github :repo "mickeynp/combobulate" :branch "master")
   :hook
   (python-ts-mode . combobulate-mode)
@@ -70,8 +70,10 @@
 
 (use-package embark
   :after (evil evil-collection avy)
-  :commands (embark-act)
-  :bind (("C-c a" . embark-act))
+  :commands (embark-act embark-dwim embark-bindings)
+  :bind
+  (("C-." . embark-act)         ;; pick some comfortable binding
+   ("C-;" . embark-dwim))        ;; good alternative: M-.
 
   :init
   ;; Optionally replace the key help with a completing-read interface
@@ -80,7 +82,7 @@
   :config
   ;; Override the Evil bindings
   (define-key evil-normal-state-map (kbd "C-.") 'embark-act)
-  (define-key evil-normal-state-map (kbd "M-.") 'embark-dwim)
+  (define-key evil-normal-state-map (kbd "C-;") 'embark-dwim)
 
   ;; Hide the mode line of the Embark live/completions buffers
   (add-to-list 'display-buffer-alist
@@ -162,14 +164,14 @@
 ;; (add-hook 'clojure-mode-hook 'format-all-mode))
 
 (use-package apheleia
-  ;; :config
-  ;; (setf (alist-get 'mix-format apheleia-formatters) '("mix" "format" "--dot-formatter" "/Users/jesse/src/github.com/duffelhq/platform/.formatter.exs" "-"))
   :hook
   (elixir-mode . apheleia-mode)
   (elixir-ts-mode . apheleia-mode)
   (swift-mode . apheleia-mode)
   (rust-mode . apheleia-mode)
   (rust-ts-mode . apheleia-mode)
+  (python-mode . apheleia-mode)
+  (python-ts-mode . apheleia-mode)
   (javascript-mode . apheleia-mode)
   (sass-mode . apheleia-mode)
   (typescript-mode . apheleia-mode)

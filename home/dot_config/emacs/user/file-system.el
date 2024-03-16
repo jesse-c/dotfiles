@@ -143,7 +143,7 @@
                                                  :right-fringe 16)))
 
 (use-package zoxide
-  :elpaca
+  :ensure
   (:type git :host gitlab :repo "Vonfry/zoxide.el"))
 
 (provide 'file-system)

@@ -30,6 +30,7 @@
 ;; Alternative to try: https://superuser.com/questions/125569/how-to-fix-emacs-popup-dialogs-on-mac-os-x
 (setq use-dialog-box nil)
 
+;; https://stackoverflow.com/a/8609349
 ;; Ensure PATH is correct when launched as GUI application
 (use-package
   exec-path-from-shell
@@ -51,6 +52,12 @@
    (lambda (key _value)
      (file-notify-rm-watch key))
    file-notify-descriptors))
+
+;; https://mise.jdx.dev/ide-integration.html
+;; CLI tools installed by Mise
+;; See: https://www.emacswiki.org/emacs/ExecPath
+(setenv "PATH" (concat (getenv "PATH") ":/home/user/.local/share/mise/shims"))
+(setq exec-path (append exec-path '("/home/user/.local/share/mise/shims")))
 
 (provide 'os)
 

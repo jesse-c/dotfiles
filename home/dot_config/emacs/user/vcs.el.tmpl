@@ -25,11 +25,15 @@
   (transient-append-suffix 'magit-dispatch "!"
     '("*" "My Magit Cmds" th/magit-aux-commands)))
 
+(use-package magit-popup
+  :after magit)
+
 (use-package magit-delta
   :after magit
   :hook (magit-mode . magit-delta-mode))
 
 (use-package magit-todos
+  :disabled
   :after (magit transient hl-todo)
   :config (magit-todos-mode))
 

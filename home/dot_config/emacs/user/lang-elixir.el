@@ -8,7 +8,7 @@
 (use-package heex-ts-mode)
 
 (use-package apprentice
-  :elpaca
+  :ensure
   (:type git :host github :repo "Sasanidas/Apprentice" :branch "master"))
 
 (use-package mix

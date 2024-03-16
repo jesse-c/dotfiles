@@ -144,7 +144,7 @@
 
 (use-package corfu
   ;; https://github.com/purplg/dotfiles/blob/04c5217247a738adef11d9bf569a329c7eebae4a/.config/emacs/modules/pg-completion.el
-  :elpaca
+  :ensure
   (:files (:defaults "extensions/corfu-popupinfo.el"))
   ;; Optional customizations
   :custom
@@ -223,7 +223,7 @@
 
 (use-package copilot
   :after jsonrpc
-  :elpaca
+  :ensure
   (:host github :repo "zerolfx/copilot.el" :files ("dist" "*.el"))
   :hook
   (prog-mode-hook . copilot-mode)
@@ -247,7 +247,7 @@
 
 (use-package chatgpt-arcana
   :after all-the-icons
-  :elpaca
+  :ensure
   (:host github :repo "CarlQLange/ChatGPT-Arcana.el" :files ("*.el"))
   :custom
   (chatgpt-arcana-api-key (my/get-password "api.openai.com" "me"))
@@ -261,7 +261,7 @@
   (gptel-model "gpt-4"))
 
 (use-package ellama
-  :elpaca
+  :ensure
   (:host github :repo "s-kostyaev/ellama"))
 
 (use-package kind-icon

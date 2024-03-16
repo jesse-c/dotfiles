@@ -2,7 +2,7 @@
 
 (use-package typescript-mode)
 ;; (use-package tsx-mode
-;;   :elpaca
+;;   :ensure
 ;;   (:type git :host github :repo "jesse-c/tsx-mode.el" :branch "emacs29")
 ;;   :defer t
 ;;   :init

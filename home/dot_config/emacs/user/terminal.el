@@ -1,7 +1,7 @@
 ;;; terminal.el --- -*- lexical-binding: t; -*-
 
 (use-package eat
-  :elpaca (:host codeberg
+  :ensure (:host codeberg
            :repo "akib/emacs-eat"
            :branch "master"
            :files ("*.el" ("term" "term/*.el") "*.texi"

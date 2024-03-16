@@ -8,7 +8,7 @@
   (flycheck-kotlin-setup))
 
 (use-package kotlin-ts-mode
-  :elpaca
+  :ensure
   (:type git :host gitlab :repo "bricka/emacs-kotlin-ts-mode" :branch "main")
   :mode "\\.kt\\'")
 

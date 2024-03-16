@@ -3,7 +3,7 @@
 (use-package clojure-mode)
 
 (use-package clojure-ts-mode
-  :elpaca
+  :ensure
   (:type git :host github :repo "clojure-emacs/clojure-ts-mode" :branch "main"))
 
 (use-package clojure-snippets)
