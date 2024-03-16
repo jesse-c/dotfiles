@@ -1,7 +1,7 @@
 {
   "apps": [
     { "key": "q", "appname": "/Applications/Things3.app" },
-    { "key": "g", "appname": "WezTerm" },
+    { "key": "g", "appname": "kitty" },
     { "key": "b", "appname": "/Applications/Emacs.app" },
     { "key": "f", "appname": "Firefox" },
     { "key": "m", "appname": "Mail" },
@@ -19,7 +19,6 @@
     { "key": "x", "appname": "Xcode" },
     { "key": "u", "appname": "Proxyman" },
     { "key": "o", "appname": "/Applications/Anybox.app" },
-    { "key": "v", "appname": "Beeper" },
-    { "key": ",", "appname": "Obsidian" }
+    { "key": "v", "appname": "Texts" }
   ]
 }
