@@ -51,4 +51,7 @@ return {
       require("feline").statuscolumn.setup()
     end,
   },
+  {
+    "nvim-neotest/nvim-nio",
+  },
 }
