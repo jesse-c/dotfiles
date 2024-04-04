@@ -172,13 +172,16 @@
   (rust-ts-mode . apheleia-mode)
   (python-mode . apheleia-mode)
   (python-ts-mode . apheleia-mode)
+  (haskell-mode . apheleia-mode)
   (javascript-mode . apheleia-mode)
   (sass-mode . apheleia-mode)
   (typescript-mode . apheleia-mode)
   (typescript-ts-mode . apheleia-mode)
   (tsx-mode . apheleia-mode)
   (go-mode . apheleia-mode)
-  (go-ts-mode . apheleia-mode))
+  (go-ts-mode . apheleia-mode)
+  (ruby-mode . apheleia-mode)
+  (ruby-ts-mode . apheleia-mode))
 
 (use-package xref
   :ensure nil
