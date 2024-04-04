@@ -2,3 +2,4 @@ machine api.github.com login {{ .forge_github_username }} password {{ .forge_git
 {{range $user := .openai_username -}}
 machine api.openai.com login {{$user}} password {{ $.openai_password }}
 {{end -}}
+machine anthropic.com login {{ .anthropic_username }} password {{ .anthropic_password }}

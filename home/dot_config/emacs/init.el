@@ -37,6 +37,7 @@
 (require 'file-system)
 (require 'snippets)
 (require 'terminal)
+(require 'ai)
 (require 'lang-all)
 (require 'lang-http)
 (require 'lang-rust)
