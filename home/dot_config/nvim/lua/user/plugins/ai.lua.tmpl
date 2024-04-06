@@ -1,0 +1,43 @@
+return {
+	{
+		"olimorris/codecompanion.nvim",
+		dependencies = {
+			"nvim-lua/plenary.nvim",
+			"nvim-treesitter/nvim-treesitter",
+			"nvim-telescope/telescope.nvim",
+			{
+				"stevearc/dressing.nvim",
+				opts = {},
+			},
+		},
+		config = function()
+			require("codecompanion").setup({
+				adapters = {
+					anthropic = require("codecompanion.adapters").use("anthropic", {
+						env = {
+							api_key = 'cmd:op read op://Personal/Anthropic/editor --no-newline',
+						},
+					}),
+				},
+				strategies = {
+					chat = "anthropic",
+					inline = "anthropic",
+				},
+			})
+		end,
+	},
+	{
+		"frankroeder/parrot.nvim",
+		dependencies = { "fzf-lua" },
+		enabled = false,
+		config = function()
+			require("parrot").setup({
+				providers = {
+					anthropic = {
+						api_key = '{{ onepasswordRead "op://Personal/Anthropic/editor" }}',
+					},
+				},
+			})
+		end,
+	},
+}
