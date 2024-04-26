@@ -48,10 +48,7 @@ local releasedF18 = function()
   end
 end
 
--- Bind the Hyper key
-hs.hotkey.bind({}, "F18", pressedF18, releasedF18)
-
--- Window management -----------------------------------------------------------
+-- Window management
 
 -- Temporarily here. Ideally would be in windows.lua, but we need access to the
 -- Hyper binding.
@@ -62,14 +59,17 @@ k:bind({}, "h", function()
   k:exit()
 end)
 k:bind({}, "j", function()
-  hs.window.focusedWindow():focusWindowNorth()
+  hs.window.focusedWindow():focusWindowSouth()
   k:exit()
 end)
 k:bind({}, "k", function()
-  hs.window.focusedWindow():focusWindowSouth()
+  hs.window.focusedWindow():focusWindowNorth()
   k:exit()
 end)
 k:bind({}, "l", function()
   hs.window.focusedWindow():focusWindowEast()
   k:exit()
 end)
+
+-- Bind the Hyper key -----------------------------------------------------------
+hs.hotkey.bind({}, "F18", pressedF18, releasedF18)
