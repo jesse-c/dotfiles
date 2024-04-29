@@ -46,6 +46,9 @@ if status is-interactive
     alias lr="eza --all --icons=always --long --group-directories-first --sort=created"
   end
 
+  alias to-dark='kitty +kitten themes --reload-in=all --config-file-name themes.conf Catppuccin-Mocha'
+  alias to-light='kitty +kitten themes --reload-in=all --config-file-name themes.conf Catppuccin-Latte'
+
   alias root='cd (git root)'
 
   fish_add_path $HOME/.local/bin
