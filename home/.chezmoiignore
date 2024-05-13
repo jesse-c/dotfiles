@@ -10,6 +10,8 @@ Library
 .config/Brewfile
 .config/MailMate
 .config/fontconfig
+.config/yabai
+.config/skhd
 .config/himalaya
 .config/homebrew
 .config/macos
