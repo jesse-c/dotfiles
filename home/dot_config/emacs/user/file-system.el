@@ -146,6 +146,11 @@
   :ensure
   (:type git :host gitlab :repo "Vonfry/zoxide.el"))
 
+(use-package dired
+  :ensure nil
+  :commands (dired)
+  :custom ((dired-listing-switches "-agho --group-directories-first")))
+
 (use-package casual-dired
   :ensure
   (:type git :host github :repo "kickingvegas/casual-dired" :brain "main")
