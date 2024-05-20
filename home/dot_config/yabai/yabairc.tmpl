@@ -44,19 +44,10 @@ yabai -m config                                 \
     mouse_drop_action            swap
 
 # Disable specific apps
-yabai -m rule --add app="^System Settings$" manage=off
-yabai -m rule --add app="^Things$" manage=off
-yabai -m rule --add app="^Mail$" manage=off
-yabai -m rule --add app="^Anybox$" manage=off
-yabai -m rule --add app="^Calendar$" manage=off
-yabai -m rule --add app="^WhatsApp$" manage=off
-yabai -m rule --add app="^1Password$" manage=off
-yabai -m rule --add app="^Finder$" manage=off
-yabai -m rule --add app="^Notes$" manage=off
-yabai -m rule --add app="^Spotify$" manage=off
-yabai -m rule --add app="^Contacts$" manage=off
-yabai -m rule --add app="^Ivory$" manage=off
-yabai -m rule --add app="^Messages$" manage=off
-yabai -m rule --add app="^Messenger$" manage=off
+{{- $apps := list "System Settings" "Things" "Mail" "Anybox" "Calendar" "WhatsApp" "1Password" "Finder" "Notes" "Spotify" "Contacts" "Ivory" "Messages" "Messenger" "Home" "DaisyDisk" "AppCleaner" "Steam" "Dash" -}}
+
+{{range $app := $apps}}
+yabai -m rule --add app="^{{$app}}$" manage=off
+{{- end}}
 
 echo "yabai configuration loaded.."
