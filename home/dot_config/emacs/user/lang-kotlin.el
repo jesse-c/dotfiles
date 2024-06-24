@@ -12,7 +12,8 @@
   (:type git :host gitlab :repo "bricka/emacs-kotlin-ts-mode" :branch "main")
   :mode "\\.kt\\'")
 
-(use-package ob-kotlin)
+(use-package ob-kotlin
+  :after (kotlin org))
 
 (provide 'lang-kotlin)
 

@@ -3,7 +3,7 @@
 (use-package terraform-mode
   :after hcl-mode)
 (use-package terraform-doc
-  :after terraform-mode)
+  :after (terraform-mode org))
 
 (provide 'lang-terraform)
 

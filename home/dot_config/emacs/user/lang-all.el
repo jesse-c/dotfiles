@@ -50,7 +50,8 @@
 (use-package coverlay
   :defer t)
 
-(use-package ox-pandoc)
+(use-package ox-pandoc
+  :after org)
 
 (provide 'lang-all)
 
