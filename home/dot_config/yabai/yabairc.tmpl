@@ -44,7 +44,7 @@ yabai -m config                                 \
     mouse_drop_action            swap
 
 # Disable specific apps
-{{- $apps := list "System Settings" "Things" "Mail" "Anybox" "Calendar" "WhatsApp" "1Password" "Finder" "Notes" "Spotify" "Contacts" "Ivory" "Messages" "Messenger" "Home" "DaisyDisk" "AppCleaner" "Steam" "Dash" -}}
+{{- $apps := list "System Settings" "Things" "Mail" "Anybox" "Calendar" "WhatsApp" "1Password" "Finder" "Notes" "Spotify" "Contacts" "Ivory" "Messages" "Messenger" "Home" "DaisyDisk" "AppCleaner" "Steam" "Dash" "Reminders" -}}
 
 {{range $app := $apps}}
 yabai -m rule --add app="^{{$app}}$" manage=off
