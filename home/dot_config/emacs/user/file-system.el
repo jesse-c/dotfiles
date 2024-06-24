@@ -151,9 +151,14 @@
   :commands (dired)
   :custom ((dired-listing-switches "-agho --group-directories-first")))
 
+(use-package casual-lib
+  :ensure
+  (:type git :host github :repo "kickingvegas/casual-lib" :branch "main"))
+
 (use-package casual-dired
   :ensure
-  (:type git :host github :repo "kickingvegas/casual-dired" :brain "main")
+  (:type git :host github :repo "kickingvegas/casual-dired" :branch "main")
+  :after (casual-lib)
   :bind (:map dired-mode-map ("C-o" . 'casual-dired-tmenu)))
 
 (provide 'file-system)
