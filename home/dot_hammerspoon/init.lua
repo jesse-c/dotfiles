@@ -1,4 +1,5 @@
 require("console")
+require("ipc")
 require("wifi")
 require("hyper")
 require("audio")
