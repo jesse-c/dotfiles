@@ -184,18 +184,18 @@ shift + alt - e : yabai -m space --balance
 # swap windows
 shift + alt - j : yabai -m window --swap south
 shift + alt - k : yabai -m window --swap north
-shift + alt -h : yabai -m window --swap west
+shift + alt - h : yabai -m window --swap west
 shift + alt - l : yabai -m window --swap east
 
 # move window and split
 ctrl + alt - j : yabai -m window --warp south
 ctrl + alt - k : yabai -m window --warp north
-ctrl + alt -h : yabai -m window —-warp west
+ctrl + alt - h : yabai -m window —-warp west
 ctrl + alt - l : yabai -m window --warp east
 
 # move window to prev and next space
 shift + alt - p: yabai -m window --space prev;
-shift + alt -n : yabai -m window --space next;
+shift + alt - n : yabai -m window --space next;
 
 # move window to space
 shift + alt - 1 : yabai -m window --space 1;
