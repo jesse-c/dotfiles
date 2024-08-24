@@ -211,3 +211,9 @@ shift + alt - 7 : yabai -m window —-space 7;
 # -- start/stop yabai ---
 # ctrl + alt - q: brew services stop yabai
 # ctrl + alt -s : brew services start yabai
+
+# Widths
+
+alt - 1 : yabai -m window --ratio abs:0.33 # 2/3
+alt - 2 : yabai -m window --ratio abs:0.50 # 1/2
+alt - 3 : yabai -m window --ratio abs:0.66 # 1/3
