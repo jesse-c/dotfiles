@@ -48,6 +48,7 @@
 (require 'lang-go)
 (require 'lang-haskell)
 (require 'lang-swift)
+(require 'lang-just)
 (require 'lang-json)
 (require 'lang-python)
 (require 'lang-kotlin)
