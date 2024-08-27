@@ -110,7 +110,7 @@ matches:
   - trigger: ":del"
     replace: "⌫"
   - trigger: ":fdel"
-    replace: "⌦"  
+    replace: "⌦"
 
   # https://hub.espanso.org/arrows
   - trigger: ":--"
@@ -129,6 +129,8 @@ matches:
     replace: "•"
   - trigger: ":check"
     replace: "✓"
+  - trigger: ":ballot"
+    replace: "✗"
   - trigger: "::sect"
     replace: "§"
   - trigger: ":rarrow"
