@@ -46,7 +46,7 @@
              gptel-make-anthropic)
   :custom
   (gptel-default-mode 'org-mode)
-  (gptel-model "claude-3-opus-20240229") ;  "claude-3-sonnet-20240229" also available
+  (gptel-model "claude-3-5-sonnet-20240620")
   :config
   (setq gptel-backend (gptel-make-anthropic "Claude" :stream t :key (my/get-password "anthropic.com" "me"))))
 
