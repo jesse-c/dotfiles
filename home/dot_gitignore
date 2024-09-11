@@ -13,3 +13,6 @@ els_lsp/
 
 # Emacs
 TODO.org
+
+# Aider
+.aider.*
