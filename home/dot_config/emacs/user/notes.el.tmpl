@@ -15,6 +15,7 @@
   :ensure nil
   :custom
   (org-confirm-babel-evaluate nil)
+  (org-todo-keywords '((sequence "TODO(t)" "IN-PROGRESS(i)" "REVIEW(r)" "|" "DONE(d)" "CANCELLED(c)")))
   :config
   (org-babel-do-load-languages
    'org-babel-load-languages
@@ -41,6 +42,8 @@
   :config
   ;; If you're using a vertical completion framework, you might want a more informative completion interface
   (setq org-roam-node-display-template (concat "${title:*} " (propertize "${tags:10}" 'face 'org-tag)))
+  ;; RETURN will follow links in org-mode files
+  (setq org-return-follows-link  t)
   (org-roam-db-autosync-mode)
   ;; If using org-roam-protocol
   (require 'org-roam-protocol))
