@@ -18,7 +18,7 @@ yabai -m config                                 \
     external_bar                 off:40:0       \
     menubar_opacity              1.0            \
     mouse_follows_focus          off            \
-    focus_follows_mouse          autoraise      \
+    focus_follows_mouse          off            \
     display_arrangement_order    default        \
     window_origin_display        default        \
     window_placement             second_child   \
@@ -46,7 +46,7 @@ yabai -m config                                 \
     mouse_drop_action            swap
 
 # Disable specific apps
-{{- $apps := list "System Settings" "Things" "Mail" "Anybox" "Calendar" "WhatsApp" "1Password" "Finder" "Notes" "Spotify" "Contacts" "Ivory" "Messages" "Messenger" "Home" "DaisyDisk" "AppCleaner" "Steam" "Dash" "Reminders" "Bitwarden" "Google Meet" "Slack" "zoom.us" "Infuse" "Pixelmator Pro" -}}
+{{- $apps := list "System Settings" "Things" "Mail" "Anybox" "Calendar" "WhatsApp" "1Password" "Finder" "Notes" "Spotify" "Contacts" "Ivory" "Messages" "Messenger" "Home" "DaisyDisk" "AppCleaner" "Steam" "Dash" "Reminders" "Bitwarden" "Google Meet" "Slack" "zoom.us" "Infuse" "Pixelmator Pro" "Element" -}}
 
 {{range $app := $apps}}
 yabai -m rule --add app="^{{$app}}$" manage=off
