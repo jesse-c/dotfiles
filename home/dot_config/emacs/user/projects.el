@@ -84,6 +84,13 @@
   :config
   (rg-enable-menu))
 
+(defun rename-tab-to-project-name ()
+  "Rename the current tab to the project name."
+  (interactive)
+  (when-let ((project (project-current)))
+    (let ((project-name (file-name-nondirectory (directory-file-name (project-root project)))))
+      (tab-rename project-name))))
+
 (provide 'projects)
 
 ;;; projects.el ends here
