@@ -1,7 +1,7 @@
 # Forget the current commandline value
 #
 # https://www.milanvit.net/post/my-ultimate-shell-setup-with-fish-shell-and-tmux/
-function forget
+function forget -d "Remove a command from shell history"
     set -l cmd (commandline | string collect)
     printf "\nDo you want to forget '%s'? [Y/n]\n" $cmd
     switch (read | tr A-Z a-z)
