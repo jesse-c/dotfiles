@@ -50,6 +50,7 @@
 (require 'lang-swift)
 (require 'lang-just)
 (require 'lang-json)
+(require 'lang-jsonl)
 (require 'lang-python)
 (require 'lang-kotlin)
 (require 'lang-protobuf)
