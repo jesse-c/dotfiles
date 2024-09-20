@@ -191,6 +191,11 @@
   (xref-show-xrefs-function #'xref-show-definitions-completing-read)
   (xref-show-definitions-function #'xref-show-definitions-completing-read))
 
+(use-package re-builder
+  :ensure nil
+  :custom
+  (reb-re-syntax 'string))
+
 (provide 'editor)
 
 ;;; editor.el ends here
