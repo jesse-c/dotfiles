@@ -10,12 +10,12 @@
 	editor = nvim
 	excludesfile = ~/.config/git/.gitignore
 	autocrlf = input
+[rerere]
+	enabled = 1
 [stash]
 	showPatch = true
 [merge]
 	conflictstyle = zdiff3
-[diff]
-	colorMoved = default
 [fetch]
 	prune = true
 	prunetags = true
@@ -35,7 +35,8 @@
 	compactionHeuristic = true
 	indentHeuristic = on
 	tool = difftastic
-	external = difft
+	colorMoved = default
+	mnemonicPrefix = true
 [difftool]
 	prompt = false
 [difftool "difftastic"]
@@ -43,7 +44,8 @@
 [difftool "diffsitter"]
 	cmd = diffsitter --color on "$LOCAL" "$REMOTE"
 [alias]
-	dft = difftool
+	d = difftool
+	p = diff --patch
 	dlog = "!f() { GIT_EXTERNAL_DIFF=difft git log -p --ext-diff; }; f"
 	# Prune local and remote origin
 	prune-all = "!git prune && git remote prune origin"
@@ -90,3 +92,6 @@
 	date = iso
 [include]
 	path = ./local.inc
+[grep]
+	extendedRegexp = true
+	lineNumber = true
