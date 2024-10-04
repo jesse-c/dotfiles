@@ -97,32 +97,11 @@
 
 (use-package hl-todo)
 
-;; (use-package
-;;   modus-themes
-;;   :custom
-;;   (modus-operandi-theme-faint-syntax t)
-;;   (modus-vivendi-theme-faint-syntax t)
-;;   :config
-;;   (my/load-theme-by-current-time))
-
 (use-package catppuccin-theme
   :config
   (my/load-theme-by-current-time))
 
 (use-package doom-themes)
-
-;; Disabled as AppearanceNotifier is used
-;; (run-with-timer 0 (* 5 60) 'my/load-theme-by-current-time)
-
-;; Disabled while I use a different distribution
-;; (defun my/apply-theme (appearance)
-;;   "Load theme, taking current system APPEARANCE into consideration."
-;;   (mapc #'disable-theme custom-enabled-themes)
-;;   (pcase appearance
-;;     ('light (load-theme 'modus-operandi t))
-;;     ('dark (load-theme 'modus-vivendi t))))
-;;
-;; (add-hook 'ns-system-appearance-change-functions #'my/apply-theme)
 
 ;; Font
 {{- if eq .chezmoi.os "darwin"}}
