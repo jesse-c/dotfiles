@@ -2,7 +2,6 @@
 
 (use-package lsp-mode
   :custom
-  (lsp-elixir-ls-version "v0.20.0")
   (lsp-elixir-local-server-command "~/.cache/elixir-ls/language_server.sh")
   (lsp-completion-provider :none) ;; we use Corfu!
   :init
@@ -56,6 +55,7 @@
   (add-to-list 'lsp-language-id-configuration '(protobuf-mode . "protobuf"))
   (add-to-list 'lsp-language-id-configuration '(protobuf-ts-mode . "protobuf"))
   (add-to-list 'lsp-language-id-configuration '(swift-mode . "swift"))
+  (add-to-list 'lsp-language-id-configuration '(forge-post-mode-mode . "plaintext"))
   (lsp-register-client
     (make-lsp-client :new-connection (lsp-stdio-connection '("bufls" "serve"))
                      :major-modes '(protobuf-mode protobuf-ts-mode)
