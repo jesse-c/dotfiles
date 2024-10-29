@@ -258,6 +258,15 @@
 ;; Misc.
 (setq x-underline-at-descent-line nil)           ; Prettier underlines
 
+(use-package casual
+  :ensure
+  (:type git :host github :repo "kickingvegas/casual" :branch "main")
+  :bind (:map dired-mode-map
+              ("C-o" . #'casual-dired-tmenu)
+              ("s" . #'casual-dired-sort-by-tmenu))
+        (:map bookmark-bmenu-mode-map
+              ("C-o" . casual-bookmarks-tmenu)))
+
 (provide 'ui)
 
 ;;; ui.el ends here

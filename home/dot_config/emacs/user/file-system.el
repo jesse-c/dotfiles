@@ -151,25 +151,6 @@
   :commands (dired)
   :custom ((dired-listing-switches "-agho --group-directories-first")))
 
-(use-package casual-lib
-  :ensure
-  (:type git :host github :repo "kickingvegas/casual-lib" :branch "main"))
-
-(use-package casual-dired
-  :ensure
-  (:type git :host github :repo "kickingvegas/casual-dired" :branch "main")
-  :after (casual-lib)
-  :bind (:map dired-mode-map
-              ("C-o" . #'casual-dired-tmenu)
-              ("s" . #'casual-dired-sort-by-tmenu)))
-
-(use-package casual-bookmarks
-  :ensure
-  (:type git :host github :repo "kickingvegas/casual-bookmarks" :branch "main")
-  :after (casual-lib)
-  :bind (:map bookmark-bmenu-mode-map
-              ("C-o" . casual-bookmarks-tmenu)))
-
 (provide 'file-system)
 
 ;;; file-system.el ends here
