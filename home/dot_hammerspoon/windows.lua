@@ -15,29 +15,38 @@ hs.hotkey.bind("alt-shift", "tab", "Prev window", function()
   switcher:previous()
 end)
 
--- Set the percentage of screen to use
-local percentOfScreen = 0.75
-
--- Function to center a window on the screen
-function centerWindow(window)
+-- Resize a window to the percentage size of the total screen
+function resizeWindow(window, percentOfScreen)
   local screen = window:screen()
   local frame = screen:frame()
   local size = {
-    w = frame.w * percentOfScreen,
-    h = frame.h * percentOfScreen,
-  }
-  local origin = {
-    x = frame.x + ((frame.w - size.w) / 2),
-    y = frame.y + ((frame.h - size.h) / 2),
+    w = (frame.w * percentOfScreen) - (12*2),
+    h = (frame.h * percentOfScreen) - (12*2),
   }
   window:setSize(size)
-  window:setTopLeft(origin)
 end
 
 -- Bind a hotkey to centre the frontmost window
 hs.hotkey.bind({ "cmd", "alt" }, "v", function()
   local window = hs.window.frontmostWindow()
   if window then
-    centerWindow(window)
+    resizeWindow(window, 0.75)
+    window:centerOnScreen()
+  end
+end)
+
+-- Bind a hotkey to maximise the frontmost window
+hs.hotkey.bind({ "cmd", "alt" }, "f", function()
+  local window = hs.window.frontmostWindow()
+  if window then
+    resizeWindow(window, 1)
+    window:centerOnScreen()
+  end
+end)
+
+hs.hotkey.bind({ "cmd", "alt" }, "c", function()
+  local window = hs.window.frontmostWindow()
+  if window then
+    window:centerOnScreen()
   end
 end)
