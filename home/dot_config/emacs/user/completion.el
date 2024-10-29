@@ -244,6 +244,26 @@
   :bind (("C-c j" . avy-goto-line)
          ("s-j"   . avy-goto-char-timer)))
 
+(use-package consult-gh
+  :after consult)
+
+(use-package consult-gh-embark
+  :ensure
+  (:type git :host github :repo "armindarvish/consult-gh" :branch "main")
+  :after (consult consult-gh)
+  :config
+  (consult-gh-embark-mode +1))
+
+(use-package consult-gh-forge
+  :after (consult consult-gh)
+  :config
+  (consult-gh-forge-mode +1))
+
+(use-package consult-ghq
+  :after (consult affe))
+
+(use-package affe)
+
 (provide 'completion)
 
 ;;; completion.el ends here
