@@ -61,6 +61,13 @@
 (use-package llm
   :disabled)
 
+(use-package aider
+  :after transient
+  :ensure
+  (:type git :host github :repo "tninja/aider.el" :branch "main" :files ("aider.el")))
+  ;; :config)
+  ;; (global-set-key (kbd "C-c a") 'aider-transient-menu))
+
 (provide 'ai)
 
 ;;; ai.el ends here
