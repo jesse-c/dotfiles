@@ -138,11 +138,15 @@
 # toggle window split type
 # alt - e : yabai -m window --toggle split
 
-# float / unfloat window and center on screen
-# alt - t : yabai -m window --toggle float --grid 4:4:1:1:2:2
+# toggle window float
+shift + alt - f : yabai -m window --toggle float; \
+                  yabai -m window --grid 4:4:1:1:2:2
+
+# toggle sticky
+shift + alt - s : yabai -m window --toggle sticky
 
 # toggle sticky(+float), picture-in-picture
-# alt - p : yabai -m window --toggle sticky --toggle pip
+shift + alt - p : yabai -m window --toggle sticky --toggle pip
 
 # How To Use A Tiling Window Manager On MacOs | Yabai Ultimate Guide
 # https://www.youtube.com/watch?v=k94qImbFKWE
@@ -167,10 +171,6 @@ alt - l: yabai -m window --focus east
 
 # flip along x-axis
 # shift + alt - x : yabai -m space —-mirror x-axis
-
-# toggle window float
-shift + alt - f : yabai -m window --toggle float;\
-                  yabai -m window --grid 4:4:1:1:2:2
 
 # Modifying Window Size
 
