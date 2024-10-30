@@ -22,6 +22,13 @@ if status is-interactive
 
   set -U __done_notification_duration 5000 # 5 seconds
 
+  # Prompt ---------------------------------------------------------------------
+
+  # The default Lean prompt [1], with my change(s).
+  #
+  # [1] https://github.com/IlanCosman/tide/blob/44c521ab292f0eb659a9e2e1b6f83f5f0595fcbd/functions/tide/configure/configs/lean.fish#L86C1-L87C1
+  set --universal tide_right_prompt_items status shlvl private_mode cmd_duration context jobs direnv node python rustc java php pulumi ruby go gcloud kubectl distrobox toolbox terraform aws nix_shell crystal elixir zig
+
   # Bindings -------------------------------------------------------------------
 
   fish_vi_key_bindings
