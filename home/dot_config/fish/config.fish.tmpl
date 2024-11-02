@@ -45,6 +45,15 @@ if status is-interactive
     abbr --add cat bat
   end
 
+  if type -q llm
+    set -gx LLM_USER_PATH ~/.config/io.datasette.llm
+  end
+
+  if type -q lms
+    # Added by LM Studio CLI (lms)
+    set -gx PATH $PATH /Users/jesse/.cache/lm-studio/bin
+  end
+
   # https://github.com/gf3/dotfiles/blob/75298b4c801c9228283a6bf6dce42ec251c3a113/.config/fish/config.fish#L9-L13
   # https://github.com/maxmilton/dotfiles/blob/6e8ec6ff576f233d2ab1442dd5d7e1991740cfda/private_dot_config/fish/oneshot-config.fish.tmpl#L142-L144
   if type -q eza
