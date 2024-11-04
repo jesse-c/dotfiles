@@ -49,7 +49,7 @@ if status is-interactive
     set -gx LLM_USER_PATH ~/.config/io.datasette.llm
   end
 
-  if type -q lms
+  if test -d /Applications/LM\ Studio.app/
     # Added by LM Studio CLI (lms)
     set -gx PATH $PATH /Users/jesse/.cache/lm-studio/bin
   end
