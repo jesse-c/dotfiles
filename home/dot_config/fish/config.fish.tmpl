@@ -90,12 +90,6 @@ if status is-interactive
 
   alias g='git'
 
-  function __zx
-    cd (fd --hidden --no-ignore -d 4 --type d '.git$' ~/src | xargs -I{} dirname {} | sk)
-  end
-
-  alias zx __zx
-
   export EMACS_USER_DIRECTORY=~/.config/emacs
 
   # https://github.com/akermu/emacs-libvterm#shell-side-configuration
