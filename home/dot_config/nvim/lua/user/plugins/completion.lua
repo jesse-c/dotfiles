@@ -1,100 +1,45 @@
 return {
   {
-    "hrsh7th/nvim-cmp",
-    version = false,
-    dependencies = {
-      "hrsh7th/cmp-nvim-lua",
-      "hrsh7th/cmp-buffer",
-      "hrsh7th/cmp-path",
-      "hrsh7th/cmp-nvim-lsp",
-      "neovim/nvim-lspconfig",
-      "saadparwaiz1/cmp_luasnip",
-      "L3MON4D3/LuaSnip",
-      "onsails/lspkind.nvim",
+    "saghen/blink.cmp",
+    lazy = false, -- lazy loading handled internally
+    -- optional: provides snippets for the snippet source
+    dependencies = "rafamadriz/friendly-snippets",
+
+    -- use a release tag to download pre-built binaries
+    version = "v0.*",
+    -- OR build from source, requires nightly: https://rust-lang.github.io/rustup/concepts/channels.html#working-with-nightly-rust
+    -- build = 'cargo build --release',
+    -- If you use nix, you can build from source using latest nightly rust with:
+    -- build = 'nix run .#build-plugin',
+
+    ---@module 'blink.cmp'
+    ---@type blink.cmp.Config
+    opts = {
+      -- 'default' for mappings similar to built-in completion
+      -- 'super-tab' for mappings similar to vscode (tab to accept, arrow keys to navigate)
+      -- 'enter' for mappings similar to 'super-tab' but with 'enter' to accept
+      -- see the "default configuration" section below for full documentation on how to define
+      -- your own keymap.
+      keymap = { preset = "enter" },
+
+      highlight = {
+        -- sets the fallback highlight groups to nvim-cmp's highlight groups
+        -- useful for when your theme doesn't support blink.cmp
+        -- will be removed in a future release, assuming themes add support
+        use_nvim_cmp_as_default = true,
+      },
+      -- set to 'mono' for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
+      -- adjusts spacing to ensure icons are aligned
+      nerd_font_variant = "mono",
+
+      -- experimental auto-brackets support
+      -- accept = { auto_brackets = { enabled = true } }
+
+      -- experimental signature help support
+      -- trigger = { signature_help = { enabled = true } }
     },
-    event = { "InsertEnter", "CmdlineEnter" },
-    config = function()
-      local cmp = require("cmp")
-
-      local lspkind = require("lspkind")
-
-      cmp.setup({
-        formatting = {
-          format = lspkind.cmp_format({
-            -- show only symbol annotations
-            mode = "symbol",
-            -- prevent the popup from showing more than provided characters (e.g 50 will not show more than 50 characters)
-            -- can also be a function to dynamically calculate max width such as
-            -- maxwidth = function() return math.floor(0.45 * vim.o.columns) end,
-            maxwidth = 50,
-            -- when popup menu exceed maxwidth, the truncated part would show ellipsis_char instead (must define maxwidth first)
-            ellipsis_char = "...",
-            -- show labelDetails in menu. Disabled by default
-            show_labelDetails = true,
-          }),
-        },
-
-        snippet = {
-          expand = function(args)
-            require("luasnip").lsp_expand(args.body) -- For `luasnip` users.
-          end,
-        },
-        window = {
-          completion = cmp.config.window.bordered(),
-          documentation = cmp.config.window.bordered(),
-        },
-        mapping = cmp.mapping.preset.insert({
-          ["<C-b>"] = cmp.mapping.scroll_docs(-4),
-          ["<C-f>"] = cmp.mapping.scroll_docs(4),
-          ["<C-Space>"] = cmp.mapping.complete(),
-          ["<C-e>"] = cmp.mapping.abort(),
-          ["<CR>"] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
-        }),
-        sources = cmp.config.sources({
-          { name = "nvim_lsp" },
-          { name = "luasnip" }, -- For luasnip users.
-        }, {
-          { name = "buffer" },
-        }),
-      })
-
-      -- Set configuration for specific filetype.
-      cmp.setup.filetype("gitcommit", {
-        sources = cmp.config.sources({
-          { name = "git" }, -- You can specify the `git` source if [you were installed it](https://github.com/petertriho/cmp-git).
-        }, {
-          { name = "buffer" },
-        }),
-      })
-
-      -- Use buffer source for `/` and `?` (if you enabled `native_menu`, this won't work anymore).
-      cmp.setup.cmdline({ "/", "?" }, {
-        mapping = cmp.mapping.preset.cmdline(),
-        sources = {
-          { name = "buffer" },
-        },
-      })
-
-      -- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
-      cmp.setup.cmdline(":", {
-        mapping = cmp.mapping.preset.cmdline(),
-        sources = cmp.config.sources({
-          { name = "path" },
-        }, {
-          { name = "cmdline" },
-        }),
-      })
-
-      -- Set up lspconfig.
-      -- local capabilities = require("cmp_nvim_lsp").default_capabilities()
-      -- -- Replace <YOUR_LSP_SERVER> with each lsp server you've enabled.
-      -- require("lspconfig")["<YOUR_LSP_SERVER>"].setup({
-      -- 	capabilities = capabilities,
-      -- })
-    end,
-  },
-  {
-    "onsails/lspkind.nvim",
-    event = { "BufRead" },
+    -- allows extending the enabled_providers array elsewhere in your config
+    -- without having to redefining it
+    opts_extend = { "sources.completion.enabled_providers" },
   },
 }
