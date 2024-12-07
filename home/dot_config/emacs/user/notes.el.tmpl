@@ -20,8 +20,7 @@
   (org-babel-do-load-languages
    'org-babel-load-languages
    '((org . t)
-     (python . t)
-     (go . t))))
+     (python . t))))
 
 (use-package org-roam
   :defer t
@@ -82,10 +81,6 @@
 (use-package org-pomodoro)
 
 (use-package org-modern)
-
-(use-package ob-go
-  :ensure
-  (:type git :host github :repo "pope/ob-go" :branch "master"))
 
 (defun my/open-project-notes ()
   "Open the project's notes."
