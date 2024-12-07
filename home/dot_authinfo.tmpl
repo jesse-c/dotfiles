@@ -3,3 +3,4 @@ machine api.github.com login {{ .forge_github_username }} password {{ .forge_git
 machine api.openai.com login {{$user}} password {{ $.openai_password }}
 {{end -}}
 machine anthropic.com login me password {{ onepasswordRead "op://Personal/Anthropic/editor" }}
+machine codeium.com login apikey password {{ onepasswordRead "op://Personal/Codeium/editor" }}
