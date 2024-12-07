@@ -30,16 +30,12 @@
 ;; Alternative to try: https://superuser.com/questions/125569/how-to-fix-emacs-popup-dialogs-on-mac-os-x
 (setq use-dialog-box nil)
 
-;; https://stackoverflow.com/a/8609349
-;; Ensure PATH is correct when launched as GUI application
-(use-package
-  exec-path-from-shell
+(use-package exec-path-from-shell
   :init
   (setq exec-path-from-shell-debug t)
+  :if (memq window-system '(mac ns))
   :config
-  (when (memq window-system '(mac ns))
-    (require 'exec-path-from-shell)
-    (exec-path-from-shell-initialize)))
+  (exec-path-from-shell-initialize))
 
 (when (memq window-system '(mac ns))
   (setq dired-use-ls-dired nil))
