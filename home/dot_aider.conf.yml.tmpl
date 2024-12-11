@@ -20,7 +20,7 @@ anthropic-api-key: {{ onepasswordRead "op://Personal/Anthropic/aider" }}
 #opus: false
 
 ## Use claude-3-5-sonnet-20240620 model for the main chat
-sonnet: true
+sonnet: false
 
 ## Use gpt-4-0613 model for the main chat
 #4: false
@@ -47,6 +47,7 @@ sonnet: true
 #models:
 
 ## Specify the api base url
+# LM Studio example: https://github.com/jesse-c/dotfiles/blob/52e4f1d2b9f5d6384b02b9046381b1881b817bae/home/dot_config/io.datasette.llm/extra-openai-models.yaml#L3
 #openai-api-base:
 
 ## Specify the api_type
@@ -67,14 +68,24 @@ sonnet: true
 ## Specify a file with context window and costs for unknown models
 #model-metadata-file: .aider.model.metadata.json
 
+alias:
+  - "default:claude-3-5-sonnet-20241022"
+  - "gemini:gemini/gemini-exp-1206"
+
 ## Verify the SSL cert when connecting to models (default: True)
 #verify-ssl: true
 
 ## Specify what edit format the LLM should use (default depends on model)
 #edit-format:
 
+## Use architect edit format for the main chat
+architect: true
+
 ## Specify the model to use for commit messages and chat history summarization (default depends on --model)
-#weak-model:
+#weak-model: xxx
+
+## Specify the model to use for editor tasks (default depends on --model)
+#editor-model: xxx
 
 ## Only work with models that have meta-data available (default: True)
 #show-model-warnings: true
@@ -92,7 +103,7 @@ sonnet: true
 #max-chat-history-tokens:
 
 ## Specify the .env file to load (default: .env in git root)
-#env-file: .env
+env-file: .aider/.env
 
 ################
 # History Files:
