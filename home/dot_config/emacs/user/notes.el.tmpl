@@ -46,6 +46,20 @@
   ;; If using org-roam-protocol
   (require 'org-roam-protocol))
 
+(use-package org-ql
+  :after org
+  :defer t)
+
+(use-package org-roam-ql
+  :after (org org-roam org-ql)
+  :defer t)
+
+(use-package org-roam-ql-ql
+  :after (org org-roam org-ql org-roam-ql)
+  :defer t
+  :config
+  (org-roam-ql-ql-init))
+
 (use-package org-journal
   :defer t
   :init
