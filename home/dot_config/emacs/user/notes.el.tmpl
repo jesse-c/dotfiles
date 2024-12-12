@@ -60,6 +60,15 @@
   :config
   (org-roam-ql-ql-init))
 
+(use-package org-superstar
+  :disabled
+  :defer t
+  :after org
+  :config
+  (org-superstar-remove-leading-stars t)
+  :hook
+  (org-mode-hook . org-superstar-mode))
+
 (use-package org-journal
   :defer t
   :init
@@ -94,7 +103,9 @@
 
 (use-package org-pomodoro)
 
-(use-package org-modern)
+(use-package org-modern
+  :config
+  (global-org-modern-mode))
 
 (defun my/open-project-notes ()
   "Open the project's notes."
