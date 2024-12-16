@@ -48,28 +48,5 @@ local releasedF18 = function()
   end
 end
 
--- Window management
-
--- Temporarily here. Ideally would be in windows.lua, but we need access to the
--- Hyper binding.
-
--- http://larryhynes.net/2015/04/a-minor-update-to-my-hammerspoon-config.html
-k:bind({}, "h", function()
-  hs.window.focusedWindow():focusWindowWest()
-  k:exit()
-end)
-k:bind({}, "j", function()
-  hs.window.focusedWindow():focusWindowSouth()
-  k:exit()
-end)
-k:bind({}, "k", function()
-  hs.window.focusedWindow():focusWindowNorth()
-  k:exit()
-end)
-k:bind({}, "l", function()
-  hs.window.focusedWindow():focusWindowEast()
-  k:exit()
-end)
-
 -- Bind the Hyper key -----------------------------------------------------------
 hs.hotkey.bind({}, "F18", pressedF18, releasedF18)
