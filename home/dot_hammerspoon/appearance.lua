@@ -48,7 +48,8 @@ cb = function(observedNotificationName)
   print("theme changed. Dark mode: " .. tostring(isDarkMode))
 
   local commands = {
-    { builder = buildKittyCommand, appName = "kitty" },
+    -- Relying on new auto-switching in Kitty v0.38
+    -- { builder = buildKittyCommand, appName = "kitty" },
     { builder = buildEmacsCommand, appName = "emacs" },
     -- TODO: Neovim
     -- TODO: Helix
