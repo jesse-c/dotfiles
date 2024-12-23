@@ -7,6 +7,9 @@
 #######
 # Main:
 
+api-key:
+- gemini={{ onepasswordRead "op://Personal/Google/gemini" }} # Sets env var GEMINI_API_KEY=foo
+
 ## Specify the OpenAI API key
 #openai-api-key:
 
@@ -70,7 +73,7 @@ sonnet: false
 
 alias:
   - "default:claude-3-5-sonnet-20241022"
-  - "gemini:gemini/gemini-exp-1206"
+  - "gemini:gemini/gemini-2.0-flash-exp"
 
 ## Verify the SSL cert when connecting to models (default: True)
 #verify-ssl: true
