@@ -1,6 +1,6 @@
-machine api.github.com login {{ .forge_github_username }} password {{ .forge_github_password }}
+machine api.github.com login {{ .forge_github_username }} password {{ onepasswordRead "op://Personal/GitHub/api token" }}
 {{range $user := .openai_username -}}
-machine api.openai.com login {{$user}} password {{ $.openai_password }}
+machine api.openai.com login {{$user}} password {{ onepasswordRead "op://Personal/OpenAI/editor" }}
 {{end -}}
 machine anthropic.com login me password {{ onepasswordRead "op://Personal/Anthropic/editor" }}
 machine codeium.com login apikey password {{ onepasswordRead "op://Personal/Codeium/editor" }}
