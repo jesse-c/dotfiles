@@ -17,6 +17,7 @@
    (css-mode . lsp-deferred)
    (elixir-mode . lsp-deferred)
    (elixir-ts-mode . lsp-deferred)
+   (flix-mode . lsp-deferred)
    (go-mode . lsp-deferred)
    (go-ts-mode . lsp-deferred)
    (heex-ts-mode . lsp-deferred)
@@ -56,6 +57,7 @@
   (add-to-list 'lsp-language-id-configuration '(protobuf-ts-mode . "protobuf"))
   (add-to-list 'lsp-language-id-configuration '(swift-mode . "swift"))
   (add-to-list 'lsp-language-id-configuration '(forge-post-mode-mode . "plaintext"))
+  (add-to-list 'lsp-language-id-configuration '(flix-mode . "flix"))
   (lsp-register-client
     (make-lsp-client :new-connection (lsp-stdio-connection '("bufls" "serve"))
                      :major-modes '(protobuf-mode protobuf-ts-mode)
@@ -63,11 +65,13 @@
   (lsp-register-client
     (make-lsp-client :new-connection (lsp-stdio-connection '("sourcekit-lsp"))
                      :major-modes '(swift-mode)
-                     :server-id 'swift-ls)))
-  ;; (lsp-register-client
-  ;;   (make-lsp-client :new-connection (lsp-stdio-connection '("next-ls" "--stdio"))
-  ;;                    :major-modes '(elixir-mode elixir-ts-mode)
-  ;;                    :server-id 'elixir-ls)))
+                     :server-id 'swift-ls))
+  (lsp-register-client
+   (make-lsp-client :new-connection (lsp-stdio-connection '("flix"
+                                                            "lsp"
+                                                            "6670"))
+                    :major-modes '(flix-mode)
+                    :server-id 'flix-ls)))
 
 (use-package lsp-ui :commands lsp-ui-mode)
 (use-package consult-lsp :commands (consult-lsp-diagnostics consult-lsp-symbols consult-lsp-file-symbols))

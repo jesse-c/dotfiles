@@ -1,0 +1,5 @@
+#!/bin/bash
+
+# Assumes the VS Code Flix plugin has been installed.
+
+java -jar ~/Library/Application\ Support/Code/User/globalStorage/flix.flix/flix.jar "$@"

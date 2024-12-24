@@ -49,6 +49,7 @@
 (require 'lang-epub)
 (require 'lang-erlang)
 (require 'lang-fish)
+(require 'lang-flix)
 (require 'lang-go)
 (require 'lang-graphql)
 (require 'lang-haskell)
