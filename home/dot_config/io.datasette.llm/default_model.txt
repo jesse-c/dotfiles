@@ -1,1 +1,1 @@
-lm-studio-llama-3.2-3b-instruct
+lm-studio-Llama-3.2-3B-Instruct-4bit
