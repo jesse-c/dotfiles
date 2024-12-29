@@ -6,8 +6,8 @@ clipboard-read = allow
 clipboard-write = allow
 clipboard-paste-protection = true
 
-font-family = JetBrainsMonoNL Nerd Font Mono
+font-family = JetBrains Mono Nerd Font
 font-size = 12
 
-window-padding-x = 4
-window-padding-y = 4
+window-padding-x = 6
+window-padding-y = 0
