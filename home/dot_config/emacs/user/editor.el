@@ -33,10 +33,7 @@
 (use-package comby)
 
 ;; Editor Config
-(use-package editorconfig
-  :diminish
-  :config
-  (editorconfig-mode 1))
+(customize-set-variable 'editorconfig-mode t)
 
 ;; Structured editing
 (use-package puni
