@@ -2,9 +2,6 @@
 
 ;;; Code:
 
-;; Don't use package.el
-(setq package-enable-at-startup nil)
-
 ;; Disable warning [1]
 ;;
 ;; [1] https://memopixel.com/fix-package-cl-is-deprecated-warning-for-emacs
