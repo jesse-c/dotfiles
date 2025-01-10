@@ -530,6 +530,52 @@
 ;; :config)
 ;; (global-set-key (kbd "C-c a") 'aider-transient-menu))
 
+(use-package codeium
+  :vc
+  (:url "https://github.com/Exafunction/codeium.el" :branch "main")
+
+  :init
+  ;; use globally
+  (add-to-list 'completion-at-point-functions #'codeium-completion-at-point t)
+  ;; codeium-completion-at-point is autoloaded, but you can
+  ;; optionally set a timer, which might speed up things as the
+  ;; codeium local language server takes ~0.2s to start up
+  (add-hook 'emacs-startup-hook
+            (lambda () (run-with-timer 0.1 nil #'codeium-init)))
+
+  :defer t
+  :config
+  (setq use-dialog-box nil) ;; do not use popup boxes
+
+  ;; if you don't want to use customize to save the api-key
+  ;; (setq codeium/metadata/api_key "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx")
+
+  ;; get codeium status in the modeline
+  (setq codeium-mode-line-enable
+        (lambda (api) (not (memq api '(CancelRequest Heartbeat AcceptCompletion)))))
+  (add-to-list 'mode-line-format '(:eval (car-safe codeium-mode-line)) t)
+
+  ;; use M-x codeium-diagnose to see apis/fields that would be sent to the local language server
+  (setq codeium-api-enabled
+        (lambda (api)
+          (memq api '(GetCompletions Heartbeat CancelRequest GetAuthToken RegisterUser auth-redirect AcceptCompletion))))
+
+  ;; Limit the string sent to codeium for better performance
+  (defun my/codeium/document/text ()
+    (buffer-substring-no-properties (max (- (point) 3000) (point-min)) (min (+ (point) 1000) (point-max))))
+  ;; if you change the text, you should also change the cursor_offset
+  ;; warning: this is measured by UTF-8 encoded bytes
+  (defun my/codeium/document/cursor_offset ()
+    (codeium-utf8-byte-length
+     (buffer-substring-no-properties (max (- (point) 3000) (point-min)) (point)
+                                     (setq codeium/document/text 'my/codeium/document/text)
+                                     (setq codeium/document/cursor_offset 'my/codeium/document/cursor_offset))))
+  ;; https://github.com/yuzhou721/dotemacs/blob/a1c88c0ee489110f05e7d38ac0006e8f2064a7ab/lisp/config/init-ai.el#L37C1-L40C52
+  (defun my/codeium ()
+    "Decouple codeium from other completions"
+    (interactive)
+    (cape-interactive #'codeium-completion-at-point)))
+
 ;; Snippets ---------------------------------------------------------------------
 
 (use-package yasnippet
