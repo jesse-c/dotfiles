@@ -480,11 +480,37 @@
              gptel-make-anthropic)
   :custom
   (gptel-default-mode 'org-mode)
-  (gptel-model "claude-3-5-sonnet-20241022")
+  (gptel-model 'claude-3-5-sonnet-20241022)
+  (gptel-display-buffer-action
+   '((display-buffer-reuse-window display-buffer-in-side-window)
+     (side . right)
+     (window-width . 80)
+     (slot . 0)))
   :bind
-  (("s-a" . gptel-menu))
+  ("s-a" . gptel-menu)
+  ("<f5>" . gptel-toggle-sidebar)
   :config
-  (setq gptel-backend (gptel-make-anthropic "Claude" :stream t :key (my/get-password "anthropic.com" "me"))))
+  (setq gptel-backend (gptel-make-anthropic "Claude" :stream t :key (my/get-password "anthropic.com" "me")))
+  (defun gptel-toggle-sidebar ()
+    "Toggle a custom sidebar for a persistent buffer."
+    ;;  From nehrbash [1]
+    ;;
+    ;; [1] https://github.com/nehrbash/dotfiles/blob/main/Emacs.org#gpt
+    (interactive)
+    (let ((buffer-name "AI Chat"))
+      (if-let* ((window (get-buffer-window buffer-name)))
+          ;; If the sidebar is already open, close it.
+          (delete-window window)
+        ;; Else, create the sidebar using
+        (let ((chat-buffer (gptel buffer-name)))
+          (display-buffer-in-side-window
+           chat-buffer gptel-display-buffer-action)
+          (let ((window (get-buffer-window chat-buffer)
+                        (when window
+                          (set-window-dedicated-p window t)
+                          (set-window-parameter window 'no-other-window t)
+                          (select-window window))))
+            (setq mode-line-format nil)))))))
 
 (use-package org-ai
   :commands (org-ai-mode
