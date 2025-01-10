@@ -7,9 +7,10 @@
 (add-to-list 'package-archives '("gnu"   . "https://elpa.gnu.org/packages/"))
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
 
-(require 'use-package)
+(setq use-package-enable-imenu-support t
+      use-package-always-ensure t)
 
-(setq use-package-always-ensure t)
+(require 'use-package)
 
 (use-package emacs
   :custom
