@@ -54,6 +54,24 @@
    ("C-S-h x" . helpful-command)
    ("C-S-h d" . helpful-at-point)))
 
+;; https://emacs.stackexchange.com/a/64551
+(defun my/ad-timestamp-message (FORMAT-STRING &rest args)
+  "Advice to run before `message' that prepends a timestamp to each message.
+        Activate this advice with:
+          (advice-add 'message :before 'my/ad-timestamp-message)
+        Deactivate this advice with:
+          (advice-remove 'message 'my/ad-timestamp-message)"
+  (if message-log-max
+      (let ((deactivate-mark nil)
+            (inhibit-read-only t))
+        (with-current-buffer "*Messages*"
+          (goto-char (point-max))
+          (if (not (bolp))
+              (newline))
+          (insert (format-time-string "[%F %T.%3N] "))))))
+
+(advice-add 'message :before 'my/ad-timestamp-message)
+
 ;; Common -----------------------------------------------------------------------
 
 (require 'transient)
@@ -493,9 +511,7 @@
   (setq gptel-backend (gptel-make-anthropic "Claude" :stream t :key (my/get-password "anthropic.com" "me")))
   (defun gptel-toggle-sidebar ()
     "Toggle a custom sidebar for a persistent buffer."
-    ;;  From nehrbash [1]
-    ;;
-    ;; [1] https://github.com/nehrbash/dotfiles/blob/main/Emacs.org#gpt
+    ;; https://github.com/nehrbash/dotfiles/blob/main/Emacs.org#gpt
     (interactive)
     (let ((buffer-name "AI Chat"))
       (if-let* ((window (get-buffer-window buffer-name)))
