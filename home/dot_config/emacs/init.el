@@ -953,6 +953,13 @@
 
 (use-package smex)  ;; show recent commands when invoking Alt-x (or Cmd+Shift+p)
 
+(use-package repeat
+  :ensure nil
+  :hook (after-init . repeat-mode)
+  :custom
+  (repeat-too-dangerous '(kill-this-buffer))
+  (repeat-exit-timeout 5))
+
 ;; Example:
 ;; :bind
 ;; (("C-." . embark-act) ;; pick some comfortable binding
