@@ -391,6 +391,7 @@
   :custom
   (eglot-autoshutdown t)
   (eglot-events-buffer-size 0)
+  (eglot-sync-connect nil) ;; The value of nil or 0 means don’t block at all during the waiting period
   :hook
   (python-mode . eglot-ensure)
   (python-ts-mode . eglot-ensure)
