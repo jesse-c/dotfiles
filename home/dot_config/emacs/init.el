@@ -44,6 +44,15 @@
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (load custom-file 'noerror)
 
+(use-package helpful
+  :bind
+  (("C-S-h f" . helpful-callable)
+   ("C-S-h F" . helpful-function)
+   ("C-S-h v" . helpful-variable)
+   ("C-S-h k" . helpful-key)
+   ("C-S-h x" . helpful-command)
+   ("C-S-h d" . helpful-at-point)))
+
 ;; Common -----------------------------------------------------------------------
 
 (require 'transient)
@@ -471,6 +480,8 @@
   :custom
   (gptel-default-mode 'org-mode)
   (gptel-model "claude-3-5-sonnet-20241022")
+  :bind
+  (("s-a" . gptel-menu))
   :config
   (setq gptel-backend (gptel-make-anthropic "Claude" :stream t :key (my/get-password "anthropic.com" "me"))))
 
@@ -867,6 +878,13 @@
 
 ;; Scrolling
 (pixel-scroll-precision-mode) ;; Smooth scrolling
+(use-package ultra-scroll
+  :vc (:url "https://github.com/jdtsmith/ultra-scroll" :branch "main")
+  :init
+  (setq scroll-conservatively 101 ; important!
+        scroll-margin 0)
+  :config
+  (ultra-scroll-mode 1))
 
 ;; Use ESC as universal get me out of here command
 (define-key key-translation-map (kbd "ESC") (kbd "C-g"))
