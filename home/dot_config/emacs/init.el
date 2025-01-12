@@ -24,6 +24,7 @@
   ;; `completion-at-point' is often bound to M-TAB.
   (tab-always-indent 'complete)
   (major-mode-remap-alist '((git-commit-mode . git-commit-ts-mode)))
+  (package-install-upgrade-built-in t)
   :init
   ;; Add prompt indicator to `completing-read-multiple'.
   ;; We display [CRM<separator>], e.g., [CRM,] if the separator is a comma.
@@ -160,7 +161,18 @@
 (use-package project
   :ensure nil
   :init
-  (setq project-vc-extra-root-markers '("TODO.org")))
+  (setq project-vc-extra-root-markers '("TODO.org"))
+  :config
+  (transient-define-prefix project-transient-menu ()
+    "Project command menu."
+    ["Navigation"
+     [("s" "Search" consult-ripgrep)
+      ("b" "Buffers" consult-project-buffer)
+      ("f" "Files" project-find-file)
+      ("d" "Layout" project-dired)
+      ("p" "Switch" project-switch-project)]])
+  :bind
+  ("s-p" . project-transient-menu))
 
 (defun my/project-root ()
   (interactive)
@@ -403,6 +415,8 @@
   (yaml-ts-mode . eglot-ensure)
   (swift-mode . eglot-ensure)
   (swift-ts-mode . eglot-ensure)
+  :bind
+  ("s-l" . eglot-transient-menu)
   :config
   (add-to-list 'eglot-server-programs
                `(elixir-mode . ,(eglot-alternatives
@@ -465,8 +479,6 @@
       ("v" "Verify setup" flycheck-verify-setup)]]
     ["Server"
      ("s" "Commands" eglot-server-menu)]))
-
-(global-set-key (kbd "s-l") 'eglot-transient-menu)
 
 (use-package flycheck-eglot
   :after (flycheck eglot)
@@ -629,6 +641,7 @@
   (org-confirm-babel-evaluate nil)
   (org-startup-with-inline-images t)
   (org-todo-keywords '((sequence "TODO(t)" "IN-PROGRESS(i)" "REVIEW(r)" "|" "DONE(d)" "CANCELLED(c)")))
+  (calendar-week-start-day 1)
   :config
   (org-babel-do-load-languages
    'org-babel-load-languages
@@ -958,12 +971,11 @@
   :hook (after-init . repeat-mode)
   :custom
   (repeat-too-dangerous '(kill-this-buffer))
-  (repeat-exit-timeout 5))
+  (repeat-exit-timeout 5)
+  :bind
+  (("C-." . embark-act)) ;; pick some comfortable binding
+  ("C-;" . embark-dwim)) ;; good alternative: M-.
 
-;; Example:
-;; :bind
-;; (("C-." . embark-act) ;; pick some comfortable binding
-;; ("C-;" . embark-dwim)) ;; good alternative: M-.
 (use-package embark
   :after (evil evil-collection)
   :commands (embark-act embark-dwim embark-bindings))
