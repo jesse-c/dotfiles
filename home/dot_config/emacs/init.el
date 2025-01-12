@@ -530,16 +530,16 @@
       (if-let* ((window (get-buffer-window buffer-name)))
           ;; If the sidebar is already open, close it.
           (delete-window window)
-        ;; Else, create the sidebar using
-        (let ((chat-buffer (gptel buffer-name)))
+        ;; Else, create the sidebar
+        (let* ((chat-buffer (gptel buffer-name))
+               (window (get-buffer-window chat-buffer)))
           (display-buffer-in-side-window
            chat-buffer gptel-display-buffer-action)
-          (let ((window (get-buffer-window chat-buffer)
-                        (when window
-                          (set-window-dedicated-p window t)
-                          (set-window-parameter window 'no-other-window t)
-                          (select-window window))))
-            (setq mode-line-format nil)))))))
+          (when window
+            (set-window-dedicated-p window t)
+            (set-window-parameter window 'no-other-window t)
+            (select-window window))
+          (setq mode-line-format nil))))))
 
 (use-package org-ai
   :commands (org-ai-mode
