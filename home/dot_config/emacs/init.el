@@ -170,7 +170,9 @@
       ("b" "Buffers" consult-project-buffer)
       ("f" "Files" project-find-file)
       ("d" "Layout" project-dired)
-      ("p" "Switch" project-switch-project)]])
+      ("p" "Switch" project-switch-project)]]
+    ["Management"
+     [("n" "Rename tab" my/rename-tab-to-project-name)]])
   :bind
   ("s-p" . project-transient-menu))
 
@@ -654,15 +656,16 @@
   :custom
   (org-roam-directory (file-truename org-roam-dir))
   (org-roam-completion-everywhere t)
-  :bind (("C-c n l" . org-roam-buffer-toggle)
-         ("C-c n f" . org-roam-node-find)
-         ("C-c n g" . org-roam-graph)
-         ("C-c n i" . org-roam-node-insert)
-         ("C-c n c" . org-roam-capture)
-         ;; Dailies
-         ("C-c n j" . org-roam-dailies-capture-today)
-         :map org-mode-map
-         ("C-M-i" . completion-at-point))
+  :bind
+  (("s-o" . org-transient-menu)
+   ("C-c n l" . org-roam-buffer-toggle)
+   ("C-c n f" . org-roam-node-find)
+   ("C-c n g" . org-roam-graph)
+   ("C-c n i" . org-roam-node-insert)
+   ("C-c n c" . org-roam-capture)
+   ("C-c n j" . org-roam-dailies-capture-today)
+   :map org-mode-map
+   ("C-M-i" . completion-at-point))
   :config
   ;; If you're using a vertical completion framework, you might want a more informative completion interface
   (setq org-roam-node-display-template (concat "${title:*} " (propertize "${tags:10}" 'face 'org-tag)))
@@ -670,7 +673,20 @@
   (setq org-return-follows-link  t)
   (org-roam-db-autosync-mode)
   ;; If using org-roam-protocol
-  (require 'org-roam-protocol))
+  (require 'org-roam-protocol)
+  (transient-define-prefix org-transient-menu ()
+    "Org command menu."
+    ["Capture"
+     [("c" "Capture" org-roam-capture)]]
+    ["Navigation"
+     [("s" "Search" consult-org-roam-search)
+      ("f" "Find" org-roam-node-find)
+      ("i" "Insert" org-roam-node-insert)
+      ("g" "Graph" org-roam-graph)]]
+    ["Dailies"
+     [("g" "Goto today" org-roam-dailies-goto-today)
+      ("t" "Capture today" org-roam-dailies-capture-today)
+      ("y" "Capture yesterday" org-roam-dailies-capture-yesterday)]]))
 
 (use-package org-ql
   :after org
