@@ -169,9 +169,12 @@
      [("s" "Search" consult-ripgrep)
       ("b" "Buffers" consult-project-buffer)
       ("f" "Files" project-find-file)
+      ("l" "Line" consult-line)
       ("d" "Layout" project-dired)
       ("p" "Switch" project-switch-project)]]
     ["Management"
+     [("t" "New tab" tab-new)]
+     [("c" "Close tab" tab-close)]
      [("n" "Rename tab" my/rename-tab-to-project-name)]])
   :bind
   ("s-p" . project-transient-menu))
@@ -926,7 +929,30 @@
 
 (use-package hydra)
 
-(use-package casual)
+(use-package casual
+  :after (dired re-builder)
+  :bind
+  ("s-c" . casual-editkit-main-tmenu)
+  (:map dired-mode-map
+        ("s-c" . casual-dired-tmenu))
+  (:map reb-mode-map
+        ("s-c" . casual-re-builder-tmenu))
+  (:map isearch-mode-map
+        ("s-c" . casual-isearch-tmenu))
+  (:map Info-mode-map
+        ("s-c" . casual-info-tmenu))
+  (:map ibuffer-mode-map
+        ("s-c" . casual-ibuffer-tmenu))
+  ;; (:map calendar-mode-map
+  ;;       ("s-c" . casual-calendar))
+  (:map calc-mode-map
+        ("s-c" . casual-calc-tmenu))
+  (:map calc-alg-map
+        ("s-c" . casual-calc-tmenu))
+  (:map bookmark-bmenu-mode-map
+        ("s-c" . casual-bookmarks-tmenu)))
+;; (:map org-agenda-mode-map
+;;       ("s-c" . casual-agenda-tmenu)))
 
 (use-package marginalia
   ;; Bind `marginalia-cycle' locally in the minibuffer.  To make the binding
@@ -1455,7 +1481,7 @@
 (use-package dape
   :custom
   (dape-inlay-hints t)
-  (dape-cwd-fn 'my/project-root)
+  (dape-cwd-function 'my/project-root)
   (dape-buffer-window-arrangement 'right)
   :hook
   (dape-start . (lambda () (save-some-buffers t t)))
