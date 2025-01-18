@@ -747,6 +747,46 @@
   :config
   (global-evil-surround-mode 1))
 
+(use-package evil-textobj-tree-sitter
+  :after (treesit evil evil-collection)
+  :config
+  ;; Map textobjects
+  ;; bind `function.outer`(entire function block) to `f` for use in things like `vaf`, `yaf`
+  (define-key evil-outer-text-objects-map "f" (evil-textobj-tree-sitter-get-textobj "function.outer"))
+  ;; bind `function.inner`(function block without name and args) to `f` for use in things like `vif`, `yif`
+  (define-key evil-inner-text-objects-map "f" (evil-textobj-tree-sitter-get-textobj "function.inner"))
+  ;; You can also bind multiple items and we will match the first one we can find
+  (define-key evil-outer-text-objects-map "a" (evil-textobj-tree-sitter-get-textobj ("conditional.outer" "loop.outer")))
+
+  ;; Map gotos
+  ;; Goto start of next function
+  (define-key evil-normal-state-map
+              (kbd "]f")
+              (lambda ()
+                (interactive)
+                (evil-textobj-tree-sitter-goto-textobj "function.outer")))
+
+  ;; Goto start of previous function
+  (define-key evil-normal-state-map
+              (kbd "[f")
+              (lambda ()
+                (interactive)
+                (evil-textobj-tree-sitter-goto-textobj "function.outer" t)))
+
+  ;; Goto end of next function
+  (define-key evil-normal-state-map
+              (kbd "]F")
+              (lambda ()
+                (interactive)
+                (evil-textobj-tree-sitter-goto-textobj "function.outer" nil t)))
+
+  ;; Goto end of previous function
+  (define-key evil-normal-state-map
+              (kbd "[F")
+              (lambda ()
+                (interactive)
+                (evil-textobj-tree-sitter-goto-textobj "function.outer" t t))))
+
 ;; UI ---------------------------------------------------------------------------
 
 (which-key-mode)
@@ -971,6 +1011,10 @@
 ;; (:map org-agenda-mode-map
 ;;       ("s-c" . casual-agenda-tmenu)))
 
+(use-package casual-avy
+  :after (avy casual)
+  :commands casual-avy-tmenu)
+
 (use-package marginalia
   ;; Bind `marginalia-cycle' locally in the minibuffer.  To make the binding
   ;; available in the *Completions* buffer, add it to the
@@ -1030,14 +1074,14 @@
   :hook (after-init . repeat-mode)
   :custom
   (repeat-too-dangerous '(kill-this-buffer))
-  (repeat-exit-timeout 5)
-  :bind
-  ("C-:" . embark-act) ;; pick some comfortable binding
-  ("C-;" . embark-dwim)) ;; good alternative: M-.
+  (repeat-exit-timeout 5))
 
 (use-package embark
   :after (evil evil-collection)
-  :commands (embark-act embark-dwim embark-bindings))
+  :commands (embark-act embark-dwim embark-bindings)
+  :bind
+  ("C-:" . embark-act)
+  ("C-;" . embark-dwim))
 
 (use-package embark-consult
   :after (embark consult)
@@ -1416,6 +1460,19 @@
 (use-package avy
   :bind
   (("C-'" . avy-goto-word-0)))
+
+(use-package treesit-jump
+  :vc (:url "https://www.github.com/dmille56/treesit-jump" :branch "main")
+  :after (treesit avy transient gptel)
+  :commands
+  (treesit-jump-jump
+   treesit-jump-select
+   treesit-jump-delete
+   treesit-jump-parent-jump
+   treesit-jump-gptel-describe)
+  :config
+  ;; Optional: add some queries to filter out of results (since they can be too cluttered sometimes)
+  (setq treesit-jump-queries-filter-list '("inner" "test" "param")))
 
 ;; Undo
 ;; Linear undo and redo.
