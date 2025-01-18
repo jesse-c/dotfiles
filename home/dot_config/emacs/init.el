@@ -413,21 +413,29 @@
   (eglot-events-buffer-size 0)
   (eglot-sync-connect nil) ;; The value of nil or 0 means don’t block at all during the waiting period
   :hook
-  (python-mode . eglot-ensure)
-  (python-ts-mode . eglot-ensure)
+  (clojure-mode . eglot-ensure)
+  (clojure-ts-mode . eglot-ensure)
   (elixir-mode . eglot-ensure)
   (elixir-ts-mode . eglot-ensure)
+  (python-mode . eglot-ensure)
+  (python-ts-mode . eglot-ensure)
+  (rust-mode . eglot-ensure)
+  (rust-ts-mode . eglot-ensure)
+  (swift-mode . eglot-ensure)
+  (swift-ts-mode . eglot-ensure)
   (typescript-mode . eglot-ensure)
   (typescript-ts-mode . eglot-ensure)
   (yaml-mode . eglot-ensure)
   (yaml-ts-mode . eglot-ensure)
-  (swift-mode . eglot-ensure)
-  (swift-ts-mode . eglot-ensure)
-  (rust-mode . eglot-ensure)
-  (rust-ts-mode . eglot-ensure)
   :bind
   ("s-l" . eglot-transient-menu)
   :config
+  (add-to-list 'eglot-server-programs
+               `(clojure-mode . ,(eglot-alternatives
+                                  '(("clojure-lsp")))))
+  (add-to-list 'eglot-server-programs
+               `(clojure-ts-mode . ,(eglot-alternatives
+                                     '(("clojure-lsp")))))
   (add-to-list 'eglot-server-programs
                `(elixir-mode . ,(eglot-alternatives
                                  '(("elixir-ls")))))
@@ -1608,6 +1616,24 @@
 ;; Language: Fish ---------------------------------------------------------------
 
 (use-package fish-mode)
+
+;; Language: Clojure(Script) ----------------------------------------------------
+
+(use-package clojure-mode)
+
+(use-package clojure-ts-mode
+  :hook
+  (clojure-ts-mode . cider-mode)
+  (clojure-ts-mode . enable-paredit-mode)
+  (clojure-ts-mode . rainbow-delimiters-mode)
+  (clojure-ts-mode . clj-refactor-mode))
+
+(use-package flycheck-clojure
+  :defer 1
+  :after (clojure-mode clojure-ts-mode flycheck)
+  :commands flycheck-clojure-setup
+  :hook
+  (flycheck-mode . flycheck-clojure-setup))
 
 ;; Language: Flix ---------------------------------------------------------------
 
