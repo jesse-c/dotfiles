@@ -1635,9 +1635,7 @@
 (use-package clojure-ts-mode
   :hook
   (clojure-ts-mode . cider-mode)
-  (clojure-ts-mode . enable-paredit-mode)
-  (clojure-ts-mode . rainbow-delimiters-mode)
-  (clojure-ts-mode . clj-refactor-mode))
+  (clojure-ts-mode . rainbow-delimiters-mode))
 
 (use-package flycheck-clojure
   :defer 1
