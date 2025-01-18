@@ -417,6 +417,8 @@
   (clojure-ts-mode . eglot-ensure)
   (elixir-mode . eglot-ensure)
   (elixir-ts-mode . eglot-ensure)
+  (go-mode . eglot-ensure)
+  (go-ts-mode . eglot-ensure)
   (python-mode . eglot-ensure)
   (python-ts-mode . eglot-ensure)
   (rust-mode . eglot-ensure)
@@ -442,6 +444,12 @@
   (add-to-list 'eglot-server-programs
                `(elixir-ts-mode . ,(eglot-alternatives
                                     '(("elixir-ls")))))
+  (add-to-list 'eglot-server-programs
+               `(go-mode . ,(eglot-alternatives
+                             '(("gopls")))))
+  (add-to-list 'eglot-server-programs
+               `(go-ts-mode . ,(eglot-alternatives
+                                '(("gopls")))))
   (add-to-list 'eglot-server-programs
                `(typescript-mode . ,(eglot-alternatives
                                      '(("deno" "lsp")))))
