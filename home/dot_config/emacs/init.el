@@ -1032,7 +1032,7 @@
   (repeat-too-dangerous '(kill-this-buffer))
   (repeat-exit-timeout 5)
   :bind
-  (("C-." . embark-act)) ;; pick some comfortable binding
+  ("C-:" . embark-act) ;; pick some comfortable binding
   ("C-;" . embark-dwim)) ;; good alternative: M-.
 
 (use-package embark
@@ -1415,7 +1415,7 @@
 ;; Movement
 (use-package avy
   :bind
-  (("C-:" . avy-goto-word-0)))
+  (("C-'" . avy-goto-word-0)))
 
 ;; Undo
 ;; Linear undo and redo.
