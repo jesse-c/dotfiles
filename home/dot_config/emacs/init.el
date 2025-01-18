@@ -236,6 +236,8 @@
   :after (magit transient)
   :defer 1)
 
+(use-package pr-review)
+
 (use-package git-modes
   :after magit)
 
@@ -276,7 +278,8 @@
 
 ;; View versions of a file
 (use-package git-timemachine
-  :after transient)
+  :after transient
+  :commands git-timemachine)
 
 (use-package git-commit-ts-mode
   :vc
@@ -420,6 +423,8 @@
   (yaml-ts-mode . eglot-ensure)
   (swift-mode . eglot-ensure)
   (swift-ts-mode . eglot-ensure)
+  (rust-mode . eglot-ensure)
+  (rust-ts-mode . eglot-ensure)
   :bind
   ("s-l" . eglot-transient-menu)
   :config
@@ -447,6 +452,12 @@
   (add-to-list 'eglot-server-programs
                `(swift-ts-mode . ,(eglot-alternatives
                                    '(("sourcekit-lsp")))))
+  (add-to-list 'eglot-server-programs
+               `(rust-mode . ,(eglot-alternatives
+                               '(("rust-analyzer")))))
+  (add-to-list 'eglot-server-programs
+               `(rust-ts-mode . ,(eglot-alternatives
+                                  '(("rust-analyzer")))))
 
   (transient-define-prefix eglot-server-menu ()
     "Eglot server commands."
@@ -844,6 +855,9 @@
   :hook
   (flycheck-mode . sideline-flycheck-setup))
 
+(use-package breadcrumb
+  :hook (after-init . breadcrumb-mode))
+
 ;; Themes
 (defun my/theme-by-current-time ()
   "Get the light or dark THEME based on the current time."
@@ -920,9 +934,12 @@
   (nerd-icons-font-family "Symbols Nerd Font Mono"))
 
 (use-package nerd-icons-completion
-  :after nerd-icons
+  :after (nerd-icons marginalia)
   :config
   (nerd-icons-completion-mode))
+;; This is being setup elsewhere
+;; :hook
+;; (marginalia-mode . nerd-icons-completion-marginalia-setup))
 
 (use-package transient
   :after seq)
@@ -1084,6 +1101,9 @@
 
 (setq auto-save-file-name-transforms '((".*" "~/.config/emacs/auto-save-list/" t)))
 (setq create-lockfiles nil)
+
+(use-package envrc
+  :hook (after-init . envrc-global-mode))
 
 (defun my/copy-buffer-name ()
   "Copy the buffer name."
@@ -1523,7 +1543,25 @@
 
 ;; Language: Rust ---------------------------------------------------------------
 
-(use-package rust-mode)
+(use-package rust-mode
+  :init
+  (setq rust-mode-treesitter-derive t))
+
+(use-package flycheck-rust
+  :defer 1
+  :after (rust-mode flycheck)
+  :hook
+  (flycheck-mode . flycheck-rust-setup))
+
+(use-package cargo-mode
+  :hook
+  (rust-mode . cargo-minor-mode)
+  :config
+  (setq compilation-scroll-output t))
+
+(use-package cargo-transient
+  :custom
+  (cargo-transient-buffer-name-function #'project-prefixed-buffer-name))
 
 ;; Language: Swift --------------------------------------------------------------
 
@@ -1568,6 +1606,11 @@
   :config
   (add-to-list 'treesit-language-source-alist '(markdown "https://github.com/tree-sitter-grammars/tree-sitter-markdown" "split_parser" "tree-sitter-markdown/src"))
   (add-to-list 'treesit-language-source-alist '(markdown-inline "https://github.com/tree-sitter-grammars/tree-sitter-markdown" "split_parser" "tree-sitter-markdown-inline/src")))
+
+;; Language: ePub ---------------------------------------------------------------
+
+(use-package nov
+  :mode ("\\.epub\\'" . nov-mode))
 
 (provide 'init)
 
