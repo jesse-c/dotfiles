@@ -161,7 +161,10 @@
 (use-package project
   :ensure nil
   :init
-  (setq project-vc-extra-root-markers '("TODO.org"))
+  (setq project-vc-extra-root-markers '(;; Org
+                                        "TODO.org"
+                                        ;; Clojure(Script)
+                                        "project.clj" "deps.edn"))
   :config
   (transient-define-prefix project-transient-menu ()
     "Project command menu."
