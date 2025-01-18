@@ -1588,6 +1588,13 @@
 
 (use-package heex-ts-mode)
 
+;; Language: Erlang --------------------------------------------------------------
+
+(use-package erlang-ts
+  :vc (:url "https://github.com/erlang/emacs-erlang-ts" :branch "main")
+  :mode ("\\.erl\\'" . erlang-ts-mode)
+  :defer t)
+
 ;; Language: Python --------------------------------------------------------------
 
 (use-package python-mode)
