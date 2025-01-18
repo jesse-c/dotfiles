@@ -1605,6 +1605,22 @@
   :config
   (add-hook 'python-base-mode-hook 'pet-mode -10))
 
+;; Language: Fish ---------------------------------------------------------------
+
+(use-package fish-mode)
+
+;; Language: Flix ---------------------------------------------------------------
+
+;; Define flix mode
+(define-derived-mode flix-mode prog-mode "Flix"
+  "Major mode for editing Flix source code."
+  :group 'flix
+  (setq-local comment-start "//")
+  (setq-local comment-end ""))
+
+;; Associate .flix files with flix-mode
+(add-to-list 'auto-mode-alist '("\\.flix\\'" . flix-mode))
+
 ;; Language: Rust ---------------------------------------------------------------
 
 (use-package rust-mode
