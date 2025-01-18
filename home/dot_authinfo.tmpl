@@ -1,4 +1,5 @@
 machine api.github.com login {{ .forge_github_username }} password {{ onepasswordRead "op://Personal/GitHub/api token" }}
+machine api.github.com login {{ .emacs_pr_review_github_username }} password {{ onepasswordRead "op://Personal/GitHub/api token" }}
 {{range $user := .openai_username -}}
 machine api.openai.com login {{$user}} password {{ onepasswordRead "op://Personal/OpenAI/editor" }}
 {{end -}}
