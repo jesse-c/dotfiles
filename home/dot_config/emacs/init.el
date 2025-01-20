@@ -1686,7 +1686,9 @@
 
 (use-package flycheck-swift
   :defer 1
-  :after (swift-mode))
+  :after (swift-mode flycheck)
+  :hook
+  (flycheck-mode . flycheck-swift-setup))
 
 ;; Language: JSON --------------------------------------------------------------
 
