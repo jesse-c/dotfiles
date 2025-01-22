@@ -1369,6 +1369,33 @@
 ;; Editor ----------------------------------------------------------------------
 
 ;; Navigation
+(defmacro after-packages (packages &rest body)
+  "Execute BODY after all PACKAGES are loaded.
+PACKAGES should be a list of package names as symbols."
+  (declare (indent 1))
+  `(progn
+     ,@(mapcar (lambda (pkg)
+                 `(eval-after-load ',pkg
+                    '(progn))) packages)
+     ,@body))
+
+(after-packages (evil avy xref)
+  (transient-define-prefix nav-transient-menu ()
+    "Navigation commands menu."
+    ["Navigation"
+     ["Changes"
+      ("c" "Last change" evil-goto-last-change)]
+     ["Things"
+      ("g" "Imenu" consult-imenu)]
+     ["Position"
+      ("b" "Jump backward" evil-jump-backward)
+      ("f" "Jump forward" evil-jump-forward)
+      ("w" "Word" avy-goto-word-0)]
+     ["Xref"
+      ("a" "Back" xref-go-back)
+      ("o" "Forward" xref-go-forward)]])
+  (global-set-key (kbd "s-u") 'nav-transient-menu))
+
 (use-package xref
   :ensure nil
   :hook ((xref-after-return xref-after-jump) . recenter)
