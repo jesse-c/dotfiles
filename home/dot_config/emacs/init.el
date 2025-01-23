@@ -171,14 +171,15 @@
     ["Navigation"
      [("s" "Search" consult-ripgrep)
       ("b" "Buffers" consult-project-buffer)
-      ("f" "Files" project-find-file)
-      ("l" "Line" consult-line)
-      ("d" "Layout" project-dired)
-      ("p" "Switch" project-switch-project)]]
+      ("f" "Files" project-find-file)]
+     [("l" "Line" consult-line)
+      ("d" "Layout" project-dired)]]
     ["Management"
-     [("t" "New tab" tab-new)]
-     [("c" "Close tab" tab-close)]
-     [("n" "Rename tab" my/rename-tab-to-project-name)]])
+     [("t" "New tab" tab-new)
+      ("c" "Close tab" tab-close)
+      ("n" "Rename tab" my/rename-tab-to-project-name)]
+     [("p" "Switch (Known)" project-switch-project)
+      ("P" "Switch (All)" consult-ghq-switch-project)]])
   :bind
   ("s-p" . project-transient-menu))
 
@@ -974,6 +975,12 @@
   (completion-category-defaults nil)
   (completion-category-overrides '((file (styles basic partial-completion)))))
 
+(use-package affe)
+
+(use-package hl-todo
+  :config
+  (global-hl-todo-mode))
+
 ;; Icons
 (use-package all-the-icons
   :if (display-graphic-p))
@@ -1294,6 +1301,12 @@
 ;; You may want to use `embark-prefix-help-command' or which-key instead.
 ;; (keymap-set consult-narrow-map (concat consult-narrow-key " ?") #'consult-narrow-help)
 
+(use-package consult-xref-stack
+  :vc
+  (:url "https://github.com/brett-lempereur/consult-xref-stack" :branch "main")
+  :after consult
+  :commands consult-xref-stack-backward)
+
 (use-package consult-flycheck
   :after (consult flycheck))
 
@@ -1310,6 +1323,25 @@
 
 (use-package consult-eglot
   :after (consult eglot))
+
+(use-package consult-todo
+  :after (consult hl-todo))
+
+(use-package consult-gh
+  :after consult)
+
+(use-package consult-gh-embark
+  :after consult-gh
+  :config
+  (consult-gh-embark-mode +1))
+
+(use-package consult-gh-forge
+  :after consult-gh
+  :config
+  (consult-gh-forge-mode +1))
+
+(use-package consult-ghq
+  :after (consult affe))
 
 (use-package consult-project-extra
   ;; Suggested bindings
@@ -1379,21 +1411,25 @@ PACKAGES should be a list of package names as symbols."
                     '(progn))) packages)
      ,@body))
 
-(after-packages (evil avy xref)
+(after-packages (evil avy xref consult-todo)
   (transient-define-prefix nav-transient-menu ()
     "Navigation commands menu."
     ["Navigation"
      ["Changes"
       ("c" "Last change" evil-goto-last-change)]
      ["Things"
-      ("g" "Imenu" consult-imenu)]
+      ("g" "Imenu" consult-imenu)
+      ("m" "Marks" consult-mark)
+      ("t" "TODOs" consult-todo)]
      ["Position"
       ("b" "Jump backward" evil-jump-backward)
       ("f" "Jump forward" evil-jump-forward)
       ("w" "Word" avy-goto-word-0)]
      ["Xref"
       ("a" "Back" xref-go-back)
-      ("o" "Forward" xref-go-forward)]])
+      ("o" "Forward" xref-go-forward)
+      ("A" "Back / Stack" consult-xref-stack-backward)
+      ("O" "Forward / Stack" consult-xref-stack-forward)]])
   (global-set-key (kbd "s-u") 'nav-transient-menu))
 
 (use-package xref
