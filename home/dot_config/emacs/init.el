@@ -478,6 +478,12 @@
   (add-to-list 'eglot-server-programs
                `(rust-ts-mode . ,(eglot-alternatives
                                   '(("rust-analyzer")))))
+  (add-to-list 'eglot-server-programs
+               `(python-mode . ,(eglot-alternatives
+                                 '(("basedpyright-langserver" "--stdio")))))
+  (add-to-list 'eglot-server-programs
+               `(python-ts-mode . ,(eglot-alternatives
+                                    '(("basedpyright-langserver" "--stdio")))))
 
   (transient-define-prefix eglot-server-menu ()
     "Eglot server commands."
