@@ -597,9 +597,12 @@
 (use-package aider
   :after (transient magit)
   :vc
-  (:url "https://github.com/tninja/aider.el" :branch "main"))
-;; :config)
-;; (global-set-key (kbd "C-c a") 'aider-transient-menu))
+  (:url "https://github.com/MatthewZMD/aidermacs" :branch "main")
+  :config
+  (setq aider-args '("--model" "anthropic/claude-3-5-sonnet-20241022"))
+  (setenv "ANTHROPIC_API_KEY" (my/get-password "anthropic.com" "me"))
+  :bind
+  ("C-c a" . aider-transient-menu))
 
 (use-package codeium
   :vc
