@@ -423,6 +423,7 @@
   (swift-ts-mode . eglot-ensure)
   (typescript-mode . eglot-ensure)
   (typescript-ts-mode . eglot-ensure)
+  (vespa-schema-mode . eglot-ensure)
   (yaml-mode . eglot-ensure)
   (yaml-ts-mode . eglot-ensure)
   :bind
@@ -476,6 +477,9 @@
   (add-to-list 'eglot-server-programs
                `(python-ts-mode . ,(eglot-alternatives
                                     '(("basedpyright-langserver" "--stdio")))))
+  (add-to-list 'eglot-server-programs
+               `(vespa-schema-mode . ,(eglot-alternatives
+                                       (list (list "java" "-jar" (expand-file-name "~/.local/bin/vespa-language-server.jar"))))))
 
   (transient-define-prefix eglot-server-menu ()
     "Eglot server commands."
@@ -1793,6 +1797,16 @@ PACKAGES should be a list of package names as symbols."
 
 (use-package nov
   :mode ("\\.epub\\'" . nov-mode))
+
+;; Language: Vespa --------------------------------------------------------------
+
+(define-derived-mode vespa-schema-mode prog-mode "Vespa Schema"
+  "Major mode for editing Vespa schema definition files."
+  :group 'vespa
+  (setq-local comment-start "#")
+  (setq-local comment-end ""))
+
+(add-to-list 'auto-mode-alist '("\\.sd\\'" . vespa-schema-mode))
 
 (provide 'init)
 
