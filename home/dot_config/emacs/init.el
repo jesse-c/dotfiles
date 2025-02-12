@@ -203,6 +203,8 @@
   ;; Setting ‘forge-add-default-bindings’ to nil in ‘evil-collection-forge-setup’.
   ;; To suppress this message you can set this variable to nil in your init.el file.
   (forge-add-default-bindings nil)
+  :init
+  (setopt magit-format-file-function #'magit-format-file-all-the-icons)
   :bind
   (("s-g" . magit-status)
    :map magit-status-mode-map
@@ -225,16 +227,6 @@
 (use-package magit-delta
   :after magit
   :hook (magit-mode . magit-delta-mode))
-
-(use-package magit-file-icons
-  :after (magit nerd-icons)
-  :init
-  (magit-file-icons-mode 1)
-  :custom
-  ;; These are the default values:
-  (magit-file-icons-enable-diff-file-section-icons t)
-  (magit-file-icons-enable-untracked-icons t)
-  (magit-file-icons-enable-diffstat-icons t))
 
 (use-package forge
   :after (magit transient)
