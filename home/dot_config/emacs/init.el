@@ -1371,7 +1371,38 @@
   (corfu-on-exact-match nil)     ;; Configure handling of exact matches
   (corfu-separator ?\s)          ;; Orderless field separator
   :init
-  (global-corfu-mode))
+  (global-corfu-mode)
+  :hook
+  (minibuffer-setup-hook . corfu-enable-in-minibuffer)
+  (corfu-mode-hook . corfu-popupinfo-mode)
+  :config
+  (defun corfu-enable-in-minibuffer ()
+    "Enable Corfu completion in the minibuffer, e.g., `eval-expression'."
+    (when (where-is-internal #'completion-at-point (list (current-local-map)))
+      (corfu-mode 1))))
+
+(use-package completion-preview
+  :ensure nil
+  :hook
+  ((comint-mode-hook
+    eshell-mode-hook
+    prog-mode-hook
+    text-mode-hook) . completion-preview-mode)
+  (minibuffer-setup-hook . completion-preview-enable-in-minibuffer)
+  :bind
+  (:map completion-preview-active-mode-map
+        ("TAB" . completion-preview-complete)
+        ("C-e" . completion-preview-insert))
+  :init
+  (setq completion-preview-adapt-background-color nil)
+  (setq completion-preview-minimum-symbol-length 2)
+  :config
+  (defun completion-preview-enable-in-minibuffer ()
+    "Enable Corfu completion in the minibuffer, e.g., `eval-expression'."
+    (when (where-is-internal #'completion-at-point (list (current-local-map)))
+      (completion-preview-mode 1)))
+
+  (cl-pushnew 'org-self-insert-command completion-preview-commands :test #'equal))
 
 (use-package cape
   ;; Bind prefix keymap providing all Cape commands under a mnemonic key.
