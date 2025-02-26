@@ -549,7 +549,7 @@
              gptel-make-anthropic)
   :custom
   (gptel-default-mode 'org-mode)
-  (gptel-model 'claude-3-5-sonnet-20241022)
+  (gptel-model 'claude-3-7-sonnet-20250219)
   (gptel-display-buffer-action
    '((display-buffer-reuse-window display-buffer-in-side-window)
      (side . right)
@@ -595,7 +595,7 @@
   :vc
   (:url "https://github.com/MatthewZMD/aidermacs" :branch "main")
   :config
-  (setq aider-args '("--model" "anthropic/claude-3-5-sonnet-20241022"))
+  (setq aider-args '("--model" "anthropic/claude-3-7-sonnet-20250219"))
   (setq aidermacs-backend 'vterm)
   (setenv "ANTHROPIC_API_KEY" (my/get-password "anthropic.com" "me"))
   :bind

@@ -24,8 +24,8 @@ anthropic-api-key: {{ onepasswordRead "op://Personal/Anthropic/aider" }}
 ## Use claude-3-opus-20240229 model for the main chat
 #opus: false
 
-## Use claude-3-5-sonnet-20240620 model for the main chat
-sonnet: false
+## Use anthropic/claude-3-7-sonnet-20250219 model for the main chat
+sonnet: true
 
 ## Use gpt-4-0613 model for the main chat
 #4: false
@@ -74,7 +74,7 @@ sonnet: false
 #model-metadata-file: .aider.model.metadata.json
 
 alias:
-  - "default:claude-3-5-sonnet-20241022"
+  - "default:anthropic/claude-3-7-sonnet-20250219"
 
 ## Verify the SSL cert when connecting to models (default: True)
 #verify-ssl: true
