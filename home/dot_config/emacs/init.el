@@ -413,6 +413,7 @@
   (clojure-ts-mode . eglot-ensure)
   (elixir-mode . eglot-ensure)
   (elixir-ts-mode . eglot-ensure)
+  (flix-mode . eglot-ensure)
   (go-mode . eglot-ensure)
   (go-ts-mode . eglot-ensure)
   (python-mode . eglot-ensure)
@@ -480,6 +481,9 @@
   (add-to-list 'eglot-server-programs
                `(vespa-schema-mode . ,(eglot-alternatives
                                        (list (list "java" "-jar" (expand-file-name "~/.local/bin/vespa-language-server.jar"))))))
+  (add-to-list 'eglot-server-programs
+               `(flix-mode . ,(eglot-alternatives
+                               '(("flix" "lsp")))))
 
   (transient-define-prefix eglot-server-menu ()
     "Eglot server commands."
