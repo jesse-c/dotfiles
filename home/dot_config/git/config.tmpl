@@ -5,13 +5,16 @@
 [github]
 	user = jesse-c
 [color]
-	ui = true
+	ui = auto
 [core]
 	editor = nvim
 	excludesfile = ~/.config/git/.gitignore
 	autocrlf = input
+  fsmonitor = true
+  untrackedCache = true
 [rerere]
-	enabled = 1
+	enabled = true
+	autoupdate = true
 [stash]
 	showPatch = true
 [merge]
@@ -19,6 +22,7 @@
 [fetch]
 	prune = true
 	prunetags = true
+	all = true
 [interactive]
 	diffFilter = delta --color-only
 [add.interactive]
@@ -26,6 +30,10 @@
 [push]
 	default = upstream
 	followtags = true
+	autoSetupRemote = true
+	followTags = true
+[push]
+	rebase = true
 [commit]
 	verbose = true
 	gpgsign = true
@@ -35,8 +43,9 @@
 	compactionHeuristic = true
 	indentHeuristic = on
 	tool = difftastic
-	colorMoved = default
+	colorMoved = plain
 	mnemonicPrefix = true
+	algorithm = histogram
 [difftool]
 	prompt = false
 [difftool "difftastic"]
@@ -70,6 +79,7 @@
 [rebase]
 	autosquash = true
 	autostash = true
+  updateRefs = true
 {{- if eq .chezmoi.os "darwin" }}
 [gpg]
 	program = gpg
@@ -85,6 +95,8 @@
 	defaultBranch = main
 [branch]
 	sort = -committerdate
+[tag]
+	sort = version:refname
 [delta]
 	navigate = true    # use n and N to move between diff sections
 	light = false      # set to true if you're in a terminal w/ a light background color (e.g. the default macOS terminal)
@@ -95,3 +107,5 @@
 [grep]
 	extendedRegexp = true
 	lineNumber = true
+[help]
+	autocorrect = prompt
