@@ -418,6 +418,9 @@
   (flix-mode . eglot-ensure)
   (go-mode . eglot-ensure)
   (go-ts-mode . eglot-ensure)
+  (latex-mode . eglot-ensure)
+  (markdown-mode . eglot-ensure)
+  (markdown-ts-mode . eglot-ensure)
   (python-mode . eglot-ensure)
   (python-ts-mode . eglot-ensure)
   (rust-mode . eglot-ensure)
@@ -457,6 +460,9 @@
                `(typescript-ts-mode . ,(eglot-alternatives
                                         '(("deno" "lsp")))))
   (add-to-list 'eglot-server-programs
+               `(latex-mode . ,(eglot-alternatives
+                                '(("texlab")))))
+  (add-to-list 'eglot-server-programs
                `(yaml-mode . ,(eglot-alternatives
                                '(("yaml-language-server" "--stdio")))))
   (add-to-list 'eglot-server-programs
@@ -486,6 +492,12 @@
   (add-to-list 'eglot-server-programs
                `(flix-mode . ,(eglot-alternatives
                                '(("flix" "lsp")))))
+  (add-to-list 'eglot-server-programs
+               `(markdown-mode . ,(eglot-alternatives
+                                   '(("marksman")))))
+  (add-to-list 'eglot-server-programs
+               `(markdown-ts-mode . ,(eglot-alternatives
+                                      '(("marksman")))))
 
   (transient-define-prefix eglot-server-menu ()
     "Eglot server commands."
