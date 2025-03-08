@@ -1486,7 +1486,10 @@ PACKAGES should be a list of package names as symbols."
       ("a" "Back" xref-go-back)
       ("o" "Forward" xref-go-forward)
       ("A" "Back / Stack" consult-xref-stack-backward)
-      ("O" "Forward / Stack" consult-xref-stack-forward)]])
+      ("O" "Forward / Stack" consult-xref-stack-forward)]
+     ["Structure"
+      ("," "Function beginning" beginning-of-defun)
+      ("." "Function ending" end-of-defun)]])
   (global-set-key (kbd "s-u") 'nav-transient-menu))
 
 (use-package xref
