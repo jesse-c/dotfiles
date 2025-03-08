@@ -706,7 +706,9 @@
   (org-babel-do-load-languages
    'org-babel-load-languages
    '((org . t)
-     (python . t))))
+     (python . t)))
+  :hook
+  (org-mode . visual-line-mode))
 
 (use-package org-roam
   :defer t
