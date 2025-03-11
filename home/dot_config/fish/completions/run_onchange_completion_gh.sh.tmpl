@@ -1,5 +1,5 @@
 #!/bin/bash
 
-# GitHub CLI version: {{ output "trim" "gh" "--version" | trim }}
+# GitHub CLI version: {{ output "gh" "--version" | trim }}
 
-gh completion -s fish > "$HOME/.config/fish/completions/gh.fish"
+gh completion -s fish >"$HOME/.config/fish/completions/gh.fish"
