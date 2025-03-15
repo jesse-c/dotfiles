@@ -706,7 +706,8 @@
   (org-babel-do-load-languages
    'org-babel-load-languages
    '((org . t)
-     (python . t)))
+     (python . t)
+     (verb . t)))
   :hook
   (org-mode . visual-line-mode))
 
@@ -763,11 +764,16 @@
   (org-roam-ql-ql-init))
 
 (use-package org-modern
+  :after org
+  :custom
+  (org-modern-tag t)
   :config
   (global-org-modern-mode))
 
 (use-package ox-pandoc
   :after org)
+
+(use-package org-download)
 
 ;; Modal ------------------------------------------------------------------------
 
@@ -1861,6 +1867,14 @@ PACKAGES should be a list of package names as symbols."
   (setq-local comment-end ""))
 
 (add-to-list 'auto-mode-alist '("\\.sd\\'" . vespa-schema-mode))
+
+;; Language: HTTP ---------------------------------------------------------------
+
+(use-package verb
+  :after (org))
+
+(use-package ob-verb
+  :after (org verb))
 
 (provide 'init)
 
