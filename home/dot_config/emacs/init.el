@@ -1875,9 +1875,6 @@ PACKAGES should be a list of package names as symbols."
 (use-package verb
   :after (org))
 
-(use-package ob-verb
-  :after (org verb))
-
 (provide 'init)
 
 ;;; init.el ends here
