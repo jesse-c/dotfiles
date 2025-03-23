@@ -88,6 +88,16 @@
 (use-package load-relative)
 (use-package f)
 
+(defmacro after-packages (packages &rest body)
+  "Execute BODY after all PACKAGES are loaded.
+PACKAGES should be a list of package names as symbols."
+  (declare (indent 1))
+  `(progn
+     ,@(mapcar (lambda (pkg)
+                 `(eval-after-load ',pkg
+                    '(progn))) packages)
+     ,@body))
+
 ;; Server -----------------------------------------------------------------------
 
 ;; Hint: emacsclient -n file1 file2 (Use -c to open in a new frame)
@@ -1466,22 +1476,14 @@
 ;; Editor ----------------------------------------------------------------------
 
 ;; Navigation
-(defmacro after-packages (packages &rest body)
-  "Execute BODY after all PACKAGES are loaded.
-PACKAGES should be a list of package names as symbols."
-  (declare (indent 1))
-  `(progn
-     ,@(mapcar (lambda (pkg)
-                 `(eval-after-load ',pkg
-                    '(progn))) packages)
-     ,@body))
-
 (after-packages (evil avy xref consult-todo)
   (transient-define-prefix nav-transient-menu ()
     "Navigation commands menu."
     ["Navigation"
      ["Changes"
-      ("c" "Last change" evil-goto-last-change)]
+      ("c" "Last change" evil-goto-last-change)
+      ("p" "Previous hunk" git-gutter:previous-hunk)
+      ("n" "Next hunk" git-gutter:next-hunk)]
      ["Things"
       ("g" "Imenu" consult-imenu)
       ("m" "Marks" consult-mark)
