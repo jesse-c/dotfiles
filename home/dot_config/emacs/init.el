@@ -613,11 +613,13 @@
   :vc
   (:url "https://github.com/MatthewZMD/aidermacs" :branch "main")
   :config
-  (setq aider-args '("--model" "anthropic/claude-3-7-sonnet-20250219"))
-  (setq aidermacs-backend 'vterm)
   (setenv "ANTHROPIC_API_KEY" (my/get-password "anthropic.com" "me"))
   :bind
-  ("C-c a" . aider-transient-menu))
+  ("C-c a" . aidermacs-transient-menu)
+  :custom
+  (aidermacs-use-architect-mode t)
+  (aidermacs-default-model "sonnet")
+  (aidermacs-backend 'vterm))
 
 (use-package codeium
   :vc
