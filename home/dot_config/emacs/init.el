@@ -1877,6 +1877,13 @@ PACKAGES should be a list of package names as symbols."
 (use-package verb
   :after (org))
 
+;; Language: Shell --------------------------------------------------------------
+
+(use-package modern-sh
+  :hook
+  (sh-mode . modern-sh-mode)
+  (bash-mode . modern-sh-mode))
+
 (provide 'init)
 
 ;;; init.el ends here
