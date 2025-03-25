@@ -2,16 +2,28 @@
 
 ;;; Code:
 
+;; Ensure Emacs loads the most recent byte-compiled files.
+(setq load-prefer-newer t)
+
+;; Make Emacs Native-compile .elc files asynchronously
+(setq native-comp-jit-compilation t
+      native-comp-deferred-compilation t)  ; Deprecated in Emacs > 29.1
+
+;; Suppress native compilation warnings and errors
+(setq native-comp-async-report-warnings-errors nil)
+
+;; Ensure that quitting only occurs once Emacs finishes native compiling,
+;; preventing incomplete or leftover compilation files in `/tmp`.
+(setq native-comp-async-query-on-exit t)
+(setq confirm-kill-processes t)
+
+;; Non-nil means to native compile packages as part of their installation.
+(setq package-native-compile t)
+
 ;; Disable warning [1]
 ;;
 ;; [1] https://memopixel.com/fix-package-cl-is-deprecated-warning-for-emacs
 (setq byte-compile-warnings '(cl-functions))
-
-;; Suppress native compilation warnings and errors
-(setq native-comp-async-report-warnings-errors nil
-      native-comp-async-query-on-exit t
-      native-comp-deferred-compilation nil)
-(setq load-prefer-newer noninteractive)
 
 ;; Don't resize the frame to preserve the number of columns or lines
 ;; being displayed when setting font, menu bar, tool bar, tab bar,
