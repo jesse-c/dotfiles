@@ -863,6 +863,7 @@ PACKAGES should be a list of package names as symbols."
   (prog-mode . highlight-indent-guides-mode))
 
 (use-package aggressive-indent
+  :disabled
   :hook
   (prog-mode . aggressive-indent-mode))
 
