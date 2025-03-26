@@ -1858,6 +1858,8 @@ PACKAGES should be a list of package names as symbols."
   (add-to-list 'treesit-language-source-alist '(markdown "https://github.com/tree-sitter-grammars/tree-sitter-markdown" "split_parser" "tree-sitter-markdown/src"))
   (add-to-list 'treesit-language-source-alist '(markdown-inline "https://github.com/tree-sitter-grammars/tree-sitter-markdown" "split_parser" "tree-sitter-markdown-inline/src")))
 
+(use-package grip-mode)
+
 ;; Language: ePub ---------------------------------------------------------------
 
 (use-package nov
