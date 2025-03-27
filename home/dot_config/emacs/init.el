@@ -1477,7 +1477,7 @@ PACKAGES should be a list of package names as symbols."
 ;; Editor ----------------------------------------------------------------------
 
 ;; Navigation
-(after-packages (evil avy xref consult-todo)
+(after-packages (evil avy xref consult-todo treesit-fold)
   (transient-define-prefix nav-transient-menu ()
     "Navigation commands menu."
     ["Navigation"
@@ -1500,7 +1500,10 @@ PACKAGES should be a list of package names as symbols."
       ("O" "Forward / Stack" consult-xref-stack-forward)]
      ["Structure"
       ("," "Function beginning" beginning-of-defun)
-      ("." "Function ending" end-of-defun)]])
+      ("." "Function ending" end-of-defun)]
+     ["Folds"
+      ("O" "Open" treesit-fold-open)
+      ("C" "Close" treesit-fold-close)]])
   (global-set-key (kbd "s-u") 'nav-transient-menu))
 
 (use-package xref
@@ -1608,6 +1611,14 @@ PACKAGES should be a list of package names as symbols."
 
 (use-package treemacs-magit
   :after (treemacs magit))
+
+;; Folding
+(use-package treesit-fold
+  :vc (:url "https://github.com/emacs-tree-sitter/treesit-fold" :branch "master")
+  :custom
+  (treesit-fold-indicators-fringe 'left-fringe)
+  :config
+  (global-treesit-fold-indicators-mode 1))
 
 ;; Movement
 (use-package avy
