@@ -403,7 +403,9 @@ PACKAGES should be a list of package names as symbols."
 ;; Tree-sitter ------------------------------------------------------------------
 
 (use-package treesit
-  :ensure nil)
+  :ensure nil
+  :custom
+  (treesit-font-lock-level 4))
 
 (use-package treesit-auto
   :custom
