@@ -799,6 +799,16 @@ PACKAGES should be a list of package names as symbols."
   (evil-set-undo-system 'undo-tree)
   (global-unset-key (kbd "C-u"))
   (global-set-key (kbd "C-u") 'evil-scroll-up)
+  ;; 1. Use =C-y= instead of your system paste shortcut
+  ;;
+  ;; 2. Add this to your config to enable clipboard integration with isearch:
+  ;;    (define-key isearch-mode-map (kbd "s-v") 'isearch-yank-kill)
+  ;;    Or for evil-specific:
+  ;;    (define-key evil-ex-search-keymap (kbd "s-v") 'evil-ex-search-paste-from-register)
+  ;;
+  ;; 3. Consider =evil-search-module= options:
+  ;;    (setq evil-search-module 'evil-search) ;; or 'isearch
+  (define-key isearch-mode-map (kbd "s-v") 'isearch-yank-kill)
   (evil-mode 1))
 
 (use-package evil-collection
