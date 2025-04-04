@@ -621,7 +621,7 @@ PACKAGES should be a list of package names as symbols."
   (org-ai-default-chat-model "gpt-4-turbo"))
 
 (use-package aidermacs
-  :after (transient magit)
+  :after (transient magit vterm)
   :vc
   (:url "https://github.com/MatthewZMD/aidermacs" :branch "main")
   :config
@@ -700,6 +700,8 @@ PACKAGES should be a list of package names as symbols."
   :defer 1
   :hook
   (eshell-load-hook . eat-eshell-mode))
+
+(use-package vterm)
 
 ;; Notes ------------------------------------------------------------------------
 
