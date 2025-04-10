@@ -723,7 +723,10 @@ PACKAGES should be a list of package names as symbols."
    'org-babel-load-languages
    '((org . t)
      (python . t)
-     (verb . t)))
+     (verb . t)
+     (emacs-lisp . t)
+     (shell . t)
+     (calc . t)))
   :hook
   (org-mode . visual-line-mode))
 
