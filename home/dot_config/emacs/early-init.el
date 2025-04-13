@@ -107,8 +107,6 @@
                                 (time-subtract after-init-time before-init-time)))
                        gcs-done))))
 
-(setq package-quickstart t)
-
 (provide 'early-init)
 
 ;;; early-init.el ends here
