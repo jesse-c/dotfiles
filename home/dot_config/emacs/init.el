@@ -1732,6 +1732,17 @@ PACKAGES should be a list of package names as symbols."
 ;; Editor Config
 (customize-set-variable 'editorconfig-mode t)
 
+;; Email -----------------------------------------------------------------------
+
+(use-package himalaya
+  :if (file-exists-p "~/src/github.com/jesse-c/himalaya-emacs")
+  :load-path "~/src/github.com/jesse-c/himalaya-emacs"
+  :after evil
+  :custom
+  (himalaya-evil-enable-integration t)
+  (himalaya-transient-enable-integration t)
+  (himalaya-html-browse-function #'eww-open-file))
+
 ;; Language: All ----------------------------------------------------------------
 
 (use-package flycheck
