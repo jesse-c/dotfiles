@@ -754,6 +754,11 @@ PACKAGES should be a list of package names as symbols."
   (org-roam-db-autosync-mode)
   ;; If using org-roam-protocol
   (require 'org-roam-protocol)
+  (transient-define-prefix org-structure-transient-menu ()
+    ["Structure"
+     [("I" "Insert" org-meta-return)
+      ("T" "Toggle" org-toggle-heading)
+      ("y" "Capture yesterday" org-roam-dailies-capture-yesterday)]])
   (transient-define-prefix org-transient-menu ()
     "Org command menu."
     ["Capture"
@@ -766,7 +771,8 @@ PACKAGES should be a list of package names as symbols."
     ["Dailies"
      [("g" "Goto today" org-roam-dailies-goto-today)
       ("t" "Capture today" org-roam-dailies-capture-today)
-      ("y" "Capture yesterday" org-roam-dailies-capture-yesterday)]]))
+      ("y" "Capture yesterday" org-roam-dailies-capture-yesterday)]]
+    [("S" "Structure" org-structure-transient-menu)]))
 
 (use-package org-ql
   :after org
