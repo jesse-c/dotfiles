@@ -1812,9 +1812,25 @@ PACKAGES should be a list of package names as symbols."
 
 (use-package poetry)
 
+(use-package python-pytest
+  :after pet)
+
 (use-package pet
+  :custom
+  (pet-debug 1)
   :config
-  (add-hook 'python-base-mode-hook 'pet-mode -10))
+  (defun my/pet-python-setup ()
+    (pet-mode 1)
+    (setq-local python-shell-interpreter (pet-executable-find "python")
+                python-shell-virtualenv-root (pet-virtualenv-root)
+                python-pytest-executable (pet-executable-find "pytest")
+                dap-python-executable python-shell-interpreter)
+
+
+    (pet-eglot-setup)
+    (pet-flycheck-setup))
+  :hook
+  (python-base-mode . my/pet-python-setup))
 
 ;; Language: Fish ---------------------------------------------------------------
 
