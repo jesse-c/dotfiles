@@ -9,3 +9,7 @@ args = ["--stdio=true", "--port=9011"]
 [language-server.elixir-ls]
 command = "elixir-ls"
 config = { elixirLS.dialyzerEnabled = true }
+
+[[language]]
+name = "python"
+language-servers = [ "basedpyright" ]
