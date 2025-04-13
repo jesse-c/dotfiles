@@ -207,6 +207,30 @@ PACKAGES should be a list of package names as symbols."
 
 ;; VCS -------------------------------------------------------------------------
 
+(use-package smerge-mode
+  :ensure nil
+  :after transient
+  :config
+  (transient-define-prefix smerge-transient-menu ()
+    ["Navigation"
+     ("n" "Next conflict" smerge-next)
+     ("p" "Previous conflict" smerge-prev)]
+    ["Resolve"
+     ("a" "Keep all variants" smerge-keep-all)
+     ("b" "Keep base" smerge-keep-base)
+     ("l" "Keep lower" smerge-keep-lower)
+     ("u" "Keep upper" smerge-keep-upper)
+     ("c" "Keep current" smerge-keep-current)]
+    ["Diff"
+     ("E" "Ediff" smerge-ediff)
+     ("C" "Combine" smerge-combine-with-next)]
+    ["Other"
+     ("r" "Resolve" smerge-resolve)
+     ("R" "Resolve all" smerge-resolve-all)
+     ("q" "Quit" smerge-mode)])
+  :bind (:map smerge-mode-map
+              ("?" . smerge-transient-menu)))
+
 (use-package magit
   :after transient
   :commands
