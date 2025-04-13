@@ -1,7 +1,7 @@
 {
   "apps": [
     { "key": "q", "appname": "/Applications/Things3.app" },
-    { "key": "g", "appname": "kitty" },
+    { "key": "g", "appname": "Ghostty" },
     { "key": "b", "appname": "/Applications/Emacs.app" },
     { "key": "f", "appname": "Firefox" },
     { "key": "m", "appname": "Mail" },
