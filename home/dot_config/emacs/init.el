@@ -1392,6 +1392,19 @@ PACKAGES should be a list of package names as symbols."
 (use-package consult-eglot
   :after (consult eglot))
 
+(use-package consult-eglot-embark
+  :after (consult eglot consult-eglot)
+  :config
+  (defun my/toggle-consult-eglot-embark-mode ()
+    "Toggle consult-eglot-embark-mode based on buffer Eglot status."
+    (cond
+     ((eglot-managed-p)
+      (consult-eglot-embark-mode 1))  ;; Enable when buffer is managed by Eglot
+     (t
+      (consult-eglot-embark-mode -1)))) ;; Disable when buffer is not managed by Eglot
+  :hook
+  (eglot-managed-mode . my/toggle-consult-eglot-embark-mode))
+
 (use-package consult-todo
   :after (consult hl-todo))
 
