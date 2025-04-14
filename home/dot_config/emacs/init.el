@@ -602,6 +602,7 @@ PACKAGES should be a list of package names as symbols."
              gptel-backend
              gptel-make-anthropic)
   :custom
+  (gptel-use-tools t)
   (gptel-default-mode 'org-mode)
   (gptel-model 'claude-3-7-sonnet-20250219)
   (gptel-display-buffer-action
@@ -632,6 +633,46 @@ PACKAGES should be a list of package names as symbols."
             (set-window-parameter window 'no-other-window t)
             (select-window window))
           (setq mode-line-format nil))))))
+
+(setq mcp-hub-servers
+      `(("ddg-search" . (:command "uvx" :args ("duckduckgo-mcp-server")))
+        ("filesystem" . (:command "npx" :args ("-y" "@modelcontextprotocol/server-filesystem" "/Users/jesse/Downloads/")))))
+
+(use-package mcp-hub
+  :vc
+  (:url "https://github.com/lizqwerscott/mcp.el" :branch "master"))
+
+(defun gptel-mcp-register-tool ()
+  (interactive)
+  (let ((tools (mcp-hub-get-all-tool :asyncp t :categoryp t)))
+    (mapcar #'(lambda (tool)
+                (apply #'gptel-make-tool
+                       tool))
+            tools)))
+
+(defun gptel-mcp-use-tool ()
+  (interactive)
+  (let ((tools (mcp-hub-get-all-tool :asyncp t :categoryp t)))
+    (mapcar #'(lambda (tool)
+                (let ((path (list (plist-get tool :category)
+                                  (plist-get tool :name))))
+                  (push (gptel-get-tool path)
+                        gptel-tools)))
+            tools)))
+
+(defun gptel-mcp-close-use-tool ()
+  (interactive)
+  (let ((tools (mcp-hub-get-all-tool :asyncp t :categoryp t)))
+    (mapcar #'(lambda (tool)
+                (let ((path (list (plist-get tool :category)
+                                  (plist-get tool :name))))
+                  (setq gptel-tools
+                        (cl-remove-if #'(lambda (tool)
+                                          (equal path
+                                                 (list (gptel-tool-category tool)
+                                                       (gptel-tool-name tool))))
+                                      gptel-tools))))
+            tools)))
 
 (use-package org-ai
   :commands (org-ai-mode
