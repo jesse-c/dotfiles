@@ -3,7 +3,7 @@ Host *
   UseKeychain yes
   IdentityFile {{ .identity_file }}
   {{- if and (eq .chezmoi.os "darwin") (stat "/Applications/1Password.app") }}
-  IdentityAgent "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
+  IdentityAgent "~/.1password/agent.sock"
   {{- end }}
   PasswordAuthentication no
   ChallengeResponseAuthentication no
