@@ -1191,7 +1191,16 @@ PACKAGES should be a list of package names as symbols."
 
 ;;; Whitespace
 (setq-default indent-tabs-mode nil)
+
 (setq-default tab-width 2)
+(setq-default standard-indent 2)
+(setq-default evil-shift-width 2)
+
+(use-package dtrt-indent
+  :diminish
+  :config
+  (dtrt-indent-global-mode t))
+
 (setq require-final-newline t) ;; Add new line in the end of a file on save.
 (add-hook 'before-save-hook #'delete-trailing-whitespace) ;; Delete trailing spaces
 (setq-default show-trailing-whitespace nil) ;; By default, don't underline trailing spaces
@@ -1873,6 +1882,8 @@ PACKAGES should be a list of package names as symbols."
 
 ;; Language: Python --------------------------------------------------------------
 
+(setq-local python-indent-offset 4)
+
 (use-package python-mode)
 
 (use-package poetry)
@@ -2023,6 +2034,10 @@ PACKAGES should be a list of package names as symbols."
   :hook
   (sh-mode . modern-sh-mode)
   (bash-mode . modern-sh-mode))
+
+;; Language: Emacs Lisp ---------------------------------------------------------
+
+(setq-local lisp-indent-offset 2)
 
 (provide 'init)
 
