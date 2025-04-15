@@ -1249,7 +1249,35 @@ PACKAGES should be a list of package names as symbols."
   :commands (embark-act embark-dwim embark-bindings)
   :bind
   ("C-:" . embark-act)
-  ("C-;" . embark-dwim))
+  ("C-;" . embark-dwim)
+  :config
+
+  (defun my/embark-pytest-def-p ()
+    "Return non-nil if point is inside a Python test function in a test_*.py file and python-ts-mode is active."
+    (and buffer-file-name
+         (string-match-p "/test_.*\\.py\\'" buffer-file-name)
+         (eq major-mode 'python-ts-mode)
+         (require 'treesit nil t)
+         (treesit-ready-p 'python)
+         (let* ((node (treesit-node-at (point)))
+                (func-node (when node
+                             (treesit-parent-until
+                              node
+                              (lambda (n)
+                                (string= (treesit-node-type n) "function_definition"))))))
+           (when func-node
+             (let* ((name-node (treesit-node-child-by-field-name func-node "name"))
+                    (func-name (and name-node (treesit-node-text name-node))))
+               (and func-name (string-prefix-p "test_" func-name)))))))
+
+  (defun my/embark-python-pytest-run-def-at-point ()
+    "Run pytest on the test function at point using treesit."
+    (interactive)
+    (if (my/embark-pytest-def-p)
+        (call-interactively #'python-pytest-run-def-at-point-treesit)
+      (user-error "Not on a Python test function in a test_*.py file")))
+
+  (define-key embark-identifier-map (kbd "T") #'my/embark-python-pytest-run-def-at-point))
 
 (use-package embark-consult
   :after (embark consult)
