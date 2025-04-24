@@ -793,6 +793,7 @@ PACKAGES should be a list of package names as symbols."
   (org-todo-keywords '((sequence "TODO(t)" "IN-PROGRESS(i)" "REVIEW(r)" "|" "DONE(d)" "CANCELLED(c)")))
   (calendar-week-start-day 1)
   :config
+  (org-indent-mode)
   (org-babel-do-load-languages
    'org-babel-load-languages
    '((org . t)
