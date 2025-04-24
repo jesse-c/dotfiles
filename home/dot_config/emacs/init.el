@@ -833,21 +833,21 @@ PACKAGES should be a list of package names as symbols."
   (require 'org-roam-protocol)
   (transient-define-prefix org-structure-transient-menu ()
     ["Structure"
-     [("I" "Insert" org-meta-return)
-      ("T" "Toggle" org-toggle-heading)
-      ("y" "Capture yesterday" org-roam-dailies-capture-yesterday)]])
+     [("i" "Insert" org-meta-return)
+      ("t" "Toggle" org-toggle-heading)]]
+    [("p" "Set property" org-set-property)])
   (transient-define-prefix org-transient-menu ()
     "Org command menu."
     ["Capture"
      [("c" "Capture" org-roam-capture)]]
     ["Navigation"
      [("s" "Search" consult-org-roam-search)
-      ("f" "Find" org-roam-node-find)
-      ("i" "Insert" org-roam-node-insert)
+      ("f" "Find" org-roam-node-find)]
+     [("i" "Insert" org-roam-node-insert)
       ("g" "Graph" org-roam-graph)]]
     ["Dailies"
-     [("g" "Goto today" org-roam-dailies-goto-today)
-      ("t" "Capture today" org-roam-dailies-capture-today)
+     [("g" "Goto today" org-roam-dailies-goto-today)]
+     [("t" "Capture today" org-roam-dailies-capture-today)
       ("y" "Capture yesterday" org-roam-dailies-capture-yesterday)]]
     [("S" "Structure" org-structure-transient-menu)])
   :hook
