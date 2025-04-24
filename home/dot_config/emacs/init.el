@@ -782,18 +782,21 @@ PACKAGES should be a list of package names as symbols."
 (defvar org-dir "~/Documents/org/")
 
 (defvar org-roam-dir (file-name-concat org-dir "roam/"))
-
-(setq org-log-done t)
+(defvar org-roam-dailies-dir "daily/")
+(defvar org-roam-dailies-path (file-name-concat org-roam-dir org-roam-dailies-dir))
 
 (use-package org
   :ensure nil
   :custom
+  (org-log-done t)
   (org-confirm-babel-evaluate nil)
   (org-startup-with-inline-images t)
-  (org-todo-keywords '((sequence "TODO(t)" "IN-PROGRESS(i)" "REVIEW(r)" "|" "DONE(d)" "CANCELLED(c)")))
+  (org-todo-keywords '((sequence "TODO(t)" "BLOCKED(b)" "IN-PROGRESS(i)" "REVIEW(r)" "|" "DONE(d)" "CANCELLED(c)")))
   (calendar-week-start-day 1)
   :config
   (org-indent-mode)
+  (setq org-agenda-files (list (file-name-concat org-dir "todo.org")))
+  (setq diary-show-holidays-flag nil)
   (org-babel-do-load-languages
    'org-babel-load-languages
    '((org . t)
@@ -810,6 +813,7 @@ PACKAGES should be a list of package names as symbols."
   :after org
   :custom
   (org-roam-directory (file-truename org-roam-dir))
+  (org-roam-dailies-directory org-roam-dailies-dir)
   (org-roam-completion-everywhere t)
   (org-roam-db-sync-timeout)
   :bind
@@ -881,7 +885,8 @@ PACKAGES should be a list of package names as symbols."
 (use-package ox-pandoc
   :after org)
 
-(use-package org-download)
+(use-package org-download
+  :after (org org-roam))
 
 ;; Modal ------------------------------------------------------------------------
 
