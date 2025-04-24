@@ -607,7 +607,8 @@ PACKAGES should be a list of package names as symbols."
              gptel-mode
              gptel-send
              gptel-backend
-             gptel-make-anthropic)
+             gptel-make-anthropic
+             gptel-make-perplexity)
   :custom
   (gptel-use-tools t)
   (gptel-default-mode 'org-mode)
@@ -622,6 +623,7 @@ PACKAGES should be a list of package names as symbols."
   ("<f5>" . gptel-toggle-sidebar)
   :config
   (setq gptel-backend (gptel-make-anthropic "Claude" :stream t :key (my/get-password "anthropic.com" "me")))
+  (gptel-make-perplexity "Perplexity" :stream t :key (my/get-password "perplexity.ai" "apikey"))
   (defun gptel-toggle-sidebar ()
     "Toggle a custom sidebar for a persistent buffer."
     ;; https://github.com/nehrbash/dotfiles/blob/main/Emacs.org#gpt
