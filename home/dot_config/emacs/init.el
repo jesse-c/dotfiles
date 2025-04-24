@@ -1008,9 +1008,7 @@ PACKAGES should be a list of package names as symbols."
 (use-package diminish)
 
 (use-package doom-modeline
-  :hook (after-init . doom-modeline-mode)
-  :custom
-  (doom-modeline-buffer-encoding t))
+  :hook (after-init . doom-modeline-mode))
 
 ;; Line numbers
 (setq column-number-mode t) ;; Show the current line number
