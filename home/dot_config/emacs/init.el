@@ -577,7 +577,10 @@ PACKAGES should be a list of package names as symbols."
      ("s" "Commands" eglot-server-menu)]))
 
 (use-package flycheck-eglot
+  :diminish
   :after (flycheck eglot)
+  :custom
+  (flycheck-eglot-exclusive nil)
   :config
   (global-flycheck-eglot-mode 1))
 
