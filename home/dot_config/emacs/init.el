@@ -1633,6 +1633,19 @@ PACKAGES should be a list of package names as symbols."
   :config
   (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
 
+;; ElDoc
+
+;; This package displays ElDoc documentations in a childframe. The
+;; childframe is selectable and scrollable with mouse, even though the
+;; cursor is hidden.
+(use-package eldoc-box
+  :after (eldoc eglot)
+  :diminish (eldoc-box-hover-mode eldoc-box-hover-at-point-mode)
+  :custom
+  (eldoc-box-clear-with-C-g t)
+  :hook
+  (eglot-managed-mode . eldoc-box-hover-mode))
+
 ;; Editor ----------------------------------------------------------------------
 
 ;; Navigation
