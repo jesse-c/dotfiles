@@ -810,6 +810,7 @@ PACKAGES should be a list of package names as symbols."
   :custom
   (org-roam-directory (file-truename org-roam-dir))
   (org-roam-completion-everywhere t)
+  (org-roam-db-sync-timeout)
   :bind
   (("s-o" . org-transient-menu)
    ("C-c n l" . org-roam-buffer-toggle)
@@ -820,12 +821,13 @@ PACKAGES should be a list of package names as symbols."
    ("C-c n j" . org-roam-dailies-capture-today)
    :map org-mode-map
    ("C-M-i" . completion-at-point))
+  ;; :hook
+  ;; (after-init . org-roam-db-autosync-mode)
   :config
   ;; If you're using a vertical completion framework, you might want a more informative completion interface
   (setq org-roam-node-display-template (concat "${title:*} " (propertize "${tags:10}" 'face 'org-tag)))
   ;; RETURN will follow links in org-mode files
   (setq org-return-follows-link  t)
-  (org-roam-db-autosync-mode)
   ;; If using org-roam-protocol
   (require 'org-roam-protocol)
   (transient-define-prefix org-structure-transient-menu ()
@@ -846,7 +848,13 @@ PACKAGES should be a list of package names as symbols."
      [("g" "Goto today" org-roam-dailies-goto-today)
       ("t" "Capture today" org-roam-dailies-capture-today)
       ("y" "Capture yesterday" org-roam-dailies-capture-yesterday)]]
-    [("S" "Structure" org-structure-transient-menu)]))
+    [("S" "Structure" org-structure-transient-menu)])
+  :hook
+  (kill-emacs . (lambda ()
+                  (when (fboundp 'org-roam-db-sync)
+                    (message "Syncing org-roam database...")
+                    (org-roam-db-sync)))))
+
 
 (use-package org-ql
   :after org
