@@ -442,6 +442,10 @@ PACKAGES should be a list of package names as symbols."
 
 (use-package eglot
   :ensure nil
+  :init
+  ;; https://github.com/minad/corfu/wiki#filter-list-of-all-possible-completions-with-completion-style-like-orderless
+  (setq completion-category-overrides '((eglot (styles orderless))
+                                        (eglot-capf (styles orderless))))
   :custom
   (eglot-autoshutdown t)
   (eglot-events-buffer-size 0)
@@ -1547,16 +1551,14 @@ PACKAGES should be a list of package names as symbols."
   (corfu-preselect 'prompt)      ;; Preselect the prompt
   (corfu-on-exact-match nil)     ;; Configure handling of exact matches
   (corfu-separator ?\s)          ;; Orderless field separator
+  (global-corfu-minibuffer t)
   :init
   (global-corfu-mode)
   :hook
-  (minibuffer-setup-hook . corfu-enable-in-minibuffer)
   (corfu-mode-hook . corfu-popupinfo-mode)
-  :config
-  (defun corfu-enable-in-minibuffer ()
-    "Enable Corfu completion in the minibuffer, e.g., `eval-expression'."
-    (when (where-is-internal #'completion-at-point (list (current-local-map)))
-      (corfu-mode 1))))
+  (eshell-mode . (lambda ()
+                   (setq-local corfu-auto nil)
+                   (corfu-mode))))
 
 (use-package completion-preview
   :ensure nil
@@ -1565,7 +1567,6 @@ PACKAGES should be a list of package names as symbols."
     eshell-mode-hook
     prog-mode-hook
     text-mode-hook) . completion-preview-mode)
-  (minibuffer-setup-hook . completion-preview-enable-in-minibuffer)
   :bind
   (:map completion-preview-active-mode-map
         ("TAB" . completion-preview-complete)
@@ -1574,11 +1575,6 @@ PACKAGES should be a list of package names as symbols."
   (setq completion-preview-adapt-background-color nil)
   (setq completion-preview-minimum-symbol-length 2)
   :config
-  (defun completion-preview-enable-in-minibuffer ()
-    "Enable Corfu completion in the minibuffer, e.g., `eval-expression'."
-    (when (where-is-internal #'completion-at-point (list (current-local-map)))
-      (completion-preview-mode 1)))
-
   (cl-pushnew 'org-self-insert-command completion-preview-commands :test #'equal))
 
 (use-package cape
@@ -1595,15 +1591,28 @@ PACKAGES should be a list of package names as symbols."
   ;; used by `completion-at-point'.  The order of the functions matters, the
   ;; first function returning a result wins.  Note that the list of buffer-local
   ;; completion functions takes precedence over the global list.
+  ;; Complete word from current buffers. See also dabbrev-capf on Emacs 29.
   (add-hook 'completion-at-point-functions #'cape-dabbrev)
+  ;; (add-hook 'completion-at-point-functions #'dabbrev-capf)
+  ;; Complete file name.
   (add-hook 'completion-at-point-functions #'cape-file)
-  (add-hook 'completion-at-point-functions #'cape-elisp-block)
-  (add-hook 'completion-at-point-functions #'cape-emoji))
-
-(use-package yasnippet-capf
-  :after cape
-  :config
-  (add-to-list 'completion-at-point-functions #'yasnippet-capf))
+  ;; Complete Elisp symbol.
+  (add-hook 'emacs-lisp-mode-hook
+            (lambda ()
+              (add-hook 'completion-at-point-functions #'cape-elisp-block nil t)))
+  ;; Complete Emoji. Available on Emacs 29 and newer.
+  ;; (add-hook 'completion-at-point-functions #'cape-emoji)
+  ;; Complete Elisp in Org or Markdown code block.
+  ;; Add cape-elisp-block only to org-mode and markdown-mode
+  (add-hook 'org-mode-hook
+            (lambda ()
+              (add-hook 'completion-at-point-functions #'cape-elisp-block nil t)))
+  (add-hook 'markdown-mode-hook
+            (lambda ()
+              (add-hook 'completion-at-point-functions #'cape-elisp-block nil t)))
+  ;; Consider:
+  ;; https://github.com/minad/corfu/wiki#continuously-update-the-candidates
+  (advice-add 'eglot-completion-at-point :around #'cape-wrap-buster))
 
 (use-package kind-icon
   :after corfu
@@ -1912,7 +1921,11 @@ PACKAGES should be a list of package names as symbols."
 
 (setq-local python-indent-offset 4)
 
-(use-package python-mode)
+(use-package python-mode
+  :init
+  (setq py-complete-function nil)
+  (setq py-load-pymacs-p nil)
+  (setq py-do-completion-p nil))
 
 (use-package poetry)
 
