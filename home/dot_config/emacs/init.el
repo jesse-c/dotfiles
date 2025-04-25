@@ -2070,6 +2070,128 @@ PACKAGES should be a list of package names as symbols."
 
 (use-package just-ts-mode)
 
+(defun just-transient--find-justfile ()
+  "Find the Justfile in the project root or VC root."
+  (let* ((project-root (or (and (fboundp 'projectile-project-root)
+                                (projectile-project-root))
+                           (locate-dominating-file default-directory ".git")))
+         (justfile (and project-root (expand-file-name "justfile" project-root))))
+    (when (and justfile (file-exists-p justfile))
+      justfile)))
+
+(defun just-transient--parse-recipes (justfile)
+  "Parse the Justfile and return a list of (recipe . docstring)."
+  (with-temp-buffer
+    (insert-file-contents justfile)
+    (let ((recipes '()))
+      (goto-char (point-min))
+      (while (re-search-forward "^\\([a-zA-Z0-9_-]+\\):" nil t)
+        (let ((recipe (match-string 1))
+              (docstring (save-excursion
+                           (if (re-search-backward "^# ?\\(.*\\)$" (line-beginning-position 0) t)
+                               (match-string 1)
+                             ""))))
+          (push (cons recipe docstring) recipes)))
+      (nreverse recipes))))
+
+
+(defun just-transient--run-recipe-compilation (recipe)
+  "Run just RECIPE in the project root with proper environment handling."
+  (let* ((default-directory (file-name-directory (just-transient--find-justfile)))
+         (buffer-name (format "*just:%s*" recipe))
+         (shell (or (getenv "SHELL") "/bin/sh"))
+         (cmd (format "%s -c 'cd %s && just %s'"
+                      shell
+                      (shell-quote-argument default-directory)
+                      recipe)))
+    ;; Set custom compilation buffer name
+    (let ((compilation-buffer-name-function
+           (lambda (_mode) buffer-name)))
+      ;; Start compilation with shell execution
+      (compile cmd))))
+
+(defun just-transient--run-recipe-interactive-shell (recipe)
+  "Run just RECIPE in the project root using a proper shell."
+  (let ((default-directory (file-name-directory (just-transient--find-justfile)))
+        (cmd (format "just %s" recipe))
+        (buffer-name (format "*just:%s*" recipe)))
+
+    (cond
+     ;; If vterm is available, use it
+     ((fboundp 'vterm)
+      (let ((vterm-buffer (generate-new-buffer buffer-name)))
+        (with-current-buffer vterm-buffer
+          (vterm-mode)
+          (vterm-send-string (format "cd %s && %s\n"
+                                     (shell-quote-argument default-directory)
+                                     cmd)))
+        (display-buffer vterm-buffer)))
+
+     ;; If shell-pop is available
+     ((fboundp 'shell-pop)
+      (let ((shell-pop-shell-type '("shell" "*shell*" (lambda () (shell))))
+            (shell-pop-term-shell (getenv "SHELL")))
+        (shell-pop--shell-buffer-name buffer-name)
+        (shell-pop 1)
+        (comint-send-string nil (concat cmd "\n"))))
+
+     ;; Otherwise use a normal shell buffer
+     (t
+      (let ((shell-buffer (get-buffer-create buffer-name)))
+        (with-current-buffer shell-buffer
+          (shell)
+          (goto-char (point-max))
+          (comint-send-string nil (concat "cd " (shell-quote-argument default-directory) "\n"))
+          (comint-send-string nil (concat cmd "\n")))
+        (display-buffer shell-buffer))))))
+
+
+(defun just-transient--make-transient ()
+  "Create and invoke the transient menu for Just recipes."
+  (interactive)
+  (let* ((justfile (just-transient--find-justfile))
+         (recipes (and justfile (just-transient--parse-recipes justfile)))
+         (used-prefixes (make-hash-table :test 'equal))
+         (menu-items '()))
+
+    (if (not justfile)
+        (message "No Justfile found in project root or VC root.")
+
+      ;; Build menu items by looping over all recipes
+      (dolist (recipe recipes)
+        (let* ((recipe-name (car recipe))
+               (doc (cdr recipe))
+               ;; Use first character as prefix, fallback to next available if taken
+               (prefix (substring recipe-name 0 1))
+               (counter 0)
+               (description (if (string-empty-p doc)
+                                recipe-name
+                              (format "%s: %s" recipe-name doc))))
+
+          ;; Find an available prefix if the first character is taken
+          (while (and (gethash prefix used-prefixes) (< counter 26))
+            (setq counter (1+ counter))
+            (if (< counter (length recipe-name))
+                (setq prefix (substring recipe-name counter (1+ counter)))
+              (setq prefix (char-to-string (+ ?a counter)))))
+
+          ;; Mark prefix as used
+          (puthash prefix t used-prefixes)
+
+          ;; Add the menu item
+          (push `(,prefix ,description
+                          (lambda () (interactive) (just-transient--run-recipe-compilation ,recipe-name)))
+                menu-items)))
+
+      ;; Define and invoke the transient menu
+      (eval
+       `(transient-define-prefix just-transient-menu ()
+          "Run a Justfile recipe."
+          ["Recipes"
+           ,@(nreverse menu-items)]))
+
+      (just-transient-menu))))
+
 ;; Language: Markdown ---------------------------------------------------------------
 
 (use-package markdown-ts-mode
