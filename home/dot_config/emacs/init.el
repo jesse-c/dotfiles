@@ -1834,7 +1834,8 @@ PACKAGES should be a list of package names as symbols."
   (prog-mode . apheleia-mode)
   :config
   (add-to-list 'apheleia-mode-alist '(json-ts-mode . denofmt-ts))
-  (add-to-list 'apheleia-mode-alist '(typescript-ts-mode . denofmt-ts)))
+  (add-to-list 'apheleia-mode-alist '(typescript-ts-mode . denofmt-ts))
+  (add-to-list 'apheleia-mode-alist '(python-base-mode . ruff)))
 
 ;; Spelling & Grammar
 
@@ -1972,7 +1973,8 @@ PACKAGES should be a list of package names as symbols."
     (setq-local python-shell-interpreter (pet-executable-find "python")
                 python-shell-virtualenv-root (pet-virtualenv-root)
                 python-pytest-executable (pet-executable-find "pytest")
-                dap-python-executable python-shell-interpreter)
+                dap-python-executable python-shell-interpreter
+                aphelia-formatter (pet-executable-find "ruff"))
 
 
     (pet-eglot-setup)
