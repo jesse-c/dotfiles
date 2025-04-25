@@ -850,9 +850,10 @@ PACKAGES should be a list of package names as symbols."
      [("i" "Insert" org-roam-node-insert)
       ("g" "Graph" org-roam-graph)]]
     ["Dailies"
-     [("g" "Goto today" org-roam-dailies-goto-today)]
-     [("t" "Capture today" org-roam-dailies-capture-today)
-      ("y" "Capture yesterday" org-roam-dailies-capture-yesterday)]]
+     [("t" "Goto today" org-roam-dailies-goto-today)
+      ("y" "Goto yesterday" org-roam-dailies-goto-yesterday)]
+     [("T" "Capture today" org-roam-dailies-capture-today)
+      ("Y" "Capture yesterday" org-roam-dailies-capture-yesterday)]]
     [("S" "Structure" org-structure-transient-menu)])
   :hook
   (kill-emacs . (lambda ()
