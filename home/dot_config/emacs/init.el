@@ -2233,6 +2233,14 @@ PACKAGES should be a list of package names as symbols."
 
 (setq-local lisp-indent-offset 2)
 
+;; Dotfiles ---------------------------------------------------------------------
+
+(use-package chezmoi
+  :hook
+  ;; Turn off ligatures because they show up poorly.
+  (chezmoi-mode-hook . (lambda () (when (require 'ligature)
+                                    (ligature-mode (if chezmoi-mode 0 1))))))
+
 (provide 'init)
 
 ;;; init.el ends here
