@@ -14,6 +14,21 @@
 
 (require 'use-package)
 
+(setq package-lock-file (expand-file-name "lock.el" user-emacs-directory))
+
+(defun my/save-package-versions-to-file ()
+  "Save list of installed packages and versions."
+  (interactive)
+  (with-temp-buffer  ;; Create a temporary buffer that will be discarded when done
+    (package-initialize)  ;; Make sure packages are initialized
+    (insert (format ";; Generated: %s. DO NOT EDIT.\n\n" (format-time-string "%Y-%m-%d %H:%M:%S")))  ;; Add timestamp at the top
+    (let ((packages (sort (mapcar #'car package-alist) #'string<)))  ;; Get sorted list of package names
+      (dolist (pkg packages)  ;; Loop through each package
+        (let* ((pkg-desc (cadr (assq pkg package-alist)))  ;; Get package descriptor
+               (version (package-version-join (package-desc-version pkg-desc))))  ;; Extract and format version
+          (insert (format ";; %s: %s\n" pkg version)))))  ;; Format and insert package info
+    (write-file package-lock-file)))  ;; Write buffer contents to the specified file
+
 (use-package emacs
   :custom
   ;; Support opening new minibuffers from inside existing minibuffers.
