@@ -830,7 +830,6 @@ PACKAGES should be a list of package names as symbols."
   (org-roam-directory (file-truename org-roam-dir))
   (org-roam-dailies-directory org-roam-dailies-dir)
   (org-roam-completion-everywhere t)
-  (org-roam-db-sync-timeout)
   :bind
   (("s-o" . org-transient-menu)
    ("C-c n l" . org-roam-buffer-toggle)
@@ -842,6 +841,7 @@ PACKAGES should be a list of package names as symbols."
    :map org-mode-map
    ("C-M-i" . completion-at-point))
   ;; :hook
+  ;; Disabled for around 2025-04-26 due to issues.
   ;; (after-init . org-roam-db-autosync-mode)
   :config
   ;; If you're using a vertical completion framework, you might want a more informative completion interface
