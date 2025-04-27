@@ -272,6 +272,10 @@ PACKAGES should be a list of package names as symbols."
   (transient-append-suffix 'magit-dispatch "!"
     '("*" "My Magit Cmds" th/magit-aux-commands)))
 
+(use-package magit-todos
+  :after magit
+  :config (magit-todos-mode 1))
+
 (use-package magit-popup
   :after magit)
 
@@ -660,7 +664,8 @@ PACKAGES should be a list of package names as symbols."
 
 (setq mcp-hub-servers
       `(("ddg-search" . (:command "uvx" :args ("duckduckgo-mcp-server")))
-        ("filesystem" . (:command "npx" :args ("-y" "@modelcontextprotocol/server-filesystem" "/Users/jesse/Downloads/")))))
+        ("desktop-commander" . (:command "npx" :args ("-y" "@wonderwhy-er/desktop-commander")))
+        ("github" . (:command "docker" :args ("run" "-i" "--rm" "-e" (concat "GITHUB_PERSONAL_ACCESS_TOKEN=" (my/get-password "api.github.com" "jesse-c^mcp")) "ghcr.io/github/github-mcp-server")))))
 
 (use-package mcp-hub
   :vc
