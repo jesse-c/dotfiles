@@ -1,4 +1,4 @@
-;; Generated: 2025-04-26 22:39:13. DO NOT EDIT.
+;; Generated: 2025-04-28 01:17:33. DO NOT EDIT.
 
 ;; ace-window: 20220911.358
 ;; affe: 20250128.839
@@ -9,6 +9,7 @@
 ;; all-the-icons-completion: 20240128.2048
 ;; all-the-icons-dired: 20231207.1324
 ;; annalist: 20240501.1201
+;; ansi: 20230306.1823
 ;; apheleia: 20250331.2246
 ;; async: 20250325.509
 ;; avy: 20241101.1357
@@ -22,9 +23,9 @@
 ;; catppuccin-theme: 20250309.2135
 ;; cfrs: 20220129.1149
 ;; chezmoi: 20230726.1638
-;; cider: 20250423.1054
+;; cider: 20250426.2014
 ;; clojure-mode: 20241211.1522
-;; clojure-ts-mode: 20250423.1122
+;; clojure-ts-mode: 20250426.639
 ;; closql: 20250301.2221
 ;; codeium: 0
 ;; combobulate: 0.1
@@ -44,7 +45,7 @@
 ;; corfu: 20250422.745
 ;; crux: 20250421.936
 ;; csv-mode: 1.27
-;; dape: 0.23.0
+;; dape: 0.24.0
 ;; dash: 20250312.1307
 ;; difftastic: 20250416.1119
 ;; diminish: 20220909.847
@@ -58,16 +59,19 @@
 ;; eglot: 1.18
 ;; eldoc-box: 20250120.502
 ;; elisp-refs: 20230920.201
+;; elsa: 20250316.29
 ;; emacsql: 20250401.1500
 ;; embark: 20250423.1650
 ;; embark-consult: 20250201.501
 ;; envrc: 20250401.1656
 ;; erlang: 20250416.708
 ;; erlang-ts: 0.2
+;; eros: 20230309.615
+;; eros-inspector: 20240923.613
 ;; esxml: 20250421.1632
 ;; eval-in-repl: 20230805.2125
 ;; evil: 20250318.1816
-;; evil-collection: 20250331.1556
+;; evil-collection: 20250426.1557
 ;; evil-surround: 20240325.852
 ;; evil-textobj-tree-sitter: 20241118.1711
 ;; exec-path-from-shell: 20240411.859
@@ -77,6 +81,8 @@
 ;; flycheck: 20250423.1305
 ;; flycheck-clojure: 20191215.2227
 ;; flycheck-eglot: 20240927.2343
+;; flycheck-elsa: 20230217.1640
+;; flycheck-package: 20210509.2325
 ;; flycheck-rust: 20250226.2240
 ;; flycheck-swift: 20170129.549
 ;; flymake: 1.4.1
@@ -91,8 +97,8 @@
 ;; git-modes: 20240805.1320
 ;; git-timemachine: 20250128.940
 ;; goto-chg: 20240407.1110
-;; gptel: 20250422.2349
-;; grip-mode: 20250307.1011
+;; gptel: 20250424.42
+;; grip-mode: 20250426.602
 ;; heex-ts-mode: 20240113.1104
 ;; helpful: 20250408.334
 ;; highlight-indent-guides: 20241229.2012
@@ -101,21 +107,25 @@
 ;; hydra: 20250316.1254
 ;; idlwave: 6.5.1
 ;; inheritenv: 20241119.1355
+;; inspector: 0.38
 ;; jinx: 20250420.1424
 ;; json-mode: 20240427.1245
 ;; json-snatcher: 20200916.1717
 ;; just-ts-mode: 20250328.2115
 ;; kind-icon: 0.2.2
 ;; kv: 20140108.1534
+;; lgr: 20230407.1317
 ;; ligature: 20220808.1225
 ;; llama: 20250314.2009
 ;; load-relative: 20230214.1032
 ;; loop: 20160813.1407
+;; lsp-mode: 20250424.918
 ;; lv: 20200507.1518
-;; magit: 20250422.1848
+;; magit: 20250426.1033
 ;; magit-delta: 20220125.50
 ;; magit-popup: 20200719.1015
 ;; magit-section: 20250416.853
+;; magit-todos: 20240927.52
 ;; marginalia: 20250317.1632
 ;; markdown-mode: 20250403.1127
 ;; markdown-ts-mode: 20240422.2329
@@ -129,20 +139,22 @@
 ;; org: 9.7.28
 ;; org-ai: 20250418.2323
 ;; org-download: 20241118.1846
-;; org-modern: 20250422.2151
+;; org-modern: 20250427.1402
 ;; org-ql: 20250421.133
 ;; org-roam: 20250324.2140
-;; org-roam-ql: 20250417.1905
-;; org-roam-ql-ql: 20240721.306
+;; org-roam-ql: 20250427.347
+;; org-roam-ql-ql: 20250424.2227
 ;; org-super-agenda: 20250421.130
 ;; ov: 20230522.1117
 ;; ox-gfm: 20231215.1901
-;; ox-pandoc: 20250421.1200
+;; ox-pandoc: 20250424.908
+;; package-lint: 20250418.1425
 ;; pandoc-mode: 20250225.852
 ;; paredit: 20241103.2046
 ;; parinfer-rust-mode: 20250303.2113
 ;; parseclj: 20231203.1905
 ;; parseedn: 20231203.1909
+;; pcre2el: 20240629.2322
 ;; pet: 20250115.422
 ;; pfuture: 20220913.1401
 ;; poetry: 20240329.1103
@@ -150,7 +162,7 @@
 ;; posframe: 20250211.110
 ;; pr-review: 20250413.919
 ;; python: 0.30
-;; python-mode: 20250419.859
+;; python-mode: 20250427.1138
 ;; python-pytest: 20240826.948
 ;; pyvenv: 20211014.707
 ;; queue: 0.2
@@ -163,6 +175,7 @@
 ;; shrink-path: 20190208.1335
 ;; sideline: 20250311.2149
 ;; sideline-eglot: 0.1.0
+;; sideline-eros: 0.1.0
 ;; sideline-flycheck: 20250201.1746
 ;; smex: 20151212.2209
 ;; spinner: 1.7.4
@@ -173,6 +186,7 @@
 ;; track-changes: 1.4
 ;; tramp: 2.7.2.3.1
 ;; transient: 20250423.1314
+;; tree-inspector: 0.4
 ;; treemacs: 20250423.2024
 ;; treemacs-evil: 20250320.2145
 ;; treemacs-icons-dired: 20250320.2145
@@ -181,6 +195,8 @@
 ;; treesit-auto: 20240511.1425
 ;; treesit-fold: 0.2.1
 ;; treesit-jump: 0.0.1
+;; treeview: 20241101.115
+;; trinary: 20230301.2044
 ;; ts: 20220822.2313
 ;; ultra-scroll: 0.3.2
 ;; undo-tree: 0.8.2

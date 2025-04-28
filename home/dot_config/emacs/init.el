@@ -2255,6 +2255,44 @@ PACKAGES should be a list of package names as symbols."
 
 (setq-local lisp-indent-offset 2)
 
+(use-package flycheck-package
+  :after (flycheck)
+  :hook
+  (emacs-lisp-mode . flycheck-package-setup))
+
+(use-package elsa
+  :defer t)
+
+(use-package flycheck-elsa
+  :after (flycheck elsa)
+  :hook
+  (emacs-lisp-mode . flycheck-elsa-setup))
+
+(use-package eros
+  :config
+  (eros-mode 1))
+
+(use-package sideline-eros
+  :vc
+  (:url "https://github.com/emacs-sideline/sideline-eros" :branch "master")
+  :after (eros sideline)
+  :hook (sideline-mode . sideline-eros-setup)
+  :init
+  (setq sideline-backends-right '(sideline-eros)))
+
+(use-package inspector
+  :defer t
+  :custom
+  (inspector-switch-to-buffer nil))
+
+(use-package tree-inspector
+  :after inspector
+  :defer t)
+
+(use-package eros-inspector
+  :after (inspector eros)
+  :defer t)
+
 ;; Dotfiles ---------------------------------------------------------------------
 
 (use-package chezmoi
