@@ -261,6 +261,16 @@ PACKAGES should be a list of package names as symbols."
    :map magit-status-mode-map
    ("*" . th/magit-aux-commands))
   :config
+  (defun my/conventional-commit-prompt ()
+    "Prompt for conventional commit type."
+    (interactive)
+    (let ((commit-types '("feat" "fix" "docs" "style" "refactor" "perf" "test" "build" "ci" "chore" "revert")))
+      (when (y-or-n-p "Use conventional commit format? ")
+        (let ((type (completing-read "Commit type: " commit-types nil t))
+              (scope (read-string "Scope (optional): ")))
+          (insert type (if (string-empty-p scope) "" (concat "(" scope ")")) ": ")
+          (evil-insert-state)))))
+  (add-hook 'git-commit-setup-hook #'my/conventional-commit-prompt)
   (transient-define-prefix th/magit-aux-commands ()
     "My personal auxiliary magit commands."
     ["Auxiliary commands"
