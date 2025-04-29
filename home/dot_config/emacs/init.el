@@ -822,7 +822,8 @@ PACKAGES should be a list of package names as symbols."
 
 ;; Notes ------------------------------------------------------------------------
 
-(defvar org-dir "~/Documents/org/")
+(setq org-dir (expand-file-name "~/Documents/org/"))
+(setq org-tasks-path (file-name-concat org-dir "tasks.org"))
 
 (defvar org-roam-dir (file-name-concat org-dir "roam/"))
 (defvar org-roam-dailies-dir "daily/")
@@ -838,8 +839,23 @@ PACKAGES should be a list of package names as symbols."
   (calendar-week-start-day 1)
   :config
   (org-indent-mode)
-  (setq org-agenda-files (list (file-name-concat org-dir "todo.org")))
+  (setq org-agenda-files (list org-tasks-path))
   (setq diary-show-holidays-flag nil)
+  ;; Function to interactively collect tags
+  (defun my/collect-tags ()
+    "Collect tags one by one, stopping at empty input, and format them as :tag1:tag2:..."
+    (let ((tags '())
+          tag)
+      (while (not (string-empty-p (setq tag (read-string "Tag (empty to finish): "))))
+        (push tag tags))
+      (if tags
+          (concat ":" (string-join (nreverse tags) ":") ":")
+        "")))
+  (setq org-capture-templates
+        '(("t" "Task" entry
+           (file org-tasks-path)
+           "* TODO %^{Description}\n  SCHEDULED: %^t\n  :PROPERTIES:\n  :CATEGORY: %^{Category|work|personal|work|project}\n  :END:\n  %(my/collect-tags)"
+           :immediate-finish nil)))
   (org-babel-do-load-languages
    'org-babel-load-languages
    '((org . t)
@@ -886,7 +902,9 @@ PACKAGES should be a list of package names as symbols."
   (transient-define-prefix org-transient-menu ()
     "Org command menu."
     ["Capture"
-     [("c" "Capture" org-roam-capture)]]
+     [("c" "All" org-capture)
+      ("C" "All (Roam)" org-roam-capture)]
+     [("k" "Task" (lambda () (interactive) (org-capture nil "t")))]]
     ["Navigation"
      [("s" "Search" consult-org-roam-search)
       ("f" "Find" org-roam-node-find)]
@@ -897,6 +915,8 @@ PACKAGES should be a list of package names as symbols."
       ("y" "Goto yesterday" org-roam-dailies-goto-yesterday)]
      [("T" "Capture today" org-roam-dailies-capture-today)
       ("Y" "Capture yesterday" org-roam-dailies-capture-yesterday)]]
+    ["Agenda"
+     ("a" "Today" (lambda () (interactive) (org-agenda nil "a")))]
     [("S" "Structure" org-structure-transient-menu)])
   :hook
   (kill-emacs . (lambda ()
