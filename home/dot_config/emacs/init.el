@@ -630,6 +630,7 @@ PACKAGES should be a list of package names as symbols."
              gptel-make-perplexity)
   :custom
   (gptel-use-tools t)
+  (gptel-stream t)
   (gptel-default-mode 'org-mode)
   (gptel-model 'claude-3-7-sonnet-20250219)
   (gptel-display-buffer-action
@@ -637,6 +638,9 @@ PACKAGES should be a list of package names as symbols."
      (side . right)
      (window-width . 80)
      (slot . 0)))
+  :init
+  (defvar gptel-save-directory (expand-file-name "chats" user-emacs-directory)
+    "Directory to save gptel conversations.")
   :bind
   ("s-a" . gptel-menu)
   ("<f5>" . gptel-toggle-sidebar)
@@ -660,7 +664,26 @@ PACKAGES should be a list of package names as symbols."
             (set-window-dedicated-p window t)
             (set-window-parameter window 'no-other-window t)
             (select-window window))
-          (setq mode-line-format nil))))))
+          (setq mode-line-format nil)))))
+  :hook
+  (gptel-post-stream . gptel-auto-scroll)
+  (gptel-post-response-functions . gptel-end-of-response)
+  :bind
+  (:map gptel-mode-map
+        ("C-c C-s" . gptel-save-chat)))
+
+(defun gptel-save-chat ()
+  "Save current gptel buffer to chat directory with timestamp."
+  (interactive)
+  (when (and (boundp 'gptel-mode) gptel-mode)
+    (unless (file-exists-p gptel-save-directory)
+      (make-directory gptel-save-directory t))
+    (let* ((timestamp (format-time-string "%Y%m%d-%H%M%S"))
+           (buffer-name-clean (replace-regexp-in-string "[^a-zA-Z0-9_-]" "_" (buffer-name)))
+           (filename (expand-file-name (concat buffer-name-clean "-" timestamp ".org")
+                                       gptel-save-directory)))
+      (write-region (point-min) (point-max) filename)
+      (message "Saved chat to %s" filename))))
 
 (setq mcp-hub-servers
       `(("ddg-search" . (:command "uvx" :args ("duckduckgo-mcp-server")))
