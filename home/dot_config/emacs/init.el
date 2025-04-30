@@ -934,7 +934,6 @@ PACKAGES should be a list of package names as symbols."
                     (message "Syncing org-roam database...")
                     (org-roam-db-sync)))))
 
-
 (use-package org-ql
   :after org
   :defer t)
@@ -2345,6 +2344,57 @@ PACKAGES should be a list of package names as symbols."
 (use-package eros-inspector
   :after (inspector eros)
   :defer t)
+
+;; Provide helpful Elisp API examples
+(use-package elisp-demos
+  :after helpful
+  :defer t
+  :config
+  (advice-add 'helpful-update :after #'elisp-demos-advice-helpful-update))
+
+;; A few things from isamert:
+;;
+;; https://isamert.net/2023/08/14/elisp-editing-development-tips.html
+
+(defun im/eval-dwim (lastf regionf defunf)
+  "Generate an interactive function that you can bind to a key for evaluating.
+The returned function will call LASTF, REGIONF or DEFUNF
+depending on the context when called.  If you have an active
+region, REGIONF will be called, if you are in middle of an
+expression DEFUNF will be called.  If your cursor is near a
+closing parenthesis, LASTF will be called."
+  (lambda ()
+    (interactive)
+    (cond
+     ((use-region-p)
+      (call-interactively regionf))
+     ((or (-contains? '(?\) ?\") (char-before))
+          (-contains? '(?\ ?\)) (char-after)))
+      (call-interactively lastf))
+     (t
+      (call-interactively defunf)))))
+
+(after-packages (eros)
+  (bind-key "C-'" (im/eval-dwim #'eros-eval-last-sexp #'eval-region #'eros-eval-defun)))
+
+(defmacro im/tap (form)
+  "Evaluate FORM and return its result.
+Additionally, print a message to the *Messages* buffer showing
+the form and its result.
+
+This macro is useful for debugging and inspecting the
+intermediate results of Elisp code without changing your code
+structure. Just wrap the form with `im/tap' that you want to see
+it's output without introducing an intermediate let-form."
+  `(let ((result ,form))
+     (message "[im/tap :: %s] → %s" ,(prin1-to-string form) result)
+     result))
+
+(defun im/debug (thing)
+  "Like `im/tap' but uses `pp-display-expression' to display the
+result instead of `message'."
+  (pp-display-expression thing "*im/debug*")
+  thing)
 
 ;; Dotfiles ---------------------------------------------------------------------
 
