@@ -2034,6 +2034,19 @@ PACKAGES should be a list of package names as symbols."
   :hook
   (elixir-base-mode . mix-minor-mode))
 
+(use-package flycheck-credo
+  :after (flycheck)
+  :config
+  (flycheck-credo-setup)
+  :hook
+  (elixir-mode . flycheck-mode))
+
+(use-package ob-elixir
+  :defer t
+  :after org
+  :config
+  (add-to-list 'org-babel-load-languages '(elixir . t)))
+
 ;; Language: Erlang --------------------------------------------------------------
 
 (use-package erlang-ts

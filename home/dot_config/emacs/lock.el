@@ -1,4 +1,4 @@
-;; Generated: 2025-04-28 01:17:33. DO NOT EDIT.
+;; Generated: 2025-04-30 15:04:47. DO NOT EDIT.
 
 ;; ace-window: 20220911.358
 ;; affe: 20250128.839
@@ -10,7 +10,7 @@
 ;; all-the-icons-dired: 20231207.1324
 ;; annalist: 20240501.1201
 ;; ansi: 20230306.1823
-;; apheleia: 20250331.2246
+;; apheleia: 20250428.21
 ;; async: 20250325.509
 ;; avy: 20241101.1357
 ;; breadcrumb: 1.0.1
@@ -23,9 +23,9 @@
 ;; catppuccin-theme: 20250309.2135
 ;; cfrs: 20220129.1149
 ;; chezmoi: 20230726.1638
-;; cider: 20250426.2014
+;; cider: 20250430.722
 ;; clojure-mode: 20241211.1522
-;; clojure-ts-mode: 20250426.639
+;; clojure-ts-mode: 20250429.1045
 ;; closql: 20250301.2221
 ;; codeium: 0
 ;; combobulate: 0.1
@@ -47,7 +47,7 @@
 ;; csv-mode: 1.27
 ;; dape: 0.24.0
 ;; dash: 20250312.1307
-;; difftastic: 20250416.1119
+;; difftastic: 20250430.1114
 ;; diminish: 20220909.847
 ;; docker: 20250411.709
 ;; docker-compose-mode: 20200830.1336
@@ -58,6 +58,7 @@
 ;; editorconfig: 20250219.1528
 ;; eglot: 1.18
 ;; eldoc-box: 20250120.502
+;; elisp-demos: 20240128.810
 ;; elisp-refs: 20230920.201
 ;; elsa: 20250316.29
 ;; emacsql: 20250401.1500
@@ -80,6 +81,7 @@
 ;; fish-mode: 20240129.1213
 ;; flycheck: 20250423.1305
 ;; flycheck-clojure: 20191215.2227
+;; flycheck-credo: 20240105.1655
 ;; flycheck-eglot: 20240927.2343
 ;; flycheck-elsa: 20230217.1640
 ;; flycheck-package: 20210509.2325
@@ -88,7 +90,7 @@
 ;; flymake: 1.4.1
 ;; forge: 20250422.1848
 ;; fringe-helper: 20140620.2109
-;; ghub: 20250419.914
+;; ghub: 20250428.1251
 ;; git-commit-ts-mode: 1.0
 ;; git-gutter: 20241212.1415
 ;; git-gutter-fringe: 20211003.2228
@@ -108,7 +110,7 @@
 ;; idlwave: 6.5.1
 ;; inheritenv: 20241119.1355
 ;; inspector: 0.38
-;; jinx: 20250420.1424
+;; jinx: 20250429.727
 ;; json-mode: 20240427.1245
 ;; json-snatcher: 20200916.1717
 ;; just-ts-mode: 20250328.2115
@@ -121,28 +123,30 @@
 ;; loop: 20160813.1407
 ;; lsp-mode: 20250424.918
 ;; lv: 20200507.1518
-;; magit: 20250426.1033
+;; magit: 20250428.1656
 ;; magit-delta: 20220125.50
 ;; magit-popup: 20200719.1015
-;; magit-section: 20250416.853
+;; magit-section: 20250428.1147
 ;; magit-todos: 20240927.52
 ;; marginalia: 20250317.1632
 ;; markdown-mode: 20250403.1127
 ;; markdown-ts-mode: 20240422.2329
 ;; mcp-hub: 0
+;; mix: 20240122.720
 ;; modern-sh: 20250320.858
 ;; nerd-icons: 20250324.147
 ;; nerd-icons-completion: 20241221.1846
 ;; no-littering: 20250401.1510
 ;; nov: 20250309.1937
+;; ob-elixir: 20170725.1419
 ;; orderless: 20250316.2046
-;; org: 9.7.28
+;; org: 9.7.29
 ;; org-ai: 20250418.2323
 ;; org-download: 20241118.1846
 ;; org-modern: 20250427.1402
 ;; org-ql: 20250421.133
 ;; org-roam: 20250324.2140
-;; org-roam-ql: 20250427.347
+;; org-roam-ql: 20250430.430
 ;; org-roam-ql-ql: 20250424.2227
 ;; org-super-agenda: 20250421.130
 ;; ov: 20230522.1117
@@ -162,7 +166,7 @@
 ;; posframe: 20250211.110
 ;; pr-review: 20250413.919
 ;; python: 0.30
-;; python-mode: 20250427.1138
+;; python-mode: 20250428.1032
 ;; python-pytest: 20240826.948
 ;; pyvenv: 20211014.707
 ;; queue: 0.2
@@ -179,13 +183,14 @@
 ;; sideline-flycheck: 20250201.1746
 ;; smex: 20151212.2209
 ;; spinner: 1.7.4
+;; suggest: 20231003.404
 ;; svg-lib: 0.3
 ;; swift-mode: 20250412.624
 ;; swift-ts-mode: 20250115.1906
 ;; tablist: 20231019.1126
 ;; track-changes: 1.4
 ;; tramp: 2.7.2.3.1
-;; transient: 20250423.1314
+;; transient: 20250429.904
 ;; tree-inspector: 0.4
 ;; treemacs: 20250423.2024
 ;; treemacs-evil: 20250320.2145
