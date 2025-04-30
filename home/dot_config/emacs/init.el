@@ -964,6 +964,15 @@ PACKAGES should be a list of package names as symbols."
   :config
   (org-roam-ql-ql-init))
 
+;; Example:
+;;
+;; #+begin_src git-permalink
+;; https://github.com/emacs-mirror/emacs/blob/a4dcc8b9a94466c792be3743760a4a45cf6e1e61/lisp/emacs-lisp/ring.el#L48-L52
+;; #+end_src
+(use-package ob-git-permalink
+  :after org
+  :defer t)
+
 (use-package org-modern
   :after org
   :custom

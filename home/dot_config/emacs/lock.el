@@ -1,4 +1,4 @@
-;; Generated: 2025-04-30 15:04:47. DO NOT EDIT.
+;; Generated: 2025-04-30 15:17:52. DO NOT EDIT.
 
 ;; ace-window: 20220911.358
 ;; affe: 20250128.839
@@ -139,6 +139,7 @@
 ;; no-littering: 20250401.1510
 ;; nov: 20250309.1937
 ;; ob-elixir: 20170725.1419
+;; ob-git-permalink: 20220627.46
 ;; orderless: 20250316.2046
 ;; org: 9.7.29
 ;; org-ai: 20250418.2323
