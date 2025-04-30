@@ -986,6 +986,12 @@ PACKAGES should be a list of package names as symbols."
 (use-package org-download
   :after (org org-roam))
 
+;; Clipboard -------------------------------------------------------------------
+
+(add-to-list 'load-path "~/src/github.com/lorniu/pdd.el")
+(add-to-list 'load-path (expand-file-name "user/" user-emacs-directory))
+(require 'kopya)
+
 ;; Modal ------------------------------------------------------------------------
 
 (use-package evil
