@@ -2030,6 +2030,10 @@ PACKAGES should be a list of package names as symbols."
 
 (use-package heex-ts-mode)
 
+(use-package mix
+  :hook
+  (elixir-base-mode . mix-minor-mode))
+
 ;; Language: Erlang --------------------------------------------------------------
 
 (use-package erlang-ts
