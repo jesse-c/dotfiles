@@ -193,6 +193,22 @@ PACKAGES should be a list of package names as symbols."
                                         ;; Clojure(Script)
                                         "project.clj" "deps.edn"))
   :config
+  (setq src-dir (expand-file-name "~/src/"))
+  (setq forges-dirs '("github.com" "gitlab.com"))
+  (defun my/auto-discover-projects ()
+    "Automatically discover and add projects from configured forge directories."
+    (interactive)
+    (let ((src-dir (expand-file-name "~/src/"))
+          (forges-dirs '("github.com" "gitlab.com")))
+
+      ;; Run project-remember-projects-under on each forge directory
+      (dolist (forge forges-dirs)
+        (let ((forge-path (file-name-concat src-dir forge)))
+          (message "Adding projects from %s..." forge-path)
+          (project-remember-projects-under forge-path t)
+          (message "Done adding projects from %s" forge-path))))
+
+    (message "Project discovery complete"))
   (transient-define-prefix project-transient-menu ()
     "Project command menu."
     ["Navigation"
