@@ -1660,7 +1660,18 @@ PACKAGES should be a list of package names as symbols."
 
 ;; CAPF
 
+(use-package dabbrev
+  :ensure nil
+  :config
+  (add-to-list 'dabbrev-ignored-buffer-regexps "\\` ")
+  ;; Available since Emacs 29 (Use `dabbrev-ignored-buffer-regexps' on older Emacs)
+  (add-to-list 'dabbrev-ignored-buffer-modes 'authinfo-mode)
+  (add-to-list 'dabbrev-ignored-buffer-modes 'doc-view-mode)
+  (add-to-list 'dabbrev-ignored-buffer-modes 'pdf-view-mode)
+  (add-to-list 'dabbrev-ignored-buffer-modes 'tags-table-mode))
+
 (use-package corfu
+  :after (dabbrev)
   :custom
   (corfu-auto t)
   (corfu-auto-delay 0.1)
@@ -1669,12 +1680,20 @@ PACKAGES should be a list of package names as symbols."
   (corfu-quit-at-boundary nil)   ;; Never quit at completion boundary
   (corfu-quit-no-match nil)      ;; Never quit, even if there is no match
   (corfu-preview-current t)
-  (corfu-preselect 'prompt)      ;; Preselect the prompt
+  (corfu-preselect 'prompt)      ;; Pres-elect the prompt
   (corfu-on-exact-match nil)     ;; Configure handling of exact matches
   (corfu-separator ?\s)          ;; Orderless field separator
-  (global-corfu-minibuffer t)
+  (global-corfu-minibuffer t)    ;; Enable Corfu in the minibuffer
   :init
   (global-corfu-mode)
+  (corfu-popupinfo-mode)
+  :bind (:map corfu-map
+              ("S-SPC"      . corfu-insert-separator)
+              ("TAB"        . corfu-next)
+              ([tab]        . corfu-next)                ;; In case "TAB" doesn't work
+              ("S-TAB"      . corfu-previous)
+              ([backtab]    . corfu-previous)            ;; In case "S-TAB" does't work
+              ("RET"        . corfu-insert))
   :hook
   (corfu-mode-hook . corfu-popupinfo-mode)
   (eshell-mode . (lambda ()
@@ -1688,12 +1707,7 @@ PACKAGES should be a list of package names as symbols."
     eshell-mode-hook
     prog-mode-hook
     text-mode-hook) . completion-preview-mode)
-  :bind
-  (:map completion-preview-active-mode-map
-        ("TAB" . completion-preview-complete)
-        ("C-e" . completion-preview-insert))
   :init
-  (setq completion-preview-adapt-background-color nil)
   (setq completion-preview-minimum-symbol-length 2)
   :config
   (cl-pushnew 'org-self-insert-command completion-preview-commands :test #'equal))
@@ -1714,7 +1728,8 @@ PACKAGES should be a list of package names as symbols."
   ;; completion functions takes precedence over the global list.
   ;; Complete word from current buffers. See also dabbrev-capf on Emacs 29.
   (add-hook 'completion-at-point-functions #'cape-dabbrev)
-  ;; (add-hook 'completion-at-point-functions #'dabbrev-capf)
+  (add-hook 'minibuffer-setup-hook (lambda () (setq-local completion-at-point-functions
+                                                          (remove #'cape-dabbrev completion-at-point-functions))))
   ;; Complete file name.
   (add-hook 'completion-at-point-functions #'cape-file)
   ;; Complete Elisp symbol.
