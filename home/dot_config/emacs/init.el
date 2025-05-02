@@ -277,14 +277,68 @@ PACKAGES should be a list of package names as symbols."
    :map magit-status-mode-map
    ("*" . th/magit-aux-commands))
   :config
+  (defun my/find-conventional-commit-scopes ()
+    "Find all scopes used in conventional commits in the current Git project."
+    (interactive)
+    (let* ((default-directory (magit-toplevel))
+           (cache-dir (expand-file-name ".cache" (or (my/project-root) default-directory)))
+           (cache-file (expand-file-name "commit-scopes.txt" cache-dir))
+           (temp-buffer (generate-new-buffer " *commit-scopes-temp*")))
+
+      ;; Create cache directory if it doesn't exist
+      (unless (file-exists-p cache-dir)
+        (make-directory cache-dir t))
+
+      ;; Use Emacs Lisp to extract scopes directly
+      (with-current-buffer temp-buffer
+        (call-process "git" nil t nil "log" "--pretty=format:%s")
+        (goto-char (point-min))
+
+        ;; Extract scopes using a regular expression
+        (let ((scopes '()))
+          (while (re-search-forward "\\(feat\\|fix\\|docs\\|style\\|refactor\\|perf\\|test\\|build\\|ci\\|chore\\|revert\\)(\\([^)]+\\))" nil t)
+            (let ((scope-text (match-string 2)))
+              ;; Split by comma and add each scope
+              (dolist (scope (split-string scope-text "," t "[ \t]+"))
+                (push (string-trim scope) scopes))))
+
+          ;; Write unique scopes to the cache file
+          (with-temp-file cache-file
+            (insert (mapconcat #'identity (delete-dups scopes) "\n")))))
+
+      (kill-buffer temp-buffer)
+
+      ;; Return the cache file path
+      cache-file))
+  (defun my/get-commit-scopes ()
+    "Get commit scopes from cache or generate them if needed."
+    (interactive)
+    (let* ((default-directory (magit-toplevel))
+           (cache-dir (expand-file-name ".cache" (or (my/project-root) default-directory)))
+           (cache-file (expand-file-name "commit-scopes.txt" cache-dir)))
+      (unless (and (file-exists-p cache-file)
+                   (> (time-to-seconds (time-since (file-attribute-modification-time (file-attributes cache-file))))
+                      (* 60 60 24))) ; Cache for 24 hours
+        (my/find-conventional-commit-scopes))
+
+      (when (file-exists-p cache-file)
+        (with-temp-buffer
+          (insert-file-contents cache-file)
+          (split-string (buffer-string) "\n" t)))))
   (defun my/conventional-commit-prompt ()
-    "Prompt for conventional commit type."
+    "Prompt for conventional commit type with scope completion."
     (interactive)
     (let ((commit-types '("feat" "fix" "docs" "style" "refactor" "perf" "test" "build" "ci" "chore" "revert")))
       (when (y-or-n-p "Use conventional commit format? ")
-        (let ((type (completing-read "Commit type: " commit-types nil t))
-              (scope (read-string "Scope (optional): ")))
-          (insert type (if (string-empty-p scope) "" (concat "(" scope ")")) ": ")
+        (let* ((type (completing-read "Commit type: " commit-types nil t))
+               (scopes (my/get-commit-scopes))
+               ;; Allow multiple selections with comma
+               (scope-input (completing-read "Scope (optional, comma-separated for multiple): " scopes nil nil)))
+          (insert type
+                  (if (string-empty-p scope-input)
+                      ""
+                    (concat "(" scope-input ")"))
+                  ": ")
           (evil-insert-state)))))
   (add-hook 'git-commit-setup-hook #'my/conventional-commit-prompt)
   (transient-define-prefix th/magit-aux-commands ()
@@ -1728,8 +1782,12 @@ PACKAGES should be a list of package names as symbols."
   ;; completion functions takes precedence over the global list.
   ;; Complete word from current buffers. See also dabbrev-capf on Emacs 29.
   (add-hook 'completion-at-point-functions #'cape-dabbrev)
-  (add-hook 'minibuffer-setup-hook (lambda () (setq-local completion-at-point-functions
-                                                          (remove #'cape-dabbrev completion-at-point-functions))))
+  (add-hook 'minibuffer-setup-hook
+            (lambda ()
+              (setq-local completion-at-point-functions
+                          (seq-filter (lambda (func)
+                                        (not (memq func '(cape-dabbrev cape-file))))
+                                      completion-at-point-functions))))
   ;; Complete file name.
   (add-hook 'completion-at-point-functions #'cape-file)
   ;; Complete Elisp symbol.
