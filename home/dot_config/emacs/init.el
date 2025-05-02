@@ -1291,9 +1291,9 @@ PACKAGES should be a list of package names as symbols."
   (:map calc-alg-map
         ("s-c" . casual-calc-tmenu))
   (:map bookmark-bmenu-mode-map
-        ("s-c" . casual-bookmarks-tmenu)))
-;; (:map org-agenda-mode-map
-;;       ("s-c" . casual-agenda-tmenu)))
+        ("s-c" . casual-bookmarks-tmenu))
+  (:map org-agenda-mode-map
+        ("s-c" . casual-agenda-tmenu)))
 
 (use-package casual-avy
   :after (avy casual)
