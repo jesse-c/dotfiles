@@ -2090,9 +2090,95 @@ PACKAGES should be a list of package names as symbols."
   (dape-inlay-hints t)
   (dape-cwd-function 'my/project-root)
   (dape-buffer-window-arrangement 'right)
+  (dape-breakpoint-margin-string "●")
+  (dape-default-breakpoints-file (expand-file-name "dap-breakpoints" user-emacs-cache-directory))
+  :commands (dape)
+  :config
+  ;; The default read-process-output-max of 4096 bytes may inhibit performance to some degree, also.
+  (setq read-process-output-max (* 64 1024)) ;; 64k
+  ;; To not display info and/or buffers on startup
+  (remove-hook 'dape-on-start-hooks 'dape-info)
+  (remove-hook 'dape-on-start-hooks 'dape-repl)
+  ;; To display info and/or repl buffers on stopped
+  (add-hook 'dape-on-stopped-hooks 'dape-info)
+  (add-hook 'dape-on-stopped-hooks 'dape-repl)
+  (transient-define-prefix dape-transient-menu ()
+    "Transient for dape."
+    [["Stepping"
+      ("n"  "Next" dape-next :transient t)
+      ("s"  "Step in" dape-step-in :transient t)
+      ("o"  "Step out" dape-step-out :transient t)
+      ("c"  "Continue" dape-continue :transient t)
+      ("r"  "Restart" dape-restart :transient t)]
+     ["Breakpoints"
+      ("bb" "Toggle" dape-breakpoint-toggle :transient nil)
+      ("be" "Expression" dape-breakpoint-expression :transient t)
+      ("bd" "Remove at pt" dape-breakpoint-remove-at-point :transient t)
+      ("bD" "Remove all" dape-breakpoint-remove-all :transient t)
+      ("bl" "Log" dape-breakpoint-log :transient t)]
+     ["Info"
+      ("ii" "Info" dape-info :transient nil)
+      ("im" "Memory" dape-memory :transient t)
+      ("is" "Select Stack" dape-select-stack :transient t)
+      ("R"  "Repl" dape-repl :transient nil)]
+     ["Quit"
+      ("qq" "Quit" dape-quit :transient nil)
+      ("qk" "Kill" dape-kill :transient nil)]])
+  (add-to-list 'dape-configs
+               `(py modes (python-mode python-ts-mode)
+                    ensure (lambda (config) (dape-ensure-command config)
+                             (let ((python (dape-config-get config 'command)))
+                               (unless
+                                   (zerop
+                                    (call-process-shell-command
+                                     (format "%s -c \"import debugpy.adapter\"" python)))
+                                 (user-error "%s module debugpy is not installed"
+                                             python))))
+                    command dap-python-executable
+                    command-args ("-m" "debugpy.adapter" "--host" "0.0.0.0" "--port" :autoport)
+                    ;; Or have command as "python"
+                    ;; command-cwd my/x
+                    port :autoport
+                    :request "launch"
+                    :type "python"
+                    :mode "debug"
+                    :cwd dape-cwd
+                    :program dape-buffer-default
+                    :args []
+                    :justMyCode nil
+                    :console "integratedTerminal"
+                    :showReturnValue t
+                    :stopOnEntry nil))
+  (add-to-list 'dape-configs
+               `(pytest modes (python-mode python-ts-mode)
+                        ensure (lambda (config) (dape-ensure-command config)
+                                 (let ((python (dape-config-get config 'command)))
+                                   (unless
+                                       (zerop
+                                        (call-process-shell-command
+                                         (format "%s -c \"import debugpy.adapter\"" python)))
+                                     (user-error "%s module debugpy is not installed"
+                                                 python))))
+                        command dap-python-executable
+                        command-args ("-m" "debugpy.adapter" "--host" "0.0.0.0" "--port" :autoport)
+                        port :autoport
+                        :request "launch"
+                        :type "python"
+                        :mode "test"
+                        :cwd dape-cwd
+                        :module "pytest"
+                        :args [dape-buffer-default]
+                        :justMyCode nil
+                        :console "integratedTerminal"
+                        :showReturnValue t
+                        :stopOnEntry nil))
   :hook
   (dape-start . (lambda () (save-some-buffers t t)))
-  (dape-compile . kill-buffer))
+  (dape-compile . kill-buffer)
+  ;; Pulse source line (performance hit)
+  (dape-display-source . pulse-momentary-highlight-one-line)
+  :bind
+  (("s-d" . dape-transient-menu)))
 
 (use-package repeat
   :ensure nil
