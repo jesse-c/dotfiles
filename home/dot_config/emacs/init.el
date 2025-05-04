@@ -1875,7 +1875,11 @@ PACKAGES should be a list of package names as symbols."
   (xref-show-xrefs-function #'xref-show-definitions-completing-read)
   (xref-show-definitions-function #'xref-show-definitions-completing-read))
 
+(use-package wgrep
+  :defer t)
+
 (use-package rg
+  :after wgrep
   :config
   ;; Optionally customise this with:
   ;; rg-keymap-prefix
