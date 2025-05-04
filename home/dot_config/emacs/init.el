@@ -2143,8 +2143,6 @@ PACKAGES should be a list of package names as symbols."
                                              python))))
                     command dap-python-executable
                     command-args ("-m" "debugpy.adapter" "--host" "0.0.0.0" "--port" :autoport)
-                    ;; Or have command as "python"
-                    ;; command-cwd my/x
                     port :autoport
                     :request "launch"
                     :type "python"
