@@ -675,6 +675,13 @@ PACKAGES should be a list of package names as symbols."
     ["Server"
      ("s" "Commands" eglot-server-menu)]))
 
+(use-package eglot-booster
+  :after eglot
+  :vc
+  (:url "https://github.com/jdtsmith/eglot-booster" :branch "main")
+  :config
+  (eglot-booster-mode))
+
 (use-package flycheck-eglot
   :diminish
   :after (flycheck eglot)

@@ -1,4 +1,4 @@
-;; Generated: 2025-04-30 15:17:52. DO NOT EDIT.
+;; Generated: 2025-05-04 02:15:19. DO NOT EDIT.
 
 ;; ace-window: 20220911.358
 ;; affe: 20250128.839
@@ -25,7 +25,7 @@
 ;; chezmoi: 20230726.1638
 ;; cider: 20250430.722
 ;; clojure-mode: 20241211.1522
-;; clojure-ts-mode: 20250429.1045
+;; clojure-ts-mode: 20250430.1514
 ;; closql: 20250301.2221
 ;; codeium: 0
 ;; combobulate: 0.1
@@ -57,6 +57,7 @@
 ;; eat: 0.9.4
 ;; editorconfig: 20250219.1528
 ;; eglot: 1.18
+;; eglot-booster: 0.1.0
 ;; eldoc-box: 20250120.502
 ;; elisp-demos: 20240128.810
 ;; elisp-refs: 20230920.201
@@ -88,7 +89,7 @@
 ;; flycheck-rust: 20250226.2240
 ;; flycheck-swift: 20170129.549
 ;; flymake: 1.4.1
-;; forge: 20250422.1848
+;; forge: 20250501.735
 ;; fringe-helper: 20140620.2109
 ;; ghub: 20250428.1251
 ;; git-commit-ts-mode: 1.0
@@ -99,7 +100,7 @@
 ;; git-modes: 20240805.1320
 ;; git-timemachine: 20250128.940
 ;; goto-chg: 20240407.1110
-;; gptel: 20250424.42
+;; gptel: 20250502.2333
 ;; grip-mode: 20250426.602
 ;; heex-ts-mode: 20240113.1104
 ;; helpful: 20250408.334
@@ -123,13 +124,13 @@
 ;; loop: 20160813.1407
 ;; lsp-mode: 20250424.918
 ;; lv: 20200507.1518
-;; magit: 20250428.1656
+;; magit: 20250501.848
 ;; magit-delta: 20220125.50
 ;; magit-popup: 20200719.1015
-;; magit-section: 20250428.1147
+;; magit-section: 20250501.848
 ;; magit-todos: 20240927.52
 ;; marginalia: 20250317.1632
-;; markdown-mode: 20250403.1127
+;; markdown-mode: 20250501.551
 ;; markdown-ts-mode: 20240422.2329
 ;; mcp-hub: 0
 ;; mix: 20240122.720
@@ -147,7 +148,7 @@
 ;; org-modern: 20250427.1402
 ;; org-ql: 20250421.133
 ;; org-roam: 20250324.2140
-;; org-roam-ql: 20250430.430
+;; org-roam-ql: 20250503.249
 ;; org-roam-ql-ql: 20250424.2227
 ;; org-super-agenda: 20250421.130
 ;; ov: 20230522.1117
@@ -167,7 +168,7 @@
 ;; posframe: 20250211.110
 ;; pr-review: 20250413.919
 ;; python: 0.30
-;; python-mode: 20250428.1032
+;; python-mode: 20250502.1648
 ;; python-pytest: 20240826.948
 ;; pyvenv: 20211014.707
 ;; queue: 0.2
@@ -191,7 +192,7 @@
 ;; tablist: 20231019.1126
 ;; track-changes: 1.4
 ;; tramp: 2.7.2.3.1
-;; transient: 20250429.904
+;; transient: 20250501.846
 ;; tree-inspector: 0.4
 ;; treemacs: 20250423.2024
 ;; treemacs-evil: 20250320.2145
