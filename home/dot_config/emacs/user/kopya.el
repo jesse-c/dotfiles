@@ -53,7 +53,6 @@
          (total (alist-get 'total json)))
     (list :entries entries :total total)))
 
-;;;###autoload
 ;; Get clipboard history from Kopya API
 ;; This function takes a plist of arguments:
 ;; - :query: optional search string
@@ -90,7 +89,6 @@ Example usage:
               (when callback
                 (funcall callback (kopya--parse-history-response json)))))))
 
-;;;###autoload
 ;; Function to extract the text content of the last clipboard entry from history
 (defun kopya-get-last-text-content (callback)
   "Fetch the last clipboard entry and pass its text content to CALLBACK.
@@ -104,7 +102,6 @@ If the entry is not textual, passes nil. CALLBACK is called with one argument."
                         (content (and is-textual (clipboard-entry-content entry))))
                    (funcall cb content))))))
 
-;;;###autoload
 (defun kopya-get-last-text-content-sync-error (&optional timeout)
   "Synchronously fetch the last clipboard text content from history.
 Returns the string, or signals an error if not available within TIMEOUT seconds (default 3).
@@ -136,6 +133,11 @@ This version uses `accept-process-output' to better integrate with the Emacs eve
 ;;  :callback (lambda (result)
 ;;              (let ((entry (car (plist-get result :entries))))
 ;;                (message "First entry: %S" entry))))
+
+(defun kopya-get-last-text-to-killring ()
+  "Get the last saved text and put it on the killring."
+  (interactive)
+  (kill-new (kopya-get-last-text-content-sync-error)))
 
 (provide 'kopya)
 ;;; kopya.el ends here
