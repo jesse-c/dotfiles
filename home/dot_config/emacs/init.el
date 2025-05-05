@@ -2064,8 +2064,21 @@ PACKAGES should be a list of package names as symbols."
   (toml-base-mode . combobulate-mode)
   (yaml-base-mode . combobulate-mode))
 
-;; Search
+;; Search / Find
 (setq isearch-lazy-count t)
+
+(use-package semext
+  :vc (:url "https://github.com/ahyatt/semext" :branch "main")
+  :init
+  (require 'llm-openai)
+  (setopt semext-provider (make-llm-openai :key (my/get-password "api.openai.com" "me")))
+  :commands
+  (semext-forward-part
+   semext-backward-part
+   semext-query-replace
+   semext-search-forward
+   semext-search-backward
+   semext-clear-cache))
 
 (use-package re-builder
   :ensure nil
