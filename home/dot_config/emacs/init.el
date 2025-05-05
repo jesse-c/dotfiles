@@ -2058,11 +2058,13 @@ PACKAGES should be a list of package names as symbols."
   :hook
   (go-mode . combobulate-mode)
   (go-ts-mode . combobulate-mode)
-  (json-base-mode . combobulate-mode)
-  (json-base-mode . combobulate-mode)
+  (json-mode . combobulate-mode)
+  (json-ts-mode . combobulate-mode)
   (python-base-mode . combobulate-mode)
-  (toml-base-mode . combobulate-mode)
-  (yaml-base-mode . combobulate-mode))
+  (toml-mode . combobulate-mode)
+  (toml-ts-mode . combobulate-mode)
+  (yaml-mode . combobulate-mode)
+  (yaml-ts-mode . combobulate-mode))
 
 ;; Search / Find
 (setq isearch-lazy-count t)
@@ -2244,7 +2246,8 @@ PACKAGES should be a list of package names as symbols."
 
 (use-package mix
   :hook
-  (elixir-base-mode . mix-minor-mode))
+  (elixir-mode . mix-minor-mode)
+  (elixir-ts-mode . mix-minor-mode))
 
 (use-package flycheck-credo
   :after (flycheck)
