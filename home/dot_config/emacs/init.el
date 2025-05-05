@@ -2651,6 +2651,11 @@ result instead of `message'."
   (pp-display-expression thing "*im/debug*")
   thing)
 
+;; Language: Go ----------------------------------------------------------------
+
+(use-package go-ts-mode
+  :defer t)
+
 ;; Dotfiles ---------------------------------------------------------------------
 
 (use-package chezmoi
