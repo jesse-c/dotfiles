@@ -1239,8 +1239,16 @@ PACKAGES should be a list of package names as symbols."
   :hook
   (flycheck-mode . sideline-flycheck-setup))
 
+;; Emacs headerline indication of where you are in a large project
 (use-package breadcrumb
   :hook (after-init . breadcrumb-mode))
+
+;; Show info about the block at the end of the block
+(use-package scopeline
+  :after treesit
+  :diminish scopeline-mode
+  :hook
+  (prog-mode . scopeline-mode))
 
 ;; Themes
 (defun my/theme-by-current-time ()
