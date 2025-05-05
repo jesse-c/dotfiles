@@ -1713,6 +1713,10 @@ PACKAGES should be a list of package names as symbols."
   :config
   (consult-gh-forge-mode +1))
 
+(use-package consult-gh-transient
+  :ensure nil
+  :after consult-gh)
+
 (use-package consult-ghq
   :after (consult affe))
 
