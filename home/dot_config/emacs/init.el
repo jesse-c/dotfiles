@@ -1042,6 +1042,7 @@ PACKAGES should be a list of package names as symbols."
   :after org
   :custom
   (org-modern-tag t)
+  (org-modern-star 'replace)
   :config
   (global-org-modern-mode))
 
