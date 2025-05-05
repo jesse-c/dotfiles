@@ -2055,7 +2055,14 @@ PACKAGES should be a list of package names as symbols."
   (:url "https://github.com/mickeynp/combobulate" :branch "master")
   :custom
   (combobulate-key-prefix "C-c o")
-  :hook (prog-mode . combobulate-mode))
+  :hook
+  (go-mode . combobulate-mode)
+  (go-ts-mode . combobulate-mode)
+  (json-base-mode . combobulate-mode)
+  (json-base-mode . combobulate-mode)
+  (python-base-mode . combobulate-mode)
+  (toml-base-mode . combobulate-mode)
+  (yaml-base-mode . combobulate-mode))
 
 ;; Search
 (setq isearch-lazy-count t)
