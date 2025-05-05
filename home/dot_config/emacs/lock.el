@@ -1,4 +1,4 @@
-;; Generated: 2025-05-04 14:34:05. DO NOT EDIT.
+;; Generated: 2025-05-05 13:41:54. DO NOT EDIT.
 
 ;; ace-window: 20220911.358
 ;; affe: 20250128.839
@@ -206,6 +206,8 @@
 ;; treeview: 20241101.115
 ;; trinary: 20230301.2044
 ;; ts: 20220822.2313
+;; typst-preview: 0.1pre
+;; typst-ts-mode: 0.12.0
 ;; ultra-scroll: 0.3.2
 ;; undo-tree: 0.8.2
 ;; verb: 20250318.2150

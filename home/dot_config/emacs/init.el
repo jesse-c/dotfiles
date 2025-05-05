@@ -568,6 +568,7 @@ PACKAGES should be a list of package names as symbols."
   (swift-ts-mode . eglot-ensure)
   (typescript-mode . eglot-ensure)
   (typescript-ts-mode . eglot-ensure)
+  (typst-ts-mode . eglot-ensure)
   (vespa-schema-mode . eglot-ensure)
   (yaml-mode . eglot-ensure)
   (yaml-ts-mode . eglot-ensure)
@@ -637,6 +638,9 @@ PACKAGES should be a list of package names as symbols."
   (add-to-list 'eglot-server-programs
                `(markdown-ts-mode . ,(eglot-alternatives
                                       '(("marksman")))))
+  (add-to-list 'eglot-server-programs
+               `(typst-ts-mode . ,(eglot-alternatives
+                                   '(("tinymist" "lsp")))))
 
   (transient-define-prefix eglot-server-menu ()
     "Eglot server commands."
@@ -2518,6 +2522,29 @@ PACKAGES should be a list of package names as symbols."
   :hook
   (sh-mode . modern-sh-mode)
   (bash-mode . modern-sh-mode))
+
+;; Language: Typst --------------------------------------------------------------
+
+(use-package typst-ts-mode
+  :vc
+  (:url "https://codeberg.org/meow_king/typst-ts-mode" :branch "main")
+  :custom
+  (typst-ts-watch-options "--open")
+  (typst-ts-mode-grammar-location (expand-file-name "tree-sitter/libtree-sitter-typst.so" user-emacs-directory))
+  (typst-ts-mode-enable-raw-blocks-highlight t)
+  :config
+  (keymap-set typst-ts-mode-map "C-c C-c" #'typst-ts-tmenu))
+
+(use-package websocket
+  :defer t)
+
+(use-package typst-preview
+  :after websocket
+  :vc
+  (:url "https://github.com/havarddj/typst-preview.el" :branch "main")
+  :custom
+  (typst-preview-executable "tinymist preview")
+  (typst-preview-browser "default"))
 
 ;; Language: Emacs Lisp ---------------------------------------------------------
 
