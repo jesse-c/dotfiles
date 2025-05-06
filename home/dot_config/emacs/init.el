@@ -736,8 +736,30 @@ PACKAGES should be a list of package names as symbols."
   ("s-a" . gptel-menu)
   ("<f5>" . gptel-toggle-sidebar)
   :config
-  (setq gptel-backend (gptel-make-anthropic "Claude" :stream t :key (my/get-password "anthropic.com" "me")))
-  (gptel-make-perplexity "Perplexity" :stream t :key (my/get-password "perplexity.ai" "apikey"))
+  (defun my/gptel-use-claude ()
+    "Set gptel backend to Claude."
+    (interactive)
+    (setq gptel-backend (gptel-make-anthropic "Claude"
+                          :stream t
+                          :key (my/get-password "anthropic.com" "me")))
+    (message "Switched gptel backend: Claude"))
+  (defun my/gptel-use-gemini ()
+    "Set gptel backend to Gemini."
+    (interactive)
+    (setq gptel-model 'gemini-2.5-flash-preview-04-17)
+    (setq gptel-backend (gptel-make-gemini "Gemini"
+                          :key (my/get-password "aistudio.google.com" "apikey")
+                          :stream t))
+    (message "Switched gptel backend: Gemini"))
+  (defun my/gptel-use-perplexity ()
+    "Set gptel backend to Perplexity."
+    (interactive)
+    (setq gptel-backend (gptel-make-perplexity "Perplexity"
+                          :stream t
+                          :key (my/get-password "perplexity.ai" "apikey")))
+    (message "Switched gptel backend: Perplexity"))
+  ;; Set Claude as default
+  (my/gptel-use-claude)
   (defun gptel-toggle-sidebar ()
     "Toggle a custom sidebar for a persistent buffer."
     ;; https://github.com/nehrbash/dotfiles/blob/main/Emacs.org#gpt
