@@ -2109,8 +2109,14 @@ PACKAGES should be a list of package names as symbols."
   :after evil
   :custom
   (himalaya-evil-enable-integration t)
-  (himalaya-transient-enable-integration t)
   (himalaya-html-browse-function #'eww-open-file))
+
+(use-package himalaya-menu
+  :after himalaya
+  :if (file-exists-p "~/src/github.com/jesse-c/himalaya-menu-emacs")
+  :load-path "~/src/github.com/jesse-c/himalaya-menu-emacs"
+  :config
+  (himalaya-menu-setup))
 
 ;; Language: All ----------------------------------------------------------------
 
