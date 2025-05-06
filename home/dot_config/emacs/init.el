@@ -813,14 +813,11 @@ PACKAGES should be a list of package names as symbols."
       (write-region (point-min) (point-max) filename)
       (message "Saved chat to %s" filename))))
 
-(setq mcp-hub-servers
-      `(("ddg-search" . (:command "uvx" :args ("duckduckgo-mcp-server")))
-        ("desktop-commander" . (:command "npx" :args ("-y" "@wonderwhy-er/desktop-commander")))
-        ("github" . (:command "docker" :args ("run" "-i" "--rm" "-e" (concat "GITHUB_PERSONAL_ACCESS_TOKEN=" (my/get-password "api.github.com" "jesse-c^mcp")) "ghcr.io/github/github-mcp-server")))))
-
 (use-package mcp-hub
   :vc
-  (:url "https://github.com/lizqwerscott/mcp.el" :branch "master"))
+  (:url "https://github.com/lizqwerscott/mcp.el" :branch "master")
+  :hook
+  (after-init . mcp-hub-start-all-server))
 
 (defun gptel-mcp-register-tool ()
   (interactive)
