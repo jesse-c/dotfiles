@@ -140,7 +140,22 @@ PACKAGES should be a list of package names as symbols."
 ;; Tidy up .emacs.d mess
 (use-package no-littering)
 
-(savehist-mode)
+(use-package savehist
+  :config
+  (setq history-length 1000)
+  (setq savehist-autosave-interval 60)
+  (setq savehist-additional-variables
+        '(search-ring                ; Search history
+          regexp-search-ring         ; Regexp search history
+          extended-command-history   ; M-x history
+          mark-ring                  ; Marks
+          global-mark-ring           ; Global marks
+          shell-command-history      ; Shell command history
+          register-alist             ; Registers
+          file-name-history          ; Minibuffer file name history
+          tablist-named-filter
+          evil-jumps-history))
+  (savehist-mode +1))
 
 ;; Disabling suspend-frame binding
 ;; Very annoying binding, lets get rid of it.
