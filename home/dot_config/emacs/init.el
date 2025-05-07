@@ -1935,7 +1935,9 @@ PACKAGES should be a list of package names as symbols."
   ;; Optionally customise this with:
   ;; rg-keymap-prefix
   (rg-enable-default-bindings)
-  (rg-enable-menu))
+  (rg-enable-menu)
+  :hook
+  (rg-mode . wgrep-rg-setup))
 
 (use-package treemacs
   :ensure t
