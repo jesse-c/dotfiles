@@ -1,4 +1,4 @@
-;; Generated: 2025-05-06 00:38:55. DO NOT EDIT.
+;; Generated: 2025-05-07 13:48:18. DO NOT EDIT.
 
 ;; ace-window: 20220911.358
 ;; affe: 20250128.839
@@ -23,13 +23,13 @@
 ;; catppuccin-theme: 20250309.2135
 ;; cfrs: 20220129.1149
 ;; chezmoi: 20230726.1638
-;; cider: 20250430.722
+;; cider: 20250505.1711
 ;; clojure-mode: 20241211.1522
-;; clojure-ts-mode: 20250430.1514
+;; clojure-ts-mode: 20250504.2033
 ;; closql: 20250301.2221
 ;; codeium: 0
 ;; combobulate: 0.1
-;; consult: 20250419.815
+;; consult: 20250504.2026
 ;; consult-eglot: 20250216.2144
 ;; consult-eglot-embark: 20250216.2144
 ;; consult-flycheck: 20250101.914
@@ -48,7 +48,7 @@
 ;; dape: 0.24.0
 ;; dash: 20250312.1307
 ;; deadgrep: 20241210.1630
-;; difftastic: 20250430.1114
+;; difftastic: 20250506.1640
 ;; diminish: 20220909.847
 ;; docker: 20250411.709
 ;; docker-compose-mode: 20200830.1336
@@ -92,7 +92,7 @@
 ;; flymake: 1.4.1
 ;; forge: 20250501.735
 ;; fringe-helper: 20140620.2109
-;; ghub: 20250428.1251
+;; ghub: 20250505.1736
 ;; git-commit-ts-mode: 1.0
 ;; git-gutter: 20241212.1415
 ;; git-gutter-fringe: 20211003.2228
@@ -101,7 +101,7 @@
 ;; git-modes: 20240805.1320
 ;; git-timemachine: 20250128.940
 ;; goto-chg: 20240407.1110
-;; gptel: 20250502.2333
+;; gptel: 20250506.134
 ;; grip-mode: 20250426.602
 ;; heex-ts-mode: 20240113.1104
 ;; helpful: 20250408.334
@@ -112,7 +112,7 @@
 ;; idlwave: 6.5.1
 ;; inheritenv: 20241119.1355
 ;; inspector: 0.38
-;; jinx: 20250429.727
+;; jinx: 20250505.1641
 ;; json-mode: 20240427.1245
 ;; json-snatcher: 20200916.1717
 ;; just-ts-mode: 20250328.2115
@@ -126,10 +126,10 @@
 ;; loop: 20160813.1407
 ;; lsp-mode: 20250424.918
 ;; lv: 20200507.1518
-;; magit: 20250501.848
+;; magit: 20250505.1830
 ;; magit-delta: 20220125.50
 ;; magit-popup: 20200719.1015
-;; magit-section: 20250501.848
+;; magit-section: 20250505.1812
 ;; magit-todos: 20240927.52
 ;; marginalia: 20250317.1632
 ;; markdown-mode: 20250501.551
@@ -137,7 +137,7 @@
 ;; mcp-hub: 0
 ;; mix: 20240122.720
 ;; modern-sh: 20250320.858
-;; nerd-icons: 20250324.147
+;; nerd-icons: 20250506.1721
 ;; nerd-icons-completion: 20241221.1846
 ;; no-littering: 20250401.1510
 ;; nov: 20250309.1937
