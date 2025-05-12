@@ -1846,19 +1846,20 @@ PACKAGES should be a list of package names as symbols."
   ;;        ("C-c p h" . cape-history)
   ;;        ("C-c p f" . cape-file)
   ;;        ...)
-  :init
+  :config
   ;; Add to the global default value of `completion-at-point-functions' which is
   ;; used by `completion-at-point'.  The order of the functions matters, the
   ;; first function returning a result wins.  Note that the list of buffer-local
   ;; completion functions takes precedence over the global list.
   ;; Complete word from current buffers. See also dabbrev-capf on Emacs 29.
+  (defun my/filter-problematic-capfs ()
+    (interactive)
+    (setq-local completion-at-point-functions
+                (seq-filter (lambda (func)
+                              (not (memq func '(cape-dabbrev cape-file py-fast-complete))))
+                            completion-at-point-functions)))
   (add-hook 'completion-at-point-functions #'cape-dabbrev)
-  (add-hook 'minibuffer-setup-hook
-            (lambda ()
-              (setq-local completion-at-point-functions
-                          (seq-filter (lambda (func)
-                                        (not (memq func '(cape-dabbrev cape-file))))
-                                      completion-at-point-functions))))
+  (add-hook 'minibuffer-setup-hook (lambda () my/filter-problematic-capfs))
   ;; Complete file name.
   (add-hook 'completion-at-point-functions #'cape-file)
   ;; Complete Elisp symbol.
