@@ -344,17 +344,18 @@ PACKAGES should be a list of package names as symbols."
     "Prompt for conventional commit type with scope completion."
     (interactive)
     (let ((commit-types '("feat" "fix" "docs" "style" "refactor" "perf" "test" "build" "ci" "chore" "revert")))
-      (when (y-or-n-p "Use conventional commit format? ")
-        (let* ((type (completing-read "Commit type: " commit-types nil t))
-               (scopes (my/get-commit-scopes))
-               ;; Allow multiple selections with comma
-               (scope-input (completing-read "Scope (optional, comma-separated for multiple): " scopes nil nil)))
-          (insert type
-                  (if (string-empty-p scope-input)
-                      ""
-                    (concat "(" scope-input ")"))
-                  ": ")
-          (evil-insert-state)))))
+      (if (y-or-n-p "Use conventional commit format? ")
+          (let* ((type (completing-read "Commit type: " commit-types nil t))
+                 (scopes (my/get-commit-scopes))
+                 ;; Allow multiple selections with comma
+                 (scope-input (completing-read "Scope (optional, comma-separated for multiple): " scopes nil nil)))
+            (insert type
+                    (if (string-empty-p scope-input)
+                        ""
+                      (concat "(" scope-input ")"))
+                    ": ")
+            (evil-insert-state))
+        (evil-insert-state))))
   (add-hook 'git-commit-setup-hook #'my/conventional-commit-prompt)
   (transient-define-prefix th/magit-aux-commands ()
     "My personal auxiliary magit commands."
