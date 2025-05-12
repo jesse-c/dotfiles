@@ -958,6 +958,18 @@ PACKAGES should be a list of package names as symbols."
   :ensure nil
   :custom
   (org-log-done t)
+  ;; Something instead of "...", such as " ▾ "
+  (org-ellipsis " ↵ ")
+  ;; Entities are things like \alpha
+  (org-pretty-entities t)
+  ;; Stop the empty space
+  (org-edit-src-content-indentation 0)
+  ;; Display it as if with the appropriate major mode
+  (org-src-fontify-natively t)
+  ;; Tab should behave as if editing that kind of code
+  (org-src-tab-acts-natively t)
+  ;; A timestamp or a note will be logged when an entry is refiled
+  (org-log-refile t)
   (org-confirm-babel-evaluate nil)
   (org-startup-with-inline-images t)
   (org-todo-keywords '((sequence "TODO(t)" "BLOCKED(b)" "IN-PROGRESS(i)" "REVIEW(r)" "|" "DONE(d)" "CANCELLED(c)")))
