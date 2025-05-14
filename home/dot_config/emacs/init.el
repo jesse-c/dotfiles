@@ -762,7 +762,7 @@ PACKAGES should be a list of package names as symbols."
   (defun my/gptel-use-gemini ()
     "Set gptel backend to Gemini."
     (interactive)
-    (setq gptel-model 'gemini-2.5-flash-preview-04-17)
+    (setq gptel-model 'gemini-2.5-pro-preview-05-06)
     (setq gptel-backend (gptel-make-gemini "Gemini"
                           :key (my/get-password "aistudio.google.com" "apikey")
                           :stream t))
