@@ -2248,6 +2248,8 @@ This includes buffers visible in windows or tab-bar tabs."
     :fringe-face 'flycheck-fringe-info)
   (global-flycheck-mode))
 
+(setq user-emacs-cache-directory (expand-file-name ".cache" user-emacs-directory))
+
 (use-package dape
   :custom
   (dape-inlay-hints t)
