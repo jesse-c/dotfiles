@@ -750,7 +750,7 @@ PACKAGES should be a list of package names as symbols."
     "Directory to save gptel conversations.")
   :bind
   ("s-a" . gptel-menu)
-  ("<f5>" . gptel-toggle-sidebar)
+  ("<f5>" . my/gptel-toggle-sidebar)
   :config
   (defun my/gptel-use-claude ()
     "Set gptel backend to Claude."
@@ -776,7 +776,7 @@ PACKAGES should be a list of package names as symbols."
     (message "Switched gptel backend: Perplexity"))
   ;; Set Claude as default
   (my/gptel-use-claude)
-  (defun gptel-toggle-sidebar ()
+  (defun my/gptel-toggle-sidebar ()
     "Toggle a custom sidebar for a persistent buffer."
     ;; https://github.com/nehrbash/dotfiles/blob/main/Emacs.org#gpt
     (interactive)
@@ -794,6 +794,13 @@ PACKAGES should be a list of package names as symbols."
             (set-window-parameter window 'no-other-window t)
             (select-window window))
           (setq mode-line-format nil)))))
+  (defun my/gptel-reset-chat ()
+    "Reset the AI Chat buffer by killing and recreating it."
+    (interactive)
+    (let ((buffer-name "AI Chat"))
+      (when (get-buffer buffer-name)
+        (kill-buffer buffer-name)
+        (message "AI Chat buffer has been reset"))))
   (require 'gptel-integrations)
   :hook
   (gptel-post-stream . gptel-auto-scroll)
