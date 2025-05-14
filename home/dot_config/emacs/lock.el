@@ -55,6 +55,7 @@
 ;; dockerfile-mode: 20250315.1426
 ;; doom-modeline: 20250423.1614
 ;; dtrt-indent: 20250409.1325
+;; easysession: 20250426.1725
 ;; eat: 0.9.4
 ;; editorconfig: 20250219.1528
 ;; eglot: 1.18

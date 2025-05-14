@@ -251,6 +251,52 @@ PACKAGES should be a list of package names as symbols."
   (when-let ((project-name (file-name-nondirectory (directory-file-name (my/project-root)))))
     (tab-rename project-name)))
 
+(use-package easysession
+  :commands (easysession-switch-to
+             easysession-save-as
+             easysession-save-mode
+             easysession-load-including-geometry)
+
+  :custom
+  (easysession-mode-line-misc-info t)  ; Display the session in the modeline
+  (easysession-save-interval (* 10 60))  ; Save every 10 minutes
+
+  :init
+  (add-hook 'emacs-startup-hook #'easysession-save-mode 103)
+
+  :bind
+  (("C-c l" . easysession-switch-t)
+   ("C-c s" . easysession-save-as))
+
+  :config
+  ;; How to only persist and restore visible buffers
+  (defun my-easysession-visible-buffer-list ()
+    "Return a list of all visible buffers in the current session.
+This includes buffers visible in windows or tab-bar tabs."
+    (let ((visible-buffers '()))
+      (dolist (buffer (buffer-list))
+        (when (or
+               ;; Windows
+               (get-buffer-window buffer 'visible)
+               ;; Tab-bar windows
+               (and (bound-and-true-p tab-bar-mode)
+                    (fboundp 'tab-bar-get-buffer-tab)
+                    (tab-bar-get-buffer-tab buffer t nil)))
+          (push buffer visible-buffers)))
+      visible-buffers))
+
+  (setq easysession-buffer-list-function #'my-easysession-visible-buffer-list)
+
+  ;; How to create an empty session setup
+  (defun my-empty-easysession ()
+    "Set up a minimal environment when easysession creates a new session."
+    (when (and (boundp 'tab-bar-mode) tab-bar-mode)
+      (tab-bar-close-other-tabs))
+    (delete-other-windows)
+    (scratch-buffer))
+
+  (add-hook 'easysession-new-session-hook #'my-empty-easysession))
+
 ;; VCS -------------------------------------------------------------------------
 
 (use-package smerge-mode
