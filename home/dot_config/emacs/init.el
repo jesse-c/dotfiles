@@ -794,6 +794,7 @@ PACKAGES should be a list of package names as symbols."
             (set-window-parameter window 'no-other-window t)
             (select-window window))
           (setq mode-line-format nil)))))
+  (require 'gptel-integrations)
   :hook
   (gptel-post-stream . gptel-auto-scroll)
   (gptel-post-response-functions . gptel-end-of-response)
@@ -817,6 +818,9 @@ PACKAGES should be a list of package names as symbols."
 (use-package mcp-hub
   :vc
   (:url "https://github.com/lizqwerscott/mcp.el" :branch "master")
+  :init
+  (setq mcp-hub-servers
+        '(("filesystem" . (:command "npx" :args ("-y" "@modelcontextprotocol/server-filesystem" "/Users/jesse/")))))
   :hook
   (after-init . mcp-hub-start-all-server))
 
