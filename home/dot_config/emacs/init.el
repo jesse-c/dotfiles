@@ -1916,7 +1916,7 @@ This includes buffers visible in windows or tab-bar tabs."
                               (not (memq func '(cape-dabbrev cape-file py-fast-complete))))
                             completion-at-point-functions)))
   (add-hook 'completion-at-point-functions #'cape-dabbrev)
-  (add-hook 'minibuffer-setup-hook (lambda () my/filter-problematic-capfs))
+  (add-hook 'minibuffer-setup-hook (lambda () (my/filter-problematic-capfs)))
   ;; Complete file name.
   (add-hook 'completion-at-point-functions #'cape-file)
   ;; Complete Elisp symbol.
