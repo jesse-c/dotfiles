@@ -1017,7 +1017,7 @@ This includes buffers visible in windows or tab-bar tabs."
   :custom
   (org-log-done t)
   ;; Something instead of "...", such as " ▾ "
-  (org-ellipsis " ↵ ")
+  (org-ellipsis " ↲ ")
   ;; Entities are things like \alpha
   (org-pretty-entities t)
   ;; Stop the empty space
@@ -1351,6 +1351,8 @@ This includes buffers visible in windows or tab-bar tabs."
 (use-package scopeline
   :after treesit
   :diminish scopeline-mode
+  :custom
+  (scopeline-overlay-prefix " ↰ ")
   :hook
   (prog-mode . scopeline-mode))
 
