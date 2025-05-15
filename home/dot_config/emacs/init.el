@@ -2395,7 +2395,10 @@ This includes buffers visible in windows or tab-bar tabs."
 (use-package poetry)
 
 (use-package python-pytest
-  :after pet)
+  :after pet
+  :bind
+  (:map python-base-mode-map
+        ("s-t" . python-pytest-dispatch)))
 
 (use-package pet
   :custom
