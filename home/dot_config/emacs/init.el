@@ -1911,14 +1911,7 @@ This includes buffers visible in windows or tab-bar tabs."
   ;; first function returning a result wins.  Note that the list of buffer-local
   ;; completion functions takes precedence over the global list.
   ;; Complete word from current buffers. See also dabbrev-capf on Emacs 29.
-  (defun my/filter-problematic-capfs ()
-    (interactive)
-    (setq-local completion-at-point-functions
-                (seq-filter (lambda (func)
-                              (not (memq func '(cape-dabbrev cape-file py-fast-complete))))
-                            completion-at-point-functions)))
   (add-hook 'completion-at-point-functions #'cape-dabbrev)
-  (add-hook 'minibuffer-setup-hook (lambda () (my/filter-problematic-capfs)))
   ;; Complete file name.
   (add-hook 'completion-at-point-functions #'cape-file)
   ;; Complete Elisp symbol.
@@ -2397,12 +2390,6 @@ This includes buffers visible in windows or tab-bar tabs."
 ;; Language: Python --------------------------------------------------------------
 
 (setq-local python-indent-offset 4)
-
-(use-package python-mode
-  :init
-  (setq py-complete-function nil)
-  (setq py-load-pymacs-p nil)
-  (setq py-do-completion-p nil))
 
 (use-package poetry)
 
