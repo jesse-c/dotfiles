@@ -873,7 +873,8 @@ This includes buffers visible in windows or tab-bar tabs."
   (:url "https://github.com/lizqwerscott/mcp.el" :branch "master")
   :init
   (setq mcp-hub-servers
-        '(("filesystem" . (:command "npx" :args ("-y" "@modelcontextprotocol/server-filesystem" "/Users/jesse/")))))
+        `(("desktop-commander" . (:command "npx" :args ("-y" "@wonderwhy-er/desktop-commander")))
+          ("github" . (:command "docker" :args ("run" "-i" "--rm" "-e" ,(concat "GITHUB_PERSONAL_ACCESS_TOKEN=" (my/get-password "api.github.com" "jesse-c^mcp")) "ghcr.io/github/github-mcp-server")))))
   :hook
   (after-init . mcp-hub-start-all-server))
 
