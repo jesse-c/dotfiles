@@ -260,6 +260,9 @@ PACKAGES should be a list of package names as symbols."
   :custom
   (easysession-mode-line-misc-info t)  ; Display the session in the modeline
   (easysession-save-interval (* 10 60))  ; Save every 10 minutes
+  (easysession-mode-line-misc-info-format
+   '(" Session:"
+     easysession-mode-line-session-name " "))
 
   :init
   (add-hook 'emacs-startup-hook #'easysession-save-mode 103)
