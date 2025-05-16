@@ -331,6 +331,7 @@ This includes buffers visible in windows or tab-bar tabs."
   ;; Setting ‘forge-add-default-bindings’ to nil in ‘evil-collection-forge-setup’.
   ;; To suppress this message you can set this variable to nil in your init.el file.
   (forge-add-default-bindings nil)
+  (magit-git-executable "/opt/homebrew/bin/git")
   :init
   (setopt magit-format-file-function #'magit-format-file-all-the-icons)
   :bind
