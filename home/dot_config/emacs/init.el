@@ -206,8 +206,15 @@ PACKAGES should be a list of package names as symbols."
   (setq project-vc-extra-root-markers '(;; Org
                                         "TODO.org"
                                         ;; Clojure(Script)
-                                        "project.clj" "deps.edn"))
+                                        "project.clj" "deps.edn"
+                                        ;; Jujutsu
+                                        ".jj"))
   :config
+  (add-to-list 'project-vc-ignores "tmp/")
+  (add-to-list 'project-vc-ignores ".jj")
+  (add-to-list 'project-vc-ignores ".cache/")
+  (add-to-list 'project-vc-ignores ".build/")
+  (add-to-list 'project-vc-ignores "target/")
   (setq src-dir (expand-file-name "~/src/"))
   (setq forges-dirs '("github.com" "gitlab.com"))
   (defun my/auto-discover-projects ()
