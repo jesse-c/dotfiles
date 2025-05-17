@@ -6,8 +6,7 @@
 (setq load-prefer-newer t)
 
 ;; Make Emacs Native-compile .elc files asynchronously
-(setq native-comp-jit-compilation t
-      native-comp-deferred-compilation t)  ; Deprecated in Emacs > 29.1
+(setq native-comp-jit-compilation t)
 
 ;; Suppress native compilation warnings and errors
 (setq native-comp-async-report-warnings-errors nil)
