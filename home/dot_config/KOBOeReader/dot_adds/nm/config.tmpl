@@ -1,0 +1,22 @@
+experimental :menu_main_15505_label :Shortcuts
+experimental :menu_main_15505_icon :/mnt/onboard/.adds/nm/.cog.png
+
+# Main Menu -------------------------------------------------------------------
+
+menu_item :main :IP Address :cmd_output :500:/sbin/ifconfig | /usr/bin/awk '/inet addr/{print substr($2,6)}'
+menu_item :main :Device Owner :dbg_msg :{{ .name }}. Contact at {{ .personal.phone_no }}.
+# Appearance
+menu_item :main :Invert Screen :nickel_setting :toggle :invert
+menu_item :main :Dark Mode :nickel_setting :toggle :dark_mode
+# USB
+menu_item :main :USB AutoEnable :nickel_setting :enable :auto_usb_gadget
+menu_item :main :USB Connect :nickel_misc :force_usb_connection
+# Power
+menu_item :main :Reboot :power :reboot
+menu_item :main :Shutdown :power :shutdown
+
+# Reader -----------------------------------------------------------------------
+
+# Appearance
+menu_item :reader :Invert Screen :nickel_setting :toggle :invert
+menu_item :reader :Dark Mode :nickel_setting :toggle :dark_mode
