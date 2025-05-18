@@ -1,7 +1,11 @@
 machine api.github.com login {{ .forge_github_username }} password {{ onepasswordRead "op://Personal/GitHub/api token" }}
 machine api.github.com login {{ .emacs_pr_review_github_username }} password {{ onepasswordRead "op://Personal/GitHub/api token" }}
+machine api.github.com login {{ .emacs_mcp_username }} password {{ onepasswordRead "op://Personal/GitHub/API Keys/2cnp2x7mnbocwfk6hztik6drxa" }}
 {{range $user := .openai_username -}}
 machine api.openai.com login {{$user}} password {{ onepasswordRead "op://Personal/OpenAI/editor" }}
 {{end -}}
 machine anthropic.com login me password {{ onepasswordRead "op://Personal/Anthropic/editor" }}
+machine perplexity.ai login apikey password {{ onepasswordRead "op://Personal/Perplexity/API Keys/2025-04-16" }}
 machine codeium.com login apikey password {{ onepasswordRead "op://Personal/Codeium/editor" }}
+machine aistudio.google.com login apikey password {{ onepasswordRead "op://Personal/Google/API/gemini" }}
+machine tavily.com login apikey password {{ onepasswordRead "op://Personal/Tavily/API Keys/default" }}
