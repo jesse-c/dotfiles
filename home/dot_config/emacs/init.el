@@ -858,13 +858,19 @@ This includes buffers visible in windows or tab-bar tabs."
       (when (get-buffer buffer-name)
         (kill-buffer buffer-name)
         (message "AI Chat buffer has been reset"))))
+  (defun my/gptel-send-at-eol ()
+    "Move to end of line, and then send to gptel."
+    (interactive)
+    (call-interactively 'end-of-buffer)
+    (call-interactively 'gptel-send))
   (require 'gptel-integrations)
   :hook
   (gptel-post-stream . gptel-auto-scroll)
   (gptel-post-response-functions . gptel-end-of-response)
   :bind
   (:map gptel-mode-map
-        ("C-c C-s" . gptel-save-chat)))
+        ("C-c C-s" . gptel-save-chat)
+        ("C-c C-c" . my/gptel-send-at-eol)))
 
 (defun gptel-save-chat ()
   "Save current gptel buffer to chat directory with timestamp."
