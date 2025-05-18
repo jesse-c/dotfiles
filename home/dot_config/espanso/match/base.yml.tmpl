@@ -1,20 +1,20 @@
 matches:
   # Personal
   - trigger: ":jc"
-    replace: "jesse.claven@me.com"
+    replace: {{ .personal.email | quote }}
 
   # Date-Time
   - trigger: ":date"
-    replace: "{{mydate}}"
+    replace: "{{ "{{" }}mydate{{ "}}" }}"
     vars:
       - name: mydate
         type: date
         params:
           format: "%Y-%m-%d"
   - trigger: ":time"
-    replace: "{{mydate}}"
+    replace: "{{ "{{" }}mytime{{ "}}" }}"
     vars:
-      - name: mydate
+      - name: mytime
         type: date
         params:
           format: "%H:%M"
