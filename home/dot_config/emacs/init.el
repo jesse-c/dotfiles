@@ -867,6 +867,9 @@ This includes buffers visible in windows or tab-bar tabs."
   :hook
   (gptel-post-stream . gptel-auto-scroll)
   (gptel-post-response-functions . gptel-end-of-response)
+  (gptel-post-rewrite-functions . (lambda (&rest _)
+                                    "Reset the rewrite directive after accepting a rewrite."
+                                    (setq-local gptel--rewrite-message "Refactor: ")))
   :bind
   (:map gptel-mode-map
         ("C-c C-s" . gptel-save-chat)
