@@ -891,7 +891,13 @@ This includes buffers visible in windows or tab-bar tabs."
   :init
   (setq mcp-hub-servers
         `(("desktop-commander" . (:command "npx" :args ("-y" "@wonderwhy-er/desktop-commander")))
-          ("github" . (:command "docker" :args ("run" "-i" "--rm" "-e" ,(concat "GITHUB_PERSONAL_ACCESS_TOKEN=" (my/get-password "api.github.com" "jesse-c^mcp")) "ghcr.io/github/github-mcp-server")))))
+          ("github" . (
+                       :command "docker"
+                       :args ("run" "-i" "--rm" "-e" ,(concat "GITHUB_PERSONAL_ACCESS_TOKEN=" (my/get-password "api.github.com" "jesse-c^mcp")) "ghcr.io/github/github-mcp-server")))
+          ("tavily" . (
+                       :command "npx"
+                       :args ("-y" "tavily-mcp@latest")
+                       :env (:TAVILY_API_KEY ,(my/get-password "tavily.com" "apikey"))))))
   :hook
   (after-init . mcp-hub-start-all-server))
 
