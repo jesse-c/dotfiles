@@ -2194,16 +2194,11 @@ This includes buffers visible in windows or tab-bar tabs."
   (setq treesit-jump-queries-filter-list '("inner" "test" "param")))
 
 ;; Undo
-;; Linear undo and redo.
-(use-package undo-tree
-  :diminish undo-tree-mode
-  :init
-  (progn
-    (global-undo-tree-mode)
-    (setq undo-tree-history-directory-alist '(("." . "~/.config/emacs/tmp/undo"))
-          undo-tree-auto-save-history t
-          undo-tree-visualizer-timestamps t
-          undo-tree-visualizer-diff t)))
+(use-package vundo
+  :vc (:url "https://github.com/casouri/vundo" :branch "master")
+  :custom
+  (vundo-glyph-alist vundo-unicode-symbols)
+  (vundo-compact-display t))
 
 ;; Formatting
 (use-package apheleia
