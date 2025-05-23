@@ -1,4 +1,4 @@
-;; Generated: 2025-05-21 18:46:48. DO NOT EDIT.
+;; Generated: 2025-05-23 00:48:48. DO NOT EDIT.
 
 ;; ace-window: 20220911.358
 ;; affe: 20250128.839
@@ -23,7 +23,7 @@
 ;; catppuccin-theme: 20250309.2135
 ;; cfrs: 20220129.1149
 ;; chezmoi: 20230726.1638
-;; cider: 20250520.1110
+;; cider: 20250522.646
 ;; clojure-mode: 20241211.1522
 ;; clojure-ts-mode: 20250517.734
 ;; closql: 20250301.2221
@@ -33,9 +33,9 @@
 ;; consult-eglot: 20250216.2144
 ;; consult-eglot-embark: 20250216.2144
 ;; consult-flycheck: 20250101.914
-;; consult-gh: 20250415.214
-;; consult-gh-embark: 20250415.214
-;; consult-gh-forge: 20250415.214
+;; consult-gh: 20250522.523
+;; consult-gh-embark: 20250522.523
+;; consult-gh-forge: 20250522.523
 ;; consult-ghq: 20231111.1303
 ;; consult-org-roam: 20240217.1442
 ;; consult-project-extra: 20231221.1857
@@ -91,7 +91,7 @@
 ;; flycheck-rust: 20250226.2240
 ;; flycheck-swift: 20170129.549
 ;; flymake: 1.4.1
-;; forge: 20250516.1009
+;; forge: 20250522.1340
 ;; fringe-helper: 20140620.2109
 ;; ghub: 20250509.1440
 ;; git-commit-ts-mode: 1.0
@@ -102,7 +102,7 @@
 ;; git-modes: 20250509.1453
 ;; git-timemachine: 20250128.940
 ;; goto-chg: 20240407.1110
-;; gptel: 20250519.1933
+;; gptel: 20250522.2103
 ;; grip-mode: 20250426.602
 ;; heex-ts-mode: 20250511.643
 ;; helpful: 20250408.334

@@ -785,18 +785,11 @@ This includes buffers visible in windows or tab-bar tabs."
 
 (use-package gptel
   :after transient
-  :commands (gptel
-             gptel-menu
-             gptel-mode
-             gptel-send
-             gptel-backend
-             gptel-make-anthropic
-             gptel-make-perplexity)
   :custom
   (gptel-use-tools t)
   (gptel-stream t)
   (gptel-default-mode 'org-mode)
-  (gptel-model 'claude-3-7-sonnet-20250219)
+  (gptel-model 'claude-sonnet-4-20250514)
   (gptel-display-buffer-action
    '((display-buffer-reuse-window display-buffer-in-side-window)
      (side . right)
@@ -812,6 +805,7 @@ This includes buffers visible in windows or tab-bar tabs."
   (defun my/gptel-use-claude ()
     "Set gptel backend to Claude."
     (interactive)
+    (setq gptel-model 'claude-sonnet-4-20250514)
     (setq gptel-backend (gptel-make-anthropic "Claude"
                           :stream t
                           :key (my/get-password "anthropic.com" "me")))
