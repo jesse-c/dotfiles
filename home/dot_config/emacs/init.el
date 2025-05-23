@@ -1603,7 +1603,57 @@ This includes buffers visible in windows or tab-bar tabs."
         (call-interactively #'python-pytest-run-def-at-point-treesit)
       (user-error "Not on a Python test function in a test_*.py file")))
 
-  (define-key embark-identifier-map (kbd "T") #'my/embark-python-pytest-run-def-at-point))
+  (defun my/embark-rust-test-def-p ()
+    "Return non-nil if point is inside a Rust test function and rust-ts-mode is active."
+    (and buffer-file-name
+         (string-match-p "\\.rs\\'" buffer-file-name)
+         (eq major-mode 'rust-ts-mode)
+         (require 'treesit nil t)
+         (treesit-ready-p 'rust)
+         (let* ((node (treesit-node-at (point)))
+                (func-node (when node
+                             (treesit-parent-until
+                              node
+                              (lambda (n) (equal (treesit-node-type n) "function_item"))))))
+           (when func-node
+             ;; Check if function has #[test] or #[cfg(test)] attribute
+             (let ((func-start (treesit-node-start func-node))
+                   (func-text (treesit-node-text func-node)))
+               (save-excursion
+                 (goto-char func-start)
+                 (forward-line -10) ; Look backwards for attributes
+                 (re-search-forward "#\\[\\(test\\|cfg(test)\\)\\]" func-start t)))))))
+
+  (defun my/embark-rust-cargo-test-def-at-point ()
+    "Run cargo test on the test function at point using treesit."
+    (interactive)
+    (if (my/embark-rust-test-def-p)
+        (let* ((node (treesit-node-at (point)))
+               (func-node (treesit-parent-until
+                           node
+                           (lambda (n) (equal (treesit-node-type n) "function_item"))))
+               (name-node (when func-node
+                            (treesit-node-child-by-field-name func-node "name")))
+               (func-name (when name-node (treesit-node-text name-node))))
+          (if func-name
+              ;; Run cargo test directly with the function name
+              (let ((default-directory (or (locate-dominating-file default-directory "Cargo.toml") default-directory)))
+                (compile (format "cargo test %s" (shell-quote-argument func-name))))
+            (user-error "Could not determine test function name")))
+      (user-error "Not on a Rust test function")))
+
+  (defun my/embark-test-def-at-point ()
+    "Run appropriate test command based on major mode."
+    (interactive)
+    (cond
+     ((eq major-mode 'python-ts-mode)
+      (my/embark-python-pytest-run-def-at-point))
+     ((eq major-mode 'rust-ts-mode)
+      (my/embark-rust-cargo-test-def-at-point))
+     (t
+      (user-error "No test runner configured for %s" major-mode))))
+
+  (define-key embark-identifier-map (kbd "T") #'my/embark-test-def-at-point))
 
 (use-package embark-consult
   :after (embark consult)
@@ -2485,7 +2535,15 @@ This includes buffers visible in windows or tab-bar tabs."
   :hook
   (rust-mode . cargo-minor-mode)
   :config
-  (setq compilation-scroll-output t))
+  (setq compilation-scroll-output t)
+  (defun my/cargo-transient-with-test ()
+    "Call cargo-transient and immediately select test."
+    (interactive)
+    (cargo-transient)
+    (call-interactively (key-binding "t")))
+  :bind
+  (:map rust-ts-mode-map
+        ("s-t" . my/cargo-transient-with-test)))
 
 (use-package cargo-transient
   :custom
