@@ -1742,6 +1742,11 @@ This includes buffers visible in windows or tab-bar tabs."
   (dired-listing-switches "-agho --group-directories-first")
   (dired-kill-when-opening-new-dired-buffer t))
 
+(use-package dirvish
+  :after dired
+  :config
+  (dirvish-peek-mode))
+
 ;; Completion ------------------------------------------------------------------
 
 ;; Minibuffer

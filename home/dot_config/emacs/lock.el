@@ -1,4 +1,4 @@
-;; Generated: 2025-05-23 18:35:19. DO NOT EDIT.
+;; Generated: 2025-05-25 18:23:58. DO NOT EDIT.
 
 ;; ace-window: 20220911.358
 ;; affe: 20250128.839
@@ -50,6 +50,7 @@
 ;; deadgrep: 20241210.1630
 ;; difftastic: 20250516.1623
 ;; diminish: 20220909.847
+;; dirvish: 20250504.807
 ;; docker: 20250411.709
 ;; docker-compose-mode: 20200830.1336
 ;; dockerfile-mode: 20250315.1426
