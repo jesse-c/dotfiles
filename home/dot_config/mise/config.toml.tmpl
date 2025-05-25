@@ -10,7 +10,7 @@ erlang = "latest"
 elixir = "latest"
 go = "latest"
 zig = "latest"
-rust = "latest"
+rust = { version = "latest", components = "rust-src,llvm-tools,rust-analyzer" }
 racket = "latest"
 node = "latest"
 lua = "latest"
@@ -50,6 +50,7 @@ usage = "latest"
 "pipx:python-lsp-server" = "latest"
 "pipx:pyrefly" = "latest"
 "pipx:pre-commit" = "latest"
+"cargo:emacs-lsp-booster" = "latest"
 {{- end }}
 
 {{- if eq .chezmoi.os "linux" }}
