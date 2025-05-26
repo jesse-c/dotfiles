@@ -1190,7 +1190,7 @@ This includes buffers visible in windows or tab-bar tabs."
   (setq evil-want-integration t) ;; This is optional since it's already set to t by default.
   (setq evil-want-keybinding nil)
   :config
-  (evil-set-undo-system 'undo-tree)
+  (evil-set-undo-system 'undo-redo)
   (global-unset-key (kbd "C-u"))
   (global-set-key (kbd "C-u") 'evil-scroll-up)
   ;; 1. Use =C-y= instead of your system paste shortcut
