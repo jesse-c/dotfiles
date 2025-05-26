@@ -1186,11 +1186,12 @@ This includes buffers visible in windows or tab-bar tabs."
 ;; Modal ------------------------------------------------------------------------
 
 (use-package evil
+  :after undo-fu
   :init
   (setq evil-want-integration t) ;; This is optional since it's already set to t by default.
   (setq evil-want-keybinding nil)
   :config
-  (evil-set-undo-system 'undo-redo)
+  (evil-set-undo-system 'undo-fu)
   (global-unset-key (kbd "C-u"))
   (global-set-key (kbd "C-u") 'evil-scroll-up)
   ;; 1. Use =C-y= instead of your system paste shortcut
@@ -2199,6 +2200,8 @@ This includes buffers visible in windows or tab-bar tabs."
   (setq treesit-jump-queries-filter-list '("inner" "test" "param")))
 
 ;; Undo
+(use-package undo-fu)
+
 (use-package vundo
   :vc (:url "https://github.com/casouri/vundo" :branch "master")
   :custom
