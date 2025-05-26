@@ -802,14 +802,23 @@ This includes buffers visible in windows or tab-bar tabs."
   ("s-a" . gptel-menu)
   ("<f5>" . my/gptel-toggle-sidebar)
   :config
-  (defun my/gptel-use-claude ()
-    "Set gptel backend to Claude."
+  (defun my/gptel-use-claude-sonnet-4 ()
+    "Set gptel backend to Claude Sonnet 4."
     (interactive)
     (setq gptel-model 'claude-sonnet-4-20250514)
+
     (setq gptel-backend (gptel-make-anthropic "Claude"
                           :stream t
                           :key (my/get-password "anthropic.com" "me")))
-    (message "Switched gptel backend: Claude"))
+    (message "Switched gptel backend: Claude Sonnet 4"))
+  (defun my/gptel-use-claude-sonnet-3-7 ()
+    "Set gptel backend to Claude Sonnet 3.7."
+    (interactive)
+    (setq gptel-model 'claude-3-7-sonnet-20250219)
+    (setq gptel-backend (gptel-make-anthropic "Claude"
+                          :stream t
+                          :key (my/get-password "anthropic.com" "me")))
+    (message "Switched gptel backend: Claude Sonnet 3.7"))
   (defun my/gptel-use-gemini ()
     "Set gptel backend to Gemini."
     (interactive)
@@ -826,7 +835,7 @@ This includes buffers visible in windows or tab-bar tabs."
                           :key (my/get-password "perplexity.ai" "apikey")))
     (message "Switched gptel backend: Perplexity"))
   ;; Set Claude as default
-  (my/gptel-use-claude)
+  (my/gptel-use-claude-sonnet-3-7)
   (defun my/gptel-toggle-sidebar ()
     "Toggle a custom sidebar for a persistent buffer."
     ;; https://github.com/nehrbash/dotfiles/blob/main/Emacs.org#gpt
