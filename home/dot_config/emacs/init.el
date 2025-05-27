@@ -2553,9 +2553,15 @@ This includes buffers visible in windows or tab-bar tabs."
     (interactive)
     (cargo-transient)
     (call-interactively (key-binding "t")))
+  (defun my/cargo-transient-with-run ()
+    "Call cargo-transient and immediately select run."
+    (interactive)
+    (cargo-transient)
+    (call-interactively (key-binding "r")))
   :bind
   (:map rust-ts-mode-map
-        ("s-t" . my/cargo-transient-with-test)))
+        ("s-t" . my/cargo-transient-with-test)
+        ("s-r" . my/cargo-transient-with-run)))
 
 (use-package cargo-transient
   :custom
