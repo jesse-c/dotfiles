@@ -834,6 +834,14 @@ This includes buffers visible in windows or tab-bar tabs."
                           :stream t
                           :key (my/get-password "perplexity.ai" "apikey")))
     (message "Switched gptel backend: Perplexity"))
+  (defun my/gptel-use-deepseek ()
+    "Set gptel backend to DeepSeek."
+    (interactive)
+    (setq gptel-model 'deepseek-chat)
+    (setq gptel-backend (gptel-make-deepseek "DeepSeek"
+                          :stream t
+                          :key (my/get-password "deepseek.com" "apikey")))
+    (message "Switched gptel backend: DeepSeek"))
   ;; Set Claude as default
   (my/gptel-use-claude-sonnet-3-7)
   (defun my/gptel-toggle-sidebar ()
