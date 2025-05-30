@@ -798,9 +798,6 @@ This includes buffers visible in windows or tab-bar tabs."
   :init
   (defvar gptel-save-directory (expand-file-name "chats" user-emacs-directory)
     "Directory to save gptel conversations.")
-  :bind
-  ("s-a" . gptel-menu)
-  ("<f5>" . my/gptel-toggle-sidebar)
   :config
   (defun my/gptel-use-claude-sonnet-4 ()
     "Set gptel backend to Claude Sonnet 4."
@@ -834,7 +831,7 @@ This includes buffers visible in windows or tab-bar tabs."
                           :stream t
                           :key (my/get-password "perplexity.ai" "apikey")))
     (message "Switched gptel backend: Perplexity"))
-  (defun my/gptel-use-deepseek ()
+  (defun my/gptel-use-deepseek-chat ()
     "Set gptel backend to DeepSeek."
     (interactive)
     (setq gptel-model 'deepseek-chat)
@@ -875,6 +872,48 @@ This includes buffers visible in windows or tab-bar tabs."
     (call-interactively 'end-of-buffer)
     (call-interactively 'gptel-send))
   (require 'gptel-integrations)
+  (defun my/gptel-save-chat ()
+    "Save current gptel buffer to chat directory with timestamp."
+    (interactive)
+    (when (and (boundp 'gptel-mode) gptel-mode)
+      (unless (file-exists-p gptel-save-directory)
+        (make-directory gptel-save-directory t))
+      (let* ((timestamp (format-time-string "%Y%m%d-%H%M%S"))
+             (buffer-name-clean (replace-regexp-in-string "[^a-zA-Z0-9_-]" "_" (buffer-name)))
+             (filename (expand-file-name (concat buffer-name-clean "-" timestamp ".org")
+                                         gptel-save-directory)))
+        (write-region (point-min) (point-max) filename)
+        (message "Saved chat to %s" filename))))
+  (defun my/gptel-close-chat (&optional buffer)
+    "Close current gptel buffer or prompt to select one.
+If BUFFER is provided, close that buffer directly."
+    (interactive)
+    (let* ((gptel-buffers (cl-remove-if-not
+                           (lambda (b)
+                             (string-match-p "\\*\\(DeepSeek\\|Claude\\|Gemini\\)\\*"
+                                             (buffer-name b)))
+                           (buffer-list))))
+      (cond
+       (buffer (kill-buffer buffer))
+       ((or (derived-mode-p 'gptel-mode) (bound-and-true-p gptel-mode))
+        (kill-buffer (current-buffer)))
+       (t (let ((buf (completing-read "Close gptel buffer: "
+                                      (mapcar #'buffer-name gptel-buffers)
+                                      nil t)))
+            (when buf (kill-buffer buf)))))))
+  (defun my/gptel-select-chat ()
+    "Select a gptel buffer to switch to."
+    (interactive)
+    (let* ((gptel-buffers (cl-remove-if-not
+                           (lambda (b)
+                             (string-match-p "\\*\\(DeepSeek\\|Claude\\|Gemini\\)\\*"
+                                             (buffer-name b)))
+                           (buffer-list)))
+           (buffer (completing-read "Select gptel buffer: "
+                                    (mapcar #'buffer-name gptel-buffers)
+                                    nil t)))
+      (when buffer
+        (switch-to-buffer buffer))))
   :hook
   (gptel-post-stream . gptel-auto-scroll)
   (gptel-post-response-functions . gptel-end-of-response)
@@ -882,22 +921,13 @@ This includes buffers visible in windows or tab-bar tabs."
                                     "Reset the rewrite directive after accepting a rewrite."
                                     (setq-local gptel--rewrite-message "Refactor: ")))
   :bind
+  ("s-a" . gptel-menu)
+  ("<f5>" . my/gptel-toggle-sidebar)
   (:map gptel-mode-map
-        ("C-c C-s" . gptel-save-chat)
-        ("C-c C-c" . my/gptel-send-at-eol)))
-
-(defun gptel-save-chat ()
-  "Save current gptel buffer to chat directory with timestamp."
-  (interactive)
-  (when (and (boundp 'gptel-mode) gptel-mode)
-    (unless (file-exists-p gptel-save-directory)
-      (make-directory gptel-save-directory t))
-    (let* ((timestamp (format-time-string "%Y%m%d-%H%M%S"))
-           (buffer-name-clean (replace-regexp-in-string "[^a-zA-Z0-9_-]" "_" (buffer-name)))
-           (filename (expand-file-name (concat buffer-name-clean "-" timestamp ".org")
-                                       gptel-save-directory)))
-      (write-region (point-min) (point-max) filename)
-      (message "Saved chat to %s" filename))))
+        ("C-c C-s" . my/gptel-save-chat)
+        ("C-c C-c" . my/gptel-send-at-eol)
+        ("C-c C-k" . my/gptel-close-chat)
+        ("C-c C-b" . my/gptel-select-chat)))
 
 (use-package mcp-hub
   :vc
