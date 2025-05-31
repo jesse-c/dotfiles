@@ -400,7 +400,7 @@ This includes buffers visible in windows or tab-bar tabs."
   (defun my/conventional-commit-prompt ()
     "Prompt for conventional commit type with scope completion."
     (interactive)
-    (let ((commit-types '("feat" "fix" "docs" "style" "refactor" "perf" "test" "build" "ci" "chore" "revert")))
+    (let ((commit-types '("feat" "fix" "docs" "style" "refactor" "perf" "test" "build" "ci" "cd" "chore" "revert")))
       (if (y-or-n-p "Use conventional commit format? ")
           (let* ((type (completing-read "Commit type: " commit-types nil t))
                  (scopes (my/get-commit-scopes))
