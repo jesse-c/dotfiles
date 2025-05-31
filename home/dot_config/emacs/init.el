@@ -639,6 +639,8 @@ This includes buffers visible in windows or tab-bar tabs."
   (rust-ts-mode . eglot-ensure)
   (swift-mode . eglot-ensure)
   (swift-ts-mode . eglot-ensure)
+  (toml-mode . eglot-ensure)
+  (toml-ts-mode . eglot-ensure)
   (typescript-mode . eglot-ensure)
   (typescript-ts-mode . eglot-ensure)
   (typst-ts-mode . eglot-ensure)
@@ -714,6 +716,12 @@ This includes buffers visible in windows or tab-bar tabs."
   (add-to-list 'eglot-server-programs
                `(typst-ts-mode . ,(eglot-alternatives
                                    '(("tinymist" "lsp")))))
+  (add-to-list 'eglot-server-programs
+               `(toml-mode . ,(eglot-alternatives
+                               '(("taplp" "lsp" "stdio")))))
+  (add-to-list 'eglot-server-programs
+               `(toml-ts-mode . ,(eglot-alternatives
+                                  '(("taplp" "lsp" "stdio")))))
 
   (transient-define-prefix eglot-server-menu ()
     "Eglot server commands."
