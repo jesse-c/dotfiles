@@ -1,0 +1,5 @@
+#!/bin/bash
+
+# Docker version: {{ output "docker" "--version" | trim }}
+
+docker completion fish > "$HOME/.config/fish/completions/docker.fish"
