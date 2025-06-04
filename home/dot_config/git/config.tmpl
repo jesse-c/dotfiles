@@ -12,13 +12,18 @@
 	autocrlf = input
   fsmonitor = true
   untrackedCache = true
+  attributesfile = ~/.gitattributes
 [rerere]
 	enabled = true
 	autoupdate = true
 [stash]
 	showPatch = true
 [merge]
-	conflictstyle = zdiff3
+  # Try standard diff3, instead of zdiff3, for mergiraf
+	conflictstyle = diff3
+[merge "mergiraf"]
+	name = mergiraf
+	driver = mergiraf merge --git %O %A %B -s %S -x %X -y %Y -p %P -l %L
 [fetch]
 	prune = true
 	prunetags = true
