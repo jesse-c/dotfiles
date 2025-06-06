@@ -1597,8 +1597,16 @@ If BUFFER is provided, close that buffer directly."
   (dtrt-indent-global-mode t))
 
 (setq require-final-newline t) ;; Add new line in the end of a file on save.
-(add-hook 'before-save-hook #'delete-trailing-whitespace) ;; Delete trailing spaces
 (setq-default show-trailing-whitespace nil) ;; By default, don't underline trailing spaces
+
+;; Delete trailing spaces
+;; (add-hook 'before-save-hook #'delete-trailing-whitespace)
+;; Prefer ws-butler as it's aware about unchanged vs changed trailing
+;; whitespace.
+(use-package ws-butler
+  :hook
+  (prog-mode . ws-butler-mode)
+  (text-mode . ws-butler-mode))
 
 ;; Setting default coding system
 ;; https://github.com/shfx/emacs.d/blob/8715ced2c49ba2f693ad965f2c0b4c1b44c829c8/README.org#setting-default-coding-system
