@@ -1270,6 +1270,8 @@ If BUFFER is provided, close that buffer directly."
   ;; 3. Consider =evil-search-module= options:
   ;;    (setq evil-search-module 'evil-search) ;; or 'isearch
   (define-key isearch-mode-map (kbd "s-v") 'isearch-yank-kill)
+  ;; Get C-u M-x back
+  (define-key evil-normal-state-map (kbd "C-c u") 'universal-argument)
   (evil-mode 1))
 
 (use-package evil-collection
