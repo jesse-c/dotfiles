@@ -2652,6 +2652,46 @@ If BUFFER is provided, close that buffer directly."
 
 (use-package json-mode)
 
+;; https://eshelyaron.com/posts/2023-05-17-orientation-in-json-documents-with-emacs-and-tree-sitter.html
+(defun esy/json-path-to-position (pos)
+  "Return the JSON path from the document's root to the element at POS.
+
+The path is represented as a list of strings and integers,
+corresponding to the object keys and array indices that lead from
+the root to the element at POS."
+  (named-let loop ((node (treesit-node-at pos)) (acc nil))
+    (if-let ((parent (treesit-parent-until
+                      node
+                      (lambda (n)
+                        (member (treesit-node-type n)
+                                '("pair" "array"))))))
+        (loop parent
+              (cons
+               (pcase (treesit-node-type parent)
+                 ("pair"
+                  (treesit-node-text
+                   (treesit-node-child (treesit-node-child parent 0) 1) t))
+                 ("array"
+                  (named-let check ((i 1))
+                    (if (< pos (treesit-node-end (treesit-node-child parent i)))
+                        (/ (1- i) 2)
+                      (check (+ i 2))))))
+               acc))
+      acc)))
+
+(defun esy/json-path-at-point (point &optional kill)
+  "Display the JSON path at POINT.  When KILL is non-nil, kill it too.
+
+Interactively, POINT is point and KILL is the prefix argument."
+  (interactive "d\nP" json-ts-mode)
+  (let ((path (mapconcat (lambda (o) (format "%s" o))
+                         (esy/json-path-to-position point)
+                         ".")))
+    (if kill
+        (progn (kill-new path) (message "Copied: %s" path))
+      (message path))
+    path))
+
 ;; Language: Docker -------------------------------------------------------------
 
 (use-package docker
