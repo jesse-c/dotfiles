@@ -641,6 +641,7 @@ This includes buffers visible in windows or tab-bar tabs."
   (swift-ts-mode . eglot-ensure)
   (toml-mode . eglot-ensure)
   (toml-ts-mode . eglot-ensure)
+  (javascript-mode . eglot-ensure)
   (typescript-mode . eglot-ensure)
   (typescript-ts-mode . eglot-ensure)
   (typst-ts-mode . eglot-ensure)
@@ -668,6 +669,9 @@ This includes buffers visible in windows or tab-bar tabs."
   (add-to-list 'eglot-server-programs
                `(go-ts-mode . ,(eglot-alternatives
                                 '(("gopls")))))
+  (add-to-list 'eglot-server-programs
+               `(javascript-mode . ,(eglot-alternatives
+                                     '(("deno" "lsp")))))
   (add-to-list 'eglot-server-programs
                `(typescript-mode . ,(eglot-alternatives
                                      '(("deno" "lsp")))))
