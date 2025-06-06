@@ -1392,6 +1392,8 @@ If BUFFER is provided, close that buffer directly."
   (kill-matching-buffers ".*\.exs" nil t)
   (kill-matching-buffers ".*\.yaml" nil t))
 
+(use-package posframe)
+
 ;; Pretty parens
 (use-package rainbow-delimiters
   :diminish
