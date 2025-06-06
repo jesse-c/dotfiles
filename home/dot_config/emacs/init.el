@@ -2992,6 +2992,11 @@ result instead of `message'."
 (use-package go-ts-mode
   :defer t)
 
+;; Language: PDF ----------------------------------------------------------------
+
+(use-package pdf-tools
+  :defer t)
+
 ;; Dotfiles ---------------------------------------------------------------------
 
 (use-package chezmoi
