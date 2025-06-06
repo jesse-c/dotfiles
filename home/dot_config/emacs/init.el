@@ -941,6 +941,14 @@ If BUFFER is provided, close that buffer directly."
         ("C-c C-k" . my/gptel-close-chat)
         ("C-c C-b" . my/gptel-select-chat)))
 
+(use-package gptel-quick
+  :after (gptel posframe pdf-tools embark)
+  :commands gptel-quick
+  :vc
+  (:url "https://github.com/karthink/gptel-quick" :branch "master")
+  :config
+  (keymap-set embark-general-map "?" #'gptel-quick))
+
 (use-package mcp-hub
   :vc
   (:url "https://github.com/lizqwerscott/mcp.el" :branch "master")
