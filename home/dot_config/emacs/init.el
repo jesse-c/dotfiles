@@ -722,10 +722,10 @@ This includes buffers visible in windows or tab-bar tabs."
                                    '(("tinymist" "lsp")))))
   (add-to-list 'eglot-server-programs
                `(toml-mode . ,(eglot-alternatives
-                               '(("taplp" "lsp" "stdio")))))
+                               '(("taplo" "lsp" "stdio")))))
   (add-to-list 'eglot-server-programs
                `(toml-ts-mode . ,(eglot-alternatives
-                                  '(("taplp" "lsp" "stdio")))))
+                                  '(("taplo" "lsp" "stdio")))))
 
   (transient-define-prefix eglot-server-menu ()
     "Eglot server commands."
