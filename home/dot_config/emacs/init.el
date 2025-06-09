@@ -1822,9 +1822,10 @@ If BUFFER is provided, close that buffer directly."
   (dired-kill-when-opening-new-dired-buffer t))
 
 (use-package dirvish
-  :after dired
-  :config
-  (dirvish-peek-mode))
+  :after dired)
+;; Disable peek as it's slow
+;; :config
+;; (dirvish-peek-mode))
 
 ;; Completion ------------------------------------------------------------------
 
