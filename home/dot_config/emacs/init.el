@@ -1000,16 +1000,6 @@ If BUFFER is provided, close that buffer directly."
                                       gptel-tools))))
             tools)))
 
-(use-package org-ai
-  :commands (org-ai-mode
-             org-ai-global-mode)
-  :hook
-  (org-mode . org-ai-mode)
-  ;; :init
-  ;; (org-ai-global-mode) ; installs global keybindings on C-c M-a
-  :custom
-  (org-ai-openai-api-token (my/get-password "api.openai.com" "me"))
-  (org-ai-default-chat-model "gpt-4-turbo"))
 
 (use-package aidermacs
   :after (transient magit vterm)
@@ -1232,6 +1222,23 @@ If BUFFER is provided, close that buffer directly."
 (use-package ob-git-permalink
   :after org
   :defer t)
+
+;; #+begin_src gptel
+;; What is the capital of France?
+;; #+end_src
+;;
+;; #+RESULTS:
+;; : The capital of France is Paris.
+(use-package ob-gptel
+  :after org
+  :vc
+  (:url "https://github.com/jwiegley/ob-gptel" :branch "main")
+  :config
+  (add-to-list 'org-babel-load-languages '(gptel . t))
+  (defun ob-gptel-install-completions ()
+    (add-hook 'completion-at-point-functions
+              'ob-gptel-capf nil t))
+  :hook ((org-mode . ob-gptel-install-completions)))
 
 (use-package org-modern
   :after org
