@@ -831,7 +831,7 @@ This includes buffers visible in windows or tab-bar tabs."
   (defun my/gptel-use-gemini ()
     "Set gptel backend to Gemini."
     (interactive)
-    (setq gptel-model 'gemini-2.5-pro-preview-06-05)
+    (setq gptel-model 'gemini-2.5-pro)
     (setq gptel-backend (gptel-make-gemini "Gemini"
                           :key (my/get-password "aistudio.google.com" "apikey")
                           :stream t))
