@@ -36,6 +36,8 @@ usage = "latest"
 "npm:typescript-language-server" = "latest"
 "npm:typescript" = "latest"
 "npm:tavily-mcp" = "latest"
+"npm:neovim" = "latest"
+"npm:@playwright/mcp" = "latest"
 "pipx:uv" = "latest"
 "pipx:basedpyright" = "latest"
 "pipx:black" = "latest"
@@ -76,4 +78,8 @@ usage = "latest"
 {{- end }}
 
 [settings]
-idiomatic_version_file_enable_tools = ["python"]
+idiomatic_version_file_enable_tools = ["python", "node"]
+experimental = true
+
+[settings.status]
+missing_tools = "never"
