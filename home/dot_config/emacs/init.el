@@ -1650,6 +1650,24 @@ If BUFFER is provided, close that buffer directly."
 (setq confirm-kill-emacs 'y-or-n-p); ;; y and n instead of yes and no when quitting
 (fset 'yes-or-no-p 'y-or-n-p)
 
+;; https://emacsredux.com/blog/2025/06/01/let-s-make-keyboard-quit-smarter/
+(define-advice keyboard-quit
+    (:around (quit) quit-current-context)
+  "Quit the current context.
+
+When there is an active minibuffer and we are not inside it close
+it.  When we are inside the minibuffer use the regular
+`minibuffer-keyboard-quit' which quits any active region before
+exiting.  When there is no minibuffer `keyboard-quit' unless we
+are defining or executing a macro."
+  (if (active-minibuffer-window)
+      (if (minibufferp)
+          (minibuffer-keyboard-quit)
+        (abort-recursive-edit))
+    (unless (or defining-kbd-macro
+                executing-kbd-macro)
+      (funcall-interactively quit))))
+
 (use-package smex)  ;; show recent commands when invoking Alt-x (or Cmd+Shift+p)
 
 (use-package repeat
