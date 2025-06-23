@@ -961,7 +961,10 @@ If BUFFER is provided, close that buffer directly."
           ("tavily" . (
                        :command "npx"
                        :args ("-y" "tavily-mcp@latest")
-                       :env (:TAVILY_API_KEY ,(my/get-password "tavily.com" "apikey"))))))
+                       :env (:TAVILY_API_KEY ,(my/get-password "tavily.com" "apikey"))))
+          ("playwright" . (
+                           :command "mcp-server-playwright"
+                           :args ()))))
   :hook
   (after-init . mcp-hub-start-all-server))
 
