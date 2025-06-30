@@ -1141,7 +1141,11 @@ If BUFFER is provided, close that buffer directly."
      (shell . t)
      (calc . t)))
   :hook
-  (org-mode . visual-line-mode))
+  (org-mode . visual-line-mode)
+  (org-after-todo-state-change .
+                               (lambda ()
+                                 (when (string= org-state "DONE")
+                                   (org-cycle)))))
 
 (use-package org-roam
   :defer t
