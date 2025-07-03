@@ -1095,6 +1095,7 @@ If BUFFER is provided, close that buffer directly."
 
 (use-package org
   :ensure nil
+  :after flycheck
   :custom
   (org-log-done t)
   ;; Something instead of "...", such as " ▾ "
@@ -1113,6 +1114,7 @@ If BUFFER is provided, close that buffer directly."
   (org-startup-with-inline-images t)
   (org-todo-keywords '((sequence "TODO(t)" "BLOCKED(b)" "IN-PROGRESS(i)" "REVIEW(r)" "|" "DONE(d)" "CANCELLED(c)")))
   (calendar-week-start-day 1)
+  (visual-line-fringe-indicators '(nil right-curly-arrow))
   :config
   (org-indent-mode)
   (setq org-agenda-files (list org-tasks-path))
@@ -1140,12 +1142,54 @@ If BUFFER is provided, close that buffer directly."
      (emacs-lisp . t)
      (shell . t)
      (calc . t)))
+  (defun my/org-long-lines-checker (checker callback)
+    "Custom flycheck checker function for long lines in org-mode."
+    (let ((errors '())
+          (line-num 1)
+          (threshold 1000))
+      (save-excursion
+        (goto-char (point-min))
+        (while (not (eobp))
+          (let ((line-length (- (line-end-position) (line-beginning-position))))
+            (when (> line-length threshold)
+              (push (flycheck-error-new-at
+                     line-num 1 'warning
+                     (format "Line too long (%d characters, max %d)" line-length threshold)
+                     :checker checker
+                     :filename (buffer-file-name))
+                    errors)))
+          (forward-line 1)
+          (setq line-num (1+ line-num))))
+      (funcall callback 'finished (reverse errors))))
+  ;; Define the checker using the custom function
+  (flycheck-define-generic-checker 'org-long-lines-custom
+    "A custom checker for long lines in org-mode files."
+    :start #'my/org-long-lines-checker
+    :modes '(org-mode))
+  ;; Add the checker to flycheck
+  (add-to-list 'flycheck-checkers 'org-long-lines-custom)
+  (defun my/warn-long-lines-org ()
+    "Warn about lines longer than 1000 chars in org files."
+    (when (and (derived-mode-p 'org-mode)
+               (save-excursion
+                 (goto-char (point-min))
+                 (re-search-forward "^.\\{1001,\\}$" nil t)))
+      (unless (y-or-n-p "File contains very long lines. Save anyway? ")
+        (signal 'quit nil))))
   :hook
   (org-mode . visual-line-mode)
   (org-after-todo-state-change .
                                (lambda ()
                                  (when (string= org-state "DONE")
-                                   (org-cycle)))))
+                                   (org-cycle))))
+  (org-mode .
+            (lambda ()
+              (flycheck-mode 1)
+              (flycheck-select-checker 'org-long-lines-custom)))
+
+  (org-mode .
+            (lambda ()
+              (add-hook 'before-save-hook #'my/warn-long-lines-org nil t))))
 
 (use-package org-roam
   :defer t
@@ -1164,9 +1208,8 @@ If BUFFER is provided, close that buffer directly."
    ("C-c n j" . org-roam-dailies-capture-today)
    :map org-mode-map
    ("C-M-i" . completion-at-point))
-  ;; :hook
-  ;; Disabled for around 2025-04-26 due to issues.
-  ;; (after-init . org-roam-db-autosync-mode)
+  :hook
+  (after-init . org-roam-db-autosync-mode)
   :config
   ;; If you're using a vertical completion framework, you might want a more informative completion interface
   (setq org-roam-node-display-template (concat "${title:*} " (propertize "${tags:10}" 'face 'org-tag)))
