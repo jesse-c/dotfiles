@@ -2399,7 +2399,7 @@ are defining or executing a macro."
   (yaml-mode . combobulate-mode)
   (yaml-ts-mode . combobulate-mode))
 
-;; Search / Find
+;; Search / Find / Replace
 (setq isearch-lazy-count t)
 
 (use-package semext
