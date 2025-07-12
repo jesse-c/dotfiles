@@ -259,11 +259,6 @@ PACKAGES should be a list of package names as symbols."
     (tab-rename project-name)))
 
 (use-package easysession
-  :commands (easysession-switch-to
-             easysession-save-as
-             easysession-save-mode
-             easysession-load-including-geometry)
-
   :custom
   (easysession-mode-line-misc-info t)  ; Display the session in the modeline
   (easysession-save-interval (* 10 60))  ; Save every 10 minutes
@@ -275,7 +270,7 @@ PACKAGES should be a list of package names as symbols."
   (add-hook 'emacs-startup-hook #'easysession-save-mode 103)
 
   :bind
-  (("C-c l" . easysession-switch-t)
+  (("C-c l" . easysession-switch-to)
    ("C-c s" . easysession-save-as))
 
   :config
