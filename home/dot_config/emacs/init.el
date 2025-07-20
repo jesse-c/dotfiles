@@ -2372,6 +2372,9 @@ are defining or executing a macro."
 ;; http://sriramkswamy.github.io/dotemacs/
 (setq sentence-end-double-space nil)
 
+(use-package string-inflection
+  :defer t)
+
 ;; Example:
 ;;  :bind (("M-$" . jinx-correct)
 ;;         ("C-M-$" . jinx-languages))
