@@ -1297,11 +1297,7 @@ If BUFFER is provided, close that buffer directly."
   :vc
   (:url "https://github.com/jwiegley/ob-gptel" :branch "main")
   :config
-  (add-to-list 'org-babel-load-languages '(gptel . t))
-  (defun ob-gptel-install-completions ()
-    (add-hook 'completion-at-point-functions
-              'ob-gptel-capf nil t))
-  :hook ((org-mode . ob-gptel-install-completions)))
+  (add-to-list 'org-babel-load-languages '(gptel . t)))
 
 (use-package org-modern
   :after org
