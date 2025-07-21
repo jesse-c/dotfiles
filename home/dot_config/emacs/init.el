@@ -995,6 +995,13 @@ If BUFFER is provided, close that buffer directly."
                                       gptel-tools))))
             tools)))
 
+;; Make sure gptel is also installed and configured.
+(use-package macher
+  :vc
+  (:url "https://github.com/kmontag/macher" :branch "main")
+  :after macher
+  :config
+  (macher-install))
 
 (use-package aidermacs
   :after (transient magit vterm)
@@ -1067,6 +1074,11 @@ If BUFFER is provided, close that buffer directly."
   :diminish
   :config
   (yas-reload-all))
+
+(use-package yasnippet-capf
+  :after (cape corfu yasnippet)
+  :config
+  (add-to-list 'completion-at-point-functions #'yasnippet-capf))
 
 ;; Terminal ---------------------------------------------------------------------
 
@@ -1325,6 +1337,13 @@ If BUFFER is provided, close that buffer directly."
   ;; Get C-u M-x back
   (define-key evil-normal-state-map (kbd "C-c u") 'universal-argument)
   (evil-mode 1))
+
+(use-package evil-org
+  :after (org evil)
+  :hook (org-mode . (lambda () evil-org-mode))
+  :config
+  (require 'evil-org-agenda)
+  (evil-org-agenda-set-keys))
 
 (use-package evil-collection
   :after evil
@@ -2417,6 +2436,10 @@ are defining or executing a macro."
    semext-search-forward
    semext-search-backward
    semext-clear-cache))
+
+(use-package ast-grep
+  :vc
+  (:url "https://github.com/SunskyXH/ast-grep.el" :branch "main"))
 
 (use-package re-builder
   :ensure nil
