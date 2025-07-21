@@ -1100,6 +1100,15 @@ If BUFFER is provided, close that buffer directly."
 (defvar org-roam-dailies-dir "daily/")
 (defvar org-roam-dailies-path (file-name-concat org-roam-dir org-roam-dailies-dir))
 
+;; Using tasks
+;;
+;; 1. Capture them with the <C-o> entry point.
+;; 2. Refile with <g> (refresh) or <r> (rebuild) in the agenda view
+;;
+;; Tip: Use the Casual menu at <C-s>
+;; Tip: <C-c C-w> (refile) in the capture buffer
+;; Tip: Use tasks as trees of tasks
+
 (use-package org
   :ensure nil
   :after flycheck
