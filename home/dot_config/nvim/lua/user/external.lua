@@ -47,7 +47,7 @@ require("lazy").setup({
   },
   checker = {
     enabled = true,
-    frequency = 60 * 24 * 7,
+    frequency = 60 * 60 * 24 * 30,
   },
   lockfile = vim.fn.stdpath("config") .. "/lazy-lock.json",
   install = {
