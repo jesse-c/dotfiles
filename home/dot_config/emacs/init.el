@@ -2612,10 +2612,6 @@ are defining or executing a macro."
 
 ;; Language: Elixir --------------------------------------------------------------
 
-(use-package elixir-ts-mode)
-
-(use-package heex-ts-mode)
-
 (use-package mix
   :hook
   (elixir-mode . mix-minor-mode)
