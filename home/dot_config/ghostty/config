@@ -16,3 +16,5 @@ background-opacity = 0.85
 background-blur = 30
 
 # keybind = global:cmd+grave_accent=toggle_quick_terminal
+# Claude Code
+keybind = shift+enter=text:\n
