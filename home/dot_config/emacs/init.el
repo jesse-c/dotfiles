@@ -29,6 +29,7 @@
   (tab-always-indent 'complete)
   (major-mode-remap-alist '((git-commit-mode . git-commit-ts-mode)))
   (package-install-upgrade-built-in t)
+  (ad-redefinition-action 'accept)
   :init
   ;; Add prompt indicator to `completing-read-multiple'.
   ;; We display [CRM<separator>], e.g., [CRM,] if the separator is a comma.
