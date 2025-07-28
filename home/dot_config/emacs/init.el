@@ -256,7 +256,7 @@ PACKAGES should be a list of package names as symbols."
 (defun my/rename-tab-to-project-name ()
   "Rename the current tab to the project name."
   (interactive)
-  (when-let ((project-name (file-name-nondirectory (directory-file-name (my/project-root)))))
+  (when-let* ((project-name (file-name-nondirectory (directory-file-name (my/project-root)))))
     (tab-rename project-name)))
 
 (use-package easysession
@@ -2759,11 +2759,11 @@ The path is represented as a list of strings and integers,
 corresponding to the object keys and array indices that lead from
 the root to the element at POS."
   (named-let loop ((node (treesit-node-at pos)) (acc nil))
-    (if-let ((parent (treesit-parent-until
-                      node
-                      (lambda (n)
-                        (member (treesit-node-type n)
-                                '("pair" "array"))))))
+    (if-let* ((parent (treesit-parent-until
+                       node
+                       (lambda (n)
+                         (member (treesit-node-type n)
+                                 '("pair" "array"))))))
         (loop parent
               (cons
                (pcase (treesit-node-type parent)
