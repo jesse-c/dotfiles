@@ -1454,7 +1454,8 @@ If BUFFER is provided, close that buffer directly."
 (use-package diminish)
 
 (use-package doom-modeline
-  :hook (after-init . doom-modeline-mode))
+  :after (nerd-icons)
+  :init (doom-modeline-mode 1))
 
 ;; Line numbers
 (setq column-number-mode t) ;; Show the current line number
