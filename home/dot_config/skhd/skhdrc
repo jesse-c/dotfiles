@@ -105,7 +105,8 @@
 # cmd + alt - 1 : yabai -m space --focus 1
 
 # send window to desktop and follow focus
-# shift + cmd - z : yabai -m window --space next; yabai -m space --focus next
+# shift + cmd - n : yabai -m window --space next; yabai -m space --focus next
+# shift + cmd - p : yabai -m window --space prev; yabai -m space --focus prev
 # shift + cmd - 2 : yabai -m window --space  2; yabai -m space --focus 2
 
 # focus monitor

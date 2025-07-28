@@ -23,7 +23,7 @@ require("user.file-system")
 -- require("user.lang-all")
 -- require("user.lang-xxxx")
 
-require("user.keymaps")
+-- require("user.keymaps")
 require("user.buffers")
 require("user.abbrs")
 -- require("user.spotlight")
