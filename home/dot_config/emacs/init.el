@@ -1162,6 +1162,11 @@ If BUFFER is provided, close that buffer directly."
   (org-indent-mode)
   (setq org-agenda-files (list org-tasks-path))
   (setq diary-show-holidays-flag nil)
+  ;; Auto-save agenda files when modified
+  (advice-add 'org-agenda-todo :after #'org-save-all-org-buffers)
+  (advice-add 'org-agenda-priority :after #'org-save-all-org-buffers)
+  (advice-add 'org-agenda-schedule :after #'org-save-all-org-buffers)
+  (advice-add 'org-agenda-deadline :after #'org-save-all-org-buffers)
   ;; Function to interactively collect tags
   (defun my/collect-tags ()
     "Collect tags one by one, stopping at empty input, and format them as :tag1:tag2:..."
