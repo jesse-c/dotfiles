@@ -1217,11 +1217,11 @@ If BUFFER is provided, close that buffer directly."
   ;; Add the checker to flycheck
   (add-to-list 'flycheck-checkers 'org-long-lines-custom)
   (defun my/warn-long-lines-org ()
-    "Warn about lines longer than 1000 chars in org files."
+    "Warn about long longes in org files."
     (when (and (derived-mode-p 'org-mode)
                (save-excursion
                  (goto-char (point-min))
-                 (re-search-forward "^.\\{1001,\\}$" nil t)))
+                 (re-search-forward "^.\\{801,\\}$" nil t)))
       (unless (y-or-n-p "File contains very long lines. Save anyway? ")
         (signal 'quit nil))))
   :hook
