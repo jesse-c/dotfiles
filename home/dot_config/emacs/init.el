@@ -1558,7 +1558,11 @@ If BUFFER is provided, close that buffer directly."
   :custom
   (scopeline-overlay-prefix " ↰ ")
   :hook
-  (prog-mode . scopeline-mode))
+  (prog-mode . (lambda ()
+                 (when (and (fboundp 'treesit-available-p)
+                            (treesit-available-p)
+                            (treesit-parser-list))
+                   (scopeline-mode)))))
 
 ;; Themes
 (defun my/theme-by-current-time ()
