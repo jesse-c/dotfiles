@@ -90,7 +90,7 @@
 
 (advice-add 'message :before 'my/ad-timestamp-message)
 
-;; Common -----------------------------------------------------------------------
+;;; Common
 
 (require 'transient)
 (use-package ht)
@@ -113,7 +113,7 @@ PACKAGES should be a list of package names as symbols."
                     '(progn))) packages)
      ,@body))
 
-;; Server -----------------------------------------------------------------------
+;;; Server
 
 ;; Hint: emacsclient -n file1 file2 (Use -c to open in a new frame)
 ;; Example: emacsclient --socket-name ~/.config/emacs/server/server FILE
@@ -128,7 +128,7 @@ PACKAGES should be a list of package names as symbols."
 
 (unless (server-running-p) (server-start))
 
-;; OS ---------------------------------------------------------------------------
+;;; OS
 
 ;; All
 
@@ -198,7 +198,7 @@ PACKAGES should be a list of package names as symbols."
 (setenv "PATH" (concat (getenv "PATH") ":/home/user/.local/share/mise/shims"))
 (setq exec-path (append exec-path '("/home/user/.local/share/mise/shims")))
 
-;; Project ----------------------------------------------------------------------
+;;; Project
 
 (use-package project
   :ensure nil
@@ -302,7 +302,7 @@ This includes buffers visible in windows or tab-bar tabs."
 
   (add-hook 'easysession-new-session-hook #'my-empty-easysession))
 
-;; VCS -------------------------------------------------------------------------
+;;; VCS
 
 (use-package smerge-mode
   :ensure nil
@@ -595,7 +595,7 @@ This includes buffers visible in windows or tab-bar tabs."
      (get-buffer-create name)
      `("git" "--no-pager" "diff" "--ext-diff" ,@(when arg (list arg))))))
 
-;; Tree-sitter ------------------------------------------------------------------
+;;; Tree-sitter
 
 (use-package treesit
   :ensure nil
@@ -609,7 +609,7 @@ This includes buffers visible in windows or tab-bar tabs."
   (treesit-auto-add-to-auto-mode-alist 'all)
   (global-treesit-auto-mode))
 
-;; LSP --------------------------------------------------------------------------
+;;; LSP
 
 (use-package eglot
   :ensure nil
@@ -783,7 +783,7 @@ This includes buffers visible in windows or tab-bar tabs."
   :config
   (global-flycheck-eglot-mode 1))
 
-;; AI --------------------------------------------------------------------------
+;;; AI
 
 (require 'auth-source)
 
@@ -1071,7 +1071,7 @@ If BUFFER is provided, close that buffer directly."
     (interactive)
     (cape-interactive #'codeium-completion-at-point)))
 
-;; Snippets ---------------------------------------------------------------------
+;;; Snippets
 
 (use-package yasnippet
   :diminish yas-minor-mode
@@ -1089,7 +1089,7 @@ If BUFFER is provided, close that buffer directly."
   :config
   (add-to-list 'completion-at-point-functions #'yasnippet-capf))
 
-;; Terminal ---------------------------------------------------------------------
+;;; Terminal
 
 (use-package eat
   :vc
@@ -1100,7 +1100,7 @@ If BUFFER is provided, close that buffer directly."
 
 (use-package vterm)
 
-;; Notes ------------------------------------------------------------------------
+;;; Notes
 
 (setq org-dir (expand-file-name "~/Documents/org/"))
 (setq org-tasks-path (file-name-concat org-dir "tasks.org"))
@@ -1353,13 +1353,13 @@ If BUFFER is provided, close that buffer directly."
 (use-package org-download
   :after (org org-roam))
 
-;; Clipboard -------------------------------------------------------------------
+;;; Clipboard
 
 (add-to-list 'load-path "~/src/github.com/lorniu/pdd.el")
 (add-to-list 'load-path (expand-file-name "user/" user-emacs-directory))
 (require 'kopya)
 
-;; Modal ------------------------------------------------------------------------
+;;; Modal
 
 (use-package evil
   :init
@@ -1442,7 +1442,7 @@ If BUFFER is provided, close that buffer directly."
                 (interactive)
                 (evil-textobj-tree-sitter-goto-textobj "function.outer" t t))))
 
-;; UI ---------------------------------------------------------------------------
+;;; UI
 
 (which-key-mode)
 
@@ -1927,7 +1927,7 @@ are defining or executing a macro."
 (setq inhibit-startup-message t) ; No startup message
 (setq initial-scratch-message nil) ; Empty scratch buffer
 
-;; File system ------------------------------------------------------------------
+;;; File system
 
 ;; Don't bother with auto save and backups
 (setq auto-save-default nil) ;; stop creating #autosave# files
@@ -1966,7 +1966,7 @@ are defining or executing a macro."
 ;; :config
 ;; (dirvish-peek-mode))
 
-;; Completion ------------------------------------------------------------------
+;;; Completion
 
 ;; Minibuffer
 
@@ -2247,7 +2247,7 @@ are defining or executing a macro."
   :hook
   (eglot-managed-mode . eldoc-box-hover-mode))
 
-;; Editor ----------------------------------------------------------------------
+;;; Editor
 
 ;; Navigation
 (after-packages (evil avy xref consult-todo treesit-fold)
@@ -2504,7 +2504,7 @@ are defining or executing a macro."
 ;; Editor Config
 (customize-set-variable 'editorconfig-mode t)
 
-;; Email -----------------------------------------------------------------------
+;;; Email
 
 (use-package himalaya
   :if (file-exists-p "~/src/github.com/jesse-c/himalaya-emacs")
@@ -2521,7 +2521,7 @@ are defining or executing a macro."
   :config
   (himalaya-menu-setup))
 
-;; Language: All ----------------------------------------------------------------
+;;; Language: All
 
 (use-package flycheck
   :config
@@ -2644,20 +2644,20 @@ are defining or executing a macro."
   :config
   (repeat-mode))
 
-;; Language: Documents ----------------------------------------------------------
+;;; Language: Documents
 
 (use-package pandoc-mode
   :after hydra
   :hook
   (markdown-mode . panodic-mode))
 
-;; Language: Lisps --------------------------------------------------------------
+;;; Language: Lisps
 
 (use-package parinfer-rust-mode
   :diminish
   :hook emacs-lisp-mode)
 
-;; Language: Elixir --------------------------------------------------------------
+;;; Language: Elixir
 
 (use-package mix
   :hook
@@ -2677,13 +2677,13 @@ are defining or executing a macro."
   :config
   (add-to-list 'org-babel-load-languages '(elixir . t)))
 
-;; Language: Erlang --------------------------------------------------------------
+;;; Language: Erlang
 
 (use-package erlang-ts
   :mode ("\\.erl\\'" . erlang-ts-mode)
   :defer t)
 
-;; Language: Python --------------------------------------------------------------
+;;; Language: Python
 
 (setq-local python-indent-offset 4)
 
@@ -2713,11 +2713,11 @@ are defining or executing a macro."
   :hook
   (python-base-mode . my/pet-python-setup))
 
-;; Language: Fish ---------------------------------------------------------------
+;;; Language: Fish
 
 (use-package fish-mode)
 
-;; Language: Clojure(Script) ----------------------------------------------------
+;;; Language: Clojure(Script)
 
 (use-package clojure-mode)
 
@@ -2733,7 +2733,7 @@ are defining or executing a macro."
   :hook
   (flycheck-mode . flycheck-clojure-setup))
 
-;; Language: Flix ---------------------------------------------------------------
+;;; Language: Flix
 
 ;; Define flix mode
 (define-derived-mode flix-mode prog-mode "Flix"
@@ -2745,7 +2745,7 @@ are defining or executing a macro."
 ;; Associate .flix files with flix-mode
 (add-to-list 'auto-mode-alist '("\\.flix\\'" . flix-mode))
 
-;; Language: Rust ---------------------------------------------------------------
+;;; Language: Rust
 
 (use-package rust-mode
   :init
@@ -2781,7 +2781,7 @@ are defining or executing a macro."
   :custom
   (cargo-transient-buffer-name-function #'project-prefixed-buffer-name))
 
-;; Language: Swift --------------------------------------------------------------
+;;; Language: Swift
 
 (use-package swift-mode)
 
@@ -2793,7 +2793,7 @@ are defining or executing a macro."
   :hook
   (flycheck-mode . flycheck-swift-setup))
 
-;; Language: JSON --------------------------------------------------------------
+;;; Language: JSON
 
 (use-package json-mode)
 
@@ -2837,7 +2837,7 @@ Interactively, POINT is point and KILL is the prefix argument."
       (message path))
     path))
 
-;; Language: Docker -------------------------------------------------------------
+;;; Language: Docker
 
 (use-package docker
   :after transient)
@@ -2846,15 +2846,15 @@ Interactively, POINT is point and KILL is the prefix argument."
 
 (use-package docker-compose-mode)
 
-;; Language: YAML ---------------------------------------------------------------
+;;; Language: YAML
 
 (use-package yaml-mode)
 
-;; Language: CSV ----------------------------------------------------------------
+;;; Language: CSV
 
 (use-package csv-mode)
 
-;; Language: Just ---------------------------------------------------------------
+;;; Language: Just
 
 (use-package just-ts-mode)
 
@@ -2980,7 +2980,7 @@ Interactively, POINT is point and KILL is the prefix argument."
 
       (just-transient-menu))))
 
-;; Language: Markdown ---------------------------------------------------------------
+;;; Language: Markdown
 
 (use-package markdown-ts-mode
   :mode ("\\.md\\'" . markdown-ts-mode)
@@ -2989,12 +2989,12 @@ Interactively, POINT is point and KILL is the prefix argument."
   (add-to-list 'treesit-language-source-alist '(markdown "https://github.com/tree-sitter-grammars/tree-sitter-markdown" "split_parser" "tree-sitter-markdown/src"))
   (add-to-list 'treesit-language-source-alist '(markdown-inline "https://github.com/tree-sitter-grammars/tree-sitter-markdown" "split_parser" "tree-sitter-markdown-inline/src")))
 
-;; Language: ePub ---------------------------------------------------------------
+;;; Language: ePub
 
 (use-package nov
   :mode ("\\.epub\\'" . nov-mode))
 
-;; Language: Vespa --------------------------------------------------------------
+;;; Language: Vespa
 
 (define-derived-mode vespa-schema-mode prog-mode "Vespa Schema"
   "Major mode for editing Vespa schema definition files."
@@ -3004,19 +3004,19 @@ Interactively, POINT is point and KILL is the prefix argument."
 
 (add-to-list 'auto-mode-alist '("\\.sd\\'" . vespa-schema-mode))
 
-;; Language: HTTP ---------------------------------------------------------------
+;;; Language: HTTP
 
 (use-package verb
   :after (org))
 
-;; Language: Shell --------------------------------------------------------------
+;;; Language: Shell
 
 (use-package modern-sh
   :hook
   (sh-mode . modern-sh-mode)
   (bash-mode . modern-sh-mode))
 
-;; Language: Typst --------------------------------------------------------------
+;;; Language: Typst
 
 (use-package typst-ts-mode
   :vc
@@ -3039,7 +3039,7 @@ Interactively, POINT is point and KILL is the prefix argument."
   (typst-preview-executable "tinymist preview")
   (typst-preview-browser "default"))
 
-;; Language: Emacs Lisp ---------------------------------------------------------
+;;; Language: Emacs Lisp
 
 (setq-local lisp-indent-offset 2)
 
@@ -3132,17 +3132,17 @@ result instead of `message'."
   (pp-display-expression thing "*im/debug*")
   thing)
 
-;; Language: Go -----------------------------------------------------------------
+;;; Language: Go
 
 (use-package go-ts-mode
   :defer t)
 
-;; Language: PDF ----------------------------------------------------------------
+;;; Language: PDF
 
 (use-package pdf-tools
   :defer t)
 
-;; Dotfiles ---------------------------------------------------------------------
+;;; Dotfiles
 
 (use-package chezmoi
   :hook
