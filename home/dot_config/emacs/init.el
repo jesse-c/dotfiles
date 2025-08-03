@@ -771,6 +771,11 @@ This includes buffers visible in windows or tab-bar tabs."
   (eglot-booster-mode))
 
 (use-package flycheck-eglot
+  ;; Disabled at 2025-08-03 since it means that the doom-modeline
+  ;; shows 0 for all Flycheck results.
+  ;;
+  ;; This is even with `flycheck-eglot-exclusive nil`.
+  :disabled
   :diminish
   :after (flycheck eglot)
   :custom
