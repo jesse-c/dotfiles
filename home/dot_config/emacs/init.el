@@ -27,7 +27,6 @@
   ;; Enable indentation+completion using the TAB key.
   ;; `completion-at-point' is often bound to M-TAB.
   (tab-always-indent 'complete)
-  (major-mode-remap-alist '((git-commit-mode . git-commit-ts-mode)))
   (package-install-upgrade-built-in t)
   (ad-redefinition-action 'accept)
   :init
@@ -483,8 +482,12 @@ This includes buffers visible in windows or tab-bar tabs."
 
 (use-package git-commit-ts-mode
   :vc
+  :disabled
   (:url "https://github.com/danilshvalov/git-commit-ts-mode" :branch "main")
-  :mode ("\\COMMIT_EDITMSG\\'" . git-commit-ts-mode))
+  :init
+  (add-to-list 'major-mode-remap-alist
+               '(git-commit-mode . git-commit-ts-mode)))
+
 
 (use-package difftastic
   :after (magit transient)
