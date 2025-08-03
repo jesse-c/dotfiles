@@ -59,6 +59,35 @@
       (write-file package-lock-file)))  ;; Write buffer contents to the specified file
   (add-hook 'kill-emacs-hook #'my/save-package-versions-to-file))
 
+(defun list-upgradeable-builtin-packages ()
+  "List builtin packages that have newer versions available in ELPA."
+  (interactive)
+  (package-refresh-contents)
+  (let ((upgradeable '()))
+    (dolist (builtin-pkg package--builtin-versions)
+      (let* ((pkg-name (car builtin-pkg))
+             (builtin-version (cdr builtin-pkg))
+             (available-desc (cadr (assq pkg-name package-archive-contents))))
+        (when (and available-desc
+                   (package-desc-p available-desc))
+          (let ((available-version (package-desc-version available-desc)))
+            (when (version-list-< builtin-version available-version)
+              (push (list pkg-name builtin-version available-version) upgradeable))))))
+    (if upgradeable
+        (progn
+          (with-current-buffer (get-buffer-create "*Upgradeable Builtins*")
+            (erase-buffer)
+            (insert "Builtin packages with available upgrades:\n\n")
+            (dolist (pkg upgradeable)
+              (insert (format "%-20s %s -> %s\n"
+                              (car pkg)
+                              (package-version-join (cadr pkg))
+                              (package-version-join (caddr pkg)))))
+            (display-buffer (current-buffer)))
+          (message "Found %d upgradeable builtin packages" (length upgradeable)))
+      (message "No upgradeable builtin packages found"))))
+
+
 ;; Store custom-file separately, don't freak out when it's not found
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (load custom-file 'noerror)
