@@ -1232,7 +1232,8 @@ If BUFFER is provided, close that buffer directly."
      (verb . t)
      (emacs-lisp . t)
      (shell . t)
-     (calc . t)))
+     (calc . t)
+     (elixir . t)))
   (defun my/org-long-lines-checker (checker callback)
     "Custom flycheck checker function for long lines in org-mode."
     (let ((errors '())
@@ -2711,9 +2712,7 @@ are defining or executing a macro."
 
 (use-package ob-elixir
   :defer t
-  :after org
-  :config
-  (add-to-list 'org-babel-load-languages '(elixir . t)))
+  :after org)
 
 ;;; Language: Erlang
 
