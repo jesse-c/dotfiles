@@ -463,8 +463,12 @@ This includes buffers visible in windows or tab-bar tabs."
   :after magit
   :hook (magit-mode . magit-delta-mode))
 
-(use-package forge
+(use-package ghub
   :after (magit transient)
+  :defer 1)
+
+(use-package forge
+  :after (magit transient ghub)
   :defer 1)
 
 (use-package pr-review)
@@ -2143,7 +2147,8 @@ are defining or executing a macro."
   :after (consult hl-todo))
 
 (use-package consult-gh
-  :after consult)
+  :after (consult forge ghub magit))
+
 
 (use-package consult-gh-embark
   :after consult-gh
@@ -2151,7 +2156,8 @@ are defining or executing a macro."
   (consult-gh-embark-mode +1))
 
 (use-package consult-gh-forge
-  :after consult-gh
+  :disabled
+  :after (consult-gh forge ghub magit)
   :config
   (consult-gh-forge-mode +1))
 
