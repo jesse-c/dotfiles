@@ -101,6 +101,9 @@
    ("C-S-h x" . helpful-command)
    ("C-S-h d" . helpful-at-point)))
 
+(with-current-buffer "*Messages*"
+  (setq-local scroll-conservatively 101))
+
 ;; https://emacs.stackexchange.com/a/64551
 (defun my/ad-timestamp-message (FORMAT-STRING &rest args)
   "Advice to run before `message' that prepends a timestamp to each message.
