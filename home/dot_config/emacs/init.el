@@ -482,20 +482,19 @@ This includes buffers visible in windows or tab-bar tabs."
 (use-package browse-at-remote
   :after magit)
 
-(use-package git-gutter
-  :hook (prog-mode . git-gutter-mode)
+(use-package diff-hl
+  :hook ((prog-mode . diff-hl-mode)
+         (magit-pre-refresh . diff-hl-magit-pre-refresh)
+         (magit-post-refresh . diff-hl-magit-post-refresh))
+  :custom
+  (diff-hl-side 'right)
+  (diff-hl-show-staged-changes t)
+  (diff-hl-update-async t)
   :config
-  (setq git-gutter:update-interval 0.02)
+  (diff-hl-margin-mode 1)
   :bind
-  (("M-p" . git-gutter:previous-hunk)
-   ("M-n" . git-gutter:next-hunk)))
-
-(use-package git-gutter-fringe
-  :config
-  ;; https://ianyepan.github.io/posts/emacs-git-gutter/
-  (define-fringe-bitmap 'git-gutter-fr:added [224] nil nil '(center repeated))
-  (define-fringe-bitmap 'git-gutter-fr:modified [224] nil nil '(center repeated))
-  (define-fringe-bitmap 'git-gutter-fr:deleted [128 192 224 240] nil nil 'bottom))
+  (("M-p" . diff-hl-previous-hunk)
+   ("M-n" . diff-hl-next-hunk)))
 
 ;; Create URLs to files and commits in repository hosting services
 (use-package git-link
@@ -2294,8 +2293,8 @@ are defining or executing a macro."
     ["Navigation"
      ["Changes"
       ("c" "Last change" evil-goto-last-change)
-      ("p" "Previous hunk" git-gutter:previous-hunk)
-      ("n" "Next hunk" git-gutter:next-hunk)]
+      ("p" "Previous hunk" diff-hl-previous-hunk)
+      ("n" "Next hunk" diff-hl-next-hunk)]
      ["Things"
       ("g" "Imenu" consult-imenu)
       ("m" "Marks" consult-mark)
@@ -2563,6 +2562,7 @@ are defining or executing a macro."
 
 (use-package flycheck
   :config
+  (setq flycheck-indication-mode 'left-fringe)
   (define-fringe-bitmap 'flycheck-fringe-bitmap-double-arrow
     [0 0 0 0 0 24 60 126 126 60 24 0 0 0 0 0 0 0 0 0])
   (flycheck-define-error-level 'error
