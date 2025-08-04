@@ -1371,9 +1371,7 @@ If BUFFER is provided, close that buffer directly."
 (use-package ob-gptel
   :after org
   :vc
-  (:url "https://github.com/jwiegley/ob-gptel" :branch "main")
-  :config
-  (add-to-list 'org-babel-load-languages '(gptel . t)))
+  (:url "https://github.com/jwiegley/ob-gptel" :branch "main"))
 
 (use-package org-modern
   :after org
