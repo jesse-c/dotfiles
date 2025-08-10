@@ -1136,6 +1136,17 @@ If BUFFER is provided, close that buffer directly."
     (interactive)
     (cape-interactive #'codeium-completion-at-point)))
 
+(use-package claude-code-ide
+  :vc
+  (:url "https://github.com/manzaltu/claude-code-ide.el")
+  :bind ("C-c C-'" . claude-code-ide-menu)
+  :custom
+  (claude-code-ide-terminal-backend 'eat)
+  (claude-code-ide-show-claude-window-in-ediff nil)
+  (claude-code-ide-use-side-window t)
+  :config
+  (claude-code-ide-emacs-tools-setup))
+
 ;;; Snippets
 
 (use-package yasnippet
