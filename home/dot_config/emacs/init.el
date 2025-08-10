@@ -2196,9 +2196,10 @@ are defining or executing a macro."
   :after (consult hl-todo))
 
 (use-package consult-gh
-  :after (consult forge ghub magit pr-review)
-  :config
-  (consult-gh-with-pr-review-mode +1))
+  :after (consult forge ghub magit pr-review))
+;; :config
+;; Disabled, as currently having issues
+;; (consult-gh-with-pr-review-mode +1))
 
 (use-package consult-gh-embark
   :after consult-gh
