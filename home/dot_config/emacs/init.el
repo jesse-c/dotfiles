@@ -2756,7 +2756,11 @@ are defining or executing a macro."
 (use-package pandoc-mode
   :after hydra
   :hook
-  (markdown-mode . panodic-mode))
+  (markdown-mode . pandoc-mode)
+  (org-mode . pandoc-mode)
+  (rst-mode . pandoc-mode)
+  (latex-mode . pandoc-mode)
+  (pandoc-mode . pandoc-load-default-settings))
 
 ;;; Language: Lisps
 
