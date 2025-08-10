@@ -208,9 +208,19 @@ PACKAGES should be a list of package names as symbols."
 (use-package exec-path-from-shell
   :init
   (setq exec-path-from-shell-debug t)
+  (setq exec-path-from-shell-shell-name "/opt/homebrew/bin/fish")
+  (setq exec-path-from-shell-arguments nil)
+  (setq exec-path-from-shell-variables '("PATH" "MANPATH"))
   :if (memq window-system '(mac ns))
   :config
   (exec-path-from-shell-initialize))
+
+;; Manually ensure Homebrew paths are available
+(when (and (memq window-system '(mac ns))
+           (file-directory-p "/opt/homebrew/bin"))
+  (add-to-list 'exec-path "/opt/homebrew/bin" t)
+  (add-to-list 'exec-path "/opt/homebrew/sbin" t)
+  (setenv "PATH" (concat "/opt/homebrew/bin:" "/opt/homebrew/sbin:" (getenv "PATH"))))
 
 (when (memq window-system '(mac ns))
   (setq dired-use-ls-dired nil))
