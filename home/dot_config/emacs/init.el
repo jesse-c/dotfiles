@@ -481,7 +481,8 @@ This includes buffers visible in windows or tab-bar tabs."
   :after (magit transient ghub)
   :defer 1)
 
-(use-package pr-review)
+(use-package pr-review
+  :defer 1)
 
 (use-package git-modes
   :after magit)
@@ -2155,8 +2156,9 @@ are defining or executing a macro."
   :after (consult hl-todo))
 
 (use-package consult-gh
-  :after (consult forge ghub magit))
-
+  :after (consult forge ghub magit pr-review)
+  :config
+  (consult-gh-with-pr-review-mode +1))
 
 (use-package consult-gh-embark
   :after consult-gh
