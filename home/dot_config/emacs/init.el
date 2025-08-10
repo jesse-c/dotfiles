@@ -2770,6 +2770,14 @@ are defining or executing a macro."
 
 ;;; Language: Elixir
 
+;; Manually do for now
+(add-to-list 'auto-mode-alist '("\\.ex\\'" . elixir-ts-mode))
+(add-to-list 'auto-mode-alist '("\\.exs\\'" . elixir-ts-mode))
+(add-to-list 'auto-mode-alist '("\\.heex\\'" . heex-ts-mode))
+
+(add-to-list 'treesit-language-source-alist '(elixir "https://github.com/elixir-lang/tree-sitter-elixir"))
+(add-to-list 'treesit-language-source-alist '(heex "https://github.com/phoenixframework/tree-sitter-heex"))
+
 (use-package mix
   :hook
   (elixir-mode . mix-minor-mode)
