@@ -652,8 +652,15 @@ This includes buffers visible in windows or tab-bar tabs."
   :custom
   (treesit-auto-install 'prompt)
   :config
-  (treesit-auto-add-to-auto-mode-alist 'all)
-  (global-treesit-auto-mode))
+  ;; Defer treesit-auto to run after file is opened
+  (setq treesit-auto-install 'prompt)
+  (defun my/enable-treesit-auto-deferred ()
+    "Enable treesit-auto after file is opened to improve startup performance."
+    (run-with-idle-timer 0.1 nil
+                         (lambda ()
+                           (when (and buffer-file-name (treesit-available-p))
+                             (treesit-auto--set-major-remap (current-buffer))))))
+  :hook (find-file . my/enable-treesit-auto-deferred))
 
 ;;; LSP
 
@@ -667,32 +674,37 @@ This includes buffers visible in windows or tab-bar tabs."
   (eglot-autoshutdown t)
   (eglot-events-buffer-size 0)
   (eglot-sync-connect nil) ;; The value of nil or 0 means don’t block at all during the waiting period
+  :config
+  ;; Defer eglot startup to improve file opening performance
+  (defun my/eglot-ensure-deferred ()
+    "Start eglot after a short delay to improve file opening performance."
+    (run-with-idle-timer 0.5 nil #'eglot-ensure))
   :hook
-  (clojure-mode . eglot-ensure)
-  (clojure-ts-mode . eglot-ensure)
-  (elixir-mode . eglot-ensure)
-  (elixir-ts-mode . eglot-ensure)
-  (flix-mode . eglot-ensure)
-  (go-mode . eglot-ensure)
-  (go-ts-mode . eglot-ensure)
-  (latex-mode . eglot-ensure)
-  (markdown-mode . eglot-ensure)
-  (markdown-ts-mode . eglot-ensure)
-  (python-mode . eglot-ensure)
-  (python-ts-mode . eglot-ensure)
-  (rust-mode . eglot-ensure)
-  (rust-ts-mode . eglot-ensure)
-  (swift-mode . eglot-ensure)
-  (swift-ts-mode . eglot-ensure)
-  (toml-mode . eglot-ensure)
-  (toml-ts-mode . eglot-ensure)
-  (javascript-mode . eglot-ensure)
-  (typescript-mode . eglot-ensure)
-  (typescript-ts-mode . eglot-ensure)
-  (typst-ts-mode . eglot-ensure)
-  (vespa-schema-mode . eglot-ensure)
-  (yaml-mode . eglot-ensure)
-  (yaml-ts-mode . eglot-ensure)
+  (clojure-mode . my/eglot-ensure-deferred)
+  (clojure-ts-mode . my/eglot-ensure-deferred)
+  (elixir-mode . my/eglot-ensure-deferred)
+  (elixir-ts-mode . my/eglot-ensure-deferred)
+  (flix-mode . my/eglot-ensure-deferred)
+  (go-mode . my/eglot-ensure-deferred)
+  (go-ts-mode . my/eglot-ensure-deferred)
+  (latex-mode . my/eglot-ensure-deferred)
+  (markdown-mode . my/eglot-ensure-deferred)
+  (markdown-ts-mode . my/eglot-ensure-deferred)
+  (python-mode . my/eglot-ensure-deferred)
+  (python-ts-mode . my/eglot-ensure-deferred)
+  (rust-mode . my/eglot-ensure-deferred)
+  (rust-ts-mode . my/eglot-ensure-deferred)
+  (swift-mode . my/eglot-ensure-deferred)
+  (swift-ts-mode . my/eglot-ensure-deferred)
+  (toml-mode . my/eglot-ensure-deferred)
+  (toml-ts-mode . my/eglot-ensure-deferred)
+  (javascript-mode . my/eglot-ensure-deferred)
+  (typescript-mode . my/eglot-ensure-deferred)
+  (typescript-ts-mode . my/eglot-ensure-deferred)
+  (typst-ts-mode . my/eglot-ensure-deferred)
+  (vespa-schema-mode . my/eglot-ensure-deferred)
+  (yaml-mode . my/eglot-ensure-deferred)
+  (yaml-ts-mode . my/eglot-ensure-deferred)
   :bind
   ("s-l" . eglot-transient-menu)
   :config
@@ -1015,8 +1027,13 @@ If BUFFER is provided, close that buffer directly."
           ("playwright" . (
                            :command "mcp-server-playwright"
                            :args ()))))
+  :config
+  ;; Defer MCP hub startup to improve Emacs startup performance
+  (defun my/mcp-hub-start-deferred ()
+    "Start MCP hub after a delay to improve startup performance."
+    (run-with-idle-timer 2.0 nil #'mcp-hub-start-all-server))
   :hook
-  (after-init . mcp-hub-start-all-server))
+  (after-init . my/mcp-hub-start-deferred))
 
 (defun gptel-mcp-register-tool ()
   (interactive)
@@ -1052,6 +1069,7 @@ If BUFFER is provided, close that buffer directly."
 
 ;; Make sure gptel is also installed and configured.
 (use-package macher
+  :disabled
   :vc
   (:url "https://github.com/kmontag/macher" :branch "main")
   :after macher
@@ -1059,6 +1077,7 @@ If BUFFER is provided, close that buffer directly."
   (macher-install))
 
 (use-package aidermacs
+  :disabled
   :after (transient magit vterm)
   :vc
   (:url "https://github.com/MatthewZMD/aidermacs" :branch "main")
@@ -1489,7 +1508,8 @@ If BUFFER is provided, close that buffer directly."
 
 ;;; UI
 
-(which-key-mode)
+(add-hook 'emacs-startup-hook
+          (lambda () (run-with-timer 0.1 nil #'which-key-mode)))
 
 ;; Indentation
 (use-package highlight-indent-guides
@@ -1539,12 +1559,18 @@ If BUFFER is provided, close that buffer directly."
 
 (use-package doom-modeline
   :after (nerd-icons)
-  :init (doom-modeline-mode 1))
+  :hook (after-init . doom-modeline-mode))
 
 ;; Line numbers
 (setq column-number-mode t) ;; Show the current line number
 (setq display-line-numbers-type 'relative)
-(global-display-line-numbers-mode)
+;; https://github.com/daviwil/dotfiles/blob/6a819647464e733446056caabc2f8ba40469178f/.emacs.d/modules/dw-core.el#L90C1-L93C61
+(dolist (mode '(text-mode-hook
+                prog-mode-hook
+                conf-mode-hook))
+  (add-hook mode (lambda () (display-line-numbers-mode 1))))
+
+(global-so-long-mode 1)
 
 ;; Buffers
 (defun my/clean-up-buffers ()
@@ -1576,7 +1602,7 @@ If BUFFER is provided, close that buffer directly."
   (setq sideline-backends-left '()
         sideline-backends-right '(sideline-flycheck sideline-eglot)
         sideline-display-backend-name t
-        sideline-delay 0.1 ;; Seconds
+        sideline-delay 0.3 ;; Seconds
         sideline-display-backend-name t
         sideline-display-backend-type 'right
         sideline-truncate t))
@@ -1961,7 +1987,10 @@ are defining or executing a macro."
                                        "|||>" "<|||" "<|>" "..." ".." ".=" "..<" ".?" "::" ":::" ":=" "::="
                                        ":?" ":?>" "//" "///" "/*" "*/" "/=" "//=" "/==" "@_" "__" "???"
                                        "<:<" ";;;"))
-  (global-ligature-mode t))
+  ;; Don't enable globally, for performance
+  ;; (global-ligature-mode t)
+  :hook
+  (prog-mode . ligature-mode))
 
 ;; Default frame size
 (add-to-list 'default-frame-alist '(height . 100))
@@ -2444,8 +2473,17 @@ are defining or executing a macro."
   :vc (:url "https://github.com/emacs-tree-sitter/treesit-fold" :branch "master")
   :custom
   (treesit-fold-indicators-fringe 'left-fringe)
+  (treesit-fold-indicators-priority 30) ; Lower priority for less frequent updates
   :config
-  (global-treesit-fold-indicators-mode 1))
+  ;; Add debouncing for better performance
+  (setq treesit-fold-indicators-delay 0.5) ; 500ms delay before updating
+  ;; Limit to files under a certain size to avoid performance issues
+  (defun my/treesit-fold-indicators-maybe ()
+    "Enable treesit-fold-indicators only for reasonably sized files."
+    (when (and (treesit-parser-list)
+               (< (buffer-size) 50000)) ; Only files under 50KB
+      (treesit-fold-indicators-mode 1)))
+  (add-hook 'prog-mode-hook #'my/treesit-fold-indicators-maybe))
 
 ;; Movement
 (use-package avy
@@ -2549,8 +2587,28 @@ are defining or executing a macro."
   ;; \\(foo\\\|bar\\)
   (reb-re-syntax 'string))
 
-;; Editor Config
-(customize-set-variable 'editorconfig-mode t)
+;; Editor Config - only check at project.el root
+(use-package editorconfig
+  :diminish editorconfig-mode
+  :ensure nil
+  :custom
+  (editorconfig-get-properties-function 'editorconfig-core-get-properties-hash)
+  :config
+  (defun my/enable-editorconfig-maybe ()
+    "Enable editorconfig only when .editorconfig exists at project root."
+    ;; Always reset first to clear any previous project's config
+    (editorconfig-mode -1)
+    (when-let* ((project (project-current))
+                (root (project-root project))
+                (editorconfig-file (expand-file-name ".editorconfig" root)))
+      (when (file-exists-p editorconfig-file)
+        (editorconfig-apply))))
+  :config
+  (defun my/disable-editorconfig-on-project-switch (&rest _)
+    "Disable editorconfig when switching projects."
+    (editorconfig-mode -1))
+  (advice-add 'project-switch-project :before #'my/disable-editorconfig-on-project-switch)
+  :hook (find-file . my/enable-editorconfig-maybe))
 
 ;;; Email
 
@@ -2605,7 +2663,7 @@ are defining or executing a macro."
   :commands (dape)
   :config
   ;; The default read-process-output-max of 4096 bytes may inhibit performance to some degree, also.
-  (setq read-process-output-max (* 64 1024)) ;; 64k
+  (setq read-process-output-max (* 1024 1024)) ;; 1mb
   ;; To not display info and/or buffers on startup
   (remove-hook 'dape-on-start-hooks 'dape-info)
   (remove-hook 'dape-on-start-hooks 'dape-repl)
