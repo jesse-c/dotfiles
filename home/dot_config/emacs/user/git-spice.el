@@ -31,7 +31,25 @@
                               branch-symbol
                               (propertize name 'face (if is-current 'magit-branch-current 'magit-branch-local))
                               (if pr-number 
-                                  (propertize (format " (#%d)" pr-number) 'face 'magit-dimmed)
+                                  (propertize (format " (#%d)" pr-number) 
+                                             'face 'magit-dimmed
+                                             'mouse-face 'highlight
+                                             'keymap (let ((map (make-sparse-keymap)))
+                                                       (define-key map (kbd "RET")
+                                                         `(lambda () (interactive) 
+                                                            (let ((repo-url (magit-get "remote" "origin" "url")))
+                                                              (when repo-url
+                                                                (let ((repo-name (replace-regexp-in-string 
+                                                                                 ".*[:/]\\([^/]+/[^/]+\\)\\.git$" "\\1" repo-url)))
+                                                                  (browse-url (format "https://github.com/%s/pull/%d" repo-name ,pr-number)))))))
+                                                       (define-key map [mouse-1]
+                                                         `(lambda () (interactive)
+                                                            (let ((repo-url (magit-get "remote" "origin" "url")))
+                                                              (when repo-url
+                                                                (let ((repo-name (replace-regexp-in-string 
+                                                                                 ".*[:/]\\([^/]+/[^/]+\\)\\.git$" "\\1" repo-url)))
+                                                                  (browse-url (format "https://github.com/%s/pull/%d" repo-name ,pr-number)))))))
+                                                       map))
                                 "")
                               (if (string-empty-p status-flags) 
                                   "" 
