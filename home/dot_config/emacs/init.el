@@ -551,12 +551,15 @@ This includes buffers visible in windows or tab-bar tabs."
   :custom
   (treesit-font-lock-level 4))
 
+(use-package tree-sitter-langs)
+
 (use-package treesit-auto
   :custom
   (treesit-auto-install 'prompt)
   :config
   ;; Defer treesit-auto to run after file is opened
   (setq treesit-auto-install 'prompt)
+  (global-treesit-auto-mode)
   (defun my/enable-treesit-auto-deferred ()
     "Enable treesit-auto after file is opened to improve startup performance."
     (run-with-idle-timer 0.1 nil
