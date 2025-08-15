@@ -17,7 +17,6 @@
                    (if (eq a :null) nil a)))
          (is-current (string= name current-branch))
          (branch-symbol (if is-current "■" "□"))
-         (current-marker (if is-current " ◀" ""))
          (tree-char (if is-last "┗━" "┣━"))
          (status-flags ""))
     
@@ -26,7 +25,7 @@
     (when needs-push (setq status-flags (concat status-flags " (needs push)")))
     
     ;; Format branch line
-    (let ((branch-line (format "%s%s%s %s%s%s%s\n"
+    (let ((branch-line (format "%s%s%s %s%s%s\n"
                               prefix
                               tree-char
                               branch-symbol
@@ -36,10 +35,7 @@
                                 "")
                               (if (string-empty-p status-flags) 
                                   "" 
-                                  (propertize status-flags 'face 'magit-dimmed))
-                              (if is-current 
-                                  (propertize current-marker 'face 'magit-branch-current)
-                                ""))))
+                                  (propertize status-flags 'face 'magit-dimmed)))))
       
       ;; Insert clickable branch line
       (magit-insert-section (git-spice-branch name t)
