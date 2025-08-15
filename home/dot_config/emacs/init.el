@@ -1379,6 +1379,7 @@ If BUFFER is provided, close that buffer directly."
    :map org-mode-map
    ("C-M-i" . completion-at-point))
   :hook
+  (after-init . org-roam-db-autosync-mode)
   (kill-emacs . (lambda ()
                   (when (fboundp 'org-roam-db-sync)
                     (message "Syncing org-roam database...")
