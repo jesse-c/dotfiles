@@ -1615,9 +1615,13 @@ If BUFFER is provided, close that buffer directly."
   (flycheck-mode . sideline-mode)
   :init
   (setq sideline-backends-left '()
-        sideline-backends-right '(sideline-flycheck sideline-eglot)
+        sideline-backends-right '(sideline-flycheck
+                                  sideline-eglot
+                                  sideline-eros
+                                  sideline-blame)
         sideline-display-backend-name t
         sideline-delay 0.3 ;; Seconds
+        sideline-backend-delays '((sideline-blame . 2.0))
         sideline-display-backend-name t
         sideline-display-backend-type 'right
         sideline-truncate t))
@@ -1632,6 +1636,9 @@ If BUFFER is provided, close that buffer directly."
     (cl-letf (((symbol-function 'getf) #'cl-getf))
       (apply orig-fun args)))
   (advice-add 'sideline-eglot--async-candidates :around #'my/fix-sideline-eglot-getf))
+
+(use-package sideline-blame
+  :after sideline)
 
 (use-package sideline-flycheck
   :after (sideline flycheck)
@@ -2071,6 +2078,7 @@ are defining or executing a macro."
          ;; C-x bindings in `ctl-x-map'
          ("C-x M-:" . consult-complex-command)     ;; orig. repeat-complex-command
          ("C-x b" . consult-buffer)                ;; orig. switch-to-buffer
+         ("s-b" . consult-buffer)                ;; orig. switch-to-buffer
          ("C-x 4 b" . consult-buffer-other-window) ;; orig. switch-to-buffer-other-window
          ("C-x 5 b" . consult-buffer-other-frame)  ;; orig. switch-to-buffer-other-frame
          ("C-x t b" . consult-buffer-other-tab)    ;; orig. switch-to-buffer-other-tab
@@ -2093,7 +2101,7 @@ are defining or executing a macro."
          ("M-g i" . consult-imenu)
          ("M-g I" . consult-imenu-multi)
          ;; M-s bindings in `search-map'
-         ("M-s d" . consult-find)                  ;; Alternative: consult-fd
+         ("M-s d" . consult-fd)                  ;; Alternative: consult-find
          ("M-s c" . consult-locate)
          ("M-s g" . consult-grep)
          ("M-s G" . consult-git-grep)
@@ -2363,7 +2371,8 @@ are defining or executing a macro."
       ("a" "Back" xref-go-back)
       ("o" "Forward" xref-go-forward)
       ("A" "Back / Stack" consult-xref-stack-backward)
-      ("O" "Forward / Stack" consult-xref-stack-forward)]
+      ("O" "Forward / Stack" consult-xref-stack-forward)
+      ("d" "Definitions" xref-find-definitions)]
      ["Structure"
       ("," "Function beginning" beginning-of-defun)
       ("." "Function ending" end-of-defun)]
@@ -3196,10 +3205,8 @@ Interactively, POINT is point and KILL is the prefix argument."
 (use-package sideline-eros
   :vc
   (:url "https://github.com/emacs-sideline/sideline-eros" :branch "master")
-  :after (eros sideline)
-  :hook (sideline-mode . sideline-eros-setup)
-  :init
-  (setq sideline-backends-right '(sideline-eros)))
+  :after (sideline)
+  :hook (emacs-lisp-mode . sideline-eros-setup))
 
 (use-package inspector
   :defer t
