@@ -16,6 +16,8 @@
 
 (setq package-lock-file (expand-file-name "lock.el" user-emacs-directory))
 
+(add-to-list 'load-path (expand-file-name "user/" user-emacs-directory))
+
 (use-package emacs
   :custom
   ;; Support opening new minibuffers from inside existing minibuffers.
@@ -1433,7 +1435,6 @@ If BUFFER is provided, close that buffer directly."
 ;;; Clipboard
 
 (add-to-list 'load-path "~/src/github.com/lorniu/pdd.el")
-(add-to-list 'load-path (expand-file-name "user/" user-emacs-directory))
 (require 'kopya)
 
 ;;; Modal
