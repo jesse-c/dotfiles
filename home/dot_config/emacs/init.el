@@ -462,6 +462,8 @@ This includes buffers visible in windows or tab-bar tabs."
   (transient-append-suffix 'magit-dispatch "!"
     '("*" "My Magit Cmds" th/magit-aux-commands)))
 
+(after-packages (magit)) (require 'git-spice)
+
 (use-package magit-todos
   :after magit
   :config (magit-todos-mode 1))
