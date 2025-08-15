@@ -30,17 +30,22 @@
                               prefix
                               tree-char
                               branch-symbol
-                              name
-                              (if pr-number (format " (#%d)" pr-number) "")
-                              status-flags
-                              current-marker)))
+                              (propertize name 'face (if is-current 'magit-branch-current 'magit-branch-local))
+                              (if pr-number 
+                                  (propertize (format " (#%d)" pr-number) 'face 'magit-dimmed)
+                                "")
+                              (if (string-empty-p status-flags) 
+                                  "" 
+                                  (propertize status-flags 'face 'magit-dimmed))
+                              (if is-current 
+                                  (propertize current-marker 'face 'magit-branch-current)
+                                ""))))
       
       ;; Insert clickable branch line
-      (if is-current
-          (insert (propertize branch-line 'face 'magit-branch-current))
-        (magit-insert-section (branch name t)
-          (insert (propertize branch-line
-                             'face 'magit-branch-local
+      (magit-insert-section (git-spice-branch name t)
+        (insert (if is-current
+                    branch-line
+                  (propertize branch-line
                              'mouse-face 'highlight
                              'keymap (let ((map (make-sparse-keymap)))
                                        (define-key map (kbd "RET") 
@@ -53,12 +58,14 @@
     (when commits
       (let ((commit-prefix (concat prefix (if is-last "   " "┃   "))))
         (dolist (commit commits)
-          (let ((short-hash (alist-get 'ShortHash commit))
+          (let ((hash (alist-get 'Hash commit))
+                (short-hash (alist-get 'ShortHash commit))
                 (subject (alist-get 'Subject commit)))
-            (insert (format "%s%s %s\n" 
-                           commit-prefix
-                           (propertize short-hash 'face 'magit-hash)
-                           subject))))))
+            (magit-insert-section (commit hash)
+              (insert (format "%s%s %s\n" 
+                             commit-prefix
+                             (propertize short-hash 'face 'magit-hash)
+                             subject)))))))
     
     ;; Insert children branches
     (when aboves
@@ -70,7 +77,7 @@
                  (is-last-child (= i (1- child-count))))
             (when child-branch
               (my-git-spice-insert-branch-tree child-branch branches-by-index current-branch 
-                                             child-prefix is-last-child))))))))
+                                             child-prefix is-last-child)))))))
 
 (defun my-magit-insert-dummy-section ()
   "Insert a dummy section in Magit status buffer."
@@ -85,20 +92,28 @@
              (json-data (condition-case nil
                             (json-parse-string output :object-type 'alist :array-type 'list)
                           (error nil))))
-        (if json-data
-            (let ((branches-by-index (make-hash-table :test 'equal))
-                  (main-branch nil))
-              ;; Index branches by their index for quick lookup
-              (dolist (branch json-data)
-                (let ((index (alist-get 'Index branch))
-                      (name (alist-get 'Name branch)))
-                  (puthash index branch branches-by-index)
-                  (when (string= name "main")
-                    (setq main-branch branch))))
-              
-              ;; Build and display tree starting from main
-              (when main-branch
-                (my-git-spice-insert-branch-tree main-branch branches-by-index current-branch "" t)))))
-          (insert (format "Failed to parse JSON:\n%s\n" output)))))))
+        (cond
+         ;; Check if git-spice is not initialized
+         ((and (stringp output) 
+               (string-match-p "Repository not initialized" output))
+          (insert (propertize "Repository not initialized with git-spice\n" 'face 'magit-dimmed)))
+         ;; Parse successful JSON data
+         (json-data
+          (let ((branches-by-index (make-hash-table :test 'equal))
+                (main-branch nil))
+            ;; Index branches by their index for quick lookup
+            (dolist (branch json-data)
+              (let ((index (alist-get 'Index branch))
+                    (name (alist-get 'Name branch)))
+                (puthash index branch branches-by-index)
+                (when (string= name "main")
+                  (setq main-branch branch))))
+            
+            ;; Build and display tree starting from main
+            (when main-branch
+              (my-git-spice-insert-branch-tree main-branch branches-by-index current-branch "" t))))
+         ;; Fallback for other errors
+         (t
+          (insert "Failed to parse git-spice JSON output\n"))))))))
 
 (add-hook 'magit-status-sections-hook 'my-magit-insert-dummy-section t)
