@@ -1428,6 +1428,28 @@ If BUFFER is provided, close that buffer directly."
 (add-hook 'emacs-startup-hook
           (lambda () (run-with-timer 0.1 nil #'which-key-mode)))
 
+(defun my/set-frame-transparency (alpha-value)
+  (if (and (>= alpha-value 0) (<= alpha-value 100))
+      (progn
+        (set-frame-parameter nil 'alpha alpha-value)
+        (message "Frame transparency set to %d%%" alpha-value))
+    (message "Invalid transparency value. Please enter a number between 0 and 100.")))
+
+(my/set-frame-transparency 97)
+
+;; https://www.reddit.com/r/emacs/comments/1mrqi6p/emacs_toggle_transparency_with_interactive/
+(defun my/toggle-frame-transparency ()
+  "Toggle frame transparency with user-specified opacity value.
+Prompts user whether to enable transparency. If yes, asks for opacity value (0-100).
+If no, restores full opacity. Only affects the active frame."
+  (interactive)
+  (if (y-or-n-p "Enable frame transparency? ")
+      (let ((alpha-value (read-number "Enter transparency value (0-100, default 97): " 97)))
+        (my/set-frame-transparency alpha-value))
+    (progn
+      (set-frame-parameter nil 'alpha 100)
+      (message "Frame transparency disabled (full opacity restored)"))))
+
 ;; Indentation
 (use-package highlight-indent-guides
   :custom
