@@ -1152,11 +1152,44 @@ If BUFFER is provided, close that buffer directly."
   (org-indent-mode)
   (setq org-agenda-files (list org-tasks-path))
   (setq diary-show-holidays-flag nil)
+  ;; Performance optimizations
+  (setq org-agenda-inhibit-startup t)
+  (setq org-agenda-span 'day)
+  (setq org-agenda-use-tag-inheritance t)
+  (setq org-agenda-ignore-properties '(effort appt stats category))
+  ;; Hide file names and categories in agenda since we only use one file, show tags
+  (setq org-agenda-prefix-format "  %i %?-12t% s")
+  ;; Show tags in agenda by not hiding them
+  (setq org-agenda-remove-tags nil)
+  (setq org-agenda-hide-tags-regexp nil)
+  ;; Custom agenda commands
+  (setq org-agenda-custom-commands
+        '(("d" "Today's tasks"
+           ((agenda "" ((org-agenda-span 1)
+                        (org-agenda-show-log t)
+                        (org-agenda-log-mode-items '(closed clock state))))
+            (todo "TODO")))
+          ("w" "Week view"
+           ((agenda "" ((org-agenda-span 7)
+                        (org-agenda-start-on-weekday nil)
+                        (org-agenda-start-day "today")
+                        (org-agenda-show-log t)
+                        (org-agenda-log-mode-items '(closed clock state))))))))
   ;; Auto-save agenda files when modified
   (advice-add 'org-agenda-todo :after #'org-save-all-org-buffers)
   (advice-add 'org-agenda-priority :after #'org-save-all-org-buffers)
   (advice-add 'org-agenda-schedule :after #'org-save-all-org-buffers)
   (advice-add 'org-agenda-deadline :after #'org-save-all-org-buffers)
+  ;; Optional refile for completed tasks (disabled by default)
+  (defun my/auto-refile-done-tasks ()
+    "Prompt to refile DONE and CANCELLED tasks."
+    (when (and (member org-state '("DONE" "CANCELLED"))
+               (org-get-heading t t t t)
+               (y-or-n-p "Refile this completed task? "))
+      (let ((org-refile-targets '((org-agenda-files :maxlevel . 2))))
+        (org-refile))))
+  ;; Uncomment the line below to enable auto-refile prompting
+  ;; (add-hook 'org-after-todo-state-change-hook #'my/auto-refile-done-tasks)
   ;; Function to interactively collect tags
   (defun my/collect-tags ()
     "Collect tags one by one, stopping at empty input, and format them as :tag1:tag2:..."
@@ -1170,8 +1203,9 @@ If BUFFER is provided, close that buffer directly."
   (setq org-capture-templates
         '(("t" "Task" entry
            (file org-tasks-path)
-           "* TODO %^{Description}\n  SCHEDULED: %^t\n  :PROPERTIES:\n  :CATEGORY: %^{Category|work|personal|work|project}\n  :END:\n  %(my/collect-tags)"
-           :immediate-finish nil)))
+           "* TODO %^{Description} %(my/collect-tags)\n  SCHEDULED: %^t"
+           :immediate-finish nil
+           :refile-targets ((org-agenda-files :maxlevel . 2)))))
   (org-babel-do-load-languages
    'org-babel-load-languages
    '((org . t)
@@ -1304,7 +1338,9 @@ If BUFFER is provided, close that buffer directly."
      [("T" "Capture today" org-roam-dailies-capture-today)
       ("Y" "Capture yesterday" org-roam-dailies-capture-yesterday)]]
     ["Agenda"
-     ("a" "Today" (lambda () (interactive) (org-agenda nil "a")))]
+     [("d" "Day view" (lambda () (interactive) (org-agenda nil "d")))
+      ("w" "Week view" (lambda () (interactive) (org-agenda nil "w")))]
+     [("a" "Default" (lambda () (interactive) (org-agenda nil "a")))]]
     [("S" "Structure" org-structure-transient-menu)])
   ;; Force global keybinding to override macOS system binding for cmd-o
   ;; (global-set-key (kbd "s-o") 'org-transient-menu)
