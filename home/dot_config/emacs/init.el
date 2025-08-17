@@ -1207,14 +1207,52 @@ If BUFFER is provided, close that buffer directly."
     :modes '(org-mode))
   ;; Add the checker to flycheck
   (add-to-list 'flycheck-checkers 'org-long-lines-custom)
+
   (defun my/warn-long-lines-org ()
-    "Warn about long longes in org files."
+    "Warn about long lines in org files with option to wrap them."
     (when (and (derived-mode-p 'org-mode)
                (save-excursion
                  (goto-char (point-min))
                  (re-search-forward "^.\\{801,\\}$" nil t)))
-      (unless (y-or-n-p "File contains very long lines. Save anyway? ")
-        (signal 'quit nil))))
+      (let ((choice (read-char-choice 
+                     "File contains very long lines. (w)rap lines, (s)ave anyway, or (c)ontinue? "
+                     '(?w ?s ?c))))
+        (cond
+         ((eq choice ?w)
+          (my/wrap-long-lines-org 800)
+          (message "Long lines wrapped to 800 characters."))
+         ((eq choice ?s)
+          ;; Save anyway, do nothing
+          nil)
+         ((eq choice ?c)
+          (signal 'quit nil))))))
+
+  (defun my/wrap-long-lines-org (limit)
+    "Wrap lines longer than LIMIT characters in org-mode buffers."
+    (save-excursion
+      (goto-char (point-min))
+      (while (not (eobp))
+        (let ((line-start (line-beginning-position))
+              (line-end (line-end-position)))
+          (when (> (- line-end line-start) limit)
+            (goto-char line-start)
+            (while (and (< (current-column) limit)
+                        (< (point) line-end))
+              (forward-char))
+            ;; Move back to find a good break point (space or punctuation)
+            (while (and (> (current-column) 0)
+                        (not (looking-back "\\s-\\|[.,;!?]" 1)))
+              (backward-char))
+            ;; If we couldn't find a good break point, use the limit
+            (when (= (current-column) 0)
+              (goto-char line-start)
+              (forward-char limit))
+            ;; Insert newline if we're not at the end of line
+            (when (< (point) line-end)
+              (insert "\n")
+              ;; Update line-end since we inserted a newline
+              (setq line-end (line-end-position)))))
+        (forward-line 1))))
   :hook
   (org-mode . visual-line-mode)
   (org-after-todo-state-change .
