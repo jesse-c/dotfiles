@@ -1,8 +1,5 @@
 ;;; git-spice.el --- git-spice Emacs integration for Magit -*- lexical-binding: t -*-
 
-(remove-hook 'magit-status-sections-hook 'my-magit-git-spice-working)
-(remove-hook 'magit-status-sections-hook 'my-magit-insert-git-spice-section)
-
 (defun my-git-spice-insert-branch-tree (branch branches-by-index current-branch prefix is-last)
   "Insert a branch and its children in tree format."
   (let* ((name (alist-get 'Name branch))
@@ -130,7 +127,13 @@
          (t
           (insert "Failed to parse git-spice JSON output\n")))))))
 
-(add-hook 'magit-status-sections-hook 'my-magit-insert-git-spice-section t)
+(defun setup-magit-git-spice-section ()
+  (interactive)
+  (add-hook 'magit-status-sections-hook 'my-magit-insert-git-spice-section t))
+
+(defun teardown-magit-git-spice-section ()
+  (interactive)
+  (remove-hook 'magit-status-sections-hook 'my-magit-insert-git-spice-section t))
 
 (provide 'git-spice)
 ;;; git-spice.el ends here
