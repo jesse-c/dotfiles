@@ -202,6 +202,8 @@ PACKAGES should be a list of package names as symbols."
   (setq dired-use-ls-dired nil))
 
 (setq delete-by-moving-to-trash t)
+(if (eq system-type 'darwin)
+    (setq trash-directory "~/.Trash"))
 
 ;; https://emacs.stackexchange.com/a/41767
 ;; Alternative to try: https://superuser.com/questions/125569/how-to-fix-emacs-popup-dialogs-on-mac-os-x
