@@ -1352,7 +1352,9 @@ If BUFFER is provided, close that buffer directly."
      [("t" "Goto today" org-roam-dailies-goto-today)
       ("y" "Goto yesterday" org-roam-dailies-goto-yesterday)]
      [("T" "Capture today" org-roam-dailies-capture-today)
-      ("Y" "Capture yesterday" org-roam-dailies-capture-yesterday)]]
+      ("Y" "Capture yesterday" org-roam-dailies-capture-yesterday)]
+     [("p" "Find previous" org-roam-dailies-find-previous-note)
+      ("n" "Find next" org-roam-dailies-find-next-note)]]
     ["Agenda"
      [("d" "Day view" (lambda () (interactive) (org-agenda nil "d")))
       ("w" "Week view" (lambda () (interactive) (org-agenda nil "w")))]
@@ -1468,6 +1470,17 @@ If BUFFER is provided, close that buffer directly."
   :config
   (evil-collection-init))
 
+;; Add surrounding:
+;;
+;; You can surround in visual-state with S<textobject> or gS<textobject>. Or in normal-state with ys<textobject> or yS<textobject>.
+;;
+;; Change surrounding:
+;;
+;; You can change a surrounding with cs<old-textobject><new-textobject>.
+;;
+;; Delete surrounding:
+;;
+;; You can delete a surrounding with ds<textobject>.
 (use-package evil-surround
   :after evil
   :config
@@ -1535,7 +1548,7 @@ If BUFFER is provided, close that buffer directly."
         (message "Frame transparency set to %d%%" alpha-value))
     (message "Invalid transparency value. Please enter a number between 0 and 100.")))
 
-(my/set-frame-transparency 97)
+(my/set-frame-transparency 99)
 
 ;; https://www.reddit.com/r/emacs/comments/1mrqi6p/emacs_toggle_transparency_with_interactive/
 (defun my/toggle-frame-transparency ()
@@ -1544,7 +1557,7 @@ Prompts user whether to enable transparency. If yes, asks for opacity value (0-1
 If no, restores full opacity. Only affects the active frame."
   (interactive)
   (if (y-or-n-p "Enable frame transparency? ")
-      (let ((alpha-value (read-number "Enter transparency value (0-100, default 97): " 97)))
+      (let ((alpha-value (read-number "Enter transparency value (0-100, default 99): " 99)))
         (my/set-frame-transparency alpha-value))
     (progn
       (set-frame-parameter nil 'alpha 100)
@@ -2399,7 +2412,7 @@ are defining or executing a macro."
 (after-packages (evil avy xref consult-todo treesit-fold)
   (transient-define-prefix nav-transient-menu ()
     "Navigation commands menu."
-    ["Navigation"
+    [
      ["Changes"
       ("c" "Last change" evil-goto-last-change)
       ("p" "Previous hunk" diff-hl-previous-hunk)
@@ -2411,8 +2424,8 @@ are defining or executing a macro."
      ["Position"
       ("b" "Jump backward" evil-jump-backward)
       ("f" "Jump forward" evil-jump-forward)
-      ("w" "Word" avy-goto-word-0)]
-     ["Xref"
+      ("w" "Word" avy-goto-word-0)]]
+    [["Xref"
       ("a" "Back" xref-go-back)
       ("o" "Forward" xref-go-forward)
       ("A" "Back / Stack" consult-xref-stack-backward)
