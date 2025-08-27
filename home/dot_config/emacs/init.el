@@ -281,18 +281,30 @@ PACKAGES should be a list of package names as symbols."
     (message "Project discovery complete"))
   (transient-define-prefix project-transient-menu ()
     "Project command menu."
-    ["Navigation"
-     [("s" "Search" consult-ripgrep)
-      ("b" "Buffers" consult-project-buffer)
-      ("f" "Files" project-find-file)]
-     [("l" "Line" consult-line)
-      ("d" "Layout" project-dired)]]
+    [[:description "Navigation"
+                   ("s" "Search" consult-ripgrep)
+                   ("b" "Buffers" consult-project-buffer)
+                   ("f" "Files" project-find-file)
+                   ("l" "Line" consult-line)
+                   ("d" "Layout" project-dired)]
+     [:description "Execution"
+                   ("r" "Run" project-run)
+                   ("b" "Compile" project-compile)]]
     ["Management"
      [("t" "New tab" tab-new)
       ("c" "Close tab" tab-close)
       ("n" "Rename tab" my/rename-tab-to-project-name)]
      [("p" "Switch (Known)" project-switch-project)
       ("P" "Switch (All)" consult-ghq-switch-project)]])
+  (defun project-run (command)
+    "Run COMMAND in the current project's root directory."
+    (interactive (list (read-shell-command "Run command: "
+                                           (or (bound-and-true-p run-command)
+                                               (car compilation-history)
+                                               ""))))
+    (let ((default-directory (project-root (project-current t))))
+      (compile command)))
+  (add-to-list 'project-switch-commands '(project-run "Run" ?r))
   :bind
   ("s-p" . project-transient-menu))
 
@@ -1252,7 +1264,7 @@ If BUFFER is provided, close that buffer directly."
                (save-excursion
                  (goto-char (point-min))
                  (re-search-forward "^.\\{801,\\}$" nil t)))
-      (let ((choice (read-char-choice 
+      (let ((choice (read-char-choice
                      "File contains very long lines. (w)rap lines, (s)ave anyway, or (c)ontinue? "
                      '(?w ?s ?c))))
         (cond
@@ -1502,6 +1514,16 @@ If BUFFER is provided, close that buffer directly."
                 (evil-textobj-tree-sitter-goto-textobj "function.outer" t t))))
 
 ;;; UI
+
+(use-package ansi-color
+  :ensure nil
+  :config
+  ;; Process ANSI colour codes in compilation buffer
+  (defun colourise-compilation-buffer ()
+    (let ((inhibit-read-only t))
+      (ansi-color-apply-on-region compilation-filter-start (point))))
+  :hook
+  (compilation-filter . colourise-compilation-buffer))
 
 (add-hook 'emacs-startup-hook
           (lambda () (run-with-timer 0.1 nil #'which-key-mode)))
@@ -2676,6 +2698,8 @@ are defining or executing a macro."
   (himalaya-menu-setup))
 
 ;;; Language: All
+
+(setq compilation-max-output-line-length 800)
 
 (use-package flycheck
   :config
