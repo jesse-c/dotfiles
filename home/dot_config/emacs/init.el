@@ -254,7 +254,9 @@ PACKAGES should be a list of package names as symbols."
                                         ;; Clojure(Script)
                                         "project.clj" "deps.edn"
                                         ;; Jujutsu
-                                        ".jj"))
+                                        ".jj"
+                                        ;; Flix
+                                        "flix.toml"))
   :config
   (add-to-list 'project-vc-ignores "tmp/")
   (add-to-list 'project-vc-ignores ".jj")
@@ -2903,7 +2905,9 @@ are defining or executing a macro."
   "Major mode for editing Flix source code."
   :group 'flix
   (setq-local comment-start "//")
-  (setq-local comment-end ""))
+  (setq-local comment-end "")
+  (setq-local compile-command "flix build")
+  (setq-local run-command "flix run"))
 
 ;; Associate .flix files with flix-mode
 (add-to-list 'auto-mode-alist '("\\.flix\\'" . flix-mode))
