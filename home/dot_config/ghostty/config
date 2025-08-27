@@ -12,9 +12,15 @@ font-size = 12
 window-padding-x = 6
 window-padding-y = 0
 
-background-opacity = 0.90
+background-opacity = 0.95
 background-blur = 30
+
+mouse-hide-while-typing = true
 
 # keybind = global:cmd+grave_accent=toggle_quick_terminal
 # Claude Code
 keybind = shift+enter=text:\n
+keybind = cmd+shift+page_up=jump_to_prompt:-1
+keybind = cmd+shift+page_down=jump_to_prompt:1
+keybind = cmd+s=write_scrollback_file:open
+keybind = cmd+r=reload_config
