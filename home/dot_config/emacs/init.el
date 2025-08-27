@@ -2591,7 +2591,8 @@ are defining or executing a macro."
   (add-to-list 'apheleia-mode-alist '(typescript-ts-mode . denofmt-ts))
   (add-to-list 'apheleia-mode-alist '(python-base-mode . ruff))
   (add-to-list 'apheleia-formatters '(fish-indent . ("fish_indent")))
-  (add-to-list 'apheleia-mode-alist '(fish-mode . fish-indent)))
+  (add-to-list 'apheleia-mode-alist '(fish-mode . fish-indent))
+  (add-to-list 'apheleia-mode-alist '(ruby-ts-mode . rufo)))
 
 ;; Spelling & Grammar
 
