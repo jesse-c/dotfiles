@@ -494,7 +494,10 @@ This includes buffers visible in windows or tab-bar tabs."
   ;; in the Magit dispatch transient (which is bound to ? in Magit status
   ;; buffers and C-x M-g in any Magit enabled buffer)
   (transient-append-suffix 'magit-dispatch "!"
-    '("*" "My Magit Cmds" th/magit-aux-commands)))
+    '("*" "My Magit Cmds" th/magit-aux-commands))
+  (let ((git-path "/Applications/Xcode.app/Contents/Developer/usr/bin/git"))
+    (when (file-exists-p git-path)
+      (setq magit-git-executable git-path))))
 
 (after-packages (magit)) (require 'git-spice)
 
