@@ -499,6 +499,11 @@ This includes buffers visible in windows or tab-bar tabs."
     (when (file-exists-p git-path)
       (setq magit-git-executable git-path))))
 
+(use-package magit-prime
+  :after magit
+  :config
+  (add-hook 'magit-pre-refresh-hook 'magit-prime-refresh-cache))
+
 (after-packages (magit)) (require 'git-spice)
 
 (use-package magit-todos
