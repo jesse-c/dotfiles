@@ -599,14 +599,16 @@ This includes buffers visible in windows or tab-bar tabs."
   :config
   ;; Defer treesit-auto to run after file is opened
   (setq treesit-auto-install 'prompt)
-  (global-treesit-auto-mode)
+  ;; Don't start it globally.
+  ;; (global-treesit-auto-mode)
   (defun my/enable-treesit-auto-deferred ()
     "Enable treesit-auto after file is opened to improve startup performance."
     (run-with-idle-timer 0.1 nil
                          (lambda ()
                            (when (and buffer-file-name (treesit-available-p))
                              (treesit-auto--set-major-remap (current-buffer))))))
-  :hook (find-file . my/enable-treesit-auto-deferred))
+  :hook
+  (after-change-major-mode . my/enable-treesit-auto-deferred))
 
 ;;; LSP
 
