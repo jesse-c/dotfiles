@@ -1191,7 +1191,6 @@ If BUFFER is provided, close that buffer directly."
   (calendar-week-start-day 1)
   (visual-line-fringe-indicators '(nil right-curly-arrow))
   :config
-  (org-indent-mode)
   (setq org-agenda-files (list org-tasks-path))
   (setq diary-show-holidays-flag nil)
   ;; Performance optimizations
@@ -1331,6 +1330,7 @@ If BUFFER is provided, close that buffer directly."
         (forward-line 1))))
   :hook
   (org-mode . visual-line-mode)
+  (org-mode . org-indent-mode)
   (org-after-todo-state-change .
                                (lambda ()
                                  (when (string= org-state "DONE")
