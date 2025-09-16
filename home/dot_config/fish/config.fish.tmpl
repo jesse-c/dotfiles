@@ -1,181 +1,201 @@
 if status is-interactive
-  set --universal fish_greeting ""
+    set --universal fish_greeting ""
 
-  {{- if eq .chezmoi.os "darwin" }}
-  set -gx HOMEBREW_PREFIX "/opt/homebrew";
-  set -gx HOMEBREW_CELLAR "/opt/homebrew/Cellar";
-  set -gx HOMEBREW_REPOSITORY "/opt/homebrew";
-  set -gx HOMEBREW_SHELLENV_PREFIX "/opt/homebrew";
-  set -q PATH; or set PATH ''; set -gx PATH "/opt/homebrew/bin" "/opt/homebrew/sbin" $PATH;
-  set -q MANPATH; or set MANPATH ''; set -gx MANPATH "/opt/homebrew/share/man" $MANPATH;
-  set -q INFOPATH; or set INFOPATH ''; set -gx INFOPATH "/opt/homebrew/share/info" $INFOPATH;
+    {{- if eq .chezmoi.os "darwin" }}
+    set -gx HOMEBREW_PREFIX /opt/homebrew
 
-  export HOMEBREW_NO_ANALYTICS=1
-  export HOMEBREW_NO_ENV_HINTS=1
-  {{- end }}
+    set -gx HOMEBREW_CELLAR /opt/homebrew/Cellar
 
-  {{- if eq .chezmoi.os "linux" }}
-  /home/linuxbrew/.linuxbrew/bin/brew shellenv | source
-  {{- end }}
+    set -gx HOMEBREW_REPOSITORY /opt/homebrew
 
-  set -gx EDITOR nvim
+    set -gx HOMEBREW_SHELLENV_PREFIX /opt/homebrew
 
-  set -U __done_notification_duration 5000 # 5 seconds
+    set -q PATH; or set PATH ''
+    set -gx PATH /opt/homebrew/bin /opt/homebrew/sbin $PATH
 
-  # Prompt ---------------------------------------------------------------------
+    set -q MANPATH; or set MANPATH ''
+    set -gx MANPATH /opt/homebrew/share/man $MANPATH
 
-  # The default Lean prompt [1], with my change(s).
-  #
-  # [1] https://github.com/IlanCosman/tide/blob/44c521ab292f0eb659a9e2e1b6f83f5f0595fcbd/functions/tide/configure/configs/lean.fish#L86C1-L87C1
-  set --universal tide_right_prompt_items status shlvl private_mode cmd_duration context jobs direnv node python rustc java php pulumi ruby go gcloud kubectl distrobox toolbox terraform aws nix_shell crystal elixir zig time
+    set -q INFOPATH; or set INFOPATH ''
+    set -gx INFOPATH /opt/homebrew/share/info $INFOPATH
 
-  # Bindings -------------------------------------------------------------------
+    export HOMEBREW_NO_ANALYTICS=1
+    export HOMEBREW_NO_ENV_HINTS=1
+    {{- end }}
 
-  fish_vi_key_bindings
+    {{- if eq .chezmoi.os "linux" }}
+    /home/linuxbrew/.linuxbrew/bin/brew shellenv | source
+    {{- end }}
 
-  # Visual ---------------------------------------------------------------------
+    set -gx EDITOR nvim
 
-  alias wipe='clear && printf "\e[3J"'
+    set -U __done_notification_duration 5000 # 5 seconds
 
-  export CLICOLOR=1
+    # Prompt ---------------------------------------------------------------------
 
-  # Applications ---------------------------------------------------------------
+    # The default Lean prompt [1], with my change(s).
+    #
+    # [1] https://github.com/IlanCosman/tide/blob/44c521ab292f0eb659a9e2e1b6f83f5f0595fcbd/functions/tide/configure/configs/lean.fish#L86C1-L87C1
+    set --universal tide_right_prompt_items status shlvl private_mode cmd_duration context jobs direnv node python rustc java php pulumi ruby go gcloud kubectl distrobox toolbox terraform aws nix_shell crystal elixir zig time
 
-  if type -q bat
-    abbr --add cat bat
-  end
+    # Bindings -------------------------------------------------------------------
 
-  if type -q llm
-    set -gx LLM_USER_PATH ~/.config/io.datasette.llm
-  end
+    fish_vi_key_bindings
 
-  if test -d /Applications/LM\ Studio.app/
-    # Added by LM Studio CLI (lms)
-    set -gx PATH $PATH /Users/jesse/.cache/lm-studio/bin
-  end
+    # Visual ---------------------------------------------------------------------
 
-  # https://github.com/gf3/dotfiles/blob/75298b4c801c9228283a6bf6dce42ec251c3a113/.config/fish/config.fish#L9-L13
-  # https://github.com/maxmilton/dotfiles/blob/6e8ec6ff576f233d2ab1442dd5d7e1991740cfda/private_dot_config/fish/oneshot-config.fish.tmpl#L142-L144
-  if type -q eza
-    abbr --add ls eza -l
-    alias ll="eza --all --icons=always --long --group-directories-first"
-    alias lr="eza --all --icons=always --long --group-directories-first --sort=created"
-  end
+    alias wipe='clear && printf "\e[3J"'
 
-  if type -q fd
-    alias ff="fd --type d --max-depth 1"
-  end
+    export CLICOLOR=1
 
-  alias to-dark='kitty +kitten themes --reload-in=all --config-file-name themes.conf Catppuccin-Mocha'
-  alias to-light='kitty +kitten themes --reload-in=all --config-file-name themes.conf Catppuccin-Latte'
+    # Applications ---------------------------------------------------------------
 
-  alias root='cd (git root)'
+    if type -q bat
+        abbr --add cat bat
+    end
 
-  fish_add_path $HOME/.local/bin
+    if type -q llm
+        set -gx LLM_USER_PATH ~/.config/io.datasette.llm
+    end
 
-  fish_add_path $HOME/.mint/bin
+    if test -d /Applications/LM\ Studio.app/
+        # Added by LM Studio CLI (lms)
+        set -gx PATH $PATH /Users/jesse/.cache/lm-studio/bin
+    end
 
-  mise activate fish | source
+    # https://github.com/gf3/dotfiles/blob/75298b4c801c9228283a6bf6dce42ec251c3a113/.config/fish/config.fish#L9-L13
+    # https://github.com/maxmilton/dotfiles/blob/6e8ec6ff576f233d2ab1442dd5d7e1991740cfda/private_dot_config/fish/oneshot-config.fish.tmpl#L142-L144
+    if type -q eza
+        abbr --add ls eza -l
+        alias ll="eza --all --icons=always --long --group-directories-first"
+        alias lr="eza --all --icons=always --long --group-directories-first --sort=created"
+    end
 
-  alias c='chezmoi'
+    if type -q fd
+        alias ff="fd --type d --max-depth 1"
+    end
 
-  zoxide init fish | source
+    alias to-dark='kitty +kitten themes --reload-in=all --config-file-name themes.conf Catppuccin-Mocha'
+    alias to-light='kitty +kitten themes --reload-in=all --config-file-name themes.conf Catppuccin-Latte'
 
-  if type -q direnv
-    direnv hook fish | source
-  end
+    alias root='cd (git root)'
 
-  atuin init fish | source
+    fish_add_path $HOME/.local/bin
 
-  set -gx GO111MODULE on
-  set -gx GOBIN $HOME/.local/bin
+    fish_add_path $HOME/.mint/bin
 
-  alias g='git'
+    mise activate fish | source
 
-  source "$HOME/.config/emacs/eat.fish"
+    alias c='chezmoi'
 
-  export EMACS_USER_DIRECTORY=~/.config/emacs
+    zoxide init fish | source
 
-  # https://github.com/akermu/emacs-libvterm#shell-side-configuration
-  function vterm_printf;
-      if begin; [  -n "$TMUX" ]  ; and  string match -q -r "screen|tmux" "$TERM"; end
-          # tell tmux to pass the escape sequences through
-          printf "\ePtmux;\e\e]%s\007\e\\" "$argv"
-      else if string match -q -- "screen*" "$TERM"
-          # GNU screen (screen, screen-256color, screen-256color-bce)
-          printf "\eP\e]%s\007\e\\" "$argv"
-      else
-          printf "\e]%s\e\\" "$argv"
-      end
-  end
+    if type -q direnv
+        direnv hook fish | source
+    end
 
-  {{- if eq .chezmoi.os "darwin" }}
-  export GPG_TTY=(tty)
+    atuin init fish | source
 
-  # ShellHistory
-  fish_add_path "/Applications/ShellHistory.app/Contents/Helpers"
+    set -gx GO111MODULE on
+    set -gx GOBIN $HOME/.local/bin
 
-  if [ ! -n "$__shhist_session" ]
-      if [ -n "$TERM_SESSION_ID" ]
-          set __shhist_session $TERM_SESSION_ID
-      else
-          set __shhist_session (random)-$fish_pid
-      end
-  end
+    alias g='git'
 
-  functions --copy fish_prompt fish_prompt_original
-  function fish_prompt
-      set __shhist_status $status
+    source "$HOME/.config/emacs/eat.fish"
 
-      if fish_is_root_user
-          set __shhist_user $SUDO_USER
-      else
-          set __shhist_user $LOGNAME
-      end
+    export EMACS_USER_DIRECTORY=~/.config/emacs
 
-      \history --show-time="%s " -1 | sudo --preserve-env --user $__shhist_user /Applications/ShellHistory.app/Contents/Helpers/shhist insert --session $__shhist_session --username $LOGNAME --hostname (hostname) --exit-code $__shhist_status --shell fish
+    # https://github.com/akermu/emacs-libvterm#shell-side-configuration
+    function vterm_printf
 
-      fish_prompt_original;
-  end
+        if begin
+                [ -n "$TMUX" ]; and string match -q -r "screen|tmux" "$TERM"
+            end
+            # tell tmux to pass the escape sequences through
+            printf "\ePtmux;\e\e]%s\007\e\\" "$argv"
+        else if string match -q -- "screen*" "$TERM"
+            # GNU screen (screen, screen-256color, screen-256color-bce)
+            printf "\eP\e]%s\007\e\\" "$argv"
+        else
+            printf "\e]%s\e\\" "$argv"
+        end
+    end
 
-  # If using 1Password plugins, uncomment below:
-  # source ~/.config/op/plugins.sh
+    {{- if eq .chezmoi.os "darwin" }}
+    export GPG_TTY=(tty)
 
-  alias copy='pbcopy'
-  alias paste='pbpaste'
-  {{- end }}
+    # ShellHistory
+    fish_add_path "/Applications/ShellHistory.app/Contents/Helpers"
 
-  {{- if eq .chezmoi.os "linux" }}
-  alias h='helm'
+    if [ ! -n "$__shhist_session" ]
+        if [ -n "$TERM_SESSION_ID" ]
+            set __shhist_session $TERM_SESSION_ID
+        else
+            set __shhist_session (random)-$fish_pid
+        end
+    end
 
-  alias hx='helix'
+    if not set -q __shhist_prompt_initialized
+        set -g __shhist_prompt_initialized 1
 
-  alias copy='wl-copy'
-  alias paste='wl-paste'
+        if not functions -q fish_prompt_original
+            functions --copy fish_prompt fish_prompt_original
+        end
 
-  alias sg='ast-grep'
+        function fish_prompt
+            set __shhist_status $status
 
-  fish_add_path $HOME/.krew/bin
+            if fish_is_root_user
+                set __shhist_user $SUDO_USER
+            else
+                set __shhist_user $LOGNAME
+            end
 
-  alias k='kubectl'
+            \history --show-time="%s " -1 | sudo --preserve-env --user $__shhist_user /Applications/ShellHistory.app/Contents/Helpers/shhist insert --session $__shhist_session --username $LOGNAME --hostname (hostname) --exit-code $__shhist_status --shell fish
 
-  set -x K9S_CONFIG_PATH "$HOME/.config/k9s"
+            fish_prompt_original
 
-  fish_add_path /var/lib/snapd/snap/bin/
+        end
+    end
 
-  source /opt/miniconda3/etc/fish/conf.d/conda.fish
-  {{- end }}
+    # If using 1Password plugins, uncomment below:
+    # source ~/.config/op/plugins.sh
 
-  # History --------------------------------------------------------------------
+    alias copy='pbcopy'
+    alias paste='pbpaste'
+    {{- end }}
 
-  bind \cg forget # Normal mode
-  bind -M insert \cg forget # Insert mode
+    {{- if eq .chezmoi.os "linux" }}
+    alias h='helm'
 
-  # Local ----------------------------------------------------------------------
+    alias hx='helix'
 
-  source ~/.config/fish/secrets.fish
+    alias copy='wl-copy'
+    alias paste='wl-paste'
 
-  if test -e ~/config/.fish/local.fish
-    source ~/config/fish/local.fish
-  end
+    alias sg='ast-grep'
+
+    fish_add_path $HOME/.krew/bin
+
+    alias k='kubectl'
+
+    set -x K9S_CONFIG_PATH "$HOME/.config/k9s"
+
+    fish_add_path /var/lib/snapd/snap/bin/
+
+    source /opt/miniconda3/etc/fish/conf.d/conda.fish
+    {{- end }}
+
+    # History --------------------------------------------------------------------
+
+    bind \cg forget # Normal mode
+    bind -M insert \cg forget # Insert mode
+
+    # Local ----------------------------------------------------------------------
+
+    source ~/.config/fish/secrets.fish
+
+    if test -e ~/config/.fish/local.fish
+        source ~/config/fish/local.fish
+    end
 end
