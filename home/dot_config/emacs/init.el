@@ -302,7 +302,8 @@ PACKAGES should be a list of package names as symbols."
                    ("b" "Buffers" consult-project-buffer)
                    ("f" "Files" project-find-file)
                    ("l" "Line" consult-line)
-                   ("d" "Layout" project-dired)]
+                   ("d" "Layout" project-dired)
+                   ("i" "Sibling" find-sibling-file)]
      [:description "Execution"
                    ("r" "Run" project-run)
                    ("b" "Compile" project-compile)]]
@@ -2890,6 +2891,13 @@ are defining or executing a macro."
 
 (add-to-list 'treesit-language-source-alist '(elixir "https://github.com/elixir-lang/tree-sitter-elixir"))
 (add-to-list 'treesit-language-source-alist '(heex "https://github.com/phoenixframework/tree-sitter-heex"))
+
+(add-to-list 'find-sibling-rules
+             '("\\`\\(.*\\)/lib/\\(.*\\)\\.ex\\'"
+               "\\1/test/\\2_test.exs"))
+(add-to-list 'find-sibling-rules
+             '("\\`\\(.*\\)/test/\\(.*\\)_test\\.exs\\'"
+               "\\1/lib/\\2.ex"))
 
 (use-package mix
   :hook
