@@ -583,7 +583,6 @@ This includes buffers visible in windows or tab-bar tabs."
   :config
   (difftastic-bindings-mode))
 
-
 ;;; Tree-sitter
 
 (use-package treesit
