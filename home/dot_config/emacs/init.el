@@ -3371,6 +3371,11 @@ result instead of `message'."
 ;;; Dotfiles
 
 (use-package chezmoi
+  :config
+  ;; Use the base file's major mode
+  (add-to-list 'auto-mode-alist '("\\.tmpl\\'" . (lambda ()
+                                                   (let ((base-name (file-name-sans-extension buffer-file-name)))
+                                                     (set-auto-mode-0 (assoc-default base-name auto-mode-alist 'string-match))))))
   :hook
   ;; Turn off ligatures because they show up poorly.
   (chezmoi-mode-hook . (lambda () (when (require 'ligature)
