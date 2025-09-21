@@ -1881,6 +1881,10 @@ If no, restores full opacity. Only affects the active frame."
   :init
   (vertico-mode))
 
+(use-package vertico-posframe
+  :config
+  (vertico-posframe-mode 1))
+
 ;;; Whitespace
 (setq-default indent-tabs-mode nil)
 
