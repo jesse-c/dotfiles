@@ -943,6 +943,7 @@ If BUFFER is provided, close that buffer directly."
   (gptel-post-rewrite-functions . (lambda (&rest _)
                                     "Reset the rewrite directive after accepting a rewrite."
                                     (setq-local gptel--rewrite-message "Refactor: ")))
+  (gptel-mode . (lambda () (org-indent-mode -1)))
   :bind
   ("s-a" . gptel-menu)
   ("<f5>" . my/gptel-toggle-sidebar)
