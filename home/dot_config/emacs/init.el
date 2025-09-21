@@ -1355,8 +1355,6 @@ If BUFFER is provided, close that buffer directly."
   (setq org-roam-node-display-template (concat "${title:*} " (propertize "${tags:10}" 'face 'org-tag)))
   ;; RETURN will follow links in org-mode files
   (setq org-return-follows-link  t)
-  ;; If using org-roam-protocol
-  (require 'org-roam-protocol)
   (transient-define-prefix org-structure-transient-menu ()
     ["Structure"
      [("i" "Insert" org-meta-return)
