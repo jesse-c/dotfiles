@@ -2894,6 +2894,7 @@ are defining or executing a macro."
 (add-to-list 'treesit-language-source-alist '(elixir "https://github.com/elixir-lang/tree-sitter-elixir"))
 (add-to-list 'treesit-language-source-alist '(heex "https://github.com/phoenixframework/tree-sitter-heex"))
 
+;; Elixir: lib/foo.ex <-> test/foo_test.exs
 (add-to-list 'find-sibling-rules
              '("\\`\\(.*\\)/lib/\\(.*\\)\\.ex\\'"
                "\\1/test/\\2_test.exs"))
@@ -2924,6 +2925,14 @@ are defining or executing a macro."
   :defer t)
 
 ;;; Language: Python
+
+;; Python: foo.py <-> test_foo.py
+(add-to-list 'find-sibling-rules
+             '("\\`\\(.*\\)/\\([^/]*\\)\\.py\\'"
+               "\\1/test_\\2.py"))
+(add-to-list 'find-sibling-rules
+             '("\\`\\(.*\\)/test_\\([^/]*\\)\\.py\\'"
+               "\\1/\\2.py"))
 
 (setq-local python-indent-offset 4)
 
@@ -3373,6 +3382,14 @@ result instead of `message'."
   thing)
 
 ;;; Language: Go
+
+;; Go: foo.go <-> foo_test.go
+(add-to-list 'find-sibling-rules
+             '("\\`\\(.*\\)/\\([^/]*\\)\\.go\\'"
+               "\\1/\\2_test.go"))
+(add-to-list 'find-sibling-rules
+             '("\\`\\(.*\\)/\\([^/]*\\)_test\\.go\\'"
+               "\\1/\\2.go"))
 
 (use-package go-ts-mode
   :defer t)
