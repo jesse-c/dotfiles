@@ -632,6 +632,7 @@ This includes buffers visible in windows or tab-bar tabs."
   (clojure-ts-mode . my/eglot-ensure-deferred)
   (elixir-mode . my/eglot-ensure-deferred)
   (elixir-ts-mode . my/eglot-ensure-deferred)
+  (heex-ts-mode . my/eglot-ensure-deferred)
   (flix-mode . my/eglot-ensure-deferred)
   (go-mode . my/eglot-ensure-deferred)
   (go-ts-mode . my/eglot-ensure-deferred)
