@@ -84,6 +84,8 @@ if status is-interactive
 
     fish_add_path $HOME/.mint/bin
 
+    set -gx MISE_GITHUB_TOKEN '{{ onepasswordRead "op://Personal/GitHub/API Keys/Mise" }}'
+
     mise activate fish | source
 
     alias c='chezmoi'
