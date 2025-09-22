@@ -2438,6 +2438,8 @@ are defining or executing a macro."
 
 ;;; Editor
 
+(global-set-key (kbd "s-r") (lambda () (interactive) (revert-buffer t t)))
+
 ;; Navigation
 (after-packages (evil avy xref consult-todo treesit-fold)
   (transient-define-prefix nav-transient-menu ()
