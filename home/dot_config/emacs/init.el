@@ -1924,6 +1924,11 @@ If no, restores full opacity. Only affects the active frame."
   (vertico-mode))
 
 (use-package vertico-posframe
+  :custom
+  (vertico-posframe-parameters
+   '((left-fringe . 4)
+     (right-fringe . 4)
+     (internal-border-width . 4)))
   :config
   (vertico-posframe-mode 1))
 
