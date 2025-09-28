@@ -1610,6 +1610,9 @@ If BUFFER is provided, close that buffer directly."
 (add-hook 'emacs-startup-hook
           (lambda () (run-with-timer 0.1 nil #'which-key-mode)))
 
+(add-hook 'emacs-startup-hook
+          (lambda () (require 'slow)))
+
 (defun my/set-frame-transparency (alpha-value)
   (if (and (>= alpha-value 0) (<= alpha-value 100))
       (progn
