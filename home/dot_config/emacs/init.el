@@ -1503,6 +1503,10 @@ If BUFFER is provided, close that buffer directly."
   :init
   (setq evil-want-integration t) ;; This is optional since it's already set to t by default.
   (setq evil-want-keybinding nil)
+  ;; Performance optimizations
+  (setq evil-ex-search-vim-style-regexp t
+        evil-ex-substitute-global t
+        evil-want-fine-undo t)
   :config
   (evil-set-undo-system 'undo-fu)
   (global-unset-key (kbd "C-u"))
