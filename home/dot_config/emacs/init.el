@@ -1031,6 +1031,27 @@ If BUFFER is provided, close that buffer directly."
                                       gptel-tools))))
             tools)))
 
+(use-package acp
+  :vc
+  (:url "https://github.com/xenodium/acp.el"))
+
+(use-package agent-shell
+  :after (acp shell-maker)
+  :vc
+  (:url "https://github.com/xenodium/agent-shell")
+  :config
+  (setq agent-shell-anthropic-key nil)
+  (setq agent-shell-anthropic-authentication
+        (agent-shell-anthropic-make-authentication :login t))
+  (setq agent-shell-google-authentication
+        (agent-shell-google-make-authentication :login t))
+  (setq agent-shell-openai-authentication
+        (agent-shell-openai-make-authentication
+         :api-key (lambda () (my/get-password "api.openai.com" "me"))))
+  (setq agent-shell-goose-authentication
+        (agent-shell-make-goose-authentication
+         :openai-api-key (lambda () (my/get-password "api.openai.com" "me")))))
+
 ;; Make sure gptel is also installed and configured.
 (use-package macher
   :disabled
@@ -1101,6 +1122,7 @@ If BUFFER is provided, close that buffer directly."
     (cape-interactive #'codeium-completion-at-point)))
 
 (use-package claude-code-ide
+  :disabled
   :vc
   (:url "https://github.com/manzaltu/claude-code-ide.el")
   :bind ("C-c C-'" . claude-code-ide-menu)
@@ -1140,6 +1162,8 @@ If BUFFER is provided, close that buffer directly."
 
 (use-package vterm
   :defer 1)
+
+(use-package shell-maker)
 
 ;;; Notes
 
