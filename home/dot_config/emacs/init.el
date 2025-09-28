@@ -812,7 +812,6 @@ This includes buffers visible in windows or tab-bar tabs."
   (gptel-use-tools t)
   (gptel-stream t)
   (gptel-default-mode 'org-mode)
-  (gptel-model 'claude-sonnet-4-20250514)
   (gptel-display-buffer-action
    '((display-buffer-reuse-window display-buffer-in-side-window)
      (side . right)
@@ -822,11 +821,18 @@ This includes buffers visible in windows or tab-bar tabs."
   (defvar gptel-save-directory (expand-file-name "chats" user-emacs-directory)
     "Directory to save gptel conversations.")
   :config
+  (defun my/gptel-use-openai ()
+    "Set gptel backend to OpenAI"
+    (interactive)
+    (setq gptel-model 'gpt-5)
+    (setq gptel-backend (gptel-make-openai "OpenAI"
+                          :stream t
+                          :key (my/get-password "api.openai.com" "me")))
+    (message "Switched gptel backend: OpenAI"))
   (defun my/gptel-use-claude-sonnet-4 ()
     "Set gptel backend to Claude Sonnet 4."
     (interactive)
     (setq gptel-model 'claude-sonnet-4-20250514)
-
     (setq gptel-backend (gptel-make-anthropic "Claude"
                           :stream t
                           :key (my/get-password "anthropic.com" "me")))
@@ -842,7 +848,7 @@ This includes buffers visible in windows or tab-bar tabs."
   (defun my/gptel-use-gemini ()
     "Set gptel backend to Gemini."
     (interactive)
-    (setq gptel-model 'gemini-2.5-pro)
+    (setq gptel-model 'gemini-pro-latest)
     (setq gptel-backend (gptel-make-gemini "Gemini"
                           :key (my/get-password "aistudio.google.com" "apikey")
                           :stream t))
@@ -855,15 +861,23 @@ This includes buffers visible in windows or tab-bar tabs."
                           :key (my/get-password "perplexity.ai" "apikey")))
     (message "Switched gptel backend: Perplexity"))
   (defun my/gptel-use-deepseek-chat ()
-    "Set gptel backend to DeepSeek."
+    "Set gptel backend to DeepSeek Chat."
     (interactive)
     (setq gptel-model 'deepseek-chat)
     (setq gptel-backend (gptel-make-deepseek "DeepSeek"
                           :stream t
                           :key (my/get-password "deepseek.com" "apikey")))
-    (message "Switched gptel backend: DeepSeek"))
+    (message "Switched gptel backend: DeepSeek Chat"))
+  (defun my/gptel-use-deepseek-reasoner ()
+    "Set gptel backend to DeepSeek Chat."
+    (interactive)
+    (setq gptel-model 'deepseek-reasoner)
+    (setq gptel-backend (gptel-make-deepseek "DeepSeek"
+                          :stream t
+                          :key (my/get-password "deepseek.com" "apikey")))
+    (message "Switched gptel backend: DeepSeek Reasoner"))
   ;; Set Claude as default
-  (my/gptel-use-claude-sonnet-3-7)
+  (my/gptel-use-claude-sonnet-4)
   (defun my/gptel-toggle-sidebar ()
     "Toggle a custom sidebar for a persistent buffer."
     ;; https://github.com/nehrbash/dotfiles/blob/main/Emacs.org#gpt
@@ -1115,7 +1129,7 @@ If BUFFER is provided, close that buffer directly."
   :config
   (add-to-list 'completion-at-point-functions #'yasnippet-capf))
 
-;;; Terminal
+;;; Terminal / Shell
 
 (use-package eat
   :vc
@@ -1124,7 +1138,8 @@ If BUFFER is provided, close that buffer directly."
   :hook
   (eshell-load-hook . eat-eshell-mode))
 
-(use-package vterm)
+(use-package vterm
+  :defer 1)
 
 ;;; Notes
 
@@ -2493,11 +2508,11 @@ are defining or executing a macro."
   (rg-mode . wgrep-rg-setup))
 
 (use-package treemacs
-  :ensure t
   :defer t
   :init
   (with-eval-after-load 'winum
     (define-key winum-keymap (kbd "M-0") #'treemacs-select-window))
+  :commands treemacs
   :config
   (progn
     (setq treemacs-collapse-dirs                   (if treemacs-python-executable 3 0)
@@ -2581,6 +2596,7 @@ are defining or executing a macro."
   :ensure t)
 
 (use-package treemacs-magit
+  :defer t
   :after (treemacs magit))
 
 ;; Folding
