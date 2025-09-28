@@ -1211,7 +1211,7 @@ If BUFFER is provided, close that buffer directly."
 
 (use-package org
   :ensure nil
-  :after flycheck
+  :defer 1
   :custom
   (org-log-done t)
   ;; Something instead of "...", such as " ▾ "
@@ -1296,7 +1296,8 @@ If BUFFER is provided, close that buffer directly."
      (emacs-lisp . t)
      (shell . t)
      (calc . t)
-     (elixir . t)))
+     (elixir . t)
+     (rust . t)))
   (defun my/org-long-lines-checker (checker callback)
     "Custom flycheck checker function for long lines in org-mode."
     (let ((errors '())
@@ -1385,6 +1386,9 @@ If BUFFER is provided, close that buffer directly."
             (lambda ()
               (add-hook 'before-save-hook #'my/warn-long-lines-org nil t))))
 
+(use-package ob-async
+  :after org)
+
 (use-package org-roam
   :defer t
   :after org
@@ -1464,8 +1468,8 @@ If BUFFER is provided, close that buffer directly."
 ;; https://github.com/emacs-mirror/emacs/blob/a4dcc8b9a94466c792be3743760a4a45cf6e1e61/lisp/emacs-lisp/ring.el#L48-L52
 ;; #+end_src
 (use-package ob-git-permalink
-  :after org
-  :defer t)
+  :defer t
+  :commands org-babel-execute:git-permalink)
 
 ;; #+begin_src gptel
 ;; What is the capital of France?
@@ -1476,7 +1480,8 @@ If BUFFER is provided, close that buffer directly."
 (use-package ob-gptel
   :after org
   :vc
-  (:url "https://github.com/jwiegley/ob-gptel" :branch "main"))
+  (:url "https://github.com/jwiegley/ob-gptel" :branch "main")
+  :commands org-babel-execute:gptel)
 
 (use-package org-modern
   :after org
@@ -2347,7 +2352,27 @@ are defining or executing a macro."
   :after (consult hl-todo))
 
 (use-package consult-gh
-  :after (consult forge ghub magit pr-review))
+  :after (consult forge ghub magit pr-review)
+  :defer t
+  :commands
+  (consult-gh-auth-switch
+   consult-gh-repo-list
+   consult-gh-issue-list
+   consult-gh-pr-list
+   consult-gh-search-repos
+   consult-gh-search-issues
+   consult-gh-search-prs
+   consult-gh-search-code
+   consult-gh-find-file
+   consult-gh-repo-create
+   consult-gh-issue-create
+   consult-gh-pr-create
+   consult-gh-dashboard
+   consult-gh-notifications
+   consult-gh-workflow-list
+   consult-gh-workflow-run
+   consult-gh-run-list
+   consult-gh-run-rerun))
 ;; :config
 ;; Disabled, as currently having issues
 ;; (consult-gh-with-pr-review-mode +1))
@@ -2970,7 +2995,7 @@ are defining or executing a macro."
 
 (use-package ob-elixir
   :defer t
-  :after org)
+  :commands org-babel-execute:elixir)
 
 ;;; Language: Erlang
 
@@ -3055,6 +3080,10 @@ are defining or executing a macro."
 (use-package rust-mode
   :init
   (setq rust-mode-treesitter-derive t))
+
+(use-package ob-rust
+  :defer t
+  :commands org-babel-execute:rust)
 
 (use-package flycheck-rust
   :defer 1
@@ -3312,7 +3341,8 @@ Interactively, POINT is point and KILL is the prefix argument."
 ;;; Language: HTTP
 
 (use-package verb
-  :after (org))
+  :defer t
+  :commands org-babel-execute:verb)
 
 ;;; Language: Shell
 

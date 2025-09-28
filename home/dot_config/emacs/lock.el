@@ -1,4 +1,4 @@
-;; Generated: 2025-09-28 13:33:16. DO NOT EDIT.
+;; Generated: 2025-09-28 21:15:21. DO NOT EDIT.
 
 ;; ace-window: 20220911.358
 ;; acp: 0.2.1
@@ -145,9 +145,11 @@
 ;; nerd-icons-completion: 20250925.1420
 ;; no-littering: 20250901.1613
 ;; nov: 20250615.1051
+;; ob-async: 20210428.2052
 ;; ob-elixir: 20250706.556
 ;; ob-git-permalink: 20220627.46
 ;; ob-gptel: 0.1.0
+;; ob-rust: 20220824.1923
 ;; orderless: 20250922.1344
 ;; org: 9.7.34
 ;; org-appear: 20240716.1413
