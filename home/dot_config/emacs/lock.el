@@ -1,9 +1,9 @@
-;; Generated: 2025-09-28 21:15:21. DO NOT EDIT.
+;; Generated: 2025-09-29 21:37:09. DO NOT EDIT.
 
 ;; ace-window: 20220911.358
 ;; acp: 0.2.1
 ;; affe: 20250921.1712
-;; agent-shell: 0.2.2
+;; agent-shell: 0.2.3
 ;; aidermacs: 1.5
 ;; aio: 20200610.1904
 ;; all-the-icons: 20250527.927
@@ -62,6 +62,7 @@
 ;; dtrt-indent: 20250716.2128
 ;; easysession: 20250911.225
 ;; eat: 0.9.4
+;; eglot: 1.18
 ;; eglot-booster: 0.1.0
 ;; eldoc-box: 20250920.125
 ;; elisp-demos: 20240128.810
@@ -77,7 +78,7 @@
 ;; eros-inspector: 20240923.613
 ;; esxml: 20250421.1632
 ;; eval-in-repl: 20230805.2125
-;; evil: 20250812.1023
+;; evil: 20250929.1650
 ;; evil-collection: 20250927.1601
 ;; evil-org: 20221001.2335
 ;; evil-surround: 20240325.852
@@ -96,7 +97,7 @@
 ;; flycheck-swift: 20170129.549
 ;; forge: 20250916.1119
 ;; fringe-helper: 20140620.2109
-;; ghub: 20250926.2106
+;; ghub: 20250929.958
 ;; git-commit-ts-mode: 1.0
 ;; git-gutter: 20241212.1415
 ;; git-gutter-fringe: 20211003.2228
@@ -135,7 +136,7 @@
 ;; magit-popup: 20200719.1015
 ;; magit-prime: 20250803.1914
 ;; magit-section: 20250919.2134
-;; magit-todos: 20240927.52
+;; magit-todos: 20250928.1611
 ;; marginalia: 20250920.852
 ;; markdown-mode: 20250812.423
 ;; mcp-hub: 0
@@ -229,7 +230,7 @@
 ;; verb: 20250916.350
 ;; vertico: 20250908.1638
 ;; vertico-posframe: 0.9.0
-;; vterm: 20241218.331
+;; vterm: 20250929.1514
 ;; vundo: 2.4.0
 ;; websocket: 20230809.305
 ;; wgrep: 20230203.1214
