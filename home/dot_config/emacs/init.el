@@ -574,7 +574,7 @@ This includes buffers visible in windows or tab-bar tabs."
 (use-package git-commit-ts-mode
   :vc
   :disabled
-  (:url "https://github.com/danilshvalov/git-commit-ts-mode" :branch "main")
+  (:url "https://github.com/danilshvalov/git-commit-ts-mode")
   :init
   (add-to-list 'major-mode-remap-alist
                '(git-commit-mode . git-commit-ts-mode)))
@@ -773,7 +773,7 @@ This includes buffers visible in windows or tab-bar tabs."
 (use-package eglot-booster
   :after eglot
   :vc
-  (:url "https://github.com/jdtsmith/eglot-booster" :branch "main")
+  (:url "https://github.com/jdtsmith/eglot-booster")
   :config
   (eglot-booster-mode))
 
@@ -971,13 +971,13 @@ If BUFFER is provided, close that buffer directly."
   :after (gptel posframe pdf-tools embark)
   :commands gptel-quick
   :vc
-  (:url "https://github.com/karthink/gptel-quick" :branch "master")
+  (:url "https://github.com/karthink/gptel-quick")
   :config
   (keymap-set embark-general-map "?" #'gptel-quick))
 
 (use-package mcp-hub
   :vc
-  (:url "https://github.com/lizqwerscott/mcp.el" :branch "master")
+  (:url "https://github.com/lizqwerscott/mcp.el")
   :init
   (setq mcp-hub-servers
         `(("desktop-commander" . (:command "npx" :args ("-y" "@wonderwhy-er/desktop-commander")))
@@ -1052,32 +1052,9 @@ If BUFFER is provided, close that buffer directly."
         (agent-shell-make-goose-authentication
          :openai-api-key (lambda () (my/get-password "api.openai.com" "me")))))
 
-;; Make sure gptel is also installed and configured.
-(use-package macher
-  :disabled
-  :vc
-  (:url "https://github.com/kmontag/macher" :branch "main")
-  :after macher
-  :config
-  (macher-install))
-
-(use-package aidermacs
-  :disabled
-  :after (transient magit vterm)
-  :vc
-  (:url "https://github.com/MatthewZMD/aidermacs" :branch "main")
-  :config
-  (setenv "ANTHROPIC_API_KEY" (my/get-password "anthropic.com" "me"))
-  :bind
-  ("C-c a" . aidermacs-transient-menu)
-  :custom
-  (aidermacs-use-architect-mode t)
-  (aidermacs-default-model "sonnet")
-  (aidermacs-backend 'vterm))
-
 (use-package codeium
   :vc
-  (:url "https://github.com/Exafunction/codeium.el" :branch "main")
+  (:url "https://github.com/Exafunction/codeium.el")
 
   :init
   ;; use globally
@@ -1120,18 +1097,6 @@ If BUFFER is provided, close that buffer directly."
     "Decouple codeium from other completions"
     (interactive)
     (cape-interactive #'codeium-completion-at-point)))
-
-(use-package claude-code-ide
-  :disabled
-  :vc
-  (:url "https://github.com/manzaltu/claude-code-ide.el")
-  :bind ("C-c C-'" . claude-code-ide-menu)
-  :custom
-  (claude-code-ide-terminal-backend 'eat)
-  (claude-code-ide-show-claude-window-in-ediff nil)
-  (claude-code-ide-use-side-window t)
-  :config
-  (claude-code-ide-emacs-tools-setup))
 
 ;;; Snippets
 
@@ -1480,7 +1445,7 @@ If BUFFER is provided, close that buffer directly."
 (use-package ob-gptel
   :after org
   :vc
-  (:url "https://github.com/jwiegley/ob-gptel" :branch "main")
+  (:url "https://github.com/jwiegley/ob-gptel")
   :commands org-babel-execute:gptel)
 
 (use-package org-modern
@@ -1742,7 +1707,7 @@ If no, restores full opacity. Only affects the active frame."
 
 (use-package sideline-eglot
   :vc
-  (:url "https://github.com/emacs-sideline/sideline-eglot" :branch "master")
+  (:url "https://github.com/emacs-sideline/sideline-eglot")
   :config
   ;; TODO: Remove this once fixed upstream
   (defun my/fix-sideline-eglot-getf (orig-fun &rest args)
@@ -2118,7 +2083,7 @@ are defining or executing a macro."
 ;; Scrolling
 (pixel-scroll-precision-mode) ;; Smooth scrolling
 (use-package ultra-scroll
-  :vc (:url "https://github.com/jdtsmith/ultra-scroll" :branch "main")
+  :vc (:url "https://github.com/jdtsmith/ultra-scroll")
   :init
   (setq scroll-conservatively 101 ; important!
         scroll-margin 0)
@@ -2314,7 +2279,7 @@ are defining or executing a macro."
 
 (use-package consult-xref-stack
   :vc
-  (:url "https://github.com/brett-lempereur/consult-xref-stack" :branch "main")
+  (:url "https://github.com/brett-lempereur/consult-xref-stack")
   :after consult
   :commands consult-xref-stack-backward)
 
@@ -2662,7 +2627,7 @@ are defining or executing a macro."
 
 ;; Folding
 (use-package treesit-fold
-  :vc (:url "https://github.com/emacs-tree-sitter/treesit-fold" :branch "master")
+  :vc (:url "https://github.com/emacs-tree-sitter/treesit-fold")
   :custom
   (treesit-fold-indicators-fringe 'left-fringe)
   (treesit-fold-indicators-priority 30) ; Lower priority for less frequent updates
@@ -2683,7 +2648,7 @@ are defining or executing a macro."
   (("C-'" . avy-goto-word-0)))
 
 (use-package treesit-jump
-  :vc (:url "https://www.github.com/dmille56/treesit-jump" :branch "main")
+  :vc (:url "https://www.github.com/dmille56/treesit-jump")
   :after (treesit avy transient gptel)
   :commands
   (treesit-jump-jump
@@ -2699,7 +2664,7 @@ are defining or executing a macro."
 (use-package undo-fu)
 
 (use-package vundo
-  :vc (:url "https://github.com/casouri/vundo" :branch "master")
+  :vc (:url "https://github.com/casouri/vundo")
   :custom
   (vundo-glyph-alist vundo-unicode-symbols)
   (vundo-compact-display t))
@@ -2738,7 +2703,7 @@ are defining or executing a macro."
 ;; Structured editing
 (use-package combobulate
   :vc
-  (:url "https://github.com/mickeynp/combobulate" :branch "master")
+  (:url "https://github.com/mickeynp/combobulate")
   :custom
   (combobulate-key-prefix "C-c o")
   :hook
@@ -2756,7 +2721,7 @@ are defining or executing a macro."
 (setq isearch-lazy-count t)
 
 (use-package semext
-  :vc (:url "https://github.com/ahyatt/semext" :branch "main")
+  :vc (:url "https://github.com/ahyatt/semext")
   :init
   (require 'llm-openai)
   (setopt semext-provider (make-llm-openai :key (my/get-password "api.openai.com" "me")))
@@ -2770,7 +2735,7 @@ are defining or executing a macro."
 
 (use-package ast-grep
   :vc
-  (:url "https://github.com/SunskyXH/ast-grep.el" :branch "main"))
+  (:url "https://github.com/SunskyXH/ast-grep.el"))
 
 (use-package re-builder
   :ensure nil
@@ -3355,7 +3320,7 @@ Interactively, POINT is point and KILL is the prefix argument."
 
 (use-package typst-ts-mode
   :vc
-  (:url "https://codeberg.org/meow_king/typst-ts-mode" :branch "main")
+  (:url "https://codeberg.org/meow_king/typst-ts-mode")
   :custom
   (typst-ts-watch-options "--open")
   (typst-ts-mode-grammar-location (expand-file-name "tree-sitter/libtree-sitter-typst.so" user-emacs-directory))
@@ -3369,7 +3334,7 @@ Interactively, POINT is point and KILL is the prefix argument."
 (use-package typst-preview
   :after websocket
   :vc
-  (:url "https://github.com/havarddj/typst-preview.el" :branch "main")
+  (:url "https://github.com/havarddj/typst-preview.el")
   :custom
   (typst-preview-executable "tinymist preview")
   (typst-preview-browser "default"))
@@ -3397,7 +3362,7 @@ Interactively, POINT is point and KILL is the prefix argument."
 
 (use-package sideline-eros
   :vc
-  (:url "https://github.com/emacs-sideline/sideline-eros" :branch "master")
+  (:url "https://github.com/emacs-sideline/sideline-eros")
   :after (sideline)
   :hook (emacs-lisp-mode . sideline-eros-setup))
 
