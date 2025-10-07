@@ -1917,6 +1917,7 @@ If no, restores full opacity. Only affects the active frame."
 (setq-default evil-shift-width 2)
 
 (use-package dtrt-indent
+  :disabled
   :diminish
   :config
   (dtrt-indent-global-mode t))
