@@ -1906,6 +1906,11 @@ If no, restores full opacity. Only affects the active frame."
    '((left-fringe . 4)
      (right-fringe . 4)
      (internal-border-width . 4)))
+  (vertico-multiform-commands
+   '((treemacs (:not posframe))
+     (consult-line (:not posframe))
+     (consult-ripgrep (:not posframe))
+     (t posframe)))
   :config
   (vertico-posframe-mode 1))
 
