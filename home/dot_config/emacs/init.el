@@ -3448,6 +3448,35 @@ result instead of `message'."
 (use-package pdf-tools
   :defer t)
 
+;;; Language: XML
+
+;; https://www.emacswiki.org/emacs/NxmlMode#h5o-12
+(with-eval-after-load 'nxml-mode
+  (defun nxml-where ()
+    "Display the hierarchy of XML elements the point is on as a path."
+    (interactive)
+    (let ((path nil))
+      (save-excursion
+        (save-restriction
+          (widen)
+          (while (and (< (point-min) (point) ;; Doesn't error if point is at beginning of buffer
+                         (condition-case nil
+                             (progn
+                               (nxml-backward-up-element) ; always returns nil
+                               t)
+                           (error nil))))
+            (setq path (cons (xmltok-start-tag-local-name) path))))
+        (let ((result (format "/%s" (mapconcat 'identity path "/"))))
+          (when (called-interactively-p t)
+            (message "%s" result))
+          result)))
+
+    (defun nxml-where-copy ()
+      "Copy the hierarchy of XML elements the point is on to the clipboard."
+      (interactive)
+      (let ((path (nxml-where))))
+      (kill-new path))))
+
 ;;; Dotfiles
 
 (use-package chezmoi
