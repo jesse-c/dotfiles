@@ -3458,7 +3458,7 @@ result instead of `message'."
 
 ;; https://www.emacswiki.org/emacs/NxmlMode#h5o-12
 (with-eval-after-load 'nxml-mode
-  (defun nxml-where ()
+  (defun my/nxml-where ()
     "Display the hierarchy of XML elements the point is on as a path."
     (interactive)
     (let ((path nil))
@@ -3477,7 +3477,7 @@ result instead of `message'."
             (message "%s" result))
           result)))
 
-    (defun nxml-where-copy ()
+    (defun my/nxml-where-copy ()
       "Copy the hierarchy of XML elements the point is on to the clipboard."
       (interactive)
       (let ((path (nxml-where))))
