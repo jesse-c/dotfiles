@@ -557,10 +557,8 @@ This includes buffers visible in windows or tab-bar tabs."
   :after magit
   :defer 1
   :custom
-  {{- if eq .chezmoi.os "linux"}}
-  (git-link-default-remote "upstream")
-  {{- end}}
-  (git-link-use-commit t))
+  (git-link-use-commit t)
+  (git-link-default-remote "main"))
 
 ;; Why was this line changed
 (use-package git-messenger
