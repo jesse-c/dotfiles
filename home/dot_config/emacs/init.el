@@ -647,6 +647,7 @@ This includes buffers visible in windows or tab-bar tabs."
   (swift-ts-mode . my/eglot-ensure-deferred)
   (toml-mode . my/eglot-ensure-deferred)
   (toml-ts-mode . my/eglot-ensure-deferred)
+  (conf-toml-mode . my/eglot-ensure-deferred)
   (javascript-mode . my/eglot-ensure-deferred)
   (typescript-mode . my/eglot-ensure-deferred)
   (typescript-ts-mode . my/eglot-ensure-deferred)
@@ -732,6 +733,9 @@ This includes buffers visible in windows or tab-bar tabs."
   (add-to-list 'eglot-server-programs
                `(toml-ts-mode . ,(eglot-alternatives
                                   '(("taplo" "lsp" "stdio")))))
+  (add-to-list 'eglot-server-programs
+               `(conf-toml-mode . ,(eglot-alternatives
+                                    '(("taplo" "lsp" "stdio")))))
 
   (transient-define-prefix eglot-server-menu ()
     "Eglot server commands."
