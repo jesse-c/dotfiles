@@ -1266,7 +1266,8 @@ If BUFFER is provided, close that buffer directly."
      (shell . t)
      (calc . t)
      (elixir . t)
-     (rust . t)))
+     (rust . t)
+     (git-permalink . t)))
   (defun my/org-long-lines-checker (checker callback)
     "Custom flycheck checker function for long lines in org-mode."
     (let ((errors '())
@@ -1433,8 +1434,7 @@ If BUFFER is provided, close that buffer directly."
 
 ;; Example:
 ;;
-;; #+begin_src git-permalink
-;; https://github.com/emacs-mirror/emacs/blob/a4dcc8b9a94466c792be3743760a4a45cf6e1e61/lisp/emacs-lisp/ring.el#L48-L52
+;; #+begin_src git-permalink :url https://github.com/emacs-mirror/emacs/blob/a4dcc8b9a94466c792be3743760a4a45cf6e1e61/lisp/emacs-lisp/ring.el#L48-L52
 ;; #+end_src
 (use-package ob-git-permalink
   :defer t
