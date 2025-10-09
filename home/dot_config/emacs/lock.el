@@ -1,4 +1,4 @@
-;; Generated: 2025-10-06 11:31:10. DO NOT EDIT.
+;; Generated: 2025-10-09 10:50:37. DO NOT EDIT.
 
 ;; ace-window: 20220911.358
 ;; acp: 0.2.1
@@ -19,7 +19,7 @@
 ;; cape: 20250920.843
 ;; cargo-mode: 20250529.1140
 ;; cargo-transient: 20241204.1217
-;; casual: 20250924.2133
+;; casual: 20251006.2105
 ;; casual-avy: 20250830.2115
 ;; catppuccin-theme: 20250910.2247
 ;; cfrs: 20250729.1422
@@ -32,7 +32,7 @@
 ;; combobulate: 0.2
 ;; compile-angel: 20250905.2104
 ;; cond-let: 20250903.1646
-;; consult: 20251006.719
+;; consult: 20251006.1037
 ;; consult-eglot: 20250831.924
 ;; consult-eglot-embark: 20250831.925
 ;; consult-flycheck: 20250923.1114
@@ -50,7 +50,7 @@
 ;; csv-mode: 1.27
 ;; dape: 0.24.1
 ;; dash: 20250312.1307
-;; diff-hl: 20251002.2320
+;; diff-hl: 20251008.2241
 ;; difftastic: 20250930.718
 ;; diminish: 20220909.847
 ;; dirvish: 20250504.807
@@ -78,7 +78,7 @@
 ;; esxml: 20250421.1632
 ;; eval-in-repl: 20230805.2125
 ;; evil: 20250929.1650
-;; evil-collection: 20250927.1601
+;; evil-collection: 20251007.813
 ;; evil-org: 20221001.2335
 ;; evil-surround: 20240325.852
 ;; evil-textobj-tree-sitter: 20250908.352
@@ -94,9 +94,9 @@
 ;; flycheck-package: 20210509.2325
 ;; flycheck-rust: 20250226.2240
 ;; flycheck-swift: 20170129.549
-;; forge: 20251004.2042
+;; forge: 20251007.1152
 ;; fringe-helper: 20140620.2109
-;; ghub: 20250929.958
+;; ghub: 20251006.1821
 ;; git-commit-ts-mode: 1.0
 ;; git-gutter: 20241212.1415
 ;; git-gutter-fringe: 20211003.2228
@@ -105,17 +105,17 @@
 ;; git-modes: 20250901.1608
 ;; git-timemachine: 20250128.940
 ;; goto-chg: 20240407.1110
-;; gptel: 20251006.320
+;; gptel: 20251007.257
 ;; gptel-quick: 0.0.5
 ;; helpful: 20250408.334
 ;; highlight-indent-guides: 20241229.2012
-;; hl-todo: 20250923.937
+;; hl-todo: 20251006.1811
 ;; ht: 20230703.558
 ;; hydra: 20250316.1254
 ;; inheritenv: 20241119.1355
 ;; inspector: 0.38
 ;; jinja2-mode: 20220117.807
-;; jinx: 20250920.956
+;; jinx: 20251007.1659
 ;; json-mode: 20240427.1245
 ;; json-navigator: 20241031.630
 ;; json-snatcher: 20200916.1717
@@ -129,18 +129,18 @@
 ;; loop: 20160813.1407
 ;; lsp-mode: 20251002.2344
 ;; lv: 20200507.1518
-;; magit: 20251004.2028
+;; magit: 20251006.1840
 ;; magit-delta: 20220125.50
 ;; magit-popup: 20200719.1015
 ;; magit-prime: 20250803.1914
-;; magit-section: 20250919.2134
+;; magit-section: 20251006.1840
 ;; magit-todos: 20250928.1611
-;; marginalia: 20251006.721
+;; marginalia: 20251006.1126
 ;; markdown-mode: 20250812.423
 ;; mcp-hub: 0
 ;; mix: 20240122.720
 ;; modern-sh: 20250320.858
-;; nerd-icons: 20251006.121
+;; nerd-icons: 20251008.1720
 ;; nerd-icons-completion: 20250925.1420
 ;; no-littering: 20251005.1557
 ;; nov: 20250615.1051
@@ -190,7 +190,7 @@
 ;; scopeline: 20250120.331
 ;; semext: 0.0.1
 ;; sesman: 20240417.1723
-;; shell-maker: 20251005.1545
+;; shell-maker: 20251008.1308
 ;; shrink-path: 20190208.1335
 ;; sideline: 20250517.508
 ;; sideline-blame: 20250704.251
@@ -205,6 +205,8 @@
 ;; swift-ts-mode: 20250915.759
 ;; tablist: 20231019.1126
 ;; timeout: 20250911.2339
+;; tramp: 2.8.0.3
+;; transient: 20251006.1815
 ;; tree-inspector: 0.4
 ;; tree-sitter: 20220212.1632
 ;; tree-sitter-langs: 20251005.2228
