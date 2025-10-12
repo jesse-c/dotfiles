@@ -2687,7 +2687,11 @@ are defining or executing a macro."
   (add-to-list 'apheleia-mode-alist '(python-base-mode . ruff))
   (add-to-list 'apheleia-formatters '(fish-indent . ("fish_indent")))
   (add-to-list 'apheleia-mode-alist '(fish-mode . fish-indent))
-  (add-to-list 'apheleia-mode-alist '(ruby-ts-mode . rufo)))
+  (add-to-list 'apheleia-mode-alist '(ruby-ts-mode . rufo))
+  (add-to-list 'apheleia-formatters
+               `(pet-ruff . ((or (pet-executable-find "ruff")
+                                 (car (alist-get 'ruff apheleia-formatters)))
+                             ,@(cdr (alist-get 'ruff apheleia-formatters))))))
 
 ;; Spelling & Grammar
 
@@ -3000,14 +3004,17 @@ are defining or executing a macro."
   :custom
   (pet-debug 1)
   :config
+  (pet-def-config-accessor pre-commit-config
+    :file-name ".pre-commit-config.yaml"
+    :parser pet-parse-config-file)
+
   (defun my/pet-python-setup ()
     (pet-mode 1)
     (setq-local python-shell-interpreter (pet-executable-find "python")
                 python-shell-virtualenv-root (pet-virtualenv-root)
                 python-pytest-executable (pet-executable-find "pytest")
                 dap-python-executable python-shell-interpreter
-                aphelia-formatter (pet-executable-find "ruff"))
-
+                apheleia-formatter 'pet-ruff)
 
     (pet-eglot-setup)
     (pet-flycheck-setup))
