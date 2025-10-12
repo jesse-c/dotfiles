@@ -312,7 +312,8 @@ PACKAGES should be a list of package names as symbols."
       ("c" "Close tab" tab-close)
       ("n" "Rename tab" my/rename-tab-to-project-name)]
      [("p" "Switch (Known)" project-switch-project)
-      ("P" "Switch (All)" consult-ghq-switch-project)]])
+      ("P" "Switch (All)" consult-ghq-switch-project)]
+     [("C" "Close" project-kill-buffers)]])
   (defun project-run (command)
     "Run COMMAND in the current project's root directory."
     (interactive (list (read-shell-command "Run command: "
