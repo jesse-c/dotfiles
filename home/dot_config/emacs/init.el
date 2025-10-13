@@ -620,8 +620,7 @@ This includes buffers visible in windows or tab-bar tabs."
   :after magit
   :defer 1
   :custom
-  (git-link-use-commit t)
-  (git-link-default-remote "main"))
+  (git-link-use-commit t))
 
 ;; Why was this line changed
 (use-package git-messenger
