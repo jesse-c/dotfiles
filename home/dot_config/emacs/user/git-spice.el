@@ -121,5 +121,139 @@
   (interactive)
   (remove-hook 'magit-status-sections-hook 'my-magit-insert-git-spice-section t))
 
+;; Helper functions for git-spice commands
+(defun git-spice-run (&rest args)
+  "Run gs command with ARGS and refresh magit."
+  (let* ((default-directory (magit-toplevel))
+         (command-string (concat "gs " (mapconcat #'shell-quote-argument args " ")))
+         (buffer (get-buffer-create "*gs*")))
+    (with-current-buffer buffer
+      (erase-buffer))
+    (let ((proc (apply #'start-process "gs" buffer "gs" args)))
+      (set-process-sentinel
+       proc
+       (lambda (proc event)
+         (let ((exit-status (process-exit-status proc)))
+           (cond
+            ((and (string-match-p "finished" event) (= exit-status 0))
+             (message "✓ gs %s succeeded" (mapconcat #'identity args " "))
+             (magit-refresh))
+            ((string-match-p "finished" event)
+             (message "✗ gs %s failed (exit %d)" (mapconcat #'identity args " ") exit-status)
+             (with-current-buffer (get-buffer "*gs*")
+               (display-buffer (current-buffer))))
+            (t
+             (message "gs %s: %s" (mapconcat #'identity args " ") (string-trim event))))))))))
+
+(defun git-spice-run-display (&rest args)
+  "Run gs command with ARGS and display output."
+  (let ((default-directory (magit-toplevel)))
+    (async-shell-command (concat "gs " (mapconcat #'identity args " ")))))
+
+(defun git-spice-arguments (&optional prompt)
+  "Get transient arguments for current command."
+  (transient-args (or prompt 'git-spice-menu)))
+
+(defun git-spice-repo-sync ()
+  "Run gs repo sync with arguments."
+  (interactive)
+  (apply #'git-spice-run "repo" "sync" (git-spice-arguments)))
+
+(defun git-spice-branch-create (name)
+  "Create a new branch with NAME."
+  (interactive "sBranch name: ")
+  (git-spice-run "branch" "create" name))
+
+(defun git-spice-branch-checkout ()
+  "Checkout a branch using gs."
+  (interactive)
+  (let ((branch (magit-read-branch "Checkout branch")))
+    (git-spice-run "branch" "checkout" branch)))
+
+(defun git-spice-log-short ()
+  "Show short log."
+  (interactive)
+  (git-spice-run-display "log" "short"))
+
+(defun git-spice-log-long ()
+  "Show long log with commits."
+  (interactive)
+  (git-spice-run-display "log" "long"))
+
+;; Transient menus for specific commands
+(transient-define-prefix git-spice-repo-sync-menu ()
+  "Git Spice repo sync menu."
+  ["Arguments"
+   ("-r" "Restack branches" "--restack")]
+  ["Actions"
+   ("Y" "Sync" git-spice-repo-sync)
+   ("q" "Quit" transient-quit-one)])
+
+(transient-define-prefix git-spice-branch-restack-menu ()
+  "Git Spice branch restack menu."
+  ["Arguments"
+   ("-c" "Continue" "--continue")
+   ("-a" "Abort" "--abort")]
+  ["Actions"
+   ("r" "Restack" (lambda () (interactive)
+                    (apply #'git-spice-run "branch" "restack" (git-spice-arguments 'git-spice-branch-restack-menu))))
+   ("q" "Quit" transient-quit-one)])
+
+(transient-define-prefix git-spice-stack-menu ()
+  "Git Spice stack operations menu."
+  ["Arguments"
+   ("-c" "Continue" "--continue")
+   ("-a" "Abort" "--abort")]
+  ["Actions"
+   ("s" "Submit" (lambda () (interactive)
+                   (apply #'git-spice-run "stack" "submit" (git-spice-arguments 'git-spice-stack-menu))))
+   ("r" "Restack" (lambda () (interactive)
+                    (apply #'git-spice-run "stack" "restack" (git-spice-arguments 'git-spice-stack-menu))))
+   ("q" "Quit" transient-quit-one)])
+
+(transient-define-prefix git-spice-menu ()
+  "Git Spice commands menu."
+  [["Repository"
+    ("Y" "Sync›" git-spice-repo-sync-menu)]
+   ["Branch"
+    ("b" "Create" git-spice-branch-create :transient nil)
+    ("o" "Checkout" git-spice-branch-checkout :transient nil)
+    ("t" "Track" (lambda () (interactive) (git-spice-run "branch" "track")) :transient nil)
+    ("U" "Untrack" (lambda () (interactive) (git-spice-run "branch" "untrack")) :transient nil)
+    ("x" "Delete" (lambda () (interactive) (git-spice-run "branch" "delete")) :transient nil)
+    ("m" "Rename" (lambda () (interactive)
+                    (let ((new-name (read-string "New branch name: ")))
+                      (git-spice-run "branch" "rename" new-name))) :transient nil)
+    ("r" "Restack›" git-spice-branch-restack-menu)]]
+  [["Stack"
+    ("s" "Stack ops›" git-spice-stack-menu)
+    ("e" "Edit" (lambda () (interactive) (git-spice-run "stack" "edit")) :transient nil)
+    ("d" "Delete" (lambda () (interactive) (git-spice-run "stack" "delete")) :transient nil)]
+   ["Upstack"
+    ("u" "Submit" (lambda () (interactive) (git-spice-run "upstack" "submit")) :transient nil)
+    ("i" "Restack" (lambda () (interactive) (git-spice-run "upstack" "restack")) :transient nil)
+    ("O" "Move onto" (lambda () (interactive) (git-spice-run "upstack" "onto")) :transient nil)
+    ("D" "Delete" (lambda () (interactive) (git-spice-run "upstack" "delete")) :transient nil)]
+   ["Downstack"
+    ("w" "Submit" (lambda () (interactive) (git-spice-run "downstack" "submit")) :transient nil)
+    ("E" "Edit" (lambda () (interactive) (git-spice-run "downstack" "edit")) :transient nil)]]
+  [["Commit"
+    ("c" "Create" (lambda () (interactive) (git-spice-run "commit" "create")) :transient nil)
+    ("a" "Amend" (lambda () (interactive) (git-spice-run "commit" "amend")) :transient nil)
+    ("S" "Split" (lambda () (interactive) (git-spice-run "commit" "split")) :transient nil)
+    ("f" "Fixup" (lambda () (interactive) (git-spice-run "commit" "fixup")) :transient nil)]
+   ["Navigate"
+    ("n" "Up ↑" (lambda () (interactive) (git-spice-run "up")) :transient t)
+    ("p" "Down ↓" (lambda () (interactive) (git-spice-run "down")) :transient t)
+    ("N" "Top ⬆" (lambda () (interactive) (git-spice-run "top")) :transient nil)
+    ("P" "Bottom ⬇" (lambda () (interactive) (git-spice-run "bottom")) :transient nil)
+    ("T" "Trunk" (lambda () (interactive) (git-spice-run "trunk")) :transient nil)]
+   ["Log"
+    ("l" "Short" git-spice-log-short :transient nil)
+    ("L" "Long" git-spice-log-long :transient nil)]]
+  [:class transient-row
+          ("g" "Refresh" magit-refresh :transient t)
+          ("q" "Quit" transient-quit-one)])
+
 (provide 'git-spice)
 ;;; git-spice.el ends here

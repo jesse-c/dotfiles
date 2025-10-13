@@ -549,6 +549,68 @@ This includes buffers visible in windows or tab-bar tabs."
   (diff-hl-update-async t)
   :config
   (diff-hl-margin-mode 1)
+  (diff-hl-dired-mode 1)
+
+  (defface diff-hl-insert-bg
+    '((t :background "#1e1e2e" :extend t))
+    "Face for highlighting inserted lines with background colour."
+    :group 'diff-hl)
+
+  (defface diff-hl-change-bg
+    '((t :background "#1e1e2e" :extend t))
+    "Face for highlighting changed lines with background colour."
+    :group 'diff-hl)
+
+  (defface diff-hl-delete-bg
+    '((t :background "#1e1e2e" :extend t))
+    "Face for highlighting lines marking deletions with background colour."
+    :group 'diff-hl)
+
+  (defvar my/diff-hl-colours
+    '((mocha
+       (2 . ("#212230" "#202132" "#2e2024"))   ; 2% green, blue, red
+       (3 . ("#222530" "#212231" "#312027"))   ; 3% green, blue, red
+       (4 . ("#232630" "#212331" "#34212a")))  ; 4% green, blue, red
+      (latte
+       (2 . ("#eceef2" "#edeef3" "#f2ecee"))   ; 2% green, blue, red
+       (3 . ("#e9ecf0" "#ebedf2" "#f0e9ec"))   ; 3% green, blue, red
+       (4 . ("#e6e9ee" "#e9ebf1" "#eee6e9")))) ; 4% green, blue, red
+    "diff-hl background colours for different Catppuccin flavours and intensities.")
+
+  (defun my/set-diff-hl-bg-for-theme (&optional intensity)
+    "Set diff-hl background colours based on current Catppuccin flavour.
+  INTENSITY is the tint percentage (2, 3, or 4). Defaults to 3."
+    (interactive)
+    (let* ((intensity (or intensity 3))
+           (flavor (if (boundp 'catppuccin-flavor) catppuccin-flavor 'mocha))
+           (colours (alist-get intensity (alist-get flavor my/diff-hl-colours)))
+           (insert-bg (nth 0 colours))
+           (change-bg (nth 1 colours))
+           (delete-bg (nth 2 colours)))
+      (when colours
+        (set-face-attribute 'diff-hl-insert-bg nil :background insert-bg :extend t)
+        (set-face-attribute 'diff-hl-change-bg nil :background change-bg :extend t)
+        (set-face-attribute 'diff-hl-delete-bg nil :background delete-bg :extend t)
+        (when (bound-and-true-p diff-hl-mode)
+          (diff-hl-mode -1)
+          (diff-hl-mode 1)))))
+
+  ;; (my/set-diff-hl-bg-for-theme 2)  ; Very subtle
+  (my/set-diff-hl-bg-for-theme 3)  ; Medium subtle (default)
+  ;; (my/set-diff-hl-bg-for-theme 4)  ; More visible
+
+  (defun my/diff-hl-add-background-to-hunks (&rest _args)
+    "Add background highlighting to diff-hl hunk overlays."
+    (dolist (ovl (overlays-in (point-min) (point-max)))
+      (when (overlay-get ovl 'diff-hl-hunk)
+        (pcase (overlay-get ovl 'diff-hl-hunk-type)
+          ('insert (overlay-put ovl 'face 'diff-hl-insert-bg))
+          ('change (overlay-put ovl 'face 'diff-hl-change-bg))
+          ('delete (overlay-put ovl 'face 'diff-hl-delete-bg))))))
+
+  (ignore-errors (advice-remove 'diff-hl--update-overlays #'my/diff-hl-add-background-to-hunks))
+
+  (advice-add 'diff-hl--update-overlays :after #'my/diff-hl-add-background-to-hunks)
   :bind
   (("M-p" . diff-hl-previous-hunk)
    ("M-n" . diff-hl-next-hunk)))
