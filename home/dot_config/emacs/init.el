@@ -678,6 +678,8 @@ This includes buffers visible in windows or tab-bar tabs."
   ;; https://github.com/minad/corfu/wiki#filter-list-of-all-possible-completions-with-completion-style-like-orderless
   (setq completion-category-overrides '((eglot (styles orderless))
                                         (eglot-capf (styles orderless))))
+  (add-to-list 'major-mode-remap-alist
+               '(conf-toml-mode . toml-ts-mode))
   :custom
   (eglot-autoshutdown t)
   (eglot-events-buffer-size 0)
