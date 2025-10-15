@@ -637,8 +637,8 @@ This includes buffers visible in windows or tab-bar tabs."
   :commands git-timemachine)
 
 (use-package git-commit-ts-mode
-  :vc
   :disabled
+  :vc
   (:url "https://github.com/danilshvalov/git-commit-ts-mode")
   :init
   (add-to-list 'major-mode-remap-alist
