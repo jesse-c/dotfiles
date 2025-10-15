@@ -507,7 +507,11 @@ This includes buffers visible in windows or tab-bar tabs."
   :config
   (add-hook 'magit-pre-refresh-hook 'magit-prime-refresh-cache))
 
-(after-packages (magit)) (require 'git-spice)
+(use-package git-spice
+  :load-path "~/src/github.com/jesse-c/git-spice.el"
+  :after magit
+  :config
+  (git-spice-setup-magit-section))
 
 (use-package magit-todos
   :after magit
