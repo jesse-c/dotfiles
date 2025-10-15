@@ -1646,7 +1646,15 @@ If BUFFER is provided, close that buffer directly."
     (let ((inhibit-read-only t))
       (ansi-color-apply-on-region compilation-filter-start (point))))
   :hook
-  (compilation-filter . colourise-compilation-buffer))
+  (compilation-filter . colourise-compilation-buffer)
+  (fundamental-mode .
+                    (lambda ()
+                      (when (string-match-p "\\*gs\\*" (buffer-name))
+                        (add-hook 'after-change-functions
+                                  (lambda (start end _len)
+                                    (let ((inhibit-read-only t))
+                                      (ansi-color-apply-on-region start end)))
+                                  nil t)))))
 
 (add-hook 'emacs-startup-hook
           (lambda () (run-with-timer 0.1 nil #'which-key-mode)))
