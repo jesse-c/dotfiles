@@ -298,23 +298,23 @@ PACKAGES should be a list of package names as symbols."
     (message "Project discovery complete"))
   (transient-define-prefix project-transient-menu ()
     "Project command menu."
-    [[:description "Navigation"
-                   ("s" "Search" consult-ripgrep)
-                   ("b" "Buffers" consult-project-buffer)
-                   ("f" "Files" project-find-file)
-                   ("l" "Line" consult-line)
-                   ("d" "Layout" project-dired)
-                   ("i" "Sibling" find-sibling-file)]
-     [:description "Execution"
-                   ("r" "Run" project-run)
-                   ("b" "Compile" project-compile)]]
-    ["Management"
-     [("t" "New tab" tab-new)
-      ("c" "Close tab" tab-close)
-      ("n" "Rename tab" my/rename-tab-to-project-name)]
-     [("p" "Switch (Known)" project-switch-project)
-      ("P" "Switch (All)" consult-ghq-switch-project)]
-     [("C" "Close" project-kill-buffers)]])
+    [["Navigation"
+      ("s" "Search" consult-ripgrep)
+      ("b" "Buffers" consult-project-buffer)
+      ("f" "Files" project-find-file)
+      ("l" "Line" consult-line)
+      ("d" "Layout" project-dired)
+      ("i" "Sibling" find-sibling-file)]
+     ["Execution"
+      ("r" "Run" project-run)
+      ("c" "Compile" project-compile)]
+     ["Management"
+      ("t" "New tab" tab-new)
+      ("C" "Close tab" tab-close)
+      ("n" "Rename tab" my/rename-tab-to-project-name)
+      ("p" "Switch (Known)" project-switch-project)
+      ("P" "Switch (All)" consult-ghq-switch-project)
+      ("k" "Kill buffers" project-kill-buffers)]])
   (defun project-run (command)
     "Run COMMAND in the current project's root directory."
     (interactive (list (read-shell-command "Run command: "
