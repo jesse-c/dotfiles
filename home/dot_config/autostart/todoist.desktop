@@ -1,7 +1,0 @@
-[Desktop Entry]
-Exec=/var/lib/snapd/snap/bin/todoist %U
-Name=todoist
-Type=Application
-Icon=todoist
-Terminal=false
-Type=Application
