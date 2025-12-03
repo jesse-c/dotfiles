@@ -2,6 +2,5 @@
 
 {{- $mcpConfig := (include "claude-mcp-servers.json" | fromJson) -}}
 {{- $mcpConfig = ($mcpConfig | setValueAtPath "mcpServers.github.env.GITHUB_PERSONAL_ACCESS_TOKEN" (onepasswordRead "op://Personal/GitHub/API Keys/2cnp2x7mnbocwfk6hztik6drxa")) -}}
-{{- $mcpConfig = ($mcpConfig | setValueAtPath "mcpServers.zen.env.GOOGLE_API_KEY" (onepasswordRead "op://Personal/Google/gemini")) -}}
 
 {{ fromJson .chezmoi.stdin | setValueAtPath "mcpServers" $mcpConfig.mcpServers | toPrettyJson }}
