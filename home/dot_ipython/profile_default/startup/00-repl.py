@@ -1,5 +1,3 @@
-import json
-import sys
 import builtins
 from pprint import pprint
 from rich import print as rprint, inspect
