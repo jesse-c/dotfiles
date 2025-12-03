@@ -1,2 +1,2 @@
-local ipc = require('hs.ipc')
+local ipc = require("hs.ipc")
 ipc.cliInstall()

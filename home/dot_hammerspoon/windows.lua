@@ -20,8 +20,8 @@ function resizeWindow(window, percentOfScreen)
   local screen = window:screen()
   local frame = screen:frame()
   local size = {
-    w = (frame.w * percentOfScreen) - (12*2),
-    h = (frame.h * percentOfScreen) - (12*2),
+    w = (frame.w * percentOfScreen) - (12 * 2),
+    h = (frame.h * percentOfScreen) - (12 * 2),
   }
   window:setSize(size)
 end
