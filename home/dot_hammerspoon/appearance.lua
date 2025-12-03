@@ -26,7 +26,7 @@ function buildEmacsCommand(isDarkMode)
   local catppuccinTheme = themeToCatppuccinTheme(isDarkMode)
 
   return "emacsclient --socket-name ~/.config/emacs/server/server --eval '"
-    .. string.format("(my/catppuccin-set-and-reload \\'%s)", catppuccinTheme)
+    .. "(my/load-theme-by-current-theme)"
     .. "' --quiet -no-wait --suppress-output -a true"
 end
 
