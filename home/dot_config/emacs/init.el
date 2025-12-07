@@ -1156,15 +1156,16 @@ If BUFFER is provided, close that buffer directly."
             tools)))
 
 (use-package acp
-  :vc
-  (:url "https://github.com/xenodium/acp.el"))
+  :defer t)
 
 (use-package agent-shell
   :after (acp shell-maker)
-  :vc
-  (:url "https://github.com/xenodium/agent-shell")
+  :defer t
   :config
+  (setq agent-shell-file-completion-enabled t)
+  (setq agent-shell-header-style nil)
   (setq agent-shell-anthropic-key nil)
+  (setq agent-shell-show-welcome-message nil)
   (setq agent-shell-anthropic-authentication
         (agent-shell-anthropic-make-authentication :login t))
   (setq agent-shell-google-authentication
@@ -1174,7 +1175,11 @@ If BUFFER is provided, close that buffer directly."
          :api-key (lambda () (my/get-password "api.openai.com" "me"))))
   (setq agent-shell-goose-authentication
         (agent-shell-make-goose-authentication
-         :openai-api-key (lambda () (my/get-password "api.openai.com" "me")))))
+         :openai-api-key (lambda () (my/get-password "api.openai.com" "me"))))
+  (setq agent-shell-google-authentication
+        (agent-shell-google-make-authentication
+         :api-key (lambda () (my/get-password "aistudio.google.com" "apikey")))))
+
 
 (use-package codeium
   :vc
