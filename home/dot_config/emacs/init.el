@@ -330,6 +330,9 @@ PACKAGES should be a list of package names as symbols."
     (let ((default-directory (project-root (project-current t))))
       (compile command)))
   (add-to-list 'project-switch-commands '(project-run "Run" ?r))
+  (add-to-list 'project-switch-commands '(consult-ripgrep "Find regexp (rg)" ?D))
+  (add-to-list 'project-switch-commands '(project-dired "Dired" ?d))
+  (add-to-list 'project-switch-commands '(magit-status "Magit" ?m))
   :bind
   ("s-p" . project-transient-menu))
 
