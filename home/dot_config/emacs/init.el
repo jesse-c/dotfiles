@@ -1838,13 +1838,10 @@ If no, restores full opacity. Only affects the active frame."
   (flycheck-mode . sideline-mode)
   :init
   (setq sideline-backends-left '()
-        sideline-backends-right '(sideline-flycheck
-                                  sideline-eglot
-                                  sideline-eros
-                                  sideline-blame)
+        sideline-backends-right '()
         sideline-display-backend-name t
         sideline-delay 0.3 ;; Seconds
-        sideline-backend-delays '((sideline-blame . 2.0))
+        sideline-backend-delays '()
         sideline-display-backend-name t
         sideline-display-backend-type 'right
         sideline-truncate t))
@@ -1853,6 +1850,7 @@ If no, restores full opacity. Only affects the active frame."
   :vc
   (:url "https://github.com/emacs-sideline/sideline-eglot")
   :config
+  (add-to-list 'sideline-backends-right 'sideline-eglot)
   ;; TODO: Remove this once fixed upstream
   (defun my/fix-sideline-eglot-getf (orig-fun &rest args)
     "Use cl-getf instead of getf in sideline-eglot."
@@ -1861,10 +1859,15 @@ If no, restores full opacity. Only affects the active frame."
   (advice-add 'sideline-eglot--async-candidates :around #'my/fix-sideline-eglot-getf))
 
 (use-package sideline-blame
-  :after sideline)
+  :after sideline
+  :config
+  (add-to-list 'sideline-backends-right 'sideline-blame)
+  (add-to-list 'sideline-backend-delays '(sideline-blame . 2.0)))
 
 (use-package sideline-flycheck
   :after (sideline flycheck)
+  :config
+  (add-to-list 'sideline-backends-right 'sideline-flycheck)
   :hook
   (flycheck-mode . sideline-flycheck-setup))
 
@@ -3521,6 +3524,8 @@ Interactively, POINT is point and KILL is the prefix argument."
   :vc
   (:url "https://github.com/emacs-sideline/sideline-eros")
   :after (sideline)
+  :config
+  (add-to-list 'sideline-backends-right 'sideline-eros)
   :hook (emacs-lisp-mode . sideline-eros-setup))
 
 (use-package inspector
