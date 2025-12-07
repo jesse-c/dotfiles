@@ -143,7 +143,6 @@
 
 ;;; Common
 
-(require 'transient)
 (use-package ht)
 (use-package dash)
 (use-package loop)
