@@ -1308,6 +1308,8 @@ If BUFFER is provided, close that buffer directly."
   :defer 1
   :custom
   (org-log-done t)
+  ;; Example: [%] or [0/0} then C-c C-C
+  (org-hierarchical-todo-statistics t)
   ;; Something instead of "...", such as " ▾ "
   (org-ellipsis " ↲ ")
   ;; Entities are things like \alpha
@@ -1328,7 +1330,7 @@ If BUFFER is provided, close that buffer directly."
   :config
   (setq org-agenda-files (list org-tasks-path))
   (setq diary-show-holidays-flag nil)
-  ;; Performance optimizations
+  ;; Performance optimisations
   (setq org-agenda-inhibit-startup t)
   (setq org-agenda-span 'day)
   (setq org-agenda-use-tag-inheritance t)
@@ -1472,6 +1474,7 @@ If BUFFER is provided, close that buffer directly."
                                (lambda ()
                                  (when (string= org-state "DONE")
                                    (org-cycle))))
+  (org-after-todo-state-change . org-update-parent-todo-statistics)
   (org-mode .
             (lambda ()
               (flycheck-mode 1)
@@ -1490,7 +1493,7 @@ If BUFFER is provided, close that buffer directly."
   :custom
   (org-roam-directory (file-truename org-roam-dir))
   (org-roam-dailies-directory org-roam-dailies-dir)
-  (org-roam-completion-everywhere t)
+  (org-roam-completion-everywhere nil)
   :config
   ;; If you're using a vertical completion framework, you might want a more informative completion interface
   (setq org-roam-node-display-template (concat "${title:*} " (propertize "${tags:10}" 'face 'org-tag)))
@@ -1579,14 +1582,20 @@ If BUFFER is provided, close that buffer directly."
 
 (use-package org-modern
   :after org
+  :hook (org-mode . org-modern-mode)
   :custom
   (org-modern-tag t)
-  (org-modern-star 'replace)
-  :config
-  (global-org-modern-mode))
+  (org-modern-star 'replace))
 
 (use-package ox-pandoc
-  :after org)
+  :after org
+  :custom
+  ;; Inline example:
+  ;;
+  ;; #+PANDOC_OPTIONS: wrap:none
+  (org-pandoc-options-for-markdown        '((wrap . "none")))
+  (org-pandoc-options-for-markdown_mmd    '((wrap . "none")))
+  (org-pandoc-options-for-markdown_github '((wrap . "none"))))
 
 (use-package org-download
   :after (org org-roam))
