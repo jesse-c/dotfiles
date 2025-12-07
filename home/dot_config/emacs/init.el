@@ -280,6 +280,12 @@ PACKAGES should be a list of package names as symbols."
   (add-to-list 'project-vc-ignores ".cache/")
   (add-to-list 'project-vc-ignores ".build/")
   (add-to-list 'project-vc-ignores "target/")
+  (defun me/project-todo ()
+    "Visit the todo file for the current project."
+    (interactive)
+    (if-let* ((root (me/project-root)))
+        (find-file (expand-file-name "TODO.org" root))
+      (user-error "[Project] Not in a project")))
   (setq src-dir (expand-file-name "~/src/"))
   (setq forges-dirs '("github.com" "gitlab.com"))
   (defun my/auto-discover-projects ()
