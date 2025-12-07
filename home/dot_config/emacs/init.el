@@ -707,6 +707,44 @@ This includes buffers visible in windows or tab-bar tabs."
   (defun my/eglot-ensure-deferred ()
     "Start eglot after a short delay to improve file opening performance."
     (run-with-idle-timer 0.5 nil #'eglot-ensure))
+
+  ;; Sanitize and truncate diagnostic messages to prevent JSON serialization errors
+  (defun my/eglot-sanitize-diagnostic-message (msg)
+    "Sanitize a diagnostic message by fixing Unicode and truncating if needed."
+    (when (stringp msg)
+      (let ((sanitized msg))
+        ;; Replace non-breaking spaces with regular spaces
+        (setq sanitized (replace-regexp-in-string "\u00a0" " " sanitized))
+        ;; Replace any other problematic Unicode characters
+        (setq sanitized (encode-coding-string sanitized 'utf-8 t))
+        (setq sanitized (decode-coding-string sanitized 'utf-8 t))
+        ;; Truncate if too long
+        (when (> (length sanitized) 1000)
+          (setq sanitized (concat (substring sanitized 0 997) "...")))
+        sanitized)))
+
+  (defun my/eglot-sanitize-diagnostic-messages (orig-fun object &rest args)
+    "Sanitize diagnostic messages before JSON serialization."
+    (condition-case err
+        (apply orig-fun object args)
+      (wrong-type-argument
+       ;; If we get a JSON serialization error, try to sanitize diagnostic messages
+       (when (and (listp object)
+                  (plist-member object :params))
+         (let* ((params (plist-get object :params))
+                (context (plist-get params :context))
+                (diagnostics (plist-get context :diagnostics)))
+           (when (vectorp diagnostics)
+             ;; Sanitize diagnostic messages
+             (dotimes (i (length diagnostics))
+               (let* ((diag (aref diagnostics i))
+                      (msg (plist-get diag :message)))
+                 (when msg
+                   (plist-put diag :message (my/eglot-sanitize-diagnostic-message msg))))))))
+       ;; Try again with sanitized messages
+       (apply orig-fun object args))))
+
+  (advice-add 'jsonrpc--json-encode :around #'my/eglot-sanitize-diagnostic-messages)
   :hook
   (clojure-mode . my/eglot-ensure-deferred)
   (clojure-ts-mode . my/eglot-ensure-deferred)
