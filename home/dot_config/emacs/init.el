@@ -637,7 +637,8 @@ This includes buffers visible in windows or tab-bar tabs."
   :after magit
   :defer 1
   :custom
-  (git-link-use-commit t))
+  (git-link-use-commit t)
+  (git-link-add-to-kill-ring t))
 
 ;; Why was this line changed
 (use-package git-messenger
