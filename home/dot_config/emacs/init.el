@@ -1974,8 +1974,8 @@ If no, restores full opacity. Only affects the active frame."
 (use-package affe)
 
 (use-package hl-todo
-  :config
-  (global-hl-todo-mode))
+  :hook ((prog-mode . hl-todo-mode)
+         (text-mode . hl-todo-mode)))
 
 ;; Icons
 (use-package all-the-icons
