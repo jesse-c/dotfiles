@@ -1102,8 +1102,7 @@ If BUFFER is provided, close that buffer directly."
   (:url "https://github.com/lizqwerscott/mcp.el")
   :init
   (setq mcp-hub-servers
-        `(("desktop-commander" . (:command "npx" :args ("-y" "@wonderwhy-er/desktop-commander")))
-          ("github" . (
+        `(("github" . (
                        :command "docker"
                        :args ("run" "-i" "--rm" "-e" ,(concat "GITHUB_PERSONAL_ACCESS_TOKEN=" (my/get-password "api.github.com" "jesse-c^mcp")) "ghcr.io/github/github-mcp-server")))
           ("tavily" . (
@@ -1112,7 +1111,10 @@ If BUFFER is provided, close that buffer directly."
                        :env (:TAVILY_API_KEY ,(my/get-password "tavily.com" "apikey"))))
           ("playwright" . (
                            :command "mcp-server-playwright"
-                           :args ()))))
+                           :args ()))
+          ("dash" . (
+                     :command "uvx"
+                     :args ("--from" "git+https://github.com/Kapeli/dash-mcp-server.git", "dash-mcp-server")))))
   :config
   ;; Defer MCP hub startup to improve Emacs startup performance
   (defun my/mcp-hub-start-deferred ()
