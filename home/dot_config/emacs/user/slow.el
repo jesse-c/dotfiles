@@ -5,7 +5,7 @@
 (require 'profiler)
 (require 'cl-lib)
 
-(defvar slow-command-threshold 0.500
+(defvar slow-command-threshold-seconds 0.500
   "Warn about commands slower than this many seconds.")
 
 (defvar slow-command-log-file
@@ -22,7 +22,7 @@
 (defvar slow-command-profile-file-format "txt"
   "Format for saved profile files: 'txt', 'json', or 'elisp'.")
 
-(defvar slow-command-auto-profile-all-commands nil
+(defvar slow-command-auto-profile-all-commands t
   "Whether to profile all commands to capture slow ones.")
 
 (defvar slow-command-capture-detailed-profile nil
@@ -30,9 +30,6 @@
 
 (defvar slow-command-show-profiler-buffer nil
   "Whether to show the profiler buffer popup. Set to nil to disable.")
-
-(defvar slow-command-auto-profile-threshold 1.0
-  "Save detailed profiles for commands slower than this.")
 
 (defvar slow-command-last-command nil
   "Stores the last command and its start time.")
@@ -221,8 +218,8 @@
           (when top-functions
             (string-join (reverse top-functions) ", ")))))))
 
-(defun slow-command-create-event (command duration)
-  "Create a structured slow command event with profiling data."
+(defun slow-command-create-event-with-context (command duration buffer-name major-mode file-path keys)
+  "Create a structured slow command event with profiling data from given context."
   (let* ((timestamp (current-time))
          (profile-data (slow-command-extract-profile-data))
          (profile-summary (slow-command-extract-profile-summary))
@@ -232,10 +229,10 @@
      :command command
      :duration duration
      :timestamp timestamp
-     :buffer (buffer-name)
+     :buffer buffer-name
      :major-mode major-mode
-     :file-path (buffer-file-name)
-     :keys (key-description (this-command-keys))
+     :file-path file-path
+     :keys keys
      :profile-data profile-data
      :profile-summary profile-summary
      :profile-file-path profile-file-path)))
@@ -309,6 +306,17 @@
           (setq slow-command-profiling-active t))
       (error nil))))
 
+(defun slow-command-process-async (command duration profiler-data context)
+  "Process slow command profiling data asynchronously."
+  (let ((inhibit-message t)
+        (message-log-max nil)
+        (pop-up-windows nil)
+        (display-buffer-alist '(("*Profiler-Report*" display-buffer-no-window))))
+    (profiler-report-cpu profiler-data))
+
+  (let* ((event (apply #'slow-command-create-event-with-context command duration context)))
+    (slow-command-log event)))
+
 (defun slow-command-after-with-profiling ()
   "Enhanced post-command hook - saves files but no popup."
   (when slow-command-last-command
@@ -317,10 +325,15 @@
            (duration (- (float-time) start-time)))
 
       ;; Check if this was a slow command
-      (if (> duration slow-command-threshold)
-          ;; Slow command - create event and save profile file
-          (let ((event (slow-command-create-event command duration)))
-            (slow-command-log event))
+      (if (> duration slow-command-threshold-seconds)
+          (let ((profiler-data (when (profiler-running-p) (profiler-stop)))
+                (context `(,(buffer-name)
+                           ,major-mode
+                           ,(buffer-file-name)
+                           ,(key-description (this-command-keys)))))
+            (when profiler-data
+              (run-with-idle-timer 0 nil #'slow-command-process-async
+                                   command duration profiler-data context)))
 
         ;; Fast command - just clean up profiler silently
         (when (and slow-command-profiling-active (profiler-running-p))
