@@ -2006,7 +2006,8 @@ If no, restores full opacity. Only affects the active frame."
 (use-package transient
   :after seq)
 
-(use-package hydra)
+(use-package hydra
+  :defer 1)
 
 (use-package casual
   :after (dired re-builder)
@@ -2074,7 +2075,6 @@ If no, restores full opacity. Only affects the active frame."
 (setq-default evil-shift-width 2)
 
 (use-package dtrt-indent
-  :disabled
   :diminish
   :config
   (dtrt-indent-global-mode t))
@@ -2334,6 +2334,7 @@ are defining or executing a macro."
 ;; Minibuffer
 
 (use-package consult
+  :defer 1
   ;; Replace bindings. Lazily loaded by `use-package'.
   :bind (;; C-c bindings in `mode-specific-map'
          ("C-c M-x" . consult-mode-command)
@@ -2528,6 +2529,7 @@ are defining or executing a macro."
 ;; CAPF
 
 (use-package dabbrev
+  :defer 1
   :ensure nil
   :config
   (add-to-list 'dabbrev-ignored-buffer-regexps "\\` ")
@@ -2798,12 +2800,15 @@ are defining or executing a macro."
     (when (and (treesit-parser-list)
                (< (buffer-size) 50000)) ; Only files under 50KB
       (treesit-fold-indicators-mode 1)))
-  (add-hook 'prog-mode-hook #'my/treesit-fold-indicators-maybe))
+  :hook
+  (prog-mode . my/treesit-fold-indicators-maybe))
 
 ;; Movement
 (use-package avy
+  :defer t
   :bind
-  (("C-'" . avy-goto-word-0)))
+  (("C-'" . avy-goto-word-0))
+  :commands (avy-goto-word-0))
 
 (use-package treesit-jump
   :vc (:url "https://www.github.com/dmille56/treesit-jump")
@@ -2819,10 +2824,12 @@ are defining or executing a macro."
   (setq treesit-jump-queries-filter-list '("inner" "test" "param")))
 
 ;; Undo
-(use-package undo-fu)
+(use-package undo-fu
+  :defer 1)
 
 (use-package vundo
   :vc (:url "https://github.com/casouri/vundo")
+  :defer 1
   :custom
   (vundo-glyph-alist vundo-unicode-symbols)
   (vundo-compact-display t))
@@ -2856,8 +2863,13 @@ are defining or executing a macro."
 ;;  :bind (("M-$" . jinx-correct)
 ;;         ("C-M-$" . jinx-languages))
 (use-package jinx
+  :defer 1
   :config
   (global-jinx-mode))
+
+;; Documentation
+(use-package devdocs
+  :defer t)
 
 ;; Comments
 (global-set-key (kbd "s-/") 'comment-line)
@@ -2884,6 +2896,7 @@ are defining or executing a macro."
 
 (use-package semext
   :vc (:url "https://github.com/ahyatt/semext")
+  :defer t
   :init
   (require 'llm-openai)
   (setopt semext-provider (make-llm-openai :key (my/get-password "api.openai.com" "me")))
@@ -2896,8 +2909,10 @@ are defining or executing a macro."
    semext-clear-cache))
 
 (use-package ast-grep
+  :defer t
   :vc
-  (:url "https://github.com/SunskyXH/ast-grep.el"))
+  (:url "https://github.com/SunskyXH/ast-grep.el")
+  :commands (ast-grep-search ast-grep-project ast-grep-directory))
 
 (use-package re-builder
   :ensure nil
@@ -2971,7 +2986,9 @@ are defining or executing a macro."
     :overlay-category 'flycheck-info-overlay
     :fringe-bitmap 'flycheck-fringe-bitmap-double-arrow
     :fringe-face 'flycheck-fringe-info)
-  (global-flycheck-mode))
+  :hook
+  ((prog-mode . flycheck-mode)
+   (text-mode . flycheck-mode)))
 
 (setq user-emacs-cache-directory (expand-file-name ".cache" user-emacs-directory))
 
@@ -3142,7 +3159,9 @@ are defining or executing a macro."
 
 (setq-local python-indent-offset 4)
 
-(use-package poetry)
+(use-package poetry
+  :defer t
+  :commands poetry)
 
 (use-package python-pytest
   :after pet
@@ -3498,8 +3517,9 @@ Interactively, POINT is point and KILL is the prefix argument."
 
 (use-package typst-preview
   :after websocket
+  :defer t
   :vc
-  (:url "https://github.com/havarddj/typst-preview.el")
+  (:url "https://github.com/havarddj/typst-preview.el" :rev :newest)
   :custom
   (typst-preview-executable "tinymist preview")
   (typst-preview-browser "default"))
@@ -3522,8 +3542,8 @@ Interactively, POINT is point and KILL is the prefix argument."
   (emacs-lisp-mode . flycheck-elsa-setup))
 
 (use-package eros
-  :config
-  (eros-mode 1))
+  :commands eros-mode
+  :hook (emacs-lisp-mode-hook . eros-mode))
 
 (use-package sideline-eros
   :vc
