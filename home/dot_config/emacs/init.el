@@ -1902,28 +1902,33 @@ If no, restores full opacity. Only affects the active frame."
   "Load the right theme based on the current time."
   (progn
     (setq catppuccin-flavor (my/theme-by-current-time))
-    (load-theme 'catppuccin t)))
+    (load-theme 'catppuccin t)
+    (when (fboundp 'my/set-diff-hl-bg-for-theme)
+      (my/set-diff-hl-bg-for-theme))))
 
 (defun my/theme-by-current-theme ()
   "Get the light or dark theme based on the current theme."
-  (let ((appearance (get-macos-appearance-applescript)))
+  (interactive)
+  (let ((appearance (get-macos-appearance)))
     (cond
      ((eq appearance 'dark) 'mocha)
      ((eq appearance 'light) 'latte))))
 
 (defun my/load-theme-by-current-theme ()
   "Load the right theme based on the current system theme."
+  (interactive)
   (progn
     (setq catppuccin-flavor (my/theme-by-current-theme))
-    (load-theme 'catppuccin t)))
+    (load-theme 'catppuccin t)
+    (when (fboundp 'my/set-diff-hl-bg-for-theme)
+      (my/set-diff-hl-bg-for-theme))))
 
 (defun get-macos-appearance ()
-  "Get macOS appearance using AppleScript, returns 'dark or 'light."
-  (let ((result (ns-do-applescript
-                 "tell application \"System Events\" to tell appearance preferences to get dark mode")))
-    (if (or (equal result "true"))
-        'light
-      'dark)))
+  "Get macOS appearance, returns 'dark or 'light."
+  (if (string-match-p "Dark"
+                      (shell-command-to-string "defaults read -g AppleInterfaceStyle 2>/dev/null"))
+      'dark
+    'light))
 
 (defun my/disable-all-themes ()
   "Disable all enabled themes."
@@ -1958,7 +1963,7 @@ If no, restores full opacity. Only affects the active frame."
 
 (use-package catppuccin-theme
   :config
-  (my/load-theme-by-current-time))
+  (my/load-theme-by-current-theme))
 
 (use-package orderless
   :custom
