@@ -524,7 +524,10 @@ This includes buffers visible in windows or tab-bar tabs."
 
 (use-package magit-todos
   :after magit
-  :config (magit-todos-mode 1))
+  :config)
+;; This can be slow on large repositories, so it's not enabled by default.
+;; You can enable it manually with M-x magit-todos-mode.
+;; (magit-todos-mode 1)
 
 (use-package magit-popup
   :after magit)
