@@ -133,10 +133,11 @@
       (let ((deactivate-mark nil)
             (inhibit-read-only t))
         (with-current-buffer "*Messages*"
-          (goto-char (point-max))
-          (if (not (bolp))
-              (newline))
-          (insert (format-time-string "[%F %T.%3N] "))))))
+          (save-excursion
+            (goto-char (point-max))
+            (if (not (bolp))
+                (newline))
+            (insert (format-time-string "[%F %T.%3N] ")))))))
 
 (advice-add 'message :before 'my/ad-timestamp-message)
 
