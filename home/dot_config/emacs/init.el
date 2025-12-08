@@ -745,6 +745,14 @@ This includes buffers visible in windows or tab-bar tabs."
        (apply orig-fun object args))))
 
   (advice-add 'jsonrpc--json-encode :around #'my/eglot-sanitize-diagnostic-messages)
+
+  ;; Remove code action display from eldoc to avoid duplication with sideline-eglot
+  (defun my/eglot-remove-code-action-eldoc ()
+    "Remove eglot code action display from eldoc-documentation-functions."
+    (remove-hook 'eldoc-documentation-functions #'eglot-code-action-suggestion t))
+
+  (add-hook 'eglot-managed-mode-hook #'my/eglot-remove-code-action-eldoc)
+
   :hook
   (clojure-mode . my/eglot-ensure-deferred)
   (clojure-ts-mode . my/eglot-ensure-deferred)
@@ -2640,7 +2648,7 @@ are defining or executing a macro."
   :custom
   (eldoc-box-clear-with-C-g t)
   :hook
-  (eglot-managed-mode . eldoc-box-hover-mode))
+  (eglot-managed-mode . eldoc-box-hover-at-point-mode))
 
 ;;; Editor
 
