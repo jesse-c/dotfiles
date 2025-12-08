@@ -706,7 +706,7 @@ This includes buffers visible in windows or tab-bar tabs."
   ;; Defer eglot startup to improve file opening performance
   (defun my/eglot-ensure-deferred ()
     "Start eglot after a short delay to improve file opening performance."
-    (run-with-idle-timer 0.5 nil #'eglot-ensure))
+    (run-with-idle-timer 1.5 nil #'eglot-ensure))
 
   ;; Sanitize and truncate diagnostic messages to prevent JSON serialization errors
   (defun my/eglot-sanitize-diagnostic-message (msg)
@@ -1384,44 +1384,21 @@ If BUFFER is provided, close that buffer directly."
            "* TODO %^{Description} %(my/collect-tags)\n  SCHEDULED: %^t"
            :immediate-finish nil
            :refile-targets ((org-agenda-files :maxlevel . 2)))))
-  (org-babel-do-load-languages
-   'org-babel-load-languages
-   '((org . t)
-     (python . t)
-     (verb . t)
-     (emacs-lisp . t)
-     (shell . t)
-     (calc . t)
-     (elixir . t)
-     (rust . t)
-     (git-permalink . t)))
-  (defun my/org-long-lines-checker (checker callback)
-    "Custom flycheck checker function for long lines in org-mode."
-    (let ((errors '())
-          (line-num 1)
-          (threshold 1000))
-      (save-excursion
-        (goto-char (point-min))
-        (while (not (eobp))
-          (let ((line-length (- (line-end-position) (line-beginning-position))))
-            (when (> line-length threshold)
-              (push (flycheck-error-new-at
-                     line-num 1 'warning
-                     (format "Line too long (%d characters, max %d)" line-length threshold)
-                     :checker checker
-                     :filename (buffer-file-name))
-                    errors)))
-          (forward-line 1)
-          (setq line-num (1+ line-num))))
-      (funcall callback 'finished (reverse errors))))
-  ;; Define the checker using the custom function
-  (flycheck-define-generic-checker 'org-long-lines-custom
-    "A custom checker for long lines in org-mode files."
-    :start #'my/org-long-lines-checker
-    :modes '(org-mode))
-  ;; Add the checker to flycheck
-  (add-to-list 'flycheck-checkers 'org-long-lines-custom)
-
+  (defun my/load-org-babel-languages ()
+    "Load org-babel languages on first org file."
+    (org-babel-do-load-languages
+     'org-babel-load-languages
+     '((org . t)
+       (python . t)
+       (verb . t)
+       (emacs-lisp . t)
+       (shell . t)
+       (calc . t)
+       (elixir . t)
+       (rust . t)
+       (git-permalink . t)))
+    (remove-hook 'org-mode-hook #'my/load-org-babel-languages))
+  (add-hook 'org-mode-hook #'my/load-org-babel-languages)
   (defun my/warn-long-lines-org ()
     "Warn about long lines in org files with option to wrap them."
     (when (and (derived-mode-p 'org-mode)
@@ -1750,11 +1727,14 @@ If no, restores full opacity. Only affects the active frame."
       (message "Frame transparency disabled (full opacity restored)"))))
 
 ;; Indentation
-(use-package highlight-indent-guides
+
+(use-package indent-bars
+  :ensure t
   :custom
-  (highlight-indent-guides-method 'character)
+  (indent-bars-treesit-support t)
+  (indent-bars-no-descend-string t)
   :hook
-  (prog-mode . highlight-indent-guides-mode))
+  (prog-mode . indent-bars-mode))
 
 (use-package aggressive-indent
   :disabled
@@ -1840,7 +1820,7 @@ If no, restores full opacity. Only affects the active frame."
   (setq sideline-backends-left '()
         sideline-backends-right '()
         sideline-display-backend-name t
-        sideline-delay 0.3 ;; Seconds
+        sideline-delay 1.5 ;; Seconds
         sideline-backend-delays '()
         sideline-display-backend-name t
         sideline-display-backend-type 'right
@@ -1856,7 +1836,8 @@ If no, restores full opacity. Only affects the active frame."
     "Use cl-getf instead of getf in sideline-eglot."
     (cl-letf (((symbol-function 'getf) #'cl-getf))
       (apply orig-fun args)))
-  (advice-add 'sideline-eglot--async-candidates :around #'my/fix-sideline-eglot-getf))
+  (advice-add 'sideline-eglot--async-candidates :around #'my/fix-sideline-eglot-getf)
+  (add-to-list 'sideline-backend-delays '(sideline-eglot . 2.5)))
 
 (use-package sideline-blame
   :after sideline
@@ -1873,7 +1854,17 @@ If no, restores full opacity. Only affects the active frame."
 
 ;; Emacs headerline indication of where you are in a large project
 (use-package breadcrumb
-  :hook (after-init . breadcrumb-mode))
+  :defer t 
+  :config
+  (defun my/breadcrumb-mode-deferred ()
+    "Enable breadcrumb after 1.5s idle in buffer."
+    (run-with-idle-timer 1.5 nil
+                         (lambda ()
+                           (when (buffer-live-p (current-buffer))
+                             (with-current-buffer (current-buffer)
+                               (breadcrumb-local-mode 1))))))
+  :hook
+  ((prog-mode text-mode) . my/breadcrumb-mode-deferred))
 
 ;; Show info about the block at the end of the block
 (use-package scopeline
@@ -2240,6 +2231,7 @@ are defining or executing a macro."
 
 ;; Scrolling
 (pixel-scroll-precision-mode) ;; Smooth scrolling
+
 (use-package ultra-scroll
   :vc (:url "https://github.com/jdtsmith/ultra-scroll")
   :init
@@ -2247,6 +2239,11 @@ are defining or executing a macro."
         scroll-margin 0)
   :config
   (ultra-scroll-mode 1))
+
+(setq scroll-conservatively 0
+      scroll-step 0
+      scroll-margin 0
+      scroll-preserve-screen-position t)
 
 ;; Use ESC as universal get me out of here command
 (define-key key-translation-map (kbd "ESC") (kbd "C-g"))
@@ -2541,6 +2538,7 @@ are defining or executing a macro."
 
 (use-package corfu
   :after (dabbrev)
+  :defer 0.5
   :custom
   (corfu-auto t)
   (corfu-auto-delay 0.1)
@@ -2554,8 +2552,12 @@ are defining or executing a macro."
   (corfu-separator ?\s)          ;; Orderless field separator
   (global-corfu-minibuffer t)    ;; Enable Corfu in the minibuffer
   :init
-  (global-corfu-mode)
-  (corfu-popupinfo-mode)
+  (add-hook 'emacs-startup-hook
+            (lambda ()
+              (run-with-idle-timer 0.5 nil #'global-corfu-mode)))
+  (add-hook 'emacs-startup-hook
+            (lambda ()
+              (run-with-idle-timer 0.5 nil #'corfu-popupinfo-mode)))
   :bind (:map corfu-map
               ("S-SPC"      . corfu-insert-separator)
               ("TAB"        . corfu-next)
@@ -2576,10 +2578,13 @@ are defining or executing a macro."
     eshell-mode-hook
     prog-mode-hook
     text-mode-hook) . completion-preview-mode)
-  :init
-  (setq completion-preview-minimum-symbol-length 2)
   :config
-  (cl-pushnew 'org-self-insert-command completion-preview-commands :test #'equal))
+  (completion-preview-minimum-symbol-length 4)
+  (completion-preview-idle-delay 0.8)
+  :bind
+  (:map completion-preview-active-mode-map
+        ("TAB" . completion-preview-complete)
+        ("C-e" . completion-preview-insert)))
 
 (use-package cape
   ;; Bind prefix keymap providing all Cape commands under a mnemonic key.
@@ -2864,8 +2869,8 @@ are defining or executing a macro."
 ;;         ("C-M-$" . jinx-languages))
 (use-package jinx
   :defer 1
-  :config
-  (global-jinx-mode))
+  :hook
+  ((text-mode org-mode markdown-mode) . jinx-mode))
 
 ;; Documentation
 (use-package devdocs
