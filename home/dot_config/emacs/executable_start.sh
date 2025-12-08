@@ -1,12 +1,11 @@
 #!/bin/bash
 
-# Start emacs in the background
-/Applications/Emacs.app/Contents/MacOS/bin/emacs &
+/Applications/Emacs.app/Contents/MacOS/bin/emacs --daemon
 
-# Get the process ID of the last background job
-emacs_pid=$!
-
-# Disown the process
-disown $emacs_pid
-
-echo "Emacs started in the background with PID $emacs_pid"
+if [ $? -eq 0 ]; then
+  echo "Emacs daemon started successfully"
+  echo "Connect with: emacsclient -c"
+else
+  echo "Failed to start Emacs daemon"
+  exit 1
+fi
