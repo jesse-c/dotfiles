@@ -1,6 +1,6 @@
 #!/bin/bash
 
-/Applications/Emacs.app/Contents/MacOS/bin/emacsclient -e "(kill-emacs)"
+/Applications/Emacs.app/Contents/MacOS/bin/emacsclient -s ~/.config/emacs/server/server -e "(kill-emacs)"
 
 if [ $? -eq 0 ]; then
   echo "Emacs daemon stopped successfully"

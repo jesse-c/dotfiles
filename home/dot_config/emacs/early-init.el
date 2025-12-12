@@ -2,11 +2,15 @@
 
 ;;; Code:
 
+;; Using Elpaca instead
+(setq package-enable-at-startup nil)
+
 ;; Ensure Emacs loads the most recent byte-compiled files.
 (setq load-prefer-newer t)
 
 ;; Make Emacs Native-compile .elc files asynchronously
 (setq native-comp-jit-compilation t)
+(setq native-comp-deferred-compilation native-comp-jit-compilation)  ; Deprecated
 
 ;; Suppress native compilation warnings and errors
 (setq native-comp-async-report-warnings-errors nil)
@@ -96,6 +100,9 @@
                                (float-time
                                 (time-subtract after-init-time before-init-time)))
                        gcs-done))))
+
+(setq server-socket-dir "~/.config/emacs/server")
+(make-directory server-socket-dir t)
 
 (provide 'early-init)
 

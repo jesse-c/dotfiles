@@ -1,64 +1,64 @@
 -- https://github.com/lackac/dotfiles/blob/32cab1e85c0bdec72d55ace9530e44e326549bef/tag-osx/config/hammerspoon/ext/system.lua#L39-L45
 function isDarkModeEnabled()
-  local _, res = hs.osascript.javascript([[
+	local _, res = hs.osascript.javascript([[
     Application("System Events").appearancePreferences.darkMode()
   ]])
 
-  return res == true -- getting nil here sometimes
+	return res == true -- getting nil here sometimes
 end
 
 function themeToCatppuccinTheme(isDarkMode)
-  if isDarkMode then
-    return "mocha"
-  else
-    return "latte"
-  end
+	if isDarkMode then
+		return "mocha"
+	else
+		return "latte"
+	end
 end
 
 function buildKittyCommand(isDarkMode)
-  local catppuccinTheme = themeToCatppuccinTheme(isDarkMode)
-  local capitalizedTheme = catppuccinTheme:sub(1, 1):upper() .. catppuccinTheme:sub(2)
+	local catppuccinTheme = themeToCatppuccinTheme(isDarkMode)
+	local capitalizedTheme = catppuccinTheme:sub(1, 1):upper() .. catppuccinTheme:sub(2)
 
-  return "kitty +kitten themes --reload-in=all --config-file-name themes.conf Catppuccin-" .. capitalizedTheme
+	return "kitty +kitten themes --reload-in=all --config-file-name themes.conf Catppuccin-" .. capitalizedTheme
 end
 
 function buildEmacsCommand(isDarkMode)
-  local catppuccinTheme = themeToCatppuccinTheme(isDarkMode)
+	local catppuccinTheme = themeToCatppuccinTheme(isDarkMode)
 
-  return "emacsclient --socket-name ~/.config/emacs/server/server --eval '"
-    .. "(my/load-theme-by-current-theme)"
-    .. "' --quiet -no-wait --suppress-output -a true"
+	return "emacsclient -s ~/.config/emacs/server/server --eval '"
+		.. "(my/load-theme-by-current-theme)"
+		.. "' --quiet -no-wait --suppress-output -a true"
 end
 
 local function executeCommand(command, appName)
-  print(appName .. ": command: " .. command)
+	print(appName .. ": command: " .. command)
 
-  local _output, status, _type, _rc = hs.execute(command, true)
+	local _output, status, _type, _rc = hs.execute(command, true)
 
-  if status then
-    print(appName .. ": succeeded")
-  else
-    print(appName .. ": failed")
-  end
+	if status then
+		print(appName .. ": succeeded")
+	else
+		print(appName .. ": failed")
+	end
 end
 
 cb = function(observedNotificationName)
-  local isDarkMode = isDarkModeEnabled()
+	local isDarkMode = isDarkModeEnabled()
 
-  print("theme changed. Dark mode: " .. tostring(isDarkMode))
+	print("theme changed. Dark mode: " .. tostring(isDarkMode))
 
-  local commands = {
-    -- Relying on new auto-switching in Kitty v0.38
-    -- { builder = buildKittyCommand, appName = "kitty" },
-    { builder = buildEmacsCommand, appName = "emacs" },
-    -- TODO: Neovim
-    -- TODO: Helix
-  }
+	local commands = {
+		-- Relying on new auto-switching in Kitty v0.38
+		-- { builder = buildKittyCommand, appName = "kitty" },
+		{ builder = buildEmacsCommand, appName = "emacs" },
+		-- TODO: Neovim
+		-- TODO: Helix
+	}
 
-  for _, cmdInfo in ipairs(commands) do
-    local command = cmdInfo.builder(isDarkMode)
-    executeCommand(command, cmdInfo.appName)
-  end
+	for _, cmdInfo in ipairs(commands) do
+		local command = cmdInfo.builder(isDarkMode)
+		executeCommand(command, cmdInfo.appName)
+	end
 end
 
 notificationName = "AppleInterfaceThemeChangedNotification"

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-/Applications/Emacs.app/Contents/MacOS/bin/emacsclient --socket-name ~/.config/emacs/server/server -n -c "$@"
+/Applications/Emacs.app/Contents/MacOS/bin/emacsclient -s ~/.config/emacs/server/server -n -c "$@"
 
 if [ $? -ne 0 ]; then
   echo "Failed to connect to Emacs daemon"
