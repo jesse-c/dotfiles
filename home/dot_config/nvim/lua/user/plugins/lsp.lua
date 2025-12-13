@@ -271,7 +271,6 @@ return {
         ["<cr>"] = "jump",
         ["<2-leftmouse>"] = "jump",
         ["<c-s>"] = "jump_split",
-        ["<c-v>"] = "jump_vsplit",
         ["}"] = "next",
         ["{{"] = "prev",
         dd = "delete",

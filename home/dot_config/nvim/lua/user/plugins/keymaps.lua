@@ -62,8 +62,8 @@ return {
 
         -- Project menu (matching Emacs s-p)
         { "<D-p>", group = "project" },
+        { "<D-b>", "<cmd>Telescope buffers<cr>", desc = "Buffers" },
         { "<D-p>s", "<cmd>Telescope live_grep<cr>", desc = "Search (ripgrep)" },
-        { "<D-p>b", "<cmd>Telescope buffers<cr>", desc = "Buffers" },
         { "<D-p>f", "<cmd>Telescope find_files<cr>", desc = "Files" },
         { "<D-p>l", "<cmd>Telescope current_buffer_fuzzy_find<cr>", desc = "Line (current buffer)" },
         { "<D-p>d", "<cmd>NvimTreeToggle<cr>", desc = "Dired (file explorer)" },
@@ -140,6 +140,13 @@ return {
         { "<D-l>d", "<cmd>lua vim.diagnostic.open_float()<cr>", desc = "Show diagnostics" },
         { "<D-l>x", "<cmd>Trouble diagnostics toggle<cr>", desc = "Diagnostics (Trouble)" },
         { "<D-l>X", "<cmd>Trouble diagnostics toggle filter.buf=0<cr>", desc = "Buffer diagnostics" },
+
+        -- Window menu
+        { "<D-j>", group = "windows" },
+        { "<D-j>v", "<cmd>vsplit<cr>", desc = "Vsplit" },
+        { "<D-j>s", "<cmd>split<cr>", desc = "Split" },
+        { "<D-j>c", "<cmd>close<cr>", desc = "Close window" },
+        { "<D-j>o", "<cmd>only<cr>", desc = "Only window" },
 
         -- Navigation transient menu (matching Emacs nav-transient-menu)
         { "<D-u>", group = "navigation" },
