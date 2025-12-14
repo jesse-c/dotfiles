@@ -1555,7 +1555,7 @@ are defining or executing a macro."
 (use-package all-the-icons-completion
   :after (marginalia all-the-icons)
   :hook (marginalia-mode . all-the-icons-completion-marginalia-setup)
-  :init
+  :config
   (all-the-icons-completion-mode))
 
 (use-package all-the-icons-dired
@@ -1743,6 +1743,7 @@ are defining or executing a macro."
 ;; ElDoc
 
 (use-package eldoc
+  :ensure nil
   :defer t
   :config
   (global-eldoc-mode))
