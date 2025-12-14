@@ -3108,8 +3108,8 @@ Only works in python-base-mode and derived modes."
   (pet-debug 1)
   :config
   (pet-def-config-accessor pre-commit-config
-                           :file-name ".pre-commit-config.yaml"
-                           :parser pet-parse-config-file)
+    :file-name ".pre-commit-config.yaml"
+    :parser pet-parse-config-file)
 
   ;; Handle local pre-commit hooks which don't have virtualenvs managed by pre-commit
   (advice-add 'pet-executable-find :around
