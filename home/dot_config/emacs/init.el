@@ -428,7 +428,28 @@ This includes buffers visible in windows or tab-bar tabs."
   (define-key isearch-mode-map (kbd "s-v") 'isearch-yank-kill)
   ;; Get C-u M-x back
   (define-key evil-normal-state-map (kbd "C-c u") 'universal-argument)
+
+  ;; When running as daemon, :q should delete frame instead of killing Emacs
+  (defun my/evil-quit-or-delete-frame ()
+    "Delete the current frame if there are multiple frames, otherwise kill Emacs."
+    (interactive)
+    (if (> (length (frame-list)) 1)
+        (delete-frame)
+      (evil-quit)))
+
+  (evil-ex-define-cmd "q[uit]" 'my/evil-quit-or-delete-frame)
+
   (evil-mode 1))
+
+;; Make Cmd+Q (s-q) delete frame when running as daemon, instead of killing Emacs
+(defun my/quit-or-delete-frame ()
+  "Delete the current frame if running as daemon with multiple frames, otherwise kill Emacs."
+  (interactive)
+  (if (and (daemonp) (> (length (frame-list)) 1))
+      (delete-frame)
+    (save-buffers-kill-emacs)))
+
+(global-set-key (kbd "s-q") 'my/quit-or-delete-frame)
 
 (use-package evil-org
   :after (org evil)
