@@ -432,7 +432,7 @@ This includes buffers visible in windows or tab-bar tabs."
 
 (use-package evil-org
   :after (org evil)
-  :hook (org-mode . (lambda () evil-org-mode))
+  :hook (org-mode . evil-org-mode)
   :config
   (require 'evil-org-agenda)
   (evil-org-agenda-set-keys))
