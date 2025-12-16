@@ -2510,6 +2510,7 @@ If BUFFER is provided, close that buffer directly."
 (use-package ob-async
   :after org)
 
+;; Tip: src blocks: C-c ' to edit as buffer
 (use-package org-roam
   :defer t
   :after org
