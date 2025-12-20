@@ -973,10 +973,10 @@ This includes buffers visible in windows or tab-bar tabs."
                                   '(("rust-analyzer")))))
   (add-to-list 'eglot-server-programs
                `(python-mode . ,(eglot-alternatives
-                                 '(("basedpyright-langserver" "--stdio")))))
+                                 '(("ty" "server")))))
   (add-to-list 'eglot-server-programs
                `(python-ts-mode . ,(eglot-alternatives
-                                    '(("basedpyright-langserver" "--stdio")))))
+                                    '(("ty" "server")))))
   (add-to-list 'eglot-server-programs
                `(vespa-schema-mode . ,(eglot-alternatives
                                        (list (list "java" "-jar" (expand-file-name "~/.local/bin/vespa-language-server.jar"))))))
