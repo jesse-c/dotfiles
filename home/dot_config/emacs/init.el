@@ -3505,9 +3505,13 @@ Interactively, POINT is point and KILL is the prefix argument."
 (use-package markdown-ts-mode
   :mode ("\\.md\\'" . markdown-ts-mode)
   :defer t
-  :config)
-;; (add-to-list 'treesit-language-source-alist '(markdown "https://github.com/tree-sitter-grammars/tree-sitter-markdown" "split_parser" "tree-sitter-markdown/src"))
-;; (add-to-list 'treesit-language-source-alist '(markdown-inline "https://github.com/tree-sitter-grammars/tree-sitter-markdown" "split_parser" "tree-sitter-markdown-inline/src")))
+  :config
+  (add-to-list 'treesit-language-source-alist '(markdown "https://github.com/tree-sitter-grammars/tree-sitter-markdown" "split_parser" "tree-sitter-markdown/src"))
+  (add-to-list 'treesit-language-source-alist '(markdown-inline "https://github.com/tree-sitter-grammars/tree-sitter-markdown" "split_parser" "tree-sitter-markdown-inline/src"))
+  (unless (treesit-language-available-p 'markdown)
+    (treesit-install-language-grammar 'markdown))
+  (unless (treesit-language-available-p 'markdown-inline)
+    (treesit-install-language-grammar 'markdown-inline)))
 
 ;;; Language: ePub
 
