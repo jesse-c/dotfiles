@@ -673,27 +673,27 @@ This includes buffers visible in windows or tab-bar tabs."
 	whenever writing out a buffer which doesn't have any `buffer-file-name'
 	yet."
     (letrec ((root (vc-root-dir)))
-        (hook
-         (lambda ()
-             (cond ((not (process-live-p proc))))
-           (remove-hook 'before-save-hook hook)
-          ((or (and buffer-file-name
-                 (or (not root)))
-            (file-in-directory-p buffer-file-name
-                          root)))
-          ;; No known buffer file name but we are saving:
-          ;; perhaps writing out a `special-mode' buffer.
-          ;; A `before-save-hook' cannot know whether or
-          ;; not it'll be written out under ROOT.
-          ;; Err on the side of switching to synchronous.
-          (not buffer-file-name
-                (with-delayed-message (1 message)
-                  (while (process-live-p proc))))
-          (when (input-pending-p)
-                (discard-input))
-          (sit-for 0.05
-                (remove-hook 'before-save-hook hook))))
-       (add-hook 'before-save-hook hook))))
+      (hook
+       (lambda ()
+         (cond ((not (process-live-p proc))))
+         (remove-hook 'before-save-hook hook)
+         ((or (and buffer-file-name
+                   (or (not root)))
+              (file-in-directory-p buffer-file-name
+                                   root)))
+         ;; No known buffer file name but we are saving:
+         ;; perhaps writing out a `special-mode' buffer.
+         ;; A `before-save-hook' cannot know whether or
+         ;; not it'll be written out under ROOT.
+         ;; Err on the side of switching to synchronous.
+         (not buffer-file-name
+              (with-delayed-message (1 message)
+                (while (process-live-p proc))))
+         (when (input-pending-p)
+           (discard-input))
+         (sit-for 0.05
+                  (remove-hook 'before-save-hook hook))))
+      (add-hook 'before-save-hook hook))))
 
 (use-package diff-hl
   :hook ((prog-mode . diff-hl-mode)
@@ -3183,8 +3183,8 @@ Only works in python-base-mode and derived modes."
   (pet-debug 1)
   :config
   (pet-def-config-accessor pre-commit-config
-    :file-name ".pre-commit-config.yaml"
-    :parser pet-parse-config-file)
+                           :file-name ".pre-commit-config.yaml"
+                           :parser pet-parse-config-file)
 
   ;; Handle local pre-commit hooks which don't have virtualenvs managed by pre-commit
   (advice-add 'pet-executable-find :around
