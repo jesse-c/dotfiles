@@ -2012,19 +2012,27 @@ are defining or executing a macro."
   (defun my/gptel-use-openai ()
     "Set gptel backend to OpenAI"
     (interactive)
-    (setq gptel-model 'gpt-5)
+    (setq gptel-model 'gpt-5-2)
     (setq gptel-backend (gptel-make-openai "OpenAI"
                           :stream t
                           :key (my/get-password "api.openai.com" "me")))
     (message "Switched gptel backend: OpenAI"))
-  (defun my/gptel-use-claude-sonnet-4 ()
-    "Set gptel backend to Claude Sonnet 4."
+  (defun my/gptel-use-claude-opus-4-5 ()
+    "Set gptel backend to Claude Opus 4.5."
     (interactive)
-    (setq gptel-model 'claude-sonnet-4-20250514)
+    (setq gptel-model 'claude-sonnet-4-5-20250929)
     (setq gptel-backend (gptel-make-anthropic "Claude"
                           :stream t
                           :key (my/get-password "anthropic.com" "me")))
-    (message "Switched gptel backend: Claude Sonnet 4"))
+    (message "Switched gptel backend: Claude Opus 4.5"))
+  (defun my/gptel-use-claude-sonnet-4-5 ()
+    "Set gptel backend to Claude Sonnet 4.5."
+    (interactive)
+    (setq gptel-model 'claude-opus-4-5-20251101)
+    (setq gptel-backend (gptel-make-anthropic "Claude"
+                          :stream t
+                          :key (my/get-password "anthropic.com" "me")))
+    (message "Switched gptel backend: Claude Sonnet 4.5"))
   (defun my/gptel-use-claude-sonnet-3-7 ()
     "Set gptel backend to Claude Sonnet 3.7."
     (interactive)
@@ -2033,10 +2041,26 @@ are defining or executing a macro."
                           :stream t
                           :key (my/get-password "anthropic.com" "me")))
     (message "Switched gptel backend: Claude Sonnet 3.7"))
+  (defun my/gptel-use-claude-sonnet-3-7 ()
+    "Set gptel backend to Claude Sonnet 3.7."
+    (interactive)
+    (setq gptel-model 'claude-3-7-sonnet-20250219)
+    (setq gptel-backend (gptel-make-anthropic "Claude"
+                          :stream t
+                          :key (my/get-password "anthropic.com" "me")))
+    (message "Switched gptel backend: Claude Sonnet 3.7"))
+  (defun my/gptel-use-claude-haiku-4-5 ()
+    "Set gptel backend to Claude Haiku 4.5."
+    (interactive)
+    (setq gptel-model 'laude-haiku-4-5-20251001)
+    (setq gptel-backend (gptel-make-anthropic "Claude"
+                          :stream t
+                          :key (my/get-password "anthropic.com" "me")))
+    (message "Switched gptel backend: Claude Haiku 4.5"))
   (defun my/gptel-use-gemini ()
     "Set gptel backend to Gemini."
     (interactive)
-    (setq gptel-model 'gemini-pro-latest)
+    (setq gptel-model 'gemini-3-pro-preview)
     (setq gptel-backend (gptel-make-gemini "Gemini"
                           :key (my/get-password "aistudio.google.com" "apikey")
                           :stream t))
@@ -2065,7 +2089,7 @@ are defining or executing a macro."
                           :key (my/get-password "deepseek.com" "apikey")))
     (message "Switched gptel backend: DeepSeek Reasoner"))
   ;; Set Claude as default
-  (my/gptel-use-claude-sonnet-4)
+  (my/gptel-use-claude-sonnet-4-5)
   (defun my/gptel-toggle-sidebar ()
     "Toggle a custom sidebar for a persistent buffer."
     ;; https://github.com/nehrbash/dotfiles/blob/main/Emacs.org#gpt
