@@ -2327,6 +2327,19 @@ If BUFFER is provided, close that buffer directly."
 (use-package vterm
   :defer 1)
 
+(use-package mistty
+  :ensure t
+  :defer t
+  :commands mistty
+  :bind (("C-c s" . mistty)
+         :map mistty-prompt-map
+
+         ;; fish: directory history
+         ("M-<up>" . mistty-send-key)
+         ("M-<down>" . mistty-send-key)
+         ("M-<left>" . mistty-send-key)
+         ("M-<right>" . mistty-send-key)))
+
 (use-package shell-maker)
 
 ;;; Notes
