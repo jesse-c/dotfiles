@@ -6,6 +6,7 @@ options=(
 	hidpi=on
 	ax_focus=on
 	active_color=0xffbf178d
+	blacklist="iPhone Mirroring"
 )
 
 borders "${options[@]}"
