@@ -2009,87 +2009,50 @@ are defining or executing a macro."
   (defvar gptel-save-directory (expand-file-name "chats" user-emacs-directory)
     "Directory to save gptel conversations.")
   :config
-  (defun my/gptel-use-openai ()
-    "Set gptel backend to OpenAI"
-    (interactive)
-    (setq gptel-model 'gpt-5-2)
-    (setq gptel-backend (gptel-make-openai "OpenAI"
-                          :stream t
-                          :key (my/get-password "api.openai.com" "me")))
-    (message "Switched gptel backend: OpenAI"))
-  (defun my/gptel-use-claude-opus-4-5 ()
-    "Set gptel backend to Claude Opus 4.5."
-    (interactive)
-    (setq gptel-model 'claude-sonnet-4-5-20250929)
-    (setq gptel-backend (gptel-make-anthropic "Claude"
-                          :stream t
-                          :key (my/get-password "anthropic.com" "me")))
-    (message "Switched gptel backend: Claude Opus 4.5"))
-  (defun my/gptel-use-claude-sonnet-4-5 ()
-    "Set gptel backend to Claude Sonnet 4.5."
-    (interactive)
-    (setq gptel-model 'claude-opus-4-5-20251101)
-    (setq gptel-backend (gptel-make-anthropic "Claude"
-                          :stream t
-                          :key (my/get-password "anthropic.com" "me")))
-    (message "Switched gptel backend: Claude Sonnet 4.5"))
-  (defun my/gptel-use-claude-sonnet-3-7 ()
-    "Set gptel backend to Claude Sonnet 3.7."
-    (interactive)
-    (setq gptel-model 'claude-3-7-sonnet-20250219)
-    (setq gptel-backend (gptel-make-anthropic "Claude"
-                          :stream t
-                          :key (my/get-password "anthropic.com" "me")))
-    (message "Switched gptel backend: Claude Sonnet 3.7"))
-  (defun my/gptel-use-claude-sonnet-3-7 ()
-    "Set gptel backend to Claude Sonnet 3.7."
-    (interactive)
-    (setq gptel-model 'claude-3-7-sonnet-20250219)
-    (setq gptel-backend (gptel-make-anthropic "Claude"
-                          :stream t
-                          :key (my/get-password "anthropic.com" "me")))
-    (message "Switched gptel backend: Claude Sonnet 3.7"))
-  (defun my/gptel-use-claude-haiku-4-5 ()
-    "Set gptel backend to Claude Haiku 4.5."
-    (interactive)
-    (setq gptel-model 'laude-haiku-4-5-20251001)
-    (setq gptel-backend (gptel-make-anthropic "Claude"
-                          :stream t
-                          :key (my/get-password "anthropic.com" "me")))
-    (message "Switched gptel backend: Claude Haiku 4.5"))
-  (defun my/gptel-use-gemini ()
-    "Set gptel backend to Gemini."
-    (interactive)
-    (setq gptel-model 'gemini-3-pro-preview)
-    (setq gptel-backend (gptel-make-gemini "Gemini"
-                          :key (my/get-password "aistudio.google.com" "apikey")
-                          :stream t))
-    (message "Switched gptel backend: Gemini"))
-  (defun my/gptel-use-perplexity ()
-    "Set gptel backend to Perplexity."
-    (interactive)
-    (setq gptel-backend (gptel-make-perplexity "Perplexity"
-                          :stream t
-                          :key (my/get-password "perplexity.ai" "apikey")))
-    (message "Switched gptel backend: Perplexity"))
-  (defun my/gptel-use-deepseek-chat ()
-    "Set gptel backend to DeepSeek Chat."
-    (interactive)
-    (setq gptel-model 'deepseek-chat)
-    (setq gptel-backend (gptel-make-deepseek "DeepSeek"
-                          :stream t
-                          :key (my/get-password "deepseek.com" "apikey")))
-    (message "Switched gptel backend: DeepSeek Chat"))
-  (defun my/gptel-use-deepseek-reasoner ()
-    "Set gptel backend to DeepSeek Chat."
-    (interactive)
-    (setq gptel-model 'deepseek-reasoner)
-    (setq gptel-backend (gptel-make-deepseek "DeepSeek"
-                          :stream t
-                          :key (my/get-password "deepseek.com" "apikey")))
-    (message "Switched gptel backend: DeepSeek Reasoner"))
+  (defvar my/gptel-models
+    `(("OpenAI GPT-5"
+       :model gpt-5-2
+       :backend-fn ,(lambda () (gptel-make-openai "OpenAI" :stream t :key (my/get-password "api.openai.com" "me"))))
+      ("Claude Opus 4.5"
+       :model claude-opus-4-5-20251101
+       :backend-fn ,(lambda () (gptel-make-anthropic "Claude" :stream t :key (my/get-password "anthropic.com" "me"))))
+      ("Claude Sonnet 4.5"
+       :model claude-sonnet-4-5-20250929
+       :backend-fn ,(lambda () (gptel-make-anthropic "Claude" :stream t :key (my/get-password "anthropic.com" "me"))))
+      ("Claude Sonnet 3.7"
+       :model claude-3-7-sonnet-20250219
+       :backend-fn ,(lambda () (gptel-make-anthropic "Claude" :stream t :key (my/get-password "anthropic.com" "me"))))
+      ("Claude Haiku 4.5"
+       :model claude-haiku-4-5-20251001
+       :backend-fn ,(lambda () (gptel-make-anthropic "Claude" :stream t :key (my/get-password "anthropic.com" "me"))))
+      ("Gemini Pro 3 (Preview)"
+       :model gemini-3-pro-preview
+       :backend-fn ,(lambda () (gptel-make-gemini "Gemini" :stream t :key (my/get-password "aistudio.google.com" "apikey"))))
+      ("Perplexity"
+       :model nil
+       :backend-fn ,(lambda () (gptel-make-perplexity "Perplexity" :stream t :key (my/get-password "perplexity.ai" "apikey"))))
+      ("DeepSeek Chat"
+       :model deepseek-chat
+       :backend-fn ,(lambda () (gptel-make-deepseek "DeepSeek" :stream t :key (my/get-password "deepseek.com" "apikey"))))
+      ("DeepSeek Reasoner"
+       :model deepseek-reasoner
+       :backend-fn ,(lambda () (gptel-make-deepseek "DeepSeek" :stream t :key (my/get-password "deepseek.com" "apikey"))))))
+
+  (defun my/gptel-select-model (&optional model-name)
+    "Select a gptel model from `my/gptel-models`.
+If MODEL-NAME is provided, select it directly. Otherwise, prompt the user."
+    (interactive
+     (list (completing-read "Select AI Model: " (mapcar #'car my/gptel-models) nil t)))
+    (let* ((name (or model-name (completing-read "Select AI Model: " (mapcar #'car my/gptel-models) nil t)))
+           (config (cdr (assoc name my/gptel-models))))
+      (when config
+        (when (plist-get config :model)
+          (setq gptel-model (plist-get config :model)))
+        (setq gptel-backend (funcall (plist-get config :backend-fn)))
+        (message "Switched gptel backend: %s" name))))
+
   ;; Set Claude as default
-  (my/gptel-use-claude-sonnet-4-5)
+  (my/gptel-select-model "Claude Sonnet 4.5")
   (defun my/gptel-toggle-sidebar ()
     "Toggle a custom sidebar for a persistent buffer."
     ;; https://github.com/nehrbash/dotfiles/blob/main/Emacs.org#gpt
