@@ -2361,6 +2361,14 @@ If BUFFER is provided, close that buffer directly."
 ;; Tip: Use tasks as trees of tasks
 
 ;; https://xenodium.com/emacs-dwim-do-what-i-mean
+(defun ar/fetch-url-title (url)
+  "Fetch the title of URL."
+  (with-current-buffer (url-retrieve-synchronously url)
+    (set-buffer-multibyte t)
+    (goto-char (point-min))
+    (re-search-forward "^$" nil t)
+    (dom-text (car (dom-by-tag (libxml-parse-html-region (point) (point-max)) 'title)))))
+
 (defun ar/org-insert-link-dwim ()
   "Like `org-insert-link' but with personal dwim preferences."
   (interactive)
@@ -2376,13 +2384,21 @@ If BUFFER is provided, close that buffer directly."
           ((and clipboard-url (not point-in-link))
            (insert (org-make-link-string
                     clipboard-url
-                    (read-string "title: "
-                                 (with-current-buffer (url-retrieve-synchronously clipboard-url)
-                                   (dom-text (car
-                                              (dom-by-tag (libxml-parse-html-region
-                                                           (point-min)
-                                                           (point-max))
-                                                          'title))))))))
+                    (read-string "title: " (ar/fetch-url-title clipboard-url)))))
+          (point-in-link
+           (let* ((context (org-element-context))
+                  (type (org-element-type context))
+                  (url (when (eq type 'link)
+                         (org-element-property :raw-link context))))
+             (if (and url (string-prefix-p "http" url))
+                 (let ((title (ar/fetch-url-title url)))
+                   (if title
+                       (progn
+                         (delete-region (org-element-property :begin context)
+                                        (org-element-property :end context))
+                         (insert (org-make-link-string url title)))
+                     (call-interactively 'org-insert-link)))
+               (call-interactively 'org-insert-link))))
           (t
            (call-interactively 'org-insert-link)))))
 
