@@ -15,6 +15,22 @@
 ;; Suppress native compilation warnings and errors
 (setq native-comp-async-report-warnings-errors nil)
 
+;; Fix TRAMP GC crash by removing problematic hook
+;; See: https://debbugs.gnu.org/cgi/bugreport.cgi?bug=56558
+;; The issue is tramp-flush-file-function running during GC when killing buffers
+(with-eval-after-load 'tramp-cache
+  (remove-hook 'kill-buffer-hook 'tramp-flush-file-function)
+  (remove-hook 'kill-buffer-hook 'tramp-flush-file-functions))
+
+;; Also prevent it from being added back
+(defun my--block-tramp-kill-buffer-hooks (orig-fun hook function &rest args)
+  "Prevent TRAMP from adding kill-buffer-hook."
+  (unless (and (eq hook 'kill-buffer-hook)
+               (memq function '(tramp-flush-file-function tramp-flush-file-functions)))
+    (apply orig-fun hook function args)))
+
+(advice-add 'add-hook :around #'my--block-tramp-kill-buffer-hooks)
+
 ;; Ensure that quitting only occurs once Emacs finishes native compiling,
 ;; preventing incomplete or leftover compilation files in `/tmp`.
 (setq native-comp-async-query-on-exit t)
