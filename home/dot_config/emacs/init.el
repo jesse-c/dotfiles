@@ -2226,8 +2226,23 @@ If BUFFER is provided, close that buffer directly."
   (setq agent-shell-header-style nil)
   (setq agent-shell-anthropic-key nil)
   (setq agent-shell-show-welcome-message nil)
-  (setq agent-shell-anthropic-authentication
-        (agent-shell-anthropic-make-authentication :login t))
+
+  (defun my/agent-shell-anthropic-auth-login ()
+    (interactive)
+    (setq agent-shell-anthropic-authentication
+          (agent-shell-anthropic-make-authentication :login t))
+    (message "Anthropic authentication configured with login"))
+
+  (defun my/agent-shell-anthropic-auth-api ()
+    (interactive)
+    (setq agent-shell-anthropic-authentication
+          (agent-shell-anthropic-make-authentication
+           :api-key (lambda () (my/get-password "anthropic.com" "me"))))
+    (message "Anthropic authentication configured with API key"))
+
+  ;; Set default auth
+  (my/agent-shell-anthropic-auth-login)
+
   (setq agent-shell-google-authentication
         (agent-shell-google-make-authentication :login t))
   (setq agent-shell-openai-authentication
