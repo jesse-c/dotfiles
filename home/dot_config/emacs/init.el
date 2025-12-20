@@ -516,7 +516,7 @@ This includes buffers visible in windows or tab-bar tabs."
               ("?" . smerge-transient-menu)))
 
 (use-package magit
-  :after transient
+  :after (transient all-the-icons)
   :commands
   (magit-status magit-blame magit-blame-quit)
   :custom
