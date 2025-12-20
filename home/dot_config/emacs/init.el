@@ -431,11 +431,18 @@ This includes buffers visible in windows or tab-bar tabs."
 
   ;; When running as daemon, :q should delete frame instead of killing Emacs
   (defun my/evil-quit-or-delete-frame ()
-    "Delete the current frame if there are multiple frames, otherwise kill Emacs."
+    "Kill buffer if multiple buffers exist, delete frame if multiple frames, otherwise quit."
     (interactive)
-    (if (> (length (frame-list)) 1)
-        (delete-frame)
-      (evil-quit)))
+    (cond
+     ;; If there are multiple buffers in the current window, kill the buffer
+     ((> (length (buffer-list (selected-frame))) 1)
+      (kill-buffer (current-buffer)))
+     ;; If there are multiple frames, delete the current frame
+     ((> (length (frame-list)) 1)
+      (delete-frame))
+     ;; Otherwise, quit Emacs
+     (t
+      (evil-quit))))
 
   (evil-ex-define-cmd "q[uit]" 'my/evil-quit-or-delete-frame)
 
