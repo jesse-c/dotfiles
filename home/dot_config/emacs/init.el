@@ -3103,7 +3103,7 @@ If no, restores full opacity. Only affects the active frame."
 
 (use-package parinfer-rust-mode
   :diminish
-  :hook emacs-lisp-mode)
+  :hook (emacs-lisp-mode . parinfer-rust-mode))
 
 ;;; Language: Elixir
 
