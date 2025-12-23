@@ -2916,6 +2916,7 @@ If no, restores full opacity. Only affects the active frame."
   (setq-default flycheck-python-checkers '(ruff))
   (setq flycheck-display-errors-function nil) ;; Using Flyover
   (setq flycheck-disabled-checkers '(python-flake8 python-mypy python-pylint python-pyright))
+  (setq flycheck-checker-error-threshold 500)
 
   ;; Auto-show flycheck errors list in small bottom window
   (add-to-list 'display-buffer-alist
