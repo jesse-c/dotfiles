@@ -2916,6 +2916,41 @@ If no, restores full opacity. Only affects the active frame."
   (add-to-list 'flycheck-checkers 'org-long-lines-custom)
   (setq-default flycheck-python-checkers '(ruff))
   (setq flycheck-display-errors-function nil) ;; Using Flyover
+  (setq flycheck-disabled-checkers '(python-flake8 python-mypy python-pylint python-pyright))
+
+  ;; Auto-show flycheck errors list in small bottom window
+  (add-to-list 'display-buffer-alist
+               `(,(rx bos "*Flycheck errors*" eos)
+                 (display-buffer-reuse-window
+                  display-buffer-in-side-window)
+                 (side            . bottom)
+                 (reusable-frames . visible)
+                 (window-height   . 0.075)))
+
+  (defun my/flycheck-list-errors-auto ()
+    "Auto-show flycheck errors list if errors exist, otherwise close it."
+    (if flycheck-current-errors
+        (unless (get-buffer-window "*Flycheck errors*")
+          (flycheck-list-errors))
+      ;; Close if no errors
+      (when-let ((window (get-buffer-window "*Flycheck errors*")))
+        (quit-window nil window))))
+
+  (defun my/flycheck-auto-list-enable ()
+    "Enable automatic flycheck errors list display."
+    (interactive)
+    (add-hook 'flycheck-after-syntax-check-hook #'my/flycheck-list-errors-auto)
+    (message "Flycheck auto-list enabled"))
+
+  (defun my/flycheck-auto-list-disable ()
+    "Disable automatic flycheck errors list display."
+    (interactive)
+    (remove-hook 'flycheck-after-syntax-check-hook #'my/flycheck-list-errors-auto)
+    ;; Close the window if it's open
+    (when-let ((window (get-buffer-window "*Flycheck errors*")))
+      (quit-window nil window))
+    (message "Flycheck auto-list disabled"))
+
   :hook
   ((prog-mode . flycheck-mode)
    (text-mode . flycheck-mode)))
@@ -3214,7 +3249,14 @@ database, but may be available via poetry, pipenv, or a project virtualenv."
                 apheleia-formatter 'pet-ruff)
 
     (pet-eglot-setup)
-    (pet-flycheck-setup))
+    (pet-flycheck-setup)
+
+    (setq-local flycheck-disabled-checkers
+                '(python-flake8 python-mypy python-pylint python-pyright))
+
+    ;; Replace default eglot-check -> python-flake8 with eglot-check -> python-ruff
+    (setf (flycheck-checker-get 'eglot-check 'next-checkers) nil)
+    (flycheck-add-next-checker 'eglot-check 'python-ruff))
   :hook
   (python-base-mode . my/pet-python-setup))
 
