@@ -3112,8 +3112,21 @@ If no, restores full opacity. Only affects the active frame."
 (add-to-list 'auto-mode-alist '("\\.exs\\'" . elixir-ts-mode))
 (add-to-list 'auto-mode-alist '("\\.heex\\'" . heex-ts-mode))
 
-;; (add-to-list 'treesit-language-source-alist '(elixir "https://github.com/elixir-lang/tree-sitter-elixir"))
-;; (add-to-list 'treesit-language-source-alist '(heex "https://github.com/phoenixframework/tree-sitter-heex"))
+(use-package elixir-ts-mode
+  :ensure nil   ;; built-in
+  :demand t
+  :config
+  (add-to-list 'treesit-language-source-alist '(elixir "https://github.com/elixir-lang/tree-sitter-elixir"))
+  (add-to-list 'treesit-language-source-alist '(heex "https://github.com/phoenixframework/tree-sitter-heex"))
+  (unless (treesit-language-available-p 'elixir)
+    (treesit-install-language-grammar 'elixir)))
+
+(use-package heex-ts-mode
+  :ensure nil   ;; built-in
+  :demand t
+  :config
+  (unless (treesit-language-available-p 'heex)
+    (treesit-install-language-grammar 'heex)))
 
 ;; Elixir: lib/foo.ex <-> test/foo_test.exs
 (add-to-list 'find-sibling-rules
@@ -3409,7 +3422,12 @@ Interactively, POINT is point and KILL is the prefix argument."
 
 ;;; Language: Just
 
-(use-package just-ts-mode)
+(use-package just-ts-mode
+  :defer t
+  :config
+  (add-to-list 'treesit-language-source-alist '(just "https://github.com/IndianBoy42/tree-sitter-just"))
+  (unless (treesit-language-available-p 'just)
+    (treesit-install-language-grammar 'just)))
 
 (defun just-transient--find-justfile ()
   "Find the Justfile in the project root or VC root."
