@@ -475,7 +475,9 @@ This includes buffers visible in windows or tab-bar tabs."
 (use-package evil-collection
   :after (evil magit)
   :config
-  (evil-collection-init))
+  (evil-collection-init)
+  :bind
+  (("s-g" . magit-status)))
 
 ;; Add surrounding:
 ;;
