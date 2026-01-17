@@ -178,11 +178,12 @@
   "Execute BODY after all PACKAGES are loaded.
 PACKAGES should be a list of package names as symbols."
   (declare (indent 1))
-  `(progn
-     ,@(mapcar (lambda (pkg)
-                 `(eval-after-load ',pkg
-                    '(progn))) packages)
-     ,@body))
+  (if (null packages)
+      `(progn ,@body)
+    (let ((result `(progn ,@body)))
+      (dolist (pkg (reverse packages))
+        (setq result `(with-eval-after-load ',pkg ,result)))
+      result)))
 
 ;;; OS
 
@@ -194,7 +195,7 @@ PACKAGES should be a list of package names as symbols."
 ;; Tidy up .emacs.d mess
 (use-package no-littering :ensure t :demand t)
 
-(use-package transient :ensure nil :demand t)
+(use-package transient :ensure t :demand t)
 
 (use-package savehist
   :ensure nil
@@ -272,9 +273,11 @@ PACKAGES should be a list of package names as symbols."
 
 ;;; Project
 
+(use-package vc-git :ensure nil :demand t)
+
 (use-package project
   :ensure nil
-  :after (consult)
+  :after (consult vc-git transient)
   :init
   (setq project-vc-extra-root-markers '(;; Org
                                         "TODO.org"
@@ -459,7 +462,14 @@ This includes buffers visible in windows or tab-bar tabs."
   (evil-mode 1))
 
 ;; Make Cmd+Q (s-q) close frame without killing Emacs daemon
-(global-set-key (kbd "s-q") 'delete-frame)
+(defun my/quit-or-close-frame ()
+  "Close frame if running as daemon, otherwise quit Emacs."
+  (interactive)
+  (if (daemonp)
+      (delete-frame)
+    (save-buffers-kill-terminal)))
+
+(global-set-key (kbd "s-q") 'my/quit-or-close-frame)
 
 (use-package evil-org
   :after (org evil)
@@ -840,6 +850,7 @@ This includes buffers visible in windows or tab-bar tabs."
 
 (use-package eglot
   :ensure nil
+  :after transient
   :init
   ;; https://github.com/minad/corfu/wiki#filter-list-of-all-possible-completions-with-completion-style-like-orderless
   (setq completion-category-overrides '((eglot (styles orderless))
@@ -1217,10 +1228,14 @@ This includes buffers visible in windows or tab-bar tabs."
    consult-theme :preview-key '(:debounce 0.2 any)
    consult-ripgrep consult-git-grep consult-grep
    consult-bookmark consult-recent-file consult-xref
-   consult--source-bookmark consult--source-file-register
-   consult--source-recent-file consult--source-project-recent-file
+   consult-source-bookmark consult-source-file-register
+   consult-source-recent-file consult-source-project-recent-file
    ;; :preview-key "M-."
    :preview-key '(:debounce 0.4 any))
+
+  ;; Workaround for consult-project-extra using old internal API
+  ;; Until the package is updated to use consult-source-project-buffer
+  (defvaralias 'consult--source-project-buffer 'consult-source-project-buffer)
 
   ;; Optionally configure the narrowing key.
   ;; Both < and C-+ work reasonably well.
@@ -1843,7 +1858,7 @@ are defining or executing a macro."
 (global-set-key (kbd "s-r") (lambda () (interactive) (revert-buffer t t)))
 
 ;; Navigation
-(after-packages (evil avy xref consult-todo kirigami)
+(after-packages (evil avy xref consult-todo kirigami transient)
   (transient-define-prefix nav-transient-menu ()
     "Navigation commands menu."
     [
@@ -1957,6 +1972,27 @@ are defining or executing a macro."
 
 ;; Search / Find / Replace
 (setq isearch-lazy-count t)
+
+(use-package semext
+  :ensure t
+  (:host github :repo "ahyatt/semext")
+  :defer t
+  :init
+  (require 'llm-openai)
+  (setopt semext-provider (make-llm-openai :key (my/get-password "api.openai.com" "me")))
+  :commands
+  (semext-forward-part
+   semext-backward-part
+   semext-query-replace
+   semext-search-forward
+   semext-search-backward
+   semext-clear-cache))
+
+(use-package ast-grep
+  :ensure t
+  (:host github :repo "SunskyXH/ast-grep.el")
+  :defer t
+  :commands (ast-grep-search ast-grep-project ast-grep-directory))
 
 (use-package re-builder
   :ensure nil
@@ -2555,7 +2591,7 @@ If BUFFER is provided, close that buffer directly."
 ;; Tip: src blocks: C-c ' to edit as buffer
 (use-package org-roam
   :defer t
-  :after org
+  :after (org transient)
   :custom
   (org-roam-directory (file-truename org-roam-dir))
   (org-roam-dailies-directory org-roam-dailies-dir)
@@ -2996,6 +3032,7 @@ If no, restores full opacity. Only affects the active frame."
 (setq user-emacs-cache-directory (expand-file-name ".cache" user-emacs-directory))
 
 (use-package dape
+  :after transient
   :custom
   (dape-inlay-hints t)
   (dape-cwd-function 'my/project-root)
@@ -3221,8 +3258,8 @@ Only works in python-base-mode and derived modes."
   (pet-debug 1)
   :config
   (pet-def-config-accessor pre-commit-config
-                           :file-name ".pre-commit-config.yaml"
-                           :parser pet-parse-config-file)
+    :file-name ".pre-commit-config.yaml"
+    :parser pet-parse-config-file)
 
   ;; Handle local pre-commit hooks which don't have virtualenvs managed by pre-commit
   (advice-add 'pet-executable-find :around
@@ -3424,6 +3461,7 @@ Interactively, POINT is point and KILL is the prefix argument."
 
 (use-package just-ts-mode
   :defer t
+  :after transient
   :config
   (add-to-list 'treesit-language-source-alist '(just "https://github.com/IndianBoy42/tree-sitter-just"))
   (unless (treesit-language-available-p 'just)
