@@ -41,12 +41,13 @@
 (add-hook 'after-init-hook #'elpaca-process-queues)
 (elpaca `(,@elpaca-order))
 
+;; Set before setting up use-package via Elpaca
+(setq use-package-enable-imenu-support t
+      use-package-always-ensure t)
+
 (elpaca elpaca-use-package
   ;; Enable use-package :ensure support for Elpaca.
   (elpaca-use-package-mode))
-
-(setq use-package-enable-imenu-support t
-      use-package-always-ensure t)
 
 (add-to-list 'load-path (expand-file-name "user/" user-emacs-directory))
 
