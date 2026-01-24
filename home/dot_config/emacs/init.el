@@ -1859,7 +1859,7 @@ are defining or executing a macro."
 (global-set-key (kbd "s-r") (lambda () (interactive) (revert-buffer t t)))
 
 ;; Navigation
-(after-packages (evil avy xref consult-todo kirigami transient)
+(with-eval-after-load 'transient
   (transient-define-prefix nav-transient-menu ()
     "Navigation commands menu."
     [
@@ -1887,8 +1887,11 @@ are defining or executing a macro."
      ["Folds"
       ("O" "Open" kirigami-open-fold)
       ("C" "Close" kirigami-close-fold)
-      ("T" "Toggle" kirigami-toggle-fold)]])
-  (global-set-key (kbd "s-u") 'nav-transient-menu))
+      ("T" "Toggle" kirigami-toggle-fold)]]))
+
+(after-packages (evil transient)
+  (evil-define-key 'normal 'global (kbd "s-u") #'nav-transient-menu)
+  (evil-define-key 'motion 'global (kbd "s-u") #'nav-transient-menu))
 
 (use-package xref
   :ensure nil
