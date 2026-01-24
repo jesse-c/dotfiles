@@ -2438,6 +2438,7 @@ If BUFFER is provided, close that buffer directly."
   (org-log-done t)
   ;; Example: [%] or [0/0} then C-c C-C
   (org-hierarchical-todo-statistics t)
+  (org-agenda-window-setup 'other-window)
   ;; Something instead of "...", such as " ▾ "
   (org-ellipsis " ↲ ")
   ;; Entities are things like \alpha
@@ -2486,6 +2487,26 @@ If BUFFER is provided, close that buffer directly."
   (advice-add 'org-agenda-priority :after #'org-save-all-org-buffers)
   (advice-add 'org-agenda-schedule :after #'org-save-all-org-buffers)
   (advice-add 'org-agenda-deadline :after #'org-save-all-org-buffers)
+  ;; Auto-refresh agenda when agenda files are saved
+  (defvar my/org-agenda-current-key nil
+    "The key of the current custom agenda command.")
+
+  (defun my/org-agenda-with-key (key)
+    "Open org-agenda with KEY and remember it for refresh."
+    (interactive)
+    (setq my/org-agenda-current-key key)
+    (org-agenda nil key))
+
+  (defun my/org-agenda-refresh-on-save ()
+    "Refresh org-agenda buffers when an agenda file is saved."
+    (when (and (derived-mode-p 'org-mode)
+               (member (buffer-file-name) (org-agenda-files)))
+      (when (get-buffer "*Org Agenda*")
+        (if my/org-agenda-current-key
+            (org-agenda nil my/org-agenda-current-key)
+          (with-current-buffer "*Org Agenda*"
+            (org-agenda-redo-all t))))))
+  (add-hook 'after-save-hook #'my/org-agenda-refresh-on-save)
   ;; Optional refile for completed tasks (disabled by default)
   (defun my/auto-refile-done-tasks ()
     "Prompt to refile DONE and CANCELLED tasks."
@@ -2587,7 +2608,10 @@ If BUFFER is provided, close that buffer directly."
 
   (org-mode .
             (lambda ()
-              (add-hook 'before-save-hook #'my/warn-long-lines-org nil t))))
+              (add-hook 'before-save-hook #'my/warn-long-lines-org nil t)
+              (add-hook 'before-save-hook
+                        (lambda () (org-update-statistics-cookies t))
+                        nil t))))
 
 (use-package ob-async
   :after org)
@@ -2629,9 +2653,9 @@ If BUFFER is provided, close that buffer directly."
      [("p" "Find previous" org-roam-dailies-find-previous-note)
       ("n" "Find next" org-roam-dailies-find-next-note)]]
     ["Agenda"
-     [("d" "Day view" (lambda () (interactive) (org-agenda nil "d")))
-      ("w" "Week view" (lambda () (interactive) (org-agenda nil "w")))]
-     [("a" "Default" (lambda () (interactive) (org-agenda nil "a")))]]
+     [("d" "Day view" (lambda () (interactive) (my/org-agenda-with-key "d")))
+      ("w" "Week view" (lambda () (interactive) (my/org-agenda-with-key "w")))]
+     [("a" "Default" (lambda () (interactive) (my/org-agenda-with-key "a")))]]
     [("S" "Structure" org-structure-transient-menu)])
   ;; Force global keybinding to override macOS system binding for cmd-o
   ;; (global-set-key (kbd "s-o") 'org-transient-menu)
@@ -2688,7 +2712,9 @@ If BUFFER is provided, close that buffer directly."
 
 (use-package org-modern
   :after org
-  :hook (org-mode . org-modern-mode)
+  :hook
+  (org-mode . org-modern-mode)
+  (org-agenda-finalize-hook . org-modern-agenda)
   :custom
   (org-modern-tag t)
   (org-modern-star 'replace))
