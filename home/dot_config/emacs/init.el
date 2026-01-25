@@ -2270,6 +2270,7 @@ If BUFFER is provided, close that buffer directly."
 (use-package agent-shell
   :after (acp shell-maker)
   :defer t
+  :commands (agent-shell my/agent-shell-anthropic-env-z my/agent-shell-anthropic-env-default)
   :config
   (setq agent-shell-file-completion-enabled t)
   (setq agent-shell-header-style nil)
@@ -2291,6 +2292,28 @@ If BUFFER is provided, close that buffer directly."
 
   ;; Set default auth
   (my/agent-shell-anthropic-auth-login)
+
+  ;; Define environment functions after agent-shell is fully loaded
+  ;; to avoid void-function errors during byte-compilation
+  (defun my/agent-shell-anthropic-env-z ()
+    "Use alternative Anthropic-compatible endpoint."
+    (interactive)
+    (setq agent-shell-anthropic-claude-environment
+          (agent-shell-make-environment-variables
+           "ANTHROPIC_BASE_URL" "https://api.z.ai/api/anthropic"
+           "ANTHROPIC_AUTH_TOKEN" (my/get-password "z.ai" "apikey")
+           "ANTHROPIC_MODEL" "glm-4.7"
+           "ANTHROPIC_DEFAULT_OPUS_MODEL" "glm-4.7"
+           "ANTHROPIC_DEFAULT_SONNET_MODEL" "glm-4.7"
+           "ANTHROPIC_DEFAULT_HAIKU_MODEL" "glm-4.7-flash"
+           "CLAUDE_CODE_SUBAGENT_MODEL" "glm-4.7"))
+    (message "Agent shell: Using Z with Claude"))
+
+  (defun my/agent-shell-anthropic-env-default ()
+    "Use standard Claude environment."
+    (interactive)
+    (setq agent-shell-anthropic-claude-environment nil)
+    (message "Agent shell: Using standard Claude"))
 
   (setq agent-shell-google-authentication
         (agent-shell-google-make-authentication :login t))
