@@ -482,8 +482,7 @@ This includes buffers visible in windows or tab-bar tabs."
 (use-package evil-collection
   :after (evil magit)
   :config
-  (evil-collection-init)
-  (global-set-key (kbd "s-g") 'magit-status))
+  (evil-collection-init))
 
 ;; Add surrounding:
 ;;
@@ -531,7 +530,7 @@ This includes buffers visible in windows or tab-bar tabs."
               ("?" . smerge-transient-menu)))
 
 (use-package magit
-  :after (transient all-the-icons)
+  :after (transient all-the-icons isearch)
   :commands
   (magit-status magit-blame magit-blame-quit)
   :custom
@@ -546,6 +545,7 @@ This includes buffers visible in windows or tab-bar tabs."
    :map magit-status-mode-map
    ("*" . th/magit-aux-commands))
   :config
+  (global-set-key (kbd "s-g") 'magit-status)
   (defun my/find-conventional-commit-scopes ()
     "Find all scopes used in conventional commits in the current Git project."
     (interactive)
@@ -1976,6 +1976,11 @@ are defining or executing a macro."
 
 ;; Search / Find / Replace
 (setq isearch-lazy-count t)
+
+(use-package isearch
+  :ensure nil
+  :config
+  (global-unset-key (kbd "s-g")))
 
 (use-package semext
   :ensure t
