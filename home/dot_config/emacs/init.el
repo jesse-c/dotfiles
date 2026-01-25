@@ -676,24 +676,24 @@ This includes buffers visible in windows or tab-bar tabs."
 (unless (fboundp 'vc-run-delayed-success)
   (defmacro vc-run-delayed-success (okstatus &rest body)
     "Execute BODY when the current buffer's process exits successfully.
-	This means the current buffer's process exits normally (i.e., does not
-	die to a signal) with status not exceeding OKSTATUS.
-	If the current buffer has no process, execute BODY immediately."
+This means the current buffer's process exits normally (i.e., does not
+die to a signal) with status not exceeding OKSTATUS.
+If the current buffer has no process, execute BODY immediately."
     (declare (indent 1) (debug (def-body)))
     `(vc-exec-after (lambda () ,@body) ,okstatus))
 
   (defun vc-wait-for-process-before-save (proc message)
     "Make Emacs wait for PROC before saving buffers under current VC tree.
-	If waiting for PROC takes more than a second, display MESSAGE.
+  If waiting for PROC takes more than a second, display MESSAGE.
 
-	This is used to implement `vc-async-checkin'.  It effectively switches
-	to a synchronous checkin in the case that the user asks to save a buffer
-	under the tree in which the checkin operation is running.
+  This is used to implement `vc-async-checkin'.  It effectively switches
+  to a synchronous checkin in the case that the user asks to save a buffer
+  under the tree in which the checkin operation is running.
 
-	The hook installed by this function will make Emacs unconditionally wait
-	for PROC if the root of the current VC tree couldn't be determined, and
-	whenever writing out a buffer which doesn't have any `buffer-file-name'
-	yet."
+  The hook installed by this function will make Emacs unconditionally wait
+  for PROC if the root of the current VC tree couldn't be determined, and
+  whenever writing out a buffer which doesn't have any `buffer-file-name'
+  yet."
     (letrec ((root (vc-root-dir)))
       (hook
        (lambda ()
