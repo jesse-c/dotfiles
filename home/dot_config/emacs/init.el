@@ -2269,8 +2269,7 @@ If BUFFER is provided, close that buffer directly."
 
 (use-package agent-shell
   :after (acp shell-maker)
-  :defer t
-  :commands (agent-shell my/agent-shell-anthropic-env-z my/agent-shell-anthropic-env-default)
+  :defer 1
   :config
   (setq agent-shell-file-completion-enabled t)
   (setq agent-shell-header-style nil)
