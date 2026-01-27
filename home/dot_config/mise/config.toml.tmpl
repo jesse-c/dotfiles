@@ -1,27 +1,27 @@
 {{- if eq .chezmoi.os "darwin" -}}
 [env]
 SCHEME = "racket"
+NODE_OPTIONS = "--no-deprecation"
 
 [tools]
-python = "latest"
-clojure = "latest"
-erlang = "latest"
-elixir = "latest"
-go = "latest"
-zig = "latest"
-rust = { version = "latest", components = "rust-src,llvm-tools,rust-analyzer" }
-racket = "latest"
-node = "latest"
-lua = "latest"
-ruby = "latest"
-php = "latest"
-usage = "latest"
-"ubi:pimalaya/comodoro" = "latest"
-"ubi:pimalaya/himalaya" = "latest"
+python = ["3.10", "3.11", "3.12", "3.13", "3.14"]
+clojure = "1.12.4.1602"
+erlang = "28.3.1"
+elixir = "1.19.5-otp-28"
+go = "1.25.6"
+zig = "0.15.2"
+rust = { version = "1.93.0", components = "rust-src,llvm-tools,rust-analyzer" }
+racket = "9.0"
+node = "25.5.0"
+lua = "5.4.7"
+ruby = "4.0.1"
+php = "8.5.2"
+usage = "2.15.0"
+# "ubi:pimalaya/comodoro" = "latest" # Waiting on stability
+# "ubi:pimalaya/himalaya" = "latest" # Waiting on stability
 # "ubi:pimalaya/mirador" = "latest" # Waiting on refactor from author to fix issue(s) as of 2025-05-02
 # "ubi:pimalaya/neverest" = "latest" # Waiting on refactor from author to fix issue(s) as of 2025-05-02
 "ubi:abhinav/git-spice" = { version = "latest", exe = "gs" }
-"cargo:Cretezy/lazyjj" = "latest"
 "ubi:blahgeek/emacs-lsp-booster" = "latest"
 "npm:prettier" = "latest"
 "npm:yaml-language-server" = "latest"
@@ -29,7 +29,7 @@ usage = "latest"
 "npm:@zed-industries/codex-acp" = "latest"
 "cargo:https://github.com/cola-io/codex-acp" = "branch:main"
 "npm:vscode-langservers-extracted" = "latest"
-"npm:@anthropic-ai/claude-code" = "latest"
+# "npm:@anthropic-ai/claude-code" = "latest"
 "npm:@qwen-code/qwen-code" = "latest"
 "npm:@google/gemini-cli" = "latest"
 "npm:@sourcegraph/amp" = "latest"
@@ -52,16 +52,15 @@ usage = "latest"
 "pipx:pipenv" = "latest"
 "pipx:prefect" = "latest"
 "pipx:poetry" = "latest"
+"pipx:awscli" = "latest"
 "pipx:pyright" = "latest"
 "pipx:ruff" = "latest"
 "pipx:tmuxp" = "latest"
 "pipx:ty" = "latest"
 "pipx:gallery-dl" = "latest"
-"pipx:aider-chat" = "latest"
 "pipx:huggingface-hub" = "latest"
 "pipx:python-lsp-server" = "latest"
 "pipx:pyrefly" = "latest"
-"pipx:pre-commit" = "latest"
 "cargo:emacs-lsp-booster" = "latest"
 "cargo:codanna" = "latest"
 "cargo:ck-search" = "latest"
@@ -70,6 +69,7 @@ usage = "latest"
 "ubi:blopker/codebook" = "latest"
 "ubi:elixir-lang/expert" = "latest"
 "cargo:tealdeer" = "latest"
+"github:clojure-lsp/clojure-lsp" = "latest"
 {{- end }}
 
 {{- if eq .chezmoi.os "linux" }}
