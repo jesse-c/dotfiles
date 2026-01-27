@@ -1141,6 +1141,7 @@ If the current buffer has no process, execute BODY immediately."
 
 (use-package consult
   :defer 1
+  :after (xref)
   ;; Replace bindings. Lazily loaded by `use-package'.
   :bind (;; C-c bindings in `mode-specific-map'
          ("C-c M-x" . consult-mode-command)
@@ -1210,7 +1211,6 @@ If the current buffer has no process, execute BODY immediately."
   (advice-add #'register-preview :override #'consult-register-window)
   (setq register-preview-delay 0.5)
 
-  ;; Use Consult to select xref locations with preview
   (setq xref-show-xrefs-function #'consult-xref
         xref-show-definitions-function #'consult-xref)
 
@@ -1880,7 +1880,15 @@ are defining or executing a macro."
       ("o" "Forward" xref-go-forward)
       ("A" "Back / Stack" consult-xref-stack-backward)
       ("O" "Forward / Stack" consult-xref-stack-forward)
-      ("d" "Definitions" xref-find-definitions)]
+      ("d" "Definitions" xref-find-definitions)
+      ("r" "References" xref-find-references)
+      ("s" "Symbols" xref-find-apropos)
+      ("D" "Definitions (buffer)" xref-find-definitions-buffer)
+      ("R" "References (buffer)" xref-find-references-buffer)
+      ("S" "Symbols (buffer)" xref-find-apropos-buffer)]
+     ["Errors"
+      ("I" "Previous error" flycheck-previous-error)
+      ("i" "Next error" flycheck-next-error)]
      ["Structure"
       ("," "Function beginning" beginning-of-defun)
       ("." "Function ending" end-of-defun)]
@@ -1897,9 +1905,32 @@ are defining or executing a macro."
   :ensure nil
   :hook ((xref-after-return xref-after-jump) . recenter)
   :custom
-  (xref-history-storage 'xref-window-local-history)
-  (xref-show-xrefs-function #'xref-show-definitions-completing-read)
-  (xref-show-definitions-function #'xref-show-definitions-completing-read))
+  ;; Tip: Default functions that create buffers
+  ;; (xref-show-xrefs-function #'xref-show-definitions-completing-read)
+  ;; (xref-show-definitions-function #'xref-show-definitions-completing-read))
+  (xref-history-storage 'xref-window-local-history))
+
+;; Helper commands for buffer-based xref (override consult-xref default)
+(defun xref-find-definitions-buffer ()
+  "Find definitions using the default xref buffer (bypasses consult-xref)."
+  (interactive)
+  (let ((xref-show-xrefs-function #'xref--show-xref-buffer)
+        (xref-show-definitions-function #'xref-show-definitions-buffer))
+    (xref-find-definitions-at-point)))
+
+(defun xref-find-references-buffer ()
+  "Find references using the default xref buffer (bypasses consult-xref)."
+  (interactive)
+  (let ((xref-show-xrefs-function #'xref--show-xref-buffer)
+        (xref-show-definitions-function #'xref-show-definitions-buffer))
+    (xref-find-references-at-point)))
+
+(defun xref-find-apropos-buffer ()
+  "Find apropos using the default xref buffer (bypasses consult-xref)."
+  (interactive)
+  (let ((xref-show-xrefs-function #'xref--show-xref-buffer)
+        (xref-show-definitions-function #'xref-show-definitions-buffer))
+    (call-interactively 'xref-find-apropos)))
 
 (use-package wgrep
   :defer t)
