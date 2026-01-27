@@ -2533,13 +2533,21 @@ If BUFFER is provided, close that buffer directly."
            ((agenda "" ((org-agenda-span 1)
                         (org-agenda-show-log t)
                         (org-agenda-log-mode-items '(closed clock state))))
-            (todo "TODO")))
+            (todo "TODO" ((org-agenda-todo-ignore-scheduled t)))))
           ("w" "Week view"
            ((agenda "" ((org-agenda-span 7)
                         (org-agenda-start-on-weekday nil)
                         (org-agenda-start-day "today")
                         (org-agenda-show-log t)
-                        (org-agenda-log-mode-items '(closed clock state))))))))
+                        (org-agenda-log-mode-items '(closed clock state))))
+            (todo "TODO" ((org-agenda-todo-ignore-scheduled t)))))
+          ("m" "Month view"
+           ((agenda "" ((org-agenda-span 30)
+                        (org-agenda-start-on-weekday nil)
+                        (org-agenda-start-day "today")
+                        (org-agenda-show-log t)
+                        (org-agenda-log-mode-items '(closed clock state))))
+            (todo "TODO" ((org-agenda-todo-ignore-scheduled t)))))))
   ;; Auto-save agenda files when modified
   (advice-add 'org-agenda-todo :after #'org-save-all-org-buffers)
   (advice-add 'org-agenda-priority :after #'org-save-all-org-buffers)
