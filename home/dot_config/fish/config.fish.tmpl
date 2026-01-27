@@ -1,35 +1,24 @@
 if status is-interactive
     set --universal fish_greeting ""
 
-    {{- if eq .chezmoi.os "darwin" }}
-    set -gx HOMEBREW_PREFIX /opt/homebrew
+    set -gx EDITOR nvim
 
-    set -gx HOMEBREW_CELLAR /opt/homebrew/Cellar
+    set -U __done_notification_duration 5000 # 5 seconds
 
-    set -gx HOMEBREW_REPOSITORY /opt/homebrew
+    set -gx MISE_GITHUB_TOKEN '{{ onepasswordRead "op://Personal/GitHub/API Keys/Mise" }}'
 
-    set -gx HOMEBREW_SHELLENV_PREFIX /opt/homebrew
-
-    set -q PATH; or set PATH ''
-    set -gx PATH /opt/homebrew/bin /opt/homebrew/sbin $PATH
-
-    set -q MANPATH; or set MANPATH ''
-    set -gx MANPATH /opt/homebrew/share/man $MANPATH
-
-    set -q INFOPATH; or set INFOPATH ''
-    set -gx INFOPATH /opt/homebrew/share/info $INFOPATH
+    mise activate fish | source
 
     export HOMEBREW_NO_ANALYTICS=1
     export HOMEBREW_NO_ENV_HINTS=1
+
+    {{- if eq .chezmoi.os "darwin" }}
+    eval "$(/opt/homebrew/bin/brew shellenv fish)"
     {{- end }}
 
     {{- if eq .chezmoi.os "linux" }}
     /home/linuxbrew/.linuxbrew/bin/brew shellenv | source
     {{- end }}
-
-    set -gx EDITOR nvim
-
-    set -U __done_notification_duration 5000 # 5 seconds
 
     # Prompt ---------------------------------------------------------------------
 
@@ -83,10 +72,6 @@ if status is-interactive
     fish_add_path $HOME/.local/bin
 
     fish_add_path $HOME/.mint/bin
-
-    set -gx MISE_GITHUB_TOKEN '{{ onepasswordRead "op://Personal/GitHub/API Keys/Mise" }}'
-
-    mise activate fish | source
 
     alias c='chezmoi'
 
