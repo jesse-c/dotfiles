@@ -1,4 +1,4 @@
-[accounts.iCloud]
+[accounts.personal]
 default = true
 email = "{{ .personal.email }}"
 display-name = "{{ .name }}"
@@ -9,14 +9,14 @@ backend.port = 993
 backend.login = "{{ .personal.email }}"
 backend.encryption.type = "tls"
 backend.auth.type = "password"
-backend.auth.command = '{{ .personal.himalaya.imap_passwd_cmd }}'
+backend.auth.command = 'op read "op://Personal/Apple/App-specific passwords/xf3zdbppf5ee74ub35lknsiy5a"'
 message.send.backend.type = "smtp"
 message.send.backend.host = "smtp.mail.me.com"
 message.send.backend.port = 587
 message.send.backend.login = "{{ .personal.email }}"
 message.send.backend.encryption.type = "start-tls"
 message.send.backend.auth.type = "password"
-message.send.backend.auth.command = '{{ .personal.himalaya.smtp_passwd_cmd }}'
+message.send.backend.auth.command = 'op read "op://Personal/Apple/App-specific passwords/xf3zdbppf5ee74ub35lknsiy5a"'
 message.delete.style = "folder"
 folder.aliases.inbox = "INBOX"
 folder.aliases.sent = "Sent Messages"

@@ -1,5 +1,5 @@
 #!/bin/bash
 
-# Comodoro CLI version: {{ output "comodoro" "--version" | trim }}
+# Comodoro CLI version: {{ output "comodoro" "--version" | splitList "\n" | first | trim }}
 
-comodoro completion fish > "$HOME/.config/fish/completions/comdoro.fish"
+comodoro completion fish --dir "$HOME/.config/fish/completions/"

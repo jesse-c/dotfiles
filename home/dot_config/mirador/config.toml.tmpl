@@ -1,0 +1,12 @@
+[accounts.personal]
+default = true
+folder = "INBOX"
+backend.type = "imap"
+backend.host = "imap.mail.me.com"
+backend.port = 993
+backend.login = "{{ .personal.email }}"
+backend.encryption.type = "tls"
+backend.auth.type = "password"
+backend.auth.command = 'op read "op://Personal/Apple/App-specific passwords/xf3zdbppf5ee74ub35lknsiy5a"'
+on-message-added.notify.summary = "📫 New message from {sender}"
+on-message-added.notify.body = "{subject}"
