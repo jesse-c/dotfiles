@@ -10,8 +10,8 @@
     },
     "playwright": {
       "type": "stdio",
-      "command": "mcp-server-playwright",
-      "args": [],
+      "command": "npx",
+      "args": ["-y", "mcp-server-playwright"],
       "env": {}
     },
     "github": {
