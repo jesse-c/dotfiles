@@ -531,6 +531,11 @@ This includes buffers visible in windows or tab-bar tabs."
   :bind (:map smerge-mode-map
               ("?" . smerge-transient-menu)))
 
+;; Unset isearch's s-g binding before magit uses it
+(global-unset-key (kbd "s-g"))
+;; Set magit on s-g
+(global-set-key (kbd "s-g") 'magit-status)
+
 (use-package magit
   :after (transient all-the-icons isearch)
   :commands
@@ -543,7 +548,6 @@ This includes buffers visible in windows or tab-bar tabs."
   (:map magit-status-mode-map
         ("*" . th/magit-aux-commands))
   :config
-  (global-set-key (kbd "s-g") 'magit-status)
   (defun my/find-conventional-commit-scopes ()
     "Find all scopes used in conventional commits in the current Git project."
     (interactive)
@@ -2007,9 +2011,7 @@ are defining or executing a macro."
 (setq isearch-lazy-count t)
 
 (use-package isearch
-  :ensure nil
-  :config
-  (global-unset-key (kbd "s-g")))
+  :ensure nil)
 
 (use-package semext
   :ensure t
