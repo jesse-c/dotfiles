@@ -2591,6 +2591,20 @@ If BUFFER is provided, close that buffer directly."
       (if tags
           (concat ":" (string-join (nreverse tags) ":") ":")
         "")))
+  (defun my/org-toggle-statistics-cookie ()
+    "Toggle a statistics cookie ([/] or [%]) on the current heading.
+The cookie shows the count/percentage of DONE tasks among children."
+    (interactive)
+    (save-excursion
+      (org-back-to-heading t)
+      (let* ((heading (org-get-heading t t t t))
+             (cookie-pattern "\\s-+\\[[0-9]*/[0-9%]*\\]"))
+        (if (string-match cookie-pattern heading)
+            ;; Remove existing cookie
+            (org-edit-headline (replace-match "" t t heading))
+          ;; Add new cookie
+          (org-edit-headline (concat heading " [/]"))
+          (org-update-statistics-cookies t)))))
   (setq org-capture-templates
         '(("t" "Task" entry
            (file org-tasks-path)
@@ -2711,7 +2725,8 @@ If BUFFER is provided, close that buffer directly."
       ("g" "Graph" org-roam-graph)]]
     ["Dailies"
      [("t" "Goto today" org-roam-dailies-goto-today)
-      ("y" "Goto yesterday" org-roam-dailies-goto-yesterday)]
+      ("p" "Goto previous" org-roam-dailies-goto-previous-note)
+      ("n" "Goto next" org-roam-dailies-goto-next-note)]
      [("T" "Capture today" org-roam-dailies-capture-today)
       ("Y" "Capture yesterday" org-roam-dailies-capture-yesterday)]
      [("p" "Find previous" org-roam-dailies-find-previous-note)
