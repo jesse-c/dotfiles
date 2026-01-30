@@ -2007,6 +2007,16 @@ are defining or executing a macro."
   (yaml-mode . combobulate-mode)
   (yaml-ts-mode . combobulate-mode))
 
+;; Security
+
+(use-package age
+  :custom
+  (age-program "rage")
+  (age-default-identity (expand-file-name "~/.ssh/id_rsa"))
+  (age-default-recipient (expand-file-name "~/.ssh/id_rsa.pub"))
+  :config
+  (age-file-enable))
+
 ;; Search / Find / Replace
 (setq isearch-lazy-count t)
 
