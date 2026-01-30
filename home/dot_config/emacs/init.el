@@ -480,8 +480,10 @@ This includes buffers visible in windows or tab-bar tabs."
   (evil-org-agenda-set-keys))
 
 (use-package evil-collection
-  :after (evil magit)
+  :after (evil magit forge)
   :config
+  ;; Prevent evil-collection-forge from trying to set bindings before forge is ready
+  (setq forge-add-default-bindings nil)
   (evil-collection-init))
 
 ;; Add surrounding:
@@ -499,7 +501,7 @@ This includes buffers visible in windows or tab-bar tabs."
 ;; Spaces or not:
 ;; Use left or right of surrounder
 (use-package evil-surround
-  :after evil
+  :after (evil evil-collection)
   :config
   (global-evil-surround-mode 1))
 
@@ -534,16 +536,12 @@ This includes buffers visible in windows or tab-bar tabs."
   :commands
   (magit-status magit-blame magit-blame-quit)
   :custom
-  ;; Setting ‘forge-add-default-bindings’ to nil in ‘evil-collection-forge-setup’.
-  ;; To suppress this message you can set this variable to nil in your init.el file.
-  (forge-add-default-bindings nil)
   (magit-git-executable "/opt/homebrew/bin/git")
   :init
   (setopt magit-format-file-function #'magit-format-file-all-the-icons)
   :bind
-  (("s-g" . magit-status)
-   :map magit-status-mode-map
-   ("*" . th/magit-aux-commands))
+  (:map magit-status-mode-map
+        ("*" . th/magit-aux-commands))
   :config
   (global-set-key (kbd "s-g") 'magit-status)
   (defun my/find-conventional-commit-scopes ()
