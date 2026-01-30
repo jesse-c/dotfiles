@@ -43,6 +43,10 @@ if status is-interactive
 
     # Applications ---------------------------------------------------------------
 
+    if type -q pinentry-mac
+        set -gx PINENTRY_PROGRAM  pinentry-mac
+    end
+
     if type -q bat
         abbr --add cat bat
     end
