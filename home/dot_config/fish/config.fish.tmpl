@@ -31,6 +31,10 @@ if status is-interactive
 
     fish_vi_key_bindings
 
+    for mode in (bind --list-modes)
+        bind -M $mode \co edit_command_buffer
+    end
+
     # Visual ---------------------------------------------------------------------
 
     alias wipe='clear && printf "\e[3J"'
