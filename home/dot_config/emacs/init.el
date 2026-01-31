@@ -1004,7 +1004,10 @@ If the current buffer has no process, execute BODY immediately."
                                     '(("ty" "server")))))
   (add-to-list 'eglot-server-programs
                `(vespa-schema-mode . ,(eglot-alternatives
-                                       (list (list "java" "-jar" (expand-file-name "~/.local/bin/vespa-language-server.jar"))))))
+                                       (list (list "java" "-jar" (expand-file-name "~/.local/bin/vespa-lsp.jar"))))))
+  (add-to-list 'eglot-server-programs
+               `(pkl-mode . ,(eglot-alternatives
+                              (list (list "java" "-jar" (expand-file-name "~/.local/bin/pkl-lsp.jar"))))))
   (add-to-list 'eglot-server-programs
                `(flix-mode . ,(eglot-alternatives
                                '(("flix" "lsp")))))
@@ -3920,6 +3923,25 @@ result instead of `message'."
       (interactive)
       (let ((path (nxml-where))))
       (kill-new path))))
+
+;;; Language: pkl
+
+(define-derived-mode pkl-mode prog-mode "pkl"
+  "Major mode for editing pkl files."
+  :group 'pkl
+
+  ;; Comment syntax (//, /* */, ///)
+  (setq-local comment-start "// ")
+  (setq-local comment-end "")
+  (setq-local comment-start-skip "\\(///?\\|/\\*\\)\\s-*")
+  (setq-local comment-style 'indent)
+
+  ;; Syntax table for comment font-locking
+  (modify-syntax-entry ?/ ". 124b" (syntax-table))
+  (modify-syntax-entry ?* ". 23" (syntax-table))
+  (modify-syntax-entry ?\n "> b" (syntax-table)))
+
+(add-to-list 'auto-mode-alist '("\\.pkl\\'" . pkl-mode))
 
 ;;; Dotfiles
 
