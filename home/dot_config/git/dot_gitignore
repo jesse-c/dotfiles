@@ -15,6 +15,7 @@ els_lsp/
 
 # Emacs
 TODO.org
+.agent-shell
 
 # Aider
 .aider.*
