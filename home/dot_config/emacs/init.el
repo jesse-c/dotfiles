@@ -3752,11 +3752,17 @@ Interactively, POINT is point and KILL is the prefix argument."
 
 ;;; Language: Typst
 
+;; typst-ts-compile.el has ;;;###autoload on define-compilation-mode,
+;; which puts it in the autoloads file where compile.el isn't loaded yet.
+;; elpaca-use-package defers :init until after autoloads are loaded, so
+;; we must require compile at top-level before elpaca processes queues.
+(require 'compile)
+
 (use-package typst-ts-mode
   :ensure t
   (:host codeberg :repo "meow_king/typst-ts-mode")
   :custom
-  (typst-ts-watch-options "--open")
+  (typst-ts-watch-options '("--open"))
   (typst-ts-mode-grammar-location (expand-file-name "tree-sitter/libtree-sitter-typst.so" user-emacs-directory))
   (typst-ts-mode-enable-raw-blocks-highlight t)
   :config
