@@ -1,4 +1,3 @@
-{{- if eq .chezmoi.os "darwin" -}}
 [env]
 SCHEME = "racket"
 NODE_OPTIONS = "--no-deprecation"
@@ -69,27 +68,23 @@ usage = "2.15.0"
 "ubi:elixir-lang/expert" = "latest"
 "cargo:tealdeer" = "latest"
 "github:clojure-lsp/clojure-lsp" = "latest"
-{{- end }}
-
-{{- if eq .chezmoi.os "linux" }}
-[tools]
-rust = "latest"
-rust-analyzer = "latest"
-python = "latest"
-go = "latest"
-lua = "latest"
-node = "latest"
-ruby = "latest"
-erlang = "28.0.1"
-elixir = "1.18.4-otp-28"
-kotlin = "latest"
-usage = "latest"
-{{- end }}
+"github:yt-dlp/yt-dlp" = "latest"
+"github:artempyanykh/marksman" = "latest"
+"pipx:httpie" = "latest"
+"pipx:proselint" = "latest"
+"pipx:semgrep" = "latest"
+"pipx:visidata" = "latest"
+meson = "latest"
+"pipx:cased-kit" = { version = "latest", all = "" }
+# sudo mkdir /Library/Java/JavaVirtualMachines/temurin-25.0.2+10.0.LTS.jdk
+# sudo ln -s /Users/jesse/.local/share/mise/installs/java/temurin-25.0.2+10.0.LTS/Contents /Library/Java/JavaVirtualMachines/temurin-25.0.2+10.0.LTS.jdk/Contents
+java = "temurin-25.0.2+10.0.LTS"
 
 [settings]
 idiomatic_version_file_enable_tools = ["python", "node", "ruby"]
 experimental = true
 python.uv_venv_auto = true
+lockfile = true
 
 [settings.status]
 missing_tools = "never"
