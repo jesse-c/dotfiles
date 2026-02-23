@@ -148,7 +148,7 @@ return {
       })
 
       -- Vespa Schema LSP (matches Emacs Eglot config)
-      local vespa_jar_path = vim.fn.expand("~/.local/bin/vespa-language-server.jar")
+      local vespa_jar_path = vim.fn.expand("~/.local/bin/vespa-lsp.jar")
       if vim.fn.filereadable(vespa_jar_path) == 1 then
         local vespa_config = {
           name = "vespa_lsp",
