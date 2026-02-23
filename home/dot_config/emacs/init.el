@@ -2984,7 +2984,9 @@ If no, restores full opacity. Only affects the active frame."
   (:map bookmark-bmenu-mode-map
         ("s-c" . casual-bookmarks-tmenu))
   (:map org-agenda-mode-map
-        ("s-c" . casual-agenda-tmenu)))
+        ("s-c" . casual-agenda-tmenu))
+  (:map org-mode-map
+        ("s-c" . casual-org-tmenu)))
 
 (use-package casual-avy
   :after (avy casual)
