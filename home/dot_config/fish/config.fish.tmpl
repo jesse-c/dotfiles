@@ -44,11 +44,17 @@ if status is-interactive
     # Applications ---------------------------------------------------------------
 
     if type -q pinentry-mac
-        set -gx PINENTRY_PROGRAM  pinentry-mac
+        set -gx PINENTRY_PROGRAM pinentry-mac
     end
 
     if type -q bat
         abbr --add cat bat
+    end
+
+    set -gx GIT_SPICE_NO_GS_WARNING 1
+
+    if type -q git-spice
+        alias gs=git-spice
     end
 
     if type -q llm
