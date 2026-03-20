@@ -1,3 +1,11 @@
 filter_mode = "host"
 workspaces = true
 dialect = "uk"
+search_mode = "daemon-fuzzy"
+
+[ai]
+enabled = true
+
+[daemon]
+enabled = true
+autostart = true
