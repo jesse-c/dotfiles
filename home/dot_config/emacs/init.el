@@ -3565,6 +3565,7 @@ Interactively, POINT is point and KILL is the prefix argument."
 
 (use-package just-ts-mode
   :defer t
+  :mode ("\\.just\\'" . just-ts-mode)
   :after transient
   :config
   (add-to-list 'treesit-language-source-alist '(just "https://github.com/IndianBoy42/tree-sitter-just"))
