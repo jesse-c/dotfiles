@@ -1822,7 +1822,6 @@ are defining or executing a macro."
 
 (use-package eldoc
   :ensure nil
-  :defer t
   :config
   (global-eldoc-mode))
 
@@ -3428,7 +3427,6 @@ database, but may be available via poetry, pipenv, or a project virtualenv."
   (clojure-ts-mode . rainbow-delimiters-mode))
 
 (use-package flycheck-clojure
-  :defer 1
   :after (clojure-mode clojure-ts-mode flycheck)
   :commands flycheck-clojure-setup
   :hook
@@ -3459,7 +3457,6 @@ database, but may be available via poetry, pipenv, or a project virtualenv."
   :commands org-babel-execute:rust)
 
 (use-package flycheck-rust
-  :defer 1
   :after (rust-mode flycheck)
   :hook
   (flycheck-mode . flycheck-rust-setup))
@@ -3495,7 +3492,6 @@ database, but may be available via poetry, pipenv, or a project virtualenv."
 (use-package swift-ts-mode)
 
 (use-package flycheck-swift
-  :defer 1
   :after (swift-mode flycheck)
   :hook
   (flycheck-mode . flycheck-swift-setup))
