@@ -14,6 +14,7 @@ if status is-interactive
 
     {{- if eq .chezmoi.os "darwin" }}
     eval "$(/opt/homebrew/bin/brew shellenv fish)"
+    set -gx DYLD_LIBRARY_PATH ~/.local/share/mise/installs/luajit/latest/lib $DYLD_LIBRARY_PATH
     {{- end }}
 
     {{- if eq .chezmoi.os "linux" }}
