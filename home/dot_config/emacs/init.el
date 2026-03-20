@@ -1780,7 +1780,8 @@ are defining or executing a macro."
   ;; https://github.com/minad/corfu/wiki#continuously-update-the-candidates
   (advice-add 'eglot-completion-at-point :around #'cape-wrap-buster))
 
-(after-packages (cape tempel eglot corfu)
+
+(after-packages (cape tempel corfu)
   ;; Global completion functions
   (add-hook 'completion-at-point-functions #'cape-dabbrev)
   (add-hook 'completion-at-point-functions #'cape-file)
@@ -1817,6 +1818,10 @@ are defining or executing a macro."
   (add-hook 'python-base-mode-hook #'my/remove-python-capf)
   (add-hook 'python-mode-hook #'my/remove-python-capf)
   (add-hook 'python-ts-mode-hook #'my/remove-python-capf))
+
+(after-packages (cape eglot)
+  ;; eglot-specific: wrap eglot capf with cape-wrap-buster to keep candidates fresh
+  (advice-add 'eglot-completion-at-point :around #'cape-wrap-buster))
 
 ;; ElDoc
 
