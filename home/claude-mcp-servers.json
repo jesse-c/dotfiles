@@ -8,12 +8,6 @@
         "dash-mcp-server"
       ]
     },
-    "playwright": {
-      "type": "stdio",
-      "command": "npx",
-      "args": ["-y", "mcp-server-playwright"],
-      "env": {}
-    },
     "github": {
       "command": "docker",
       "args": [
