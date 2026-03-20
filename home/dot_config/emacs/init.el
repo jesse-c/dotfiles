@@ -253,9 +253,6 @@ PACKAGES should be a list of package names as symbols."
   (add-to-list 'exec-path "/opt/homebrew/sbin" t)
   (setenv "PATH" (concat "/opt/homebrew/bin:" "/opt/homebrew/sbin:" (getenv "PATH"))))
 
-(when (memq window-system '(mac ns))
-  (setq dired-use-ls-dired nil))
-
 ;; https://www.blogbyben.com/2022/05/gotcha-emacs-on-mac-os-too-many-files.html
 (defun my/file-notify-rm-all-watches ()
   "Remove all existing file notification watches from Emacs."
@@ -1537,11 +1534,6 @@ are defining or executing a macro."
 ;; Default frame size
 (add-to-list 'default-frame-alist '(height . 100))
 (add-to-list 'default-frame-alist '(width . 120))
-
-;; Initial frame content
-(setq inhibit-splash-screen t) ; No startup screen
-(setq inhibit-startup-message t) ; No startup message
-(setq initial-scratch-message nil) ; Empty scratch buffer
 
 ;;; File system
 
