@@ -2087,33 +2087,24 @@ are defining or executing a macro."
     "Directory to save gptel conversations.")
   :config
   (defvar my/gptel-models
-    `(("OpenAI GPT-5"
-       :model gpt-5-2
+    `(("OpenAI GPT-5.4"
+       :model gpt-5.4
+       :backend-fn ,(lambda () (gptel-make-openai "OpenAI" :stream t :key (my/get-password "api.openai.com" "me")))))
+    `(("OpenAI GPT-5 Mini"
+       :model gpt-5-mini
        :backend-fn ,(lambda () (gptel-make-openai "OpenAI" :stream t :key (my/get-password "api.openai.com" "me"))))
-      ("Claude Opus 4.5"
-       :model claude-opus-4-5-20251101
+      ("Claude Opus 4.6"
+       :model claude-opus-4-6
        :backend-fn ,(lambda () (gptel-make-anthropic "Claude" :stream t :key (my/get-password "anthropic.com" "me"))))
-      ("Claude Sonnet 4.5"
-       :model claude-sonnet-4-5-20250929
-       :backend-fn ,(lambda () (gptel-make-anthropic "Claude" :stream t :key (my/get-password "anthropic.com" "me"))))
-      ("Claude Sonnet 3.7"
-       :model claude-3-7-sonnet-20250219
+      ("Claude Sonnet 4.6"
+       :model claude-sonnet-4-6
        :backend-fn ,(lambda () (gptel-make-anthropic "Claude" :stream t :key (my/get-password "anthropic.com" "me"))))
       ("Claude Haiku 4.5"
        :model claude-haiku-4-5-20251001
        :backend-fn ,(lambda () (gptel-make-anthropic "Claude" :stream t :key (my/get-password "anthropic.com" "me"))))
-      ("Gemini Pro 3 (Preview)"
-       :model gemini-3-pro-preview
-       :backend-fn ,(lambda () (gptel-make-gemini "Gemini" :stream t :key (my/get-password "aistudio.google.com" "apikey"))))
-      ("Perplexity"
-       :model nil
-       :backend-fn ,(lambda () (gptel-make-perplexity "Perplexity" :stream t :key (my/get-password "perplexity.ai" "apikey"))))
-      ("DeepSeek Chat"
-       :model deepseek-chat
-       :backend-fn ,(lambda () (gptel-make-deepseek "DeepSeek" :stream t :key (my/get-password "deepseek.com" "apikey"))))
-      ("DeepSeek Reasoner"
-       :model deepseek-reasoner
-       :backend-fn ,(lambda () (gptel-make-deepseek "DeepSeek" :stream t :key (my/get-password "deepseek.com" "apikey"))))))
+      ("Gemini Pro 3 (Latest)"
+       :model gemini-3-pro-latest
+       :backend-fn ,(lambda () (gptel-make-gemini "Gemini" :stream t :key (my/get-password "aistudio.google.com" "apikey"))))))
 
   (defun my/gptel-select-model (&optional model-name)
     "Select a gptel model from `my/gptel-models`.
