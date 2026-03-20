@@ -11,7 +11,12 @@ bind main - !git commit --fixup %(commit)
 bind main 9 @sh -c "echo %(commit) | {{ .cmd_copy }}"
 
 # Rebase onto current commit
-bind main 8 !git rebase -i  %(commit)
+bind main r !git rebase -i  %(commit)
+
+# (Un)stage
+bind status s @git add -- %(file)
+bind status u @git restore --staged -- %(file)
+bind stage s status-update
 
 # Copy file path to clipboard
 bind status 7 @sh -c "echo %(file) | {{ .cmd_copy }}"
