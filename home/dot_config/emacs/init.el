@@ -291,10 +291,10 @@ PACKAGES should be a list of package names as symbols."
   (add-to-list 'project-vc-ignores ".cache/")
   (add-to-list 'project-vc-ignores ".build/")
   (add-to-list 'project-vc-ignores "target/")
-  (defun me/project-todo ()
+  (defun my/project-todo ()
     "Visit the todo file for the current project."
     (interactive)
-    (if-let* ((root (me/project-root)))
+    (if-let* ((root (when-let ((p (project-current))) (project-root p))))
         (find-file (expand-file-name "TODO.org" root))
       (user-error "[Project] Not in a project")))
   (setq src-dir (expand-file-name "~/src/"))
@@ -1566,27 +1566,10 @@ are defining or executing a macro."
   (dired-kill-when-opening-new-dired-buffer t))
 
 ;; Themes
-(defun my/theme-by-current-time ()
-  "Get the light or dark THEME based on the current time."
-  (let ((hour (->> (current-time)
-                   (decode-time)
-                   (nth 2))))
-    (if (or (> hour 18) (< hour 5))
-        'mocha
-      'latte)))
-
-(defun my/load-theme-by-current-time ()
-  "Load the right theme based on the current time."
-  (progn
-    (setq catppuccin-flavor (my/theme-by-current-time))
-    (load-theme 'catppuccin t)
-    (when (fboundp 'my/set-diff-hl-bg-for-theme)
-      (my/set-diff-hl-bg-for-theme))))
-
 (defun my/theme-by-current-theme ()
   "Get the light or dark theme based on the current theme."
   (interactive)
-  (let ((appearance (get-macos-appearance)))
+  (let ((appearance (my/get-macos-appearance)))
     (cond
      ((eq appearance 'dark) 'mocha)
      ((eq appearance 'light) 'latte))))
@@ -1600,7 +1583,7 @@ are defining or executing a macro."
     (when (fboundp 'my/set-diff-hl-bg-for-theme)
       (my/set-diff-hl-bg-for-theme))))
 
-(defun get-macos-appearance ()
+(defun my/get-macos-appearance ()
   "Get macOS appearance, returns 'dark or 'light."
   (if (string-match-p "Dark"
                       (shell-command-to-string "defaults read -g AppleInterfaceStyle 2>/dev/null"))
