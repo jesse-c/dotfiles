@@ -2896,7 +2896,8 @@ If no, restores full opacity. Only affects the active frame."
 ;; https://github.com/daviwil/dotfiles/blob/6a819647464e733446056caabc2f8ba40469178f/.emacs.d/modules/dw-core.el#L90C1-L93C61
 (dolist (mode '(text-mode-hook
                 prog-mode-hook
-                conf-mode-hook))
+                conf-mode-hook
+                markdown-ts-mode-hook))
   (add-hook mode (lambda () (display-line-numbers-mode 1))))
 
 (global-so-long-mode 1)
