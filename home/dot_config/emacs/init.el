@@ -341,7 +341,7 @@ PACKAGES should be a list of package names as symbols."
     (let ((default-directory (project-root (project-current t))))
       (compile command)))
   (add-to-list 'project-switch-commands '(project-run "Run" ?r))
-  (add-to-list 'project-switch-commands '(consult-ripgrep "Find regexp (rg)" ?D))
+  (add-to-list 'project-switch-commands '(consult-ripgrep "Find regexp" ?g))
   (add-to-list 'project-switch-commands '(project-dired "Dired" ?d))
   (add-to-list 'project-switch-commands '(magit-status "Magit" ?m))
   :bind
@@ -1243,6 +1243,11 @@ If the current buffer has no process, execute BODY immediately."
   ;; Until the package is updated to use consult-source-project-buffer
   (defvaralias 'consult--source-project-buffer 'consult-source-project-buffer)
 
+  ;; Include hidden files/folders (e.g. .github) in ripgrep searches
+  (setq consult-ripgrep-args
+        "rg --null --line-buffered --color=never --max-columns=1000 --path-separator /\
+         --smart-case --no-heading --with-filename --line-number --search-zip --hidden")
+
   ;; Optionally configure the narrowing key.
   ;; Both < and C-+ work reasonably well.
   (setq consult-narrow-key "<")) ;; "C-+"
@@ -1343,6 +1348,8 @@ If the current buffer has no process, execute BODY immediately."
   :bind
   ("C-:" . embark-act)
   ("C-;" . embark-dwim)
+  (:map minibuffer-local-map
+        ("C-c e" . embark-export))
   :config
 
   (defun my/embark-pytest-def-p ()
@@ -1875,9 +1882,9 @@ are defining or executing a macro."
       ("," "Function beginning" beginning-of-defun)
       ("." "Function ending" end-of-defun)]
      ["Folds"
-      ("O" "Open" kirigami-open-fold)
-      ("C" "Close" kirigami-close-fold)
-      ("T" "Toggle" kirigami-toggle-fold)]]))
+      ("zo" "Open" kirigami-open-fold)
+      ("zc" "Close" kirigami-close-fold)
+      ("za" "Toggle" kirigami-toggle-fold)]]))
 
 (after-packages (evil transient)
   (evil-define-key 'normal 'global (kbd "s-u") #'nav-transient-menu)
@@ -2313,11 +2320,11 @@ If BUFFER is provided, close that buffer directly."
           (agent-shell-make-environment-variables
            "ANTHROPIC_BASE_URL" "https://api.z.ai/api/anthropic"
            "ANTHROPIC_AUTH_TOKEN" (my/get-password "z.ai" "apikey")
-           "ANTHROPIC_MODEL" "glm-4.7"
-           "ANTHROPIC_DEFAULT_OPUS_MODEL" "glm-4.7"
-           "ANTHROPIC_DEFAULT_SONNET_MODEL" "glm-4.7"
-           "ANTHROPIC_DEFAULT_HAIKU_MODEL" "glm-4.7-flash"
-           "CLAUDE_CODE_SUBAGENT_MODEL" "glm-4.7"))
+           "ANTHROPIC_MODEL" "glm-5.1"
+           "ANTHROPIC_DEFAULT_OPUS_MODEL" "glm-5.1"
+           "ANTHROPIC_DEFAULT_SONNET_MODEL" "glm-5.1"
+           "ANTHROPIC_DEFAULT_HAIKU_MODEL" "glm-5.1-flash"
+           "CLAUDE_CODE_SUBAGENT_MODEL" "glm-5.1"))
     (message "Agent shell: Using Z with Claude"))
 
   (defun my/agent-shell-anthropic-env-default ()
