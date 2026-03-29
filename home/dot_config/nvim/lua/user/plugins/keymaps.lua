@@ -102,9 +102,9 @@ return {
             end
 
             -- If on a file path, open it
-            local word = vim.fn.expand("<cfile>")
-            if vim.fn.filereadable(word) == 1 then
-              vim.cmd("edit " .. word)
+            local cfile = vim.fn.expand("<cfile>")
+            if vim.fn.filereadable(cfile) == 1 then
+              vim.cmd("edit " .. cfile)
               return
             end
 
@@ -179,7 +179,8 @@ return {
         -- Comment mappings
         { "gcc", desc = "Toggle line comment" },
         { "gbc", desc = "Toggle block comment" },
-        { "gc", desc = "Comment line/selection", mode = { "n", "v" } },
+        { "gc", group = "comment", mode = "n" },
+        { "gc", desc = "Comment selection", mode = "v" },
         { "gb", desc = "Comment block", mode = { "n", "v" } },
         { "gcO", desc = "Add comment above" },
         { "gco", desc = "Add comment below" },

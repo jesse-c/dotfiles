@@ -32,15 +32,12 @@ vim.opt.foldtext = "v:lua.custom_fold_text()"
 
 -- Syntax highlighting
 
-vim.cmd([[ filetype plugin indent on ]])
-vim.cmd([[ syntax enable ]])
-
 -- Splits
 
-vim.api.nvim_set_keymap("n", "<C-k>", ":wincmd k<CR>", { silent = true, noremap = true })
-vim.api.nvim_set_keymap("n", "<C-j>", ":wincmd j<CR>", { silent = true, noremap = true })
-vim.api.nvim_set_keymap("n", "<C-h>", ":wincmd h<CR>", { silent = true, noremap = true })
-vim.api.nvim_set_keymap("n", "<C-l>", ":wincmd l<CR>", { silent = true, noremap = true })
+vim.keymap.set("n", "<C-k>", ":wincmd k<CR>", { silent = true })
+vim.keymap.set("n", "<C-j>", ":wincmd j<CR>", { silent = true })
+vim.keymap.set("n", "<C-h>", ":wincmd h<CR>", { silent = true })
+vim.keymap.set("n", "<C-l>", ":wincmd l<CR>", { silent = true })
 
 vim.api.nvim_create_autocmd("VimResized", {
 	pattern = "*",
@@ -64,5 +61,5 @@ vim.o.cursorline = true
 
 -- Quitting
 
-vim.api.nvim_set_keymap("n", "<C-q>", ":q<CR>", { silent = true, noremap = true })
-vim.api.nvim_set_keymap("n", "<C-a>", ":bd!<CR>", { silent = true, noremap = true })
+vim.keymap.set("n", "<C-q>", ":q<CR>", { silent = true })
+vim.keymap.set("n", "<C-a>", ":bd!<CR>", { silent = true })

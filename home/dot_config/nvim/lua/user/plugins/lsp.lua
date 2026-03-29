@@ -16,12 +16,12 @@ return {
         desc = "LSP actions",
         callback = function(event)
           local opts_keymap = { buffer = event.buf }
-          vim.keymap.set("n", "K", vim.lsp.buf.hover, opts_keymap)
+          vim.keymap.set("n", "K", function() vim.lsp.buf.hover({ border = "rounded" }) end, opts_keymap)
           vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts_keymap)
           vim.keymap.set("n", "gD", vim.lsp.buf.declaration, opts_keymap)
           vim.keymap.set("n", "gi", vim.lsp.buf.implementation, opts_keymap)
           vim.keymap.set("n", "go", vim.lsp.buf.type_definition, opts_keymap)
-          vim.keymap.set("n", "gs", vim.lsp.buf.signature_help, opts_keymap)
+          vim.keymap.set("n", "gs", function() vim.lsp.buf.signature_help({ border = "rounded" }) end, opts_keymap)
           vim.keymap.set("n", "<F2>", vim.lsp.buf.rename, opts_keymap)
           vim.keymap.set({ "n", "x" }, "<F3>", vim.lsp.buf.format, opts_keymap)
           vim.keymap.set("n", "<F4>", vim.lsp.buf.code_action, opts_keymap)
@@ -38,15 +38,6 @@ return {
             vim.keymap.set("n", "<leader>cr", vim.lsp.codelens.run, opts_keymap)
           end
         end,
-      })
-
-      -- Configure LSP handlers with better styling
-      vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
-        border = "rounded",
-      })
-
-      vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, {
-        border = "rounded",
       })
 
       -- Configure diagnostics with modern sign approach and styling
@@ -107,7 +98,7 @@ return {
         elixir_ls = { "elixir" },
         gopls = { "go" },
         denols = { "javascript", "typescript" },
-        texlab = { "tex", "latex" },
+        texlab = { "tex", "bib" },
         yamlls = { "yaml" },
         sourcekit = { "swift" },
         rust_analyzer = { "rust" },
@@ -130,15 +121,13 @@ return {
 
       -- Custom LSP configurations (not in nvim-lspconfig)
       local lsp_util = require("lspconfig.util")
-      local custom_capabilities = require("blink.cmp").get_lsp_capabilities()
-
       -- Flix LSP (matches Emacs Eglot config)
       local flix_config = {
         name = "flix_lsp",
         cmd = { "flix", "lsp" },
         filetypes = { "flix" },
         root_dir = lsp_util.find_git_ancestor,
-        capabilities = custom_capabilities,
+        capabilities = capabilities,
       }
       vim.api.nvim_create_autocmd("FileType", {
         pattern = "flix",
