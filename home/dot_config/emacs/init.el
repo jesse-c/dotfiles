@@ -125,6 +125,9 @@
             (insert (format ";; %s: %s\n" pkg version)))))  ;; Format and insert package info
       (write-file package-lock-file))))  ;; Write buffer contents to the specified file
 
+;; The default read-process-output-max of 4096 bytes may inhibit performance to
+;; some degree, also.
+(setq read-process-output-max (* 4 1024 1024)) ;; 4mb
 
 ;; Store custom-file separately, don't freak out when it's not found
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
@@ -3145,8 +3148,6 @@ If no, restores full opacity. Only affects the active frame."
   (dape-default-breakpoints-file (expand-file-name "dap-breakpoints" user-emacs-cache-directory))
   :commands (dape)
   :config
-  ;; The default read-process-output-max of 4096 bytes may inhibit performance to some degree, also.
-  (setq read-process-output-max (* 1024 1024)) ;; 1mb
   ;; To not display info and/or buffers on startup
   (remove-hook 'dape-on-start-hooks 'dape-info)
   (remove-hook 'dape-on-start-hooks 'dape-repl)
