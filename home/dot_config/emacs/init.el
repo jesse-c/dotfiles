@@ -296,7 +296,7 @@ PACKAGES should be a list of package names as symbols."
   (defun my/project-todo ()
     "Visit the todo file for the current project."
     (interactive)
-    (if-let* ((root (when-let ((p (project-current))) (project-root p))))
+    (if-let* ((root (when-let* ((p (project-current))) (project-root p))))
         (find-file (expand-file-name "TODO.org" root))
       (user-error "[Project] Not in a project")))
   (setq src-dir (expand-file-name "~/src/"))
@@ -3073,7 +3073,7 @@ If no, restores full opacity. Only affects the active frame."
         (unless (get-buffer-window "*Flycheck errors*")
           (flycheck-list-errors))
       ;; Close if no errors
-      (when-let ((window (get-buffer-window "*Flycheck errors*")))
+      (when-let* ((window (get-buffer-window "*Flycheck errors*")))
         (quit-window nil window))))
 
   (defun my/flycheck-auto-list-enable ()
@@ -3087,7 +3087,7 @@ If no, restores full opacity. Only affects the active frame."
     (interactive)
     (remove-hook 'flycheck-after-syntax-check-hook #'my/flycheck-list-errors-auto)
     ;; Close the window if it's open
-    (when-let ((window (get-buffer-window "*Flycheck errors*")))
+    (when-let* ((window (get-buffer-window "*Flycheck errors*")))
       (quit-window nil window))
     (message "Flycheck auto-list disabled"))
 
