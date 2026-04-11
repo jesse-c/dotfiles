@@ -51,6 +51,8 @@
 
 (add-to-list 'load-path (expand-file-name "user/" user-emacs-directory))
 
+(setq elpaca-lock-file (expand-file-name "lock.el" user-emacs-directory))
+
 (use-package compile-angel
   :ensure t
   :demand t
