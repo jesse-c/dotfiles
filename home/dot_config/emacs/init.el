@@ -1829,7 +1829,7 @@ are defining or executing a macro."
   (add-hook 'completion-at-point-functions #'cape-file)
   ;; Add codeium if available
   (when (fboundp 'codeium-completion-at-point)
-    (add-hook 'completion-at-point-functions #'codeium-completion-at-point nil t))
+    (add-hook 'completion-at-point-functions #'codeium-completion-at-point)))
 
   ;; Elisp mode: add cape-elisp-block for symbol completion
   (add-hook 'emacs-lisp-mode-hook
@@ -2054,7 +2054,7 @@ are defining or executing a macro."
   :ensure t
   (:host github :repo "ahyatt/semext")
   :defer t
-  :init
+  :config
   (require 'llm-openai)
   (setopt semext-provider (make-llm-openai :key (my/get-password "api.openai.com" "me")))
   :commands
@@ -2283,7 +2283,7 @@ If BUFFER is provided, close that buffer directly."
           ("dash" . (
                      :command "uvx"
                      :args ("--from" "git+https://github.com/Kapeli/dash-mcp-server.git", "dash-mcp-server")))))
-  :config
+  :init
   ;; Defer MCP hub startup to improve Emacs startup performance
   (defun my/mcp-hub-start-deferred ()
     "Start MCP hub after a delay to improve startup performance."
@@ -3400,7 +3400,7 @@ Only works in python-base-mode and derived modes."
                  count
                  (if (= count 1) "" "s"))))))
 
-(setq-local python-indent-offset 4)
+(setq-default python-indent-offset 4)
 
 (use-package poetry
   :defer t
@@ -3818,7 +3818,7 @@ Interactively, POINT is point and KILL is the prefix argument."
 
 ;;; Language: Emacs Lisp
 
-(setq-local lisp-indent-offset 2)
+(setq-default lisp-indent-offset 2)
 
 (use-package flycheck-package
   :after (flycheck)
