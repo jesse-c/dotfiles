@@ -1077,8 +1077,10 @@ If the current buffer has no process, execute BODY immediately."
 
 (use-package eglot-booster
   :ensure t
-  (:host github :repo "jdtsmith/eglot-booster")
+  (:host github :repo "jesse-c/eglot-booster")
   :after eglot
+  ;; :custom
+  ;; (eglot-booster-executable "~/src/github.com/jesse-c/emacs-lsp-booster/target/release/emacs-lsp-booster")
   :config
   (eglot-booster-mode))
 
@@ -1472,8 +1474,27 @@ If the current buffer has no process, execute BODY immediately."
 (set-selection-coding-system 'utf-8)
 (prefer-coding-system 'utf-8)
 
-;; Font
+;; Cursors
+
+;; If you have several windows visible, Emacs draws a cursor in each of them,
+;; even the ones you’re not working in. It also highlights selections in
+;; non-focused windows.
+(setq-default cursor-in-non-selected-windows nil)
+(setq highlight-nonselected-windows nil)
+
+;; Font/Typography
 (add-to-list 'default-frame-alist '(font . "JetBrains Mono 12"))
+
+;; Assume left-to-right text everywhere and skip the bidirectional parenthesis
+;; algorithm.
+(setq-default bidi-display-reordering 'left-to-right
+              bidi-paragraph-direction 'left-to-right)
+(setq bidi-inhibit-bpa t)
+
+;; Emacs normally fontifies (syntax-highlights) text even while you’re actively
+;; typing. This can cause micro-stutters, especially in tree-sitter modes or
+;; large buffers.
+(setq redisplay-skip-fontification-on-input t)
 
 (global-set-key (kbd "C-=") 'text-scale-increase)
 (global-set-key (kbd "C--") 'text-scale-decrease)
@@ -1775,6 +1796,7 @@ are defining or executing a macro."
 
 (use-package cape
   :after corfu
+  :demand t
   ;; Bind prefix keymap providing all Cape commands under a mnemonic key.
   ;; Press C-c p ? to for help.
   :bind ("C-c p" . cape-prefix-map)) ;; Alternative key: M-<tab>, M-p, M-+
@@ -2013,7 +2035,7 @@ are defining or executing a macro."
 (setq isearch-lazy-count t)
 
 (use-package isearch
-  :ensure nil)
+  :ensure nil) ;; built-in
 
 (use-package semext
   :ensure t
@@ -2299,6 +2321,7 @@ If BUFFER is provided, close that buffer directly."
   (setq agent-shell-header-style nil)
   (setq agent-shell-anthropic-key nil)
   (setq agent-shell-show-welcome-message nil)
+  (setq agent-shell-prefer-viewport-interaction nil)
 
   (defun my/agent-shell-anthropic-auth-login ()
     (interactive)
@@ -2348,7 +2371,17 @@ If BUFFER is provided, close that buffer directly."
          :openai-api-key (lambda () (my/get-password "api.openai.com" "me"))))
   (setq agent-shell-google-authentication
         (agent-shell-google-make-authentication
-         :api-key (lambda () (my/get-password "aistudio.google.com" "apikey")))))
+         :api-key (lambda () (my/get-password "aistudio.google.com" "apikey"))))
+
+  ;; Evil state-specific RET behavior: insert mode = newline, normal mode = send
+  (evil-define-key 'insert agent-shell-mode-map (kbd "RET") #'newline)
+  (evil-define-key 'normal agent-shell-mode-map (kbd "RET") #'comint-send-input)
+
+  ;; Configure *agent-shell-diff* buffers to start in Emacs state
+  (add-hook 'diff-mode-hook
+            (lambda ()
+              (when (string-match-p "\\*agent-shell-diff\\*" (buffer-name))
+                (evil-emacs-state)))))
 
 (use-package codeium
   :ensure t
@@ -2805,6 +2838,14 @@ The cookie shows the count/percentage of DONE tasks among children."
 
 (use-package org-download
   :after (org org-roam))
+
+(use-package org-link-favicon
+  :ensure nil
+  :after (org nerd-icons)
+  :load-path "user/"
+  :hook (org-mode . org-link-favicon-mode)
+  :commands (org-link-favicon-refresh-buffer
+             org-link-favicon-clear-cache))
 
 ;;; UI
 
