@@ -1737,6 +1737,19 @@ are defining or executing a macro."
      (consult-ripgrep (:not posframe))
      (t posframe)))
   :config
+  ;; The `child-frame-border' face is unspecified by default, so posframe falls
+  ;; back to the frame background colour, making the border invisible.
+  ;;
+  ;; The ;; border appears on first use (posframe caches the frame) but disappears
+  ;; whenever the frame is recreated (e.g. after a theme reload or resize).
+  ;;
+  ;; Fix it by explicitly setting the border to Catppuccin's `surface1` each time the
+  ;; theme loads, so it stays correct across both Mocha (dark) and Latte (light).
+  (defun my/set-posframe-border ()
+    (set-face-attribute 'child-frame-border nil
+                        :background (catppuccin-get-color 'surface1)))
+  (add-hook 'after-load-theme-hook #'my/set-posframe-border)
+  (my/set-posframe-border)
   (vertico-posframe-mode 1))
 
 (use-package orderless
