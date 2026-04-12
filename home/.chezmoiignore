@@ -1,4 +1,6 @@
 README.md
+.config/emacs/flycheck_*.el
+.config/emacs/user/flycheck_*.el
 
 {{- if ne .chezmoi.os "darwin" }}
 Library
