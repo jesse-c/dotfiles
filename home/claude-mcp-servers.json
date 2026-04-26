@@ -47,6 +47,10 @@
         "run",
         "emacs-mcp-server"
       ]
+    },
+    "railway": {
+      "command": "npx",
+      "args": ["-y", "@railway/mcp-server"]
     }
   }
 }
