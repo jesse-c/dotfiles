@@ -25,10 +25,6 @@
                 "Z_AI_MODE": "ZAI"
             }
         },
-        "prefect-mcp-server": {
-            "type": "local",
-            "command": ["prefect-mcp-server"]
-        },
         "dash-mcp-server": {
             "type": "local",
             "command": ["dash-mcp-server"]
@@ -42,6 +38,17 @@
                 "run",
                 "emacs-mcp-server"
             ]
+        }
+    },
+    "provider": {
+        "lmstudio": {
+        "npm": "@ai-sdk/openai-compatible",
+        "name": "LM Studio (local)",
+        "options": { "baseURL": "http://127.0.0.1:1234/v1" },
+        "models": {
+                "google/gemma-4-26b-a4b": { "name": "Gemma 4 26B" },
+                "qwen/qwen3.6-27b": { "name": "Qwen3.6 27B" }
+            }
         }
     }
 }
