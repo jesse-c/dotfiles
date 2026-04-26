@@ -52,6 +52,10 @@ yabai -m config                                 \
 yabai -m rule --add app="^{{$app}}$" manage=off
 {{- end}}
 
+# https://ghostty.org/docs/help/macos-tiling-wms#yabai
+yabai -m signal --add app='^Ghostty$' event=window_created action='yabai -m space --layout bsp'
+yabai -m signal --add app='^Ghostty$' event=window_destroyed action='yabai -m space --layout bsp'
+
 echo "yabai configuration: loaded"
 
 # Borders lets you easily know which window is active. Disabled for now:
