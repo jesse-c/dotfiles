@@ -698,27 +698,27 @@ If the current buffer has no process, execute BODY immediately."
   for PROC if the root of the current VC tree couldn't be determined, and
   whenever writing out a buffer which doesn't have any `buffer-file-name'
   yet."
-    (letrec ((root (vc-root-dir)))
-      (hook
-       (lambda ()
-         (cond ((not (process-live-p proc))))
-         (remove-hook 'before-save-hook hook)
-         ((or (and buffer-file-name
-                   (or (not root)))
-              (file-in-directory-p buffer-file-name
-                                   root)))
-         ;; No known buffer file name but we are saving:
-         ;; perhaps writing out a `special-mode' buffer.
-         ;; A `before-save-hook' cannot know whether or
-         ;; not it'll be written out under ROOT.
-         ;; Err on the side of switching to synchronous.
-         (not buffer-file-name
-              (with-delayed-message (1 message)
-                (while (process-live-p proc))))
-         (when (input-pending-p)
-           (discard-input))
-         (sit-for 0.05
-                  (remove-hook 'before-save-hook hook))))
+    (letrec ((root (vc-root-dir))
+             (hook
+              (lambda ()
+                (cond ((not (process-live-p proc))))
+                (remove-hook 'before-save-hook hook)
+                ((or (and buffer-file-name
+                          (or (not root)))
+                     (file-in-directory-p buffer-file-name
+                                          root)))
+                ;; No known buffer file name but we are saving:
+                ;; perhaps writing out a `special-mode' buffer.
+                ;; A `before-save-hook' cannot know whether or
+                ;; not it'll be written out under ROOT.
+                ;; Err on the side of switching to synchronous.
+                (not buffer-file-name
+                     (with-delayed-message (1 message)
+                       (while (process-live-p proc))))
+                (when (input-pending-p)
+                  (discard-input))
+                (sit-for 0.05
+                         (remove-hook 'before-save-hook hook)))))
       (add-hook 'before-save-hook hook))))
 
 (use-package diff-hl
@@ -1357,6 +1357,8 @@ If the current buffer has no process, execute BODY immediately."
   ("C-;" . embark-dwim)
   (:map minibuffer-local-map
         ("C-c e" . embark-export))
+  (:map vertico-map
+        ("C-c e" . embark-export))
   :config
 
   (defun my/embark-pytest-def-p ()
@@ -1829,7 +1831,7 @@ are defining or executing a macro."
   (add-hook 'completion-at-point-functions #'cape-file)
   ;; Add codeium if available
   (when (fboundp 'codeium-completion-at-point)
-    (add-hook 'completion-at-point-functions #'codeium-completion-at-point)))
+    (add-hook 'completion-at-point-functions #'codeium-completion-at-point))
 
   ;; Elisp mode: add cape-elisp-block for symbol completion
   (add-hook 'emacs-lisp-mode-hook
@@ -3417,8 +3419,8 @@ Only works in python-base-mode and derived modes."
   (pet-debug 1)
   :config
   (pet-def-config-accessor pre-commit-config
-    :file-name ".pre-commit-config.yaml"
-    :parser pet-parse-config-file)
+                           :file-name ".pre-commit-config.yaml"
+                           :parser pet-parse-config-file)
 
   ;; Handle local pre-commit hooks which don't have virtualenvs managed by pre-commit
   (advice-add 'pet-executable-find :around
@@ -3980,10 +3982,9 @@ result instead of `message'."
 
 (use-package chezmoi
   :config
-  ;; Use the base file's major mode
-  (add-to-list 'auto-mode-alist '("\\.tmpl\\'" . (lambda ()
-                                                   (let ((base-name (file-name-sans-extension buffer-file-name)))
-                                                     (set-auto-mode-0 (assoc-default base-name auto-mode-alist 'string-match))))))
+  ;; (REGEXP nil NON-NIL): strip .tmpl suffix and retry auto-mode-alist,
+  ;; so e.g. config.fish.tmpl -> fish-mode
+  (add-to-list 'auto-mode-alist '("\\.tmpl\\'" nil t))
   :hook
   ;; Turn off ligatures because they show up poorly.
   (chezmoi-mode-hook . (lambda () (when (require 'ligature)
