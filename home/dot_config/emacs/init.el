@@ -3578,11 +3578,12 @@ database, but may be available via poetry, pipenv, or a project virtualenv."
     "Call cargo-transient and immediately select run."
     (interactive)
     (cargo-transient)
-    (call-interactively (key-binding "r")))
-  :bind
-  (:map rust-ts-mode-map
-        ("s-t" . my/cargo-transient-with-test)
-        ("s-r" . my/cargo-transient-with-run)))
+    (call-interactively (key-binding "r"))))
+;; Disabled as I have my own for these
+;; :bind
+;; (:map rust-ts-mode-map
+;;       ("s-t" . my/cargo-transient-with-test)
+;;       ("s-r" . my/cargo-transient-with-run)))
 
 (use-package cargo-transient
   :custom
