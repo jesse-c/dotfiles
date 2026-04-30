@@ -2434,6 +2434,15 @@ If BUFFER is provided, close that buffer directly."
               (when (string-match-p "\\*agent-shell-diff\\*" (buffer-name))
                 (evil-emacs-state)))))
 
+(use-package agent-shell-ediff
+  :ensure t
+  (:host github :repo "cassandracomar/agent-shell-ediff")
+  :after agent-shell
+  :custom
+  (agent-shell-ediff-quick-quit t)
+  :config
+  (agent-shell-ediff-mode 1))
+
 (use-package codeium
   :ensure t
   (:host github :repo "Exafunction/codeium.el")
