@@ -2406,6 +2406,24 @@ If BUFFER is provided, close that buffer directly."
         (agent-shell-google-make-authentication
          :api-key (lambda () (my/get-password "aistudio.google.com" "apikey"))))
 
+  (defun my/agent-shell-opencode-lmstudio-qwen ()
+    "Use LM Studio Qwen model via opencode's native LMStudio provider."
+    (interactive)
+    (setq agent-shell-opencode-default-model-id "lmstudio/qwen/qwen3.6-27b")
+    (message "OpenCode: Using LM Studio (Qwen)"))
+
+  (defun my/agent-shell-opencode-lmstudio-gemma ()
+    "Use LM Studio Gemma model via opencode's native LMStudio provider."
+    (interactive)
+    (setq agent-shell-opencode-default-model-id "lmstudio/google/gemma-4-26b-a4b")
+    (message "OpenCode: Using LM Studio (Gemma)"))
+
+  (defun my/agent-shell-opencode-default ()
+    "Reset opencode to its default model."
+    (interactive)
+    (setq agent-shell-opencode-default-model-id nil)
+    (message "OpenCode: Using default model"))
+
   ;; Evil state-specific RET behavior: insert mode = newline, normal mode = send
   (evil-define-key 'insert agent-shell-mode-map (kbd "RET") #'newline)
   (evil-define-key 'normal agent-shell-mode-map (kbd "RET") #'comint-send-input)
