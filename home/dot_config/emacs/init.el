@@ -41,6 +41,12 @@
 (add-hook 'after-init-hook #'elpaca-process-queues)
 (elpaca `(,@elpaca-order))
 
+;; Treeless clones omit tree objects, which breaks shared-repo packages
+;; (e.g. magit + magit-section, org-roam-ql + org-roam-ql-ql) because
+;; elpaca needs a worktree checkout for the second package and git can't
+;; materialise the working tree without tree objects. Depth 1 avoids this.
+(setq elpaca-order-defaults (plist-put elpaca-order-defaults :depth 1))
+
 ;; Set before setting up use-package via Elpaca
 (setq use-package-enable-imenu-support t
       use-package-always-ensure t)
