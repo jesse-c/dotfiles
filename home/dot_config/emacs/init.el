@@ -1888,6 +1888,18 @@ are defining or executing a macro."
   :diminish (eldoc-box-hover-mode eldoc-box-hover-at-point-mode)
   :custom
   (eldoc-box-clear-with-C-g t)
+  :config
+  (setf (alist-get 'internal-border-width eldoc-box-frame-parameters) 2)
+  ;; Catppuccin sets eldoc-box-border to its own color which gets baked into
+  ;; the frame-local child-frame-border face on every display. Override it
+  ;; after each display and after theme changes to match vertico-posframe.
+  (defun my/eldoc-box-set-border (frame)
+    (when (frame-live-p frame)
+      (set-face-background 'child-frame-border
+        (catppuccin-get-color 'surface1)
+        frame))
+    frame)
+  (advice-add 'eldoc-box--get-frame :filter-return #'my/eldoc-box-set-border)
   :hook
   (eglot-managed-mode . eldoc-box-hover-at-point-mode))
 
