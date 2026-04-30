@@ -181,6 +181,8 @@ if status is-interactive
 
     alias k='kubectl'
 
+    set -x PODMAN_COMPOSE_WARNING_LOGS
+
     set -x K9S_CONFIG_PATH "$HOME/.config/k9s"
 
     fish_add_path /var/lib/snapd/snap/bin/
