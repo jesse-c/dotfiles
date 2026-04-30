@@ -7,32 +7,32 @@
 (defvar elpaca-builds-directory (expand-file-name "builds/" elpaca-directory))
 (defvar elpaca-sources-directory (expand-file-name "sources/" elpaca-directory))
 (defvar elpaca-order '(elpaca :repo "https://github.com/progfolio/elpaca.git"
-                              :ref nil :depth 1 :inherit ignore
-                              :files (:defaults "elpaca-test.el" (:exclude "extensions"))
-                              :build (:not elpaca-activate)))
-(let* ((repo  (expand-file-name "elpaca/" elpaca-sources-directory))
-       (build (expand-file-name "elpaca/" elpaca-builds-directory))
-       (order (cdr elpaca-order))
-       (default-directory repo))
+                        :ref nil :depth 1 :inherit ignore
+                        :files (:defaults "elpaca-test.el" (:exclude "extensions"))
+                        :build (:not elpaca-activate)))
+(let* ((repo  (expand-file-name "elpaca/" elpaca-sources-directory)
+         (build (expand-file-name "elpaca/" elpaca-builds-directory))
+         (order (cdr elpaca-order))
+         (default-directory repo)))
   (add-to-list 'load-path (if (file-exists-p build) build repo))
   (unless (file-exists-p repo)
     (make-directory repo t)
     (when (<= emacs-major-version 28) (require 'subr-x))
     (condition-case-unless-debug err
-        (if-let* ((buffer (pop-to-buffer-same-window "*elpaca-bootstrap*"))
+      (if-let* ((buffer (pop-to-buffer-same-window "*elpaca-bootstrap*")
                   ((zerop (apply #'call-process `("git" nil ,buffer t "clone"
-                                                  ,@(when-let* ((depth (plist-get order :depth)))
-                                                      (list (format "--depth=%d" depth) "--no-single-branch"))
-                                                  ,(plist-get order :repo) ,repo))))
+                                                   ,@(when-let* ((depth (plist-get order :depth)))
+                                                       (list (format "--depth=%d" depth) "--no-single-branch"))
+                                                   ,(plist-get order :repo) ,repo))))
                   ((zerop (call-process "git" nil buffer t "checkout"
-                                        (or (plist-get order :ref) "--"))))
+                            (or (plist-get order :ref) "--"))))
                   (emacs (concat invocation-directory invocation-name))
                   ((zerop (call-process emacs nil buffer nil "-Q" "-L" "." "--batch"
-                                        "--eval" "(byte-recompile-directory \".\" 0 'force)")))
+                            "--eval" "(byte-recompile-directory \".\" 0 'force)")))
                   ((require 'elpaca))
-                  ((elpaca-generate-autoloads "elpaca" repo)))
-            (progn (message "%s" (buffer-string)) (kill-buffer buffer))
-          (error "%s" (with-current-buffer buffer (buffer-string))))
+                  ((elpaca-generate-autoloads "elpaca" repo))))
+        (progn (message "%s" (buffer-string)) (kill-buffer buffer))
+        (error "%s" (with-current-buffer buffer (buffer-string))))
       ((error) (warn "%s" err) (delete-directory repo 'recursive))))
   (unless (require 'elpaca-autoloads nil t)
     (require 'elpaca)
@@ -49,7 +49,7 @@
 
 ;; Set before setting up use-package via Elpaca
 (setq use-package-enable-imenu-support t
-      use-package-always-ensure t)
+  use-package-always-ensure t)
 
 (elpaca elpaca-use-package
   ;; Enable use-package :ensure support for Elpaca.
@@ -81,7 +81,7 @@
   (push "/early-init.el" compile-angel-excluded-files)
 
   (push "^/Applications/Emacs\\.app/Contents/Resources/lisp/.*\\.el\\(\\.gz\\)?$"
-        compile-angel-excluded-files-regexps)
+    compile-angel-excluded-files-regexps)
 
 
   ;; A global mode that compiles .el files before they are loaded
@@ -107,16 +107,16 @@
   ;; We display [CRM<separator>], e.g., [CRM,] if the separator is a comma.
   (defun crm-indicator (args)
     (cons (format "[CRM%s] %s"
-                  (replace-regexp-in-string
-                   "\\`\\[.*?]\\*\\|\\[.*?]\\*\\'" ""
-                   crm-separator)
-                  (car args))
-          (cdr args)))
+            (replace-regexp-in-string
+              "\\`\\[.*?]\\*\\|\\[.*?]\\*\\'" ""
+              crm-separator)
+            (car args))
+      (cdr args)))
   (advice-add #'completing-read-multiple :filter-args #'crm-indicator)
 
   ;; Do not allow the cursor in the minibuffer prompt
   (setq minibuffer-prompt-properties
-        '(read-only t cursor-intangible t face minibuffer-prompt))
+    '(read-only t cursor-intangible t face minibuffer-prompt))
   (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
   (defun my/save-package-versions-to-file ()
     "Save list of installed packages and versions."
@@ -126,8 +126,8 @@
       (insert (format ";; Generated: %s. DO NOT EDIT.\n\n" (format-time-string "%Y-%m-%d %H:%M:%S")))  ;; Add timestamp at the top
       (let ((packages (sort (mapcar #'car package-alist) #'string<)))  ;; Get sorted list of package names
         (dolist (pkg packages)  ;; Loop through each package
-          (let* ((pkg-desc (cadr (assq pkg package-alist)))  ;; Get package descriptor
-                 (version (package-version-join (package-desc-version pkg-desc))))  ;; Extract and format version
+          (let* ((pkg-desc (cadr (assq pkg package-alist))  ;; Get package descriptor
+                   (version (package-version-join (package-desc-version pkg-desc)))))  ;; Extract and format version
             (insert (format ";; %s: %s\n" pkg version)))))  ;; Format and insert package info
       (write-file package-lock-file))))  ;; Write buffer contents to the specified file
 
@@ -144,12 +144,12 @@
 
 (use-package helpful
   :bind
-  (("C-S-h f" . helpful-callable)
-   ("C-S-h F" . helpful-function)
-   ("C-S-h v" . helpful-variable)
-   ("C-S-h k" . helpful-key)
-   ("C-S-h x" . helpful-command)
-   ("C-S-h d" . helpful-at-point)))
+  (("C-S-h f" . helpful-callable
+     ("C-S-h F" . helpful-function)
+     ("C-S-h v" . helpful-variable)
+     ("C-S-h k" . helpful-key)
+     ("C-S-h x" . helpful-command)
+     ("C-S-h d" . helpful-at-point))))
 
 (with-current-buffer "*Messages*"
   (setq-local scroll-conservatively 101))
@@ -162,14 +162,14 @@
         Deactivate this advice with:
           (advice-remove 'message 'my/ad-timestamp-message)"
   (if message-log-max
-      (let ((deactivate-mark nil)
-            (inhibit-read-only t))
-        (with-current-buffer "*Messages*"
-          (save-excursion
-            (goto-char (point-max))
-            (if (not (bolp))
-                (newline))
-            (insert (format-time-string "[%F %T.%3N] ")))))))
+    (let ((deactivate-mark nil
+            (inhibit-read-only t)))
+      (with-current-buffer "*Messages*"
+        (save-excursion
+          (goto-char (point-max))
+          (if (not (bolp))
+            (newline))
+          (insert (format-time-string "[%F %T.%3N] ")))))))
 
 (advice-add 'message :before 'my/ad-timestamp-message)
 
@@ -191,7 +191,7 @@
 PACKAGES should be a list of package names as symbols."
   (declare (indent 1))
   (if (null packages)
-      `(progn ,@body)
+    `(progn ,@body)
     (let ((result `(progn ,@body)))
       (dolist (pkg (reverse packages))
         (setq result `(with-eval-after-load ',pkg ,result)))
@@ -216,16 +216,16 @@ PACKAGES should be a list of package names as symbols."
   (setq history-length 1000)
   (setq savehist-autosave-interval 60)
   (setq savehist-additional-variables
-        '(search-ring                ; Search history
-          regexp-search-ring         ; Regexp search history
-          extended-command-history   ; M-x history
-          mark-ring                  ; Marks
-          global-mark-ring           ; Global marks
-          shell-command-history      ; Shell command history
-          register-alist             ; Registers
-          file-name-history          ; Minibuffer file name history
-          tablist-named-filter
-          evil-jumps-history))
+    '(search-ring                ; Search history
+       regexp-search-ring         ; Regexp search history
+       extended-command-history   ; M-x history
+       mark-ring                  ; Marks
+       global-mark-ring           ; Global marks
+       shell-command-history      ; Shell command history
+       register-alist             ; Registers
+       file-name-history          ; Minibuffer file name history
+       tablist-named-filter
+       evil-jumps-history))
   (savehist-mode +1))
 
 ;; Disabling suspend-frame binding
@@ -240,7 +240,7 @@ PACKAGES should be a list of package names as symbols."
 
 (setq delete-by-moving-to-trash t)
 (if (eq system-type 'darwin)
-    (setq trash-directory "~/.Trash"))
+  (setq trash-directory "~/.Trash"))
 
 ;; https://emacs.stackexchange.com/a/41767
 ;; Alternative to try: https://superuser.com/questions/125569/how-to-fix-emacs-popup-dialogs-on-mac-os-x
@@ -259,7 +259,7 @@ PACKAGES should be a list of package names as symbols."
 
 ;; Manually ensure Homebrew paths are available
 (when (and (memq window-system '(mac ns))
-           (file-directory-p "/opt/homebrew/bin"))
+        (file-directory-p "/opt/homebrew/bin"))
   (add-to-list 'exec-path "/opt/homebrew/bin" t)
   (add-to-list 'exec-path "/opt/homebrew/sbin" t)
   (setenv "PATH" (concat "/opt/homebrew/bin:" "/opt/homebrew/sbin:" (getenv "PATH"))))
@@ -269,9 +269,9 @@ PACKAGES should be a list of package names as symbols."
   "Remove all existing file notification watches from Emacs."
   (interactive)
   (maphash
-   (lambda (key _value)
-     (file-notify-rm-watch key))
-   file-notify-descriptors))
+    (lambda (key _value)
+      (file-notify-rm-watch key))
+    file-notify-descriptors))
 
 ;; https://mise.jdx.dev/ide-integration.html
 ;; CLI tools installed by Mise
@@ -289,13 +289,13 @@ PACKAGES should be a list of package names as symbols."
   :after (consult vc-git transient)
   :init
   (setq project-vc-extra-root-markers '(;; Org
-                                        "TODO.org"
-                                        ;; Clojure(Script)
-                                        "project.clj" "deps.edn"
-                                        ;; Jujutsu
-                                        ".jj"
-                                        ;; Flix
-                                        "flix.toml"))
+                                         "TODO.org"
+                                         ;; Clojure(Script)
+                                         "project.clj" "deps.edn"
+                                         ;; Jujutsu
+                                         ".jj"
+                                         ;; Flix
+                                         "flix.toml"))
   :config
   (add-to-list 'project-vc-ignores "tmp/")
   (add-to-list 'project-vc-ignores ".jj")
@@ -306,15 +306,15 @@ PACKAGES should be a list of package names as symbols."
     "Visit the todo file for the current project."
     (interactive)
     (if-let* ((root (when-let* ((p (project-current))) (project-root p))))
-        (find-file (expand-file-name "TODO.org" root))
+      (find-file (expand-file-name "TODO.org" root))
       (user-error "[Project] Not in a project")))
   (setq src-dir (expand-file-name "~/src/"))
   (setq forges-dirs '("github.com" "gitlab.com"))
   (defun my/auto-discover-projects ()
     "Automatically discover and add projects from configured forge directories."
     (interactive)
-    (let ((src-dir (expand-file-name "~/src/"))
-          (forges-dirs '("github.com" "gitlab.com")))
+    (let ((src-dir (expand-file-name "~/src/")
+            (forges-dirs '("github.com" "gitlab.com"))))
 
       ;; Run project-remember-projects-under on each forge directory
       (dolist (forge forges-dirs)
@@ -327,28 +327,28 @@ PACKAGES should be a list of package names as symbols."
   (transient-define-prefix project-transient-menu ()
     "Project command menu."
     [["Navigation"
-      ("s" "Search" consult-ripgrep)
-      ("b" "Buffers" consult-project-buffer)
-      ("f" "Files" project-find-file)
-      ("l" "Line" consult-line)
-      ("d" "Layout" project-dired)
-      ("i" "Sibling" find-sibling-file)]
-     ["Execution"
-      ("r" "Run" project-run)
-      ("c" "Compile" project-compile)]
-     ["Management"
-      ("t" "New tab" tab-new)
-      ("C" "Close tab" tab-close)
-      ("n" "Rename tab" my/rename-tab-to-project-name)
-      ("p" "Switch (Known)" project-switch-project)
-      ("P" "Switch (All)" consult-ghq-switch-project)
-      ("k" "Kill buffers" project-kill-buffers)]])
+       ("s" "Search" consult-ripgrep)
+       ("b" "Buffers" consult-project-buffer)
+       ("f" "Files" project-find-file)
+       ("l" "Line" consult-line)
+       ("d" "Layout" project-dired)
+       ("i" "Sibling" find-sibling-file)
+       ["Execution"
+         ("r" "Run" project-run)
+         ("c" "Compile" project-compile)]
+       ["Management"
+         ("t" "New tab" tab-new)
+         ("C" "Close tab" tab-close)
+         ("n" "Rename tab" my/rename-tab-to-project-name)
+         ("p" "Switch (Known)" project-switch-project)
+         ("P" "Switch (All)" consult-ghq-switch-project)
+         ("k" "Kill buffers" project-kill-buffers)]]])
   (defun project-run (command)
     "Run COMMAND in the current project's root directory."
     (interactive (list (read-shell-command "Run command: "
-                                           (or (bound-and-true-p run-command)
-                                               (car compilation-history)
-                                               ""))))
+                         (or (bound-and-true-p run-command)
+                           (car compilation-history)
+                           ""))))
     (let ((default-directory (project-root (project-current t))))
       (compile command)))
   (add-to-list 'project-switch-commands '(project-run "Run" ?r))
@@ -373,15 +373,15 @@ PACKAGES should be a list of package names as symbols."
   (easysession-mode-line-misc-info t)  ; Display the session in the modeline
   (easysession-save-interval (* 10 60))  ; Save every 10 minutes
   (easysession-mode-line-misc-info-format
-   '(" Session:"
-     easysession-mode-line-session-name " "))
+    '(" Session:"
+       easysession-mode-line-session-name " "))
 
   :init
   (add-hook 'emacs-startup-hook #'easysession-save-mode 103)
 
   :bind
-  (("C-c l" . easysession-switch-to)
-   ("C-c s" . easysession-save-as))
+  (("C-c l" . easysession-switch-to
+     ("C-c s" . easysession-save-as)))
 
   :config
   ;; How to only persist and restore visible buffers
@@ -391,12 +391,12 @@ This includes buffers visible in windows or tab-bar tabs."
     (let ((visible-buffers '()))
       (dolist (buffer (buffer-list))
         (when (or
-               ;; Windows
-               (get-buffer-window buffer 'visible)
-               ;; Tab-bar windows
-               (and (bound-and-true-p tab-bar-mode)
-                    (fboundp 'tab-bar-get-buffer-tab)
-                    (tab-bar-get-buffer-tab buffer t nil)))
+                ;; Windows
+                (get-buffer-window buffer 'visible)
+                ;; Tab-bar windows
+                (and (bound-and-true-p tab-bar-mode)
+                  (fboundp 'tab-bar-get-buffer-tab)
+                  (tab-bar-get-buffer-tab buffer t nil)))
           (push buffer visible-buffers)))
       visible-buffers))
 
@@ -422,8 +422,8 @@ This includes buffers visible in windows or tab-bar tabs."
   (setq evil-want-keybinding nil)
   ;; Performance optimizations
   (setq evil-ex-search-vim-style-regexp t
-        evil-ex-substitute-global nil
-        evil-want-fine-undo t)
+    evil-ex-substitute-global nil
+    evil-want-fine-undo t)
   :config
   (evil-set-undo-system 'undo-fu)
   (global-unset-key (kbd "C-u"))
@@ -446,15 +446,15 @@ This includes buffers visible in windows or tab-bar tabs."
     "Kill buffer if multiple buffers exist, delete frame if multiple frames, otherwise quit."
     (interactive)
     (cond
-     ;; If there are multiple buffers in the current window, kill the buffer
-     ((> (length (buffer-list (selected-frame))) 1)
-      (kill-buffer (current-buffer)))
-     ;; If there are multiple frames, delete the current frame
-     ((> (length (frame-list)) 1)
-      (delete-frame))
-     ;; Otherwise, quit Emacs
-     (t
-      (evil-quit))))
+      ;; If there are multiple buffers in the current window, kill the buffer
+      ((> (length (buffer-list (selected-frame))) 1
+         (kill-buffer (current-buffer))))
+      ;; If there are multiple frames, delete the current frame
+      ((> (length (frame-list)) 1
+         (delete-frame)))
+      ;; Otherwise, quit Emacs
+      (t
+        (evil-quit))))
 
   ;; Make :q close the buffer, and close frame if it's the last buffer
   (defun my/evil-quit ()
@@ -475,7 +475,7 @@ This includes buffers visible in windows or tab-bar tabs."
   "Close frame if running as daemon, otherwise quit Emacs."
   (interactive)
   (if (daemonp)
-      (delete-frame)
+    (delete-frame)
     (save-buffers-kill-terminal)))
 
 (global-set-key (kbd "s-q") 'my/quit-or-close-frame)
@@ -521,23 +521,23 @@ This includes buffers visible in windows or tab-bar tabs."
   :config
   (transient-define-prefix smerge-transient-menu ()
     ["Navigation"
-     ("n" "Next conflict" smerge-next)
-     ("p" "Previous conflict" smerge-prev)]
+      ("n" "Next conflict" smerge-next)
+      ("p" "Previous conflict" smerge-prev)]
     ["Resolve"
-     ("a" "Keep all variants" smerge-keep-all)
-     ("b" "Keep base" smerge-keep-base)
-     ("l" "Keep lower" smerge-keep-lower)
-     ("u" "Keep upper" smerge-keep-upper)
-     ("c" "Keep current" smerge-keep-current)]
+      ("a" "Keep all variants" smerge-keep-all)
+      ("b" "Keep base" smerge-keep-base)
+      ("l" "Keep lower" smerge-keep-lower)
+      ("u" "Keep upper" smerge-keep-upper)
+      ("c" "Keep current" smerge-keep-current)]
     ["Diff"
-     ("E" "Ediff" smerge-ediff)
-     ("C" "Combine" smerge-combine-with-next)]
+      ("E" "Ediff" smerge-ediff)
+      ("C" "Combine" smerge-combine-with-next)]
     ["Other"
-     ("r" "Resolve" smerge-resolve)
-     ("R" "Resolve all" smerge-resolve-all)
-     ("q" "Quit" smerge-mode)])
+      ("r" "Resolve" smerge-resolve)
+      ("R" "Resolve all" smerge-resolve-all)
+      ("q" "Quit" smerge-mode)])
   :bind (:map smerge-mode-map
-              ("?" . smerge-transient-menu)))
+          ("?" . smerge-transient-menu)))
 
 ;; Unset isearch's s-g binding before magit uses it
 (global-unset-key (kbd "s-g"))
@@ -554,15 +554,15 @@ This includes buffers visible in windows or tab-bar tabs."
   (setopt magit-format-file-function #'magit-format-file-all-the-icons)
   :bind
   (:map magit-status-mode-map
-        ("*" . th/magit-aux-commands))
+    ("*" . th/magit-aux-commands))
   :config
   (defun my/find-conventional-commit-scopes ()
     "Find all scopes used in conventional commits in the current Git project."
     (interactive)
-    (let* ((default-directory (magit-toplevel))
-           (cache-dir (expand-file-name ".cache" (or (my/project-root) default-directory)))
-           (cache-file (expand-file-name "commit-scopes.txt" cache-dir))
-           (temp-buffer (generate-new-buffer " *commit-scopes-temp*")))
+    (let* ((default-directory (magit-toplevel)
+             (cache-dir (expand-file-name ".cache" (or (my/project-root) default-directory)))
+             (cache-file (expand-file-name "commit-scopes.txt" cache-dir))
+             (temp-buffer (generate-new-buffer " *commit-scopes-temp*"))))
 
       ;; Create cache directory if it doesn't exist
       (unless (file-exists-p cache-dir)
@@ -592,12 +592,12 @@ This includes buffers visible in windows or tab-bar tabs."
   (defun my/get-commit-scopes ()
     "Get commit scopes from cache or generate them if needed."
     (interactive)
-    (let* ((default-directory (magit-toplevel))
-           (cache-dir (expand-file-name ".cache" (or (my/project-root) default-directory)))
-           (cache-file (expand-file-name "commit-scopes.txt" cache-dir)))
+    (let* ((default-directory (magit-toplevel)
+             (cache-dir (expand-file-name ".cache" (or (my/project-root) default-directory)))
+             (cache-file (expand-file-name "commit-scopes.txt" cache-dir))))
       (unless (and (file-exists-p cache-file)
-                   (> (time-to-seconds (time-since (file-attribute-modification-time (file-attributes cache-file))))
-                      (* 60 60 24))) ; Cache for 24 hours
+                (> (time-to-seconds (time-since (file-attribute-modification-time (file-attributes cache-file))))
+                  (* 60 60 24))) ; Cache for 24 hours
         (my/find-conventional-commit-scopes))
 
       (when (file-exists-p cache-file)
@@ -609,23 +609,23 @@ This includes buffers visible in windows or tab-bar tabs."
     (interactive)
     (let ((commit-types '("feat" "fix" "docs" "style" "refactor" "perf" "test" "build" "ci" "cd" "chore" "revert")))
       (if (y-or-n-p "Use conventional commit format? ")
-          (let* ((type (completing-read "Commit type: " commit-types nil t))
+        (let* ((type (completing-read "Commit type: " commit-types nil t)
                  (scopes (my/get-commit-scopes))
                  ;; Allow multiple selections with comma
-                 (scope-input (completing-read "Scope (optional, comma-separated for multiple): " scopes nil nil)))
-            (insert type
-                    (if (string-empty-p scope-input)
-                        ""
-                      (concat "(" scope-input ")"))
-                    ": ")
-            (evil-insert-state))
+                 (scope-input (completing-read "Scope (optional, comma-separated for multiple): " scopes nil nil))))
+          (insert type
+            (if (string-empty-p scope-input)
+              ""
+              (concat "(" scope-input ")"))
+            ": ")
+          (evil-insert-state))
         (evil-insert-state))))
   (add-hook 'git-commit-setup-hook #'my/conventional-commit-prompt)
   (transient-define-prefix th/magit-aux-commands ()
     "My personal auxiliary magit commands."
     ["Auxiliary commands"
-     ("d" "Difftastic Diff (dwim)" th/magit-diff-with-difftastic)
-     ("s" "Difftastic Show" th/magit-show-with-difftastic)])
+      ("d" "Difftastic Diff (dwim)" th/magit-diff-with-difftastic)
+      ("s" "Difftastic Show" th/magit-show-with-difftastic)])
   ;; I want my personal commands transient to be bound to * and be shown
   ;; in the Magit dispatch transient (which is bound to ? in Magit status
   ;; buffers and C-x M-g in any Magit enabled buffer)
@@ -704,34 +704,34 @@ If the current buffer has no process, execute BODY immediately."
   for PROC if the root of the current VC tree couldn't be determined, and
   whenever writing out a buffer which doesn't have any `buffer-file-name'
   yet."
-    (letrec ((root (vc-root-dir))
-             (hook
-              (lambda ()
-                (cond ((not (process-live-p proc))))
-                (remove-hook 'before-save-hook hook)
-                ((or (and buffer-file-name
+    (letrec ((root (vc-root-dir)
+               (hook
+                 (lambda ()
+                   (cond ((not (process-live-p proc))))
+                   (remove-hook 'before-save-hook hook)
+                   ((or (and buffer-file-name
                           (or (not root)))
-                     (file-in-directory-p buffer-file-name
-                                          root)))
-                ;; No known buffer file name but we are saving:
-                ;; perhaps writing out a `special-mode' buffer.
-                ;; A `before-save-hook' cannot know whether or
-                ;; not it'll be written out under ROOT.
-                ;; Err on the side of switching to synchronous.
-                (not buffer-file-name
+                      (file-in-directory-p buffer-file-name
+                        root)))
+                   ;; No known buffer file name but we are saving:
+                   ;; perhaps writing out a `special-mode' buffer.
+                   ;; A `before-save-hook' cannot know whether or
+                   ;; not it'll be written out under ROOT.
+                   ;; Err on the side of switching to synchronous.
+                   (not buffer-file-name
                      (with-delayed-message (1 message)
                        (while (process-live-p proc))))
-                (when (input-pending-p)
-                  (discard-input))
-                (sit-for 0.05
-                         (remove-hook 'before-save-hook hook)))))
+                   (when (input-pending-p)
+                     (discard-input))
+                   (sit-for 0.05
+                     (remove-hook 'before-save-hook hook))))))
       (add-hook 'before-save-hook hook))))
 
 (use-package diff-hl
-  :hook ((prog-mode . diff-hl-mode)
-         (dired-mode . diff-hl-dired-mode)
-         (magit-pre-refresh . diff-hl-magit-pre-refresh)
-         (magit-post-refresh . diff-hl-magit-post-refresh))
+  :hook ((prog-mode . diff-hl-mode
+           (dired-mode . diff-hl-dired-mode)
+           (magit-pre-refresh . diff-hl-magit-pre-refresh)
+           (magit-post-refresh . diff-hl-magit-post-refresh)))
   :custom
   (diff-hl-side 'right)
   (diff-hl-show-staged-changes t)
@@ -756,25 +756,25 @@ If the current buffer has no process, execute BODY immediately."
 
   (defvar my/diff-hl-colours
     '((mocha
-       (2 . ("#212230" "#202132" "#2e2024"))   ; 2% green, blue, red
-       (3 . ("#222530" "#212231" "#312027"))   ; 3% green, blue, red
-       (4 . ("#232630" "#212331" "#34212a")))  ; 4% green, blue, red
-      (latte
-       (2 . ("#eceef2" "#edeef3" "#f2ecee"))   ; 2% green, blue, red
-       (3 . ("#e9ecf0" "#ebedf2" "#f0e9ec"))   ; 3% green, blue, red
-       (4 . ("#e6e9ee" "#e9ebf1" "#eee6e9")))) ; 4% green, blue, red
+        (2 . ("#212230" "#202132" "#2e2024"))   ; 2% green, blue, red
+        (3 . ("#222530" "#212231" "#312027"))   ; 3% green, blue, red
+        (4 . ("#232630" "#212331" "#34212a"))  ; 4% green, blue, red
+        (latte
+          (2 . ("#eceef2" "#edeef3" "#f2ecee"))   ; 2% green, blue, red
+          (3 . ("#e9ecf0" "#ebedf2" "#f0e9ec"))   ; 3% green, blue, red
+          (4 . ("#e6e9ee" "#e9ebf1" "#eee6e9"))))) ; 4% green, blue, red
     "diff-hl background colours for different Catppuccin flavours and intensities.")
 
   (defun my/set-diff-hl-bg-for-theme (&optional intensity)
     "Set diff-hl background colours based on current Catppuccin flavour.
   INTENSITY is the tint percentage (2, 3, or 4). Defaults to 3."
     (interactive)
-    (let* ((intensity (or intensity 3))
-           (flavor (if (boundp 'catppuccin-flavor) catppuccin-flavor 'mocha))
-           (colours (alist-get intensity (alist-get flavor my/diff-hl-colours)))
-           (insert-bg (nth 0 colours))
-           (change-bg (nth 1 colours))
-           (delete-bg (nth 2 colours)))
+    (let* ((intensity (or intensity 3)
+             (flavor (if (boundp 'catppuccin-flavor) catppuccin-flavor 'mocha))
+             (colours (alist-get intensity (alist-get flavor my/diff-hl-colours)))
+             (insert-bg (nth 0 colours))
+             (change-bg (nth 1 colours))
+             (delete-bg (nth 2 colours))))
       (when colours
         (set-face-attribute 'diff-hl-insert-bg nil :background insert-bg :extend t)
         (set-face-attribute 'diff-hl-change-bg nil :background change-bg :extend t)
@@ -800,8 +800,8 @@ If the current buffer has no process, execute BODY immediately."
 
   (advice-add 'diff-hl--update-overlays :after #'my/diff-hl-add-background-to-hunks)
   :bind
-  (("M-p" . diff-hl-previous-hunk)
-   ("M-n" . diff-hl-next-hunk)))
+  (("M-p" . diff-hl-previous-hunk
+     ("M-n" . diff-hl-next-hunk))))
 
 ;; Create URLs to files and commits in repository hosting services
 (use-package git-link
@@ -825,7 +825,7 @@ If the current buffer has no process, execute BODY immediately."
   (:host github :repo "danilshvalov/git-commit-ts-mode")
   :init
   (add-to-list 'major-mode-remap-alist
-               '(git-commit-mode . git-commit-ts-mode)))
+    '(git-commit-mode . git-commit-ts-mode)))
 
 (use-package difftastic
   :after (magit transient)
@@ -844,9 +844,9 @@ If the current buffer has no process, execute BODY immediately."
       (setq-local treesit-font-lock-level 1)))
   :init
   (setq major-mode-remap-alist
-        '((python-mode . python-ts-mode)
-          (rust-mode . rust-ts-mode)
-          (bash-mode . bash-ts-mode)))
+    '((python-mode . python-ts-mode
+        (rust-mode . rust-ts-mode)
+        (bash-mode . bash-ts-mode))))
   :hook
   (find-file-hook . my/treesit-disable-in-large-buffers))
 
@@ -864,10 +864,10 @@ If the current buffer has no process, execute BODY immediately."
   :after transient
   :init
   ;; https://github.com/minad/corfu/wiki#filter-list-of-all-possible-completions-with-completion-style-like-orderless
-  (setq completion-category-overrides '((eglot (styles orderless))
-                                        (eglot-capf (styles orderless))))
+  (setq completion-category-overrides '((eglot (styles orderless)
+                                          (eglot-capf (styles orderless)))))
   (add-to-list 'major-mode-remap-alist
-               '(conf-toml-mode . toml-ts-mode))
+    '(conf-toml-mode . toml-ts-mode))
   :custom
   (eglot-autoshutdown t)
   (eglot-events-buffer-size 0)
@@ -896,23 +896,23 @@ If the current buffer has no process, execute BODY immediately."
   (defun my/eglot-sanitize-diagnostic-messages (orig-fun object &rest args)
     "Sanitize diagnostic messages before JSON serialization."
     (condition-case err
-        (apply orig-fun object args)
+      (apply orig-fun object args)
       (wrong-type-argument
-       ;; If we get a JSON serialization error, try to sanitize diagnostic messages
-       (when (and (listp object)
-                  (plist-member object :params))
-         (let* ((params (plist-get object :params))
-                (context (plist-get params :context))
-                (diagnostics (plist-get context :diagnostics)))
-           (when (vectorp diagnostics)
-             ;; Sanitize diagnostic messages
-             (dotimes (i (length diagnostics))
-               (let* ((diag (aref diagnostics i))
-                      (msg (plist-get diag :message)))
-                 (when msg
-                   (plist-put diag :message (my/eglot-sanitize-diagnostic-message msg))))))))
-       ;; Try again with sanitized messages
-       (apply orig-fun object args))))
+        ;; If we get a JSON serialization error, try to sanitize diagnostic messages
+        (when (and (listp object)
+                (plist-member object :params))
+          (let* ((params (plist-get object :params)
+                   (context (plist-get params :context))
+                   (diagnostics (plist-get context :diagnostics))))
+            (when (vectorp diagnostics)
+              ;; Sanitize diagnostic messages
+              (dotimes (i (length diagnostics))
+                (let* ((diag (aref diagnostics i)
+                         (msg (plist-get diag :message))))
+                  (when msg
+                    (plist-put diag :message (my/eglot-sanitize-diagnostic-message msg))))))))
+        ;; Try again with sanitized messages
+        (apply orig-fun object args))))
 
   (advice-add 'jsonrpc--json-encode :around #'my/eglot-sanitize-diagnostic-messages)
 
@@ -957,129 +957,129 @@ If the current buffer has no process, execute BODY immediately."
   ("s-l" . eglot-transient-menu)
   :config
   (add-to-list 'eglot-server-programs
-               `(clojure-mode . ,(eglot-alternatives
-                                  '(("clojure-lsp")))))
+    `(clojure-mode . ,(eglot-alternatives
+                        '(("clojure-lsp")))))
   (add-to-list 'eglot-server-programs
-               `(clojure-ts-mode . ,(eglot-alternatives
-                                     '(("clojure-lsp")))))
+    `(clojure-ts-mode . ,(eglot-alternatives
+                           '(("clojure-lsp")))))
   (add-to-list 'eglot-server-programs
-               `(elixir-mode . ,(eglot-alternatives
-                                 '(("expert" "--stdio")))))
+    `(elixir-mode . ,(eglot-alternatives
+                       '(("expert" "--stdio")))))
   (add-to-list 'eglot-server-programs
-               `(elixir-ts-mode . ,(eglot-alternatives
-                                    '(("expert" "--stdio")))))
+    `(elixir-ts-mode . ,(eglot-alternatives
+                          '(("expert" "--stdio")))))
   (add-to-list 'eglot-server-programs
-               `(go-mode . ,(eglot-alternatives
-                             '(("gopls")))))
+    `(go-mode . ,(eglot-alternatives
+                   '(("gopls")))))
   (add-to-list 'eglot-server-programs
-               `(go-ts-mode . ,(eglot-alternatives
-                                '(("gopls")))))
+    `(go-ts-mode . ,(eglot-alternatives
+                      '(("gopls")))))
   (add-to-list 'eglot-server-programs
-               `(javascript-mode . ,(eglot-alternatives
-                                     '(("deno" "lsp")))))
+    `(javascript-mode . ,(eglot-alternatives
+                           '(("deno" "lsp")))))
   (add-to-list 'eglot-server-programs
-               `(typescript-mode . ,(eglot-alternatives
-                                     '(("deno" "lsp")))))
+    `(typescript-mode . ,(eglot-alternatives
+                           '(("deno" "lsp")))))
   (add-to-list 'eglot-server-programs
-               `(typescript-ts-mode . ,(eglot-alternatives
-                                        '(("deno" "lsp")))))
+    `(typescript-ts-mode . ,(eglot-alternatives
+                              '(("deno" "lsp")))))
   (add-to-list 'eglot-server-programs
-               `(latex-mode . ,(eglot-alternatives
-                                '(("texlab")))))
+    `(latex-mode . ,(eglot-alternatives
+                      '(("texlab")))))
   (add-to-list 'eglot-server-programs
-               `(yaml-mode . ,(eglot-alternatives
-                               '(("yaml-language-server" "--stdio")))))
+    `(yaml-mode . ,(eglot-alternatives
+                     '(("yaml-language-server" "--stdio")))))
   (add-to-list 'eglot-server-programs
-               `(yaml-ts-mode . ,(eglot-alternatives
-                                  '(("yaml-language-server" "--stdio")))))
+    `(yaml-ts-mode . ,(eglot-alternatives
+                        '(("yaml-language-server" "--stdio")))))
   (add-to-list 'eglot-server-programs
-               `(swift-mode . ,(eglot-alternatives
-                                '(("sourcekit-lsp")))))
+    `(swift-mode . ,(eglot-alternatives
+                      '(("sourcekit-lsp")))))
   (add-to-list 'eglot-server-programs
-               `(swift-ts-mode . ,(eglot-alternatives
-                                   '(("sourcekit-lsp")))))
+    `(swift-ts-mode . ,(eglot-alternatives
+                         '(("sourcekit-lsp")))))
   (add-to-list 'eglot-server-programs
-               `(rust-mode . ,(eglot-alternatives
-                               '(("rust-analyzer")))))
+    `(rust-mode . ,(eglot-alternatives
+                     '(("rust-analyzer")))))
   (add-to-list 'eglot-server-programs
-               `(rust-ts-mode . ,(eglot-alternatives
-                                  '(("rust-analyzer")))))
+    `(rust-ts-mode . ,(eglot-alternatives
+                        '(("rust-analyzer")))))
   (add-to-list 'eglot-server-programs
-               `(python-mode . ,(eglot-alternatives
-                                 '(("ty" "server")))))
+    `(python-mode . ,(eglot-alternatives
+                       '(("ty" "server")))))
   (add-to-list 'eglot-server-programs
-               `(python-ts-mode . ,(eglot-alternatives
-                                    '(("ty" "server")))))
+    `(python-ts-mode . ,(eglot-alternatives
+                          '(("ty" "server")))))
   (add-to-list 'eglot-server-programs
-               `(vespa-schema-mode . ,(eglot-alternatives
-                                       (list (list "java" "-jar" (expand-file-name "~/.local/bin/vespa-lsp.jar"))))))
+    `(vespa-schema-mode . ,(eglot-alternatives
+                             (list (list "java" "-jar" (expand-file-name "~/.local/bin/vespa-lsp.jar"))))))
   (add-to-list 'eglot-server-programs
-               `(pkl-mode . ,(eglot-alternatives
-                              (list (list "java" "-jar" (expand-file-name "~/.local/bin/pkl-lsp.jar"))))))
+    `(pkl-mode . ,(eglot-alternatives
+                    (list (list "java" "-jar" (expand-file-name "~/.local/bin/pkl-lsp.jar"))))))
   (add-to-list 'eglot-server-programs
-               `(flix-mode . ,(eglot-alternatives
-                               '(("flix" "lsp")))))
+    `(flix-mode . ,(eglot-alternatives
+                     '(("flix" "lsp")))))
   (add-to-list 'eglot-server-programs
-               `(markdown-mode . ,(eglot-alternatives
-                                   '(("marksman")))))
+    `(markdown-mode . ,(eglot-alternatives
+                         '(("marksman")))))
   (add-to-list 'eglot-server-programs
-               `(markdown-ts-mode . ,(eglot-alternatives
-                                      '(("marksman")))))
+    `(markdown-ts-mode . ,(eglot-alternatives
+                            '(("marksman")))))
   (add-to-list 'eglot-server-programs
-               `(typst-ts-mode . ,(eglot-alternatives
-                                   '(("tinymist" "lsp")))))
+    `(typst-ts-mode . ,(eglot-alternatives
+                         '(("tinymist" "lsp")))))
   (add-to-list 'eglot-server-programs
-               `(toml-mode . ,(eglot-alternatives
-                               '(("taplo" "lsp" "stdio")))))
+    `(toml-mode . ,(eglot-alternatives
+                     '(("taplo" "lsp" "stdio")))))
   (add-to-list 'eglot-server-programs
-               `(toml-ts-mode . ,(eglot-alternatives
-                                  '(("taplo" "lsp" "stdio")))))
+    `(toml-ts-mode . ,(eglot-alternatives
+                        '(("taplo" "lsp" "stdio")))))
   (add-to-list 'eglot-server-programs
-               `(conf-toml-mode . ,(eglot-alternatives
-                                    '(("taplo" "lsp" "stdio")))))
+    `(conf-toml-mode . ,(eglot-alternatives
+                          '(("taplo" "lsp" "stdio")))))
   (add-to-list 'eglot-server-programs
-               `(lua-mode . ,(eglot-alternatives
-                              '(("lua-language-server")))))
+    `(lua-mode . ,(eglot-alternatives
+                    '(("lua-language-server")))))
   (add-to-list 'eglot-server-programs
-               `(lua-ts-mode . ,(eglot-alternatives
-                                 '(("lua-language-server")))))
+    `(lua-ts-mode . ,(eglot-alternatives
+                       '(("lua-language-server")))))
 
   (transient-define-prefix eglot-server-menu ()
     "Eglot server commands."
     ["Server Commands"
-     [("c" "Connect" eglot)
-      ("C" "Reconnect" eglot-reconnect)
-      ("q" "Shutdown" eglot-shutdown)
-      ("Q" "Shutdown all" eglot-shutdown-all)]
-     [("e" "Events" eglot-events-buffer)]])
+      [("c" "Connect" eglot
+         ("C" "Reconnect" eglot-reconnect)
+         ("q" "Shutdown" eglot-shutdown)
+         ("Q" "Shutdown all" eglot-shutdown-all))]
+      [("e" "Events" eglot-events-buffer)]])
 
   (transient-define-prefix eglot-transient-menu ()
     "Eglot commands menu."
     ["Navigation"
-     [("." "Find definitions" xref-find-definitions
-       :description "Find definitions of identifier at point")
-      ("," "Pop back" xref-pop-marker-stack
-       :description "Return to position before last jump")
-      ("/" "Find references" xref-find-references
-       :description "Find references to identifier at point")]
-     [("i" "Find implementations" eglot-find-implementation
-       :description "Find implementations of identifier at point")
-      ("t" "Find type definition" eglot-find-typeDefinition
-       :description "Find type definition of identifier at point")
-      ("D" "Find declaration" eglot-find-declaration
-       :description "Find declaration of identifier at point")]]
+      [("." "Find definitions" xref-find-definitions
+         :description "Find definitions of identifier at point"
+         ("," "Pop back" xref-pop-marker-stack
+           :description "Return to position before last jump")
+         ("/" "Find references" xref-find-references
+           :description "Find references to identifier at point"))]
+      [("i" "Find implementations" eglot-find-implementation
+         :description "Find implementations of identifier at point"
+         ("t" "Find type definition" eglot-find-typeDefinition
+           :description "Find type definition of identifier at point")
+         ("D" "Find declaration" eglot-find-declaration
+           :description "Find declaration of identifier at point"))]]
     ["Code actions"
-     [("a" "Code actions" eglot-code-actions)
-      ("f" "Format buffer" eglot-format-buffer)
-      ("F" "Format region" eglot-format)]
-     [("R" "Rename symbol" eglot-rename)]]
+      [("a" "Code actions" eglot-code-actions
+         ("f" "Format buffer" eglot-format-buffer)
+         ("F" "Format region" eglot-format))]
+      [("R" "Rename symbol" eglot-rename)]]
     ["Diagnostics"
-     [("d" "Show all errors" flycheck-list-errors)
-      ("n" "Next error" flycheck-next-error)
-      ("p" "Previous error" flycheck-previous-error)
-      ("v" "Verify setup" flycheck-verify-setup)]]
+      [("d" "Show all errors" flycheck-list-errors
+         ("n" "Next error" flycheck-next-error)
+         ("p" "Previous error" flycheck-previous-error)
+         ("v" "Verify setup" flycheck-verify-setup))]]
     ["Server"
-     ("s" "Commands" eglot-server-menu)]))
+      ("s" "Commands" eglot-server-menu)]))
 
 (use-package eglot-booster
   :ensure t
@@ -1131,18 +1131,18 @@ If the current buffer has no process, execute BODY immediately."
   (add-to-list 'apheleia-mode-alist '(lua-mode . stylua))
   (add-to-list 'apheleia-mode-alist '(lua-ts-mode . stylua))
   (add-to-list 'apheleia-formatters
-               `(pet-ruff . ((or (pet-executable-find "ruff")
-                                 (car (alist-get 'ruff apheleia-formatters)))
-                             ,@(cdr (alist-get 'ruff apheleia-formatters))))))
+    `(pet-ruff . ((or (pet-executable-find "ruff")
+                    (car (alist-get 'ruff apheleia-formatters))
+                    ,@(cdr (alist-get 'ruff apheleia-formatters)))))))
 
 ;; Scrolling
 
 (pixel-scroll-precision-mode) ;; Smooth scrolling
 
 (setq scroll-conservatively 0
-      scroll-step 0
-      scroll-margin 0
-      scroll-preserve-screen-position t)
+  scroll-step 0
+  scroll-margin 0
+  scroll-preserve-screen-position t)
 
 ;; Use ESC as universal get me out of here command
 (define-key key-translation-map (kbd "ESC") (kbd "C-g"))
@@ -1162,58 +1162,58 @@ If the current buffer has no process, execute BODY immediately."
   :after (xref)
   ;; Replace bindings. Lazily loaded by `use-package'.
   :bind (;; C-c bindings in `mode-specific-map'
-         ("C-c M-x" . consult-mode-command)
-         ("C-c h" . consult-history)
-         ("C-c k" . consult-kmacro)
-         ("C-c m" . consult-man)
-         ("C-c i" . consult-info)
-         ([remap Info-search] . consult-info)
-         ;; C-x bindings in `ctl-x-map'
-         ("C-x M-:" . consult-complex-command)     ;; orig. repeat-complex-command
-         ("C-x b" . consult-buffer)                ;; orig. switch-to-buffer
-         ("s-b" . consult-buffer)                ;; orig. switch-to-buffer
-         ("C-x 4 b" . consult-buffer-other-window) ;; orig. switch-to-buffer-other-window
-         ("C-x 5 b" . consult-buffer-other-frame)  ;; orig. switch-to-buffer-other-frame
-         ("C-x t b" . consult-buffer-other-tab)    ;; orig. switch-to-buffer-other-tab
-         ("C-x r b" . consult-bookmark)            ;; orig. bookmark-jump
-         ("C-x p b" . consult-project-buffer)      ;; orig. project-switch-to-buffer
-         ;; Custom M-# bindings for fast register access
-         ("M-#" . consult-register-load)
-         ("M-'" . consult-register-store)          ;; orig. abbrev-prefix-mark (unrelated)
-         ("C-M-#" . consult-register)
-         ;; Other custom bindings
-         ("M-y" . consult-yank-pop)                ;; orig. yank-pop
-         ;; M-g bindings in `goto-map'
-         ("M-g e" . consult-compile-error)
-         ("M-g f" . consult-flycheck)
-         ("M-g g" . consult-goto-line)             ;; orig. goto-line
-         ("M-g M-g" . consult-goto-line)           ;; orig. goto-line
-         ("M-g o" . consult-outline)               ;; Alternative: consult-org-heading
-         ("M-g m" . consult-mark)
-         ("M-g k" . consult-global-mark)
-         ("M-g i" . consult-imenu)
-         ("M-g I" . consult-imenu-multi)
-         ;; M-s bindings in `search-map'
-         ("M-s d" . consult-fd)                  ;; Alternative: consult-find
-         ("M-s c" . consult-locate)
-         ("M-s g" . consult-grep)
-         ("M-s G" . consult-git-grep)
-         ("M-s r" . consult-ripgrep)
-         ("M-s l" . consult-line)
-         ("M-s L" . consult-line-multi)
-         ("M-s k" . consult-keep-lines)
-         ("M-s u" . consult-focus-lines)
-         ;; Isearch integration
-         ("M-s e" . consult-isearch-history)
-         :map isearch-mode-map
-         ("M-e" . consult-isearch-history)         ;; orig. isearch-edit-string
-         ("M-s e" . consult-isearch-history)       ;; orig. isearch-edit-string
-         ("M-s l" . consult-line)                  ;; needed by consult-line to detect isearch
-         ("M-s L" . consult-line-multi)            ;; needed by consult-line to detect isearch
-         ;; Minibuffer history
-         :map minibuffer-local-map
-         ("M-s" . consult-history)                 ;; orig. next-matching-history-element
-         ("M-r" . consult-history))                ;; orig. previous-matching-history-element
+          ("C-c M-x" . consult-mode-command)
+          ("C-c h" . consult-history)
+          ("C-c k" . consult-kmacro)
+          ("C-c m" . consult-man)
+          ("C-c i" . consult-info)
+          ([remap Info-search] . consult-info)
+          ;; C-x bindings in `ctl-x-map'
+          ("C-x M-:" . consult-complex-command)     ;; orig. repeat-complex-command
+          ("C-x b" . consult-buffer)                ;; orig. switch-to-buffer
+          ("s-b" . consult-buffer)                ;; orig. switch-to-buffer
+          ("C-x 4 b" . consult-buffer-other-window) ;; orig. switch-to-buffer-other-window
+          ("C-x 5 b" . consult-buffer-other-frame)  ;; orig. switch-to-buffer-other-frame
+          ("C-x t b" . consult-buffer-other-tab)    ;; orig. switch-to-buffer-other-tab
+          ("C-x r b" . consult-bookmark)            ;; orig. bookmark-jump
+          ("C-x p b" . consult-project-buffer)      ;; orig. project-switch-to-buffer
+          ;; Custom M-# bindings for fast register access
+          ("M-#" . consult-register-load)
+          ("M-'" . consult-register-store)          ;; orig. abbrev-prefix-mark (unrelated)
+          ("C-M-#" . consult-register)
+          ;; Other custom bindings
+          ("M-y" . consult-yank-pop)                ;; orig. yank-pop
+          ;; M-g bindings in `goto-map'
+          ("M-g e" . consult-compile-error)
+          ("M-g f" . consult-flycheck)
+          ("M-g g" . consult-goto-line)             ;; orig. goto-line
+          ("M-g M-g" . consult-goto-line)           ;; orig. goto-line
+          ("M-g o" . consult-outline)               ;; Alternative: consult-org-heading
+          ("M-g m" . consult-mark)
+          ("M-g k" . consult-global-mark)
+          ("M-g i" . consult-imenu)
+          ("M-g I" . consult-imenu-multi)
+          ;; M-s bindings in `search-map'
+          ("M-s d" . consult-fd)                  ;; Alternative: consult-find
+          ("M-s c" . consult-locate)
+          ("M-s g" . consult-grep)
+          ("M-s G" . consult-git-grep)
+          ("M-s r" . consult-ripgrep)
+          ("M-s l" . consult-line)
+          ("M-s L" . consult-line-multi)
+          ("M-s k" . consult-keep-lines)
+          ("M-s u" . consult-focus-lines)
+          ;; Isearch integration
+          ("M-s e" . consult-isearch-history)
+          :map isearch-mode-map
+          ("M-e" . consult-isearch-history)         ;; orig. isearch-edit-string
+          ("M-s e" . consult-isearch-history)       ;; orig. isearch-edit-string
+          ("M-s l" . consult-line)                  ;; needed by consult-line to detect isearch
+          ("M-s L" . consult-line-multi)            ;; needed by consult-line to detect isearch
+          ;; Minibuffer history
+          :map minibuffer-local-map
+          ("M-s" . consult-history)                 ;; orig. next-matching-history-element
+          ("M-r" . consult-history))                ;; orig. previous-matching-history-element
 
   ;; Enable automatic preview at point in the *Completions* buffer. This is
   ;; relevant when you use the default completion UI.
@@ -1230,7 +1230,7 @@ If the current buffer has no process, execute BODY immediately."
   (setq register-preview-delay 0.5)
 
   (setq xref-show-xrefs-function #'consult-xref
-        xref-show-definitions-function #'consult-xref)
+    xref-show-definitions-function #'consult-xref)
 
   ;; Configure other variables and modes in the :config section,
   ;; after lazily loading the package.
@@ -1244,13 +1244,13 @@ If the current buffer has no process, execute BODY immediately."
   ;; For some commands and buffer sources it is useful to configure the
   ;; :preview-key on a per-command basis using the `consult-customize' macro.
   (consult-customize
-   consult-theme :preview-key '(:debounce 0.2 any)
-   consult-ripgrep consult-git-grep consult-grep
-   consult-bookmark consult-recent-file consult-xref
-   consult-source-bookmark consult-source-file-register
-   consult-source-recent-file consult-source-project-recent-file
-   ;; :preview-key "M-."
-   :preview-key '(:debounce 0.4 any))
+    consult-theme :preview-key '(:debounce 0.2 any)
+    consult-ripgrep consult-git-grep consult-grep
+    consult-bookmark consult-recent-file consult-xref
+    consult-source-bookmark consult-source-file-register
+    consult-source-recent-file consult-source-project-recent-file
+    ;; :preview-key "M-."
+    :preview-key '(:debounce 0.4 any))
 
   ;; Workaround for consult-project-extra using old internal API
   ;; Until the package is updated to use consult-source-project-buffer
@@ -1258,7 +1258,7 @@ If the current buffer has no process, execute BODY immediately."
 
   ;; Include hidden files/folders (e.g. .github) in ripgrep searches
   (setq consult-ripgrep-args
-        "rg --null --line-buffered --color=never --max-columns=1000 --path-separator /\
+    "rg --null --line-buffered --color=never --max-columns=1000 --path-separator /\
          --smart-case --no-heading --with-filename --line-number --search-zip --hidden")
 
   ;; Optionally configure the narrowing key.
@@ -1294,10 +1294,10 @@ If the current buffer has no process, execute BODY immediately."
   (defun my/toggle-consult-eglot-embark-mode ()
     "Toggle consult-eglot-embark-mode based on buffer Eglot status."
     (cond
-     ((eglot-managed-p)
-      (consult-eglot-embark-mode 1))  ;; Enable when buffer is managed by Eglot
-     (t
-      (consult-eglot-embark-mode -1)))) ;; Disable when buffer is not managed by Eglot
+      ((eglot-managed-p
+         (consult-eglot-embark-mode 1)))  ;; Enable when buffer is managed by Eglot
+      (t
+        (consult-eglot-embark-mode -1)))) ;; Disable when buffer is not managed by Eglot
   :hook
   (eglot-managed-mode . my/toggle-consult-eglot-embark-mode))
 
@@ -1312,23 +1312,23 @@ If the current buffer has no process, execute BODY immediately."
   ;; (consult-gh-with-pr-review-mode +1))
   :commands
   (consult-gh-auth-switch
-   consult-gh-repo-list
-   consult-gh-issue-list
-   consult-gh-pr-list
-   consult-gh-search-repos
-   consult-gh-search-issues
-   consult-gh-search-prs
-   consult-gh-search-code
-   consult-gh-find-file
-   consult-gh-repo-create
-   consult-gh-issue-create
-   consult-gh-pr-create
-   consult-gh-dashboard
-   consult-gh-notifications
-   consult-gh-workflow-list
-   consult-gh-workflow-run
-   consult-gh-run-list
-   consult-gh-run-rerun))
+    consult-gh-repo-list
+    consult-gh-issue-list
+    consult-gh-pr-list
+    consult-gh-search-repos
+    consult-gh-search-issues
+    consult-gh-search-prs
+    consult-gh-search-code
+    consult-gh-find-file
+    consult-gh-repo-create
+    consult-gh-issue-create
+    consult-gh-pr-create
+    consult-gh-dashboard
+    consult-gh-notifications
+    consult-gh-workflow-list
+    consult-gh-workflow-run
+    consult-gh-run-list
+    consult-gh-run-rerun))
 
 (use-package consult-gh-embark
   :after consult-gh
@@ -1362,85 +1362,85 @@ If the current buffer has no process, execute BODY immediately."
   ("C-:" . embark-act)
   ("C-;" . embark-dwim)
   (:map minibuffer-local-map
-        ("C-c e" . embark-export))
+    ("C-c e" . embark-export))
   (:map vertico-map
-        ("C-c e" . embark-export))
+    ("C-c e" . embark-export))
   :config
 
   (defun my/embark-pytest-def-p ()
     "Return non-nil if point is inside a Python test function in a test_*.py file and python-ts-mode is active."
     (and buffer-file-name
-         (string-match-p "/test_.*\\.py\\'" buffer-file-name)
-         (eq major-mode 'python-ts-mode)
-         (require 'treesit nil t)
-         (treesit-ready-p 'python)
-         (let* ((node (treesit-node-at (point)))
-                (func-node (when node
-                             (treesit-parent-until
+      (string-match-p "/test_.*\\.py\\'" buffer-file-name)
+      (eq major-mode 'python-ts-mode)
+      (require 'treesit nil t)
+      (treesit-ready-p 'python)
+      (let* ((node (treesit-node-at (point))
+               (func-node (when node
+                            (treesit-parent-until
                               node
                               (lambda (n)
-                                (string= (treesit-node-type n) "function_definition"))))))
-           (when func-node
-             (let* ((name-node (treesit-node-child-by-field-name func-node "name"))
-                    (func-name (and name-node (treesit-node-text name-node))))
-               (and func-name (string-prefix-p "test_" func-name)))))))
+                                (string= (treesit-node-type n) "function_definition")))))))
+        (when func-node
+          (let* ((name-node (treesit-node-child-by-field-name func-node "name")
+                   (func-name (and name-node (treesit-node-text name-node)))))
+            (and func-name (string-prefix-p "test_" func-name)))))))
 
   (defun my/embark-python-pytest-run-def-at-point ()
     "Run pytest on the test function at point using treesit."
     (interactive)
     (if (my/embark-pytest-def-p)
-        (call-interactively #'python-pytest-run-def-at-point-treesit)
+      (call-interactively #'python-pytest-run-def-at-point-treesit)
       (user-error "Not on a Python test function in a test_*.py file")))
 
   (defun my/embark-rust-test-def-p ()
     "Return non-nil if point is inside a Rust test function and rust-ts-mode is active."
     (and buffer-file-name
-         (string-match-p "\\.rs\\'" buffer-file-name)
-         (eq major-mode 'rust-ts-mode)
-         (require 'treesit nil t)
-         (treesit-ready-p 'rust)
-         (let* ((node (treesit-node-at (point)))
-                (func-node (when node
-                             (treesit-parent-until
+      (string-match-p "\\.rs\\'" buffer-file-name)
+      (eq major-mode 'rust-ts-mode)
+      (require 'treesit nil t)
+      (treesit-ready-p 'rust)
+      (let* ((node (treesit-node-at (point))
+               (func-node (when node
+                            (treesit-parent-until
                               node
-                              (lambda (n) (equal (treesit-node-type n) "function_item"))))))
-           (when func-node
-             ;; Check if function has #[test] or #[cfg(test)] attribute
-             (let ((func-start (treesit-node-start func-node))
-                   (func-text (treesit-node-text func-node)))
-               (save-excursion
-                 (goto-char func-start)
-                 (forward-line -10) ; Look backwards for attributes
-                 (re-search-forward "#\\[\\(test\\|cfg(test)\\)\\]" func-start t)))))))
+                              (lambda (n) (equal (treesit-node-type n) "function_item")))))))
+        (when func-node
+          ;; Check if function has #[test] or #[cfg(test)] attribute
+          (let ((func-start (treesit-node-start func-node)
+                  (func-text (treesit-node-text func-node))))
+            (save-excursion
+              (goto-char func-start)
+              (forward-line -10) ; Look backwards for attributes
+              (re-search-forward "#\\[\\(test\\|cfg(test)\\)\\]" func-start t)))))))
 
   (defun my/embark-rust-cargo-test-def-at-point ()
     "Run cargo test on the test function at point using treesit."
     (interactive)
     (if (my/embark-rust-test-def-p)
-        (let* ((node (treesit-node-at (point)))
+      (let* ((node (treesit-node-at (point))
                (func-node (treesit-parent-until
-                           node
-                           (lambda (n) (equal (treesit-node-type n) "function_item"))))
+                            node
+                            (lambda (n) (equal (treesit-node-type n) "function_item"))))
                (name-node (when func-node
                             (treesit-node-child-by-field-name func-node "name")))
-               (func-name (when name-node (treesit-node-text name-node))))
-          (if func-name
-              ;; Run cargo test directly with the function name
-              (let ((default-directory (or (locate-dominating-file default-directory "Cargo.toml") default-directory)))
-                (compile (format "cargo test %s" (shell-quote-argument func-name))))
-            (user-error "Could not determine test function name")))
+               (func-name (when name-node (treesit-node-text name-node)))))
+        (if func-name
+          ;; Run cargo test directly with the function name
+          (let ((default-directory (or (locate-dominating-file default-directory "Cargo.toml") default-directory)))
+            (compile (format "cargo test %s" (shell-quote-argument func-name))))
+          (user-error "Could not determine test function name")))
       (user-error "Not on a Rust test function")))
 
   (defun my/embark-test-def-at-point ()
     "Run appropriate test command based on major mode."
     (interactive)
     (cond
-     ((eq major-mode 'python-ts-mode)
-      (my/embark-python-pytest-run-def-at-point))
-     ((eq major-mode 'rust-ts-mode)
-      (my/embark-rust-cargo-test-def-at-point))
-     (t
-      (user-error "No test runner configured for %s" major-mode))))
+      ((eq major-mode 'python-ts-mode
+         (my/embark-python-pytest-run-def-at-point)))
+      ((eq major-mode 'rust-ts-mode
+         (my/embark-rust-cargo-test-def-at-point)))
+      (t
+        (user-error "No test runner configured for %s" major-mode))))
 
   (define-key embark-identifier-map (kbd "T") #'my/embark-test-def-at-point))
 
@@ -1496,7 +1496,7 @@ If the current buffer has no process, execute BODY immediately."
 ;; Assume left-to-right text everywhere and skip the bidirectional parenthesis
 ;; algorithm.
 (setq-default bidi-display-reordering 'left-to-right
-              bidi-paragraph-direction 'left-to-right)
+  bidi-paragraph-direction 'left-to-right)
 (setq bidi-inhibit-bpa t)
 
 ;; Emacs normally fontifies (syntax-highlights) text even while you’re actively
@@ -1524,7 +1524,7 @@ If the current buffer has no process, execute BODY immediately."
 
 ;; https://emacsredux.com/blog/2025/06/01/let-s-make-keyboard-quit-smarter/
 (define-advice keyboard-quit
-    (:around (quit) quit-current-context)
+  (:around (quit) quit-current-context)
   "Quit the current context.
 
 When there is an active minibuffer and we are not inside it close
@@ -1533,11 +1533,11 @@ it.  When we are inside the minibuffer use the regular
 exiting.  When there is no minibuffer `keyboard-quit' unless we
 are defining or executing a macro."
   (if (active-minibuffer-window)
-      (if (minibufferp)
-          (minibuffer-keyboard-quit)
-        (abort-recursive-edit))
+    (if (minibufferp)
+      (minibuffer-keyboard-quit)
+      (abort-recursive-edit))
     (unless (or defining-kbd-macro
-                executing-kbd-macro)
+              executing-kbd-macro)
       (funcall-interactively quit))))
 
 (use-package smex)  ;; show recent commands when invoking Alt-x (or Cmd+Shift+p)
@@ -1555,18 +1555,18 @@ are defining or executing a macro."
   :demand t
   :config
   (ligature-set-ligatures 'prog-mode '("--" "---" "==" "===" "!=" "!==" "=!="
-                                       "=:=" "=/=" "<=" ">=" "&&" "&&&" "&=" "++" "+++" "***" ";;" "!!"
-                                       "??" "???" "?:" "?." "?=" "<:" ":<" ":>" ">:" "<:<" "<>" "<<<" ">>>"
-                                       "<<" ">>" "||" "-|" "_|_" "|-" "||-" "|=" "||=" "##" "###" "####"
-                                       "#{" "#[" "]#" "#(" "#?" "#_" "#_(" "#:" "#!" "#=" "^=" "<$>" "<$"
-                                       "$>" "<+>" "<+" "+>" "<*>" "<*" "*>" "</" "</>" "/>" "<!--" "<#--"
-                                       "-->" "->" "->>" "<<-" "<-" "<=<" "=<<" "<<=" "<==" "<=>" "<==>"
-                                       "==>" "=>" "=>>" ">=>" ">>=" ">>-" ">-" "-<" "-<<" ">->" "<-<" "<-|"
-                                       "<=|" "|=>" "|->" "<->" "<~~" "<~" "<~>" "~~" "~~>" "~>" "~-" "-~"
-                                       "~@" "[||]" "|]" "[|" "|}" "{|" "[<" ">]" "|>" "<|" "||>" "<||"
-                                       "|||>" "<|||" "<|>" "..." ".." ".=" "..<" ".?" "::" ":::" ":=" "::="
-                                       ":?" ":?>" "//" "///" "/*" "*/" "/=" "//=" "/==" "@_" "__" "???"
-                                       "<:<" ";;;"))
+                                        "=:=" "=/=" "<=" ">=" "&&" "&&&" "&=" "++" "+++" "***" ";;" "!!"
+                                        "??" "???" "?:" "?." "?=" "<:" ":<" ":>" ">:" "<:<" "<>" "<<<" ">>>"
+                                        "<<" ">>" "||" "-|" "_|_" "|-" "||-" "|=" "||=" "##" "###" "####"
+                                        "#{" "#[" "]#" "#(" "#?" "#_" "#_(" "#:" "#!" "#=" "^=" "<$>" "<$"
+                                        "$>" "<+>" "<+" "+>" "<*>" "<*" "*>" "</" "</>" "/>" "<!--" "<#--"
+                                        "-->" "->" "->>" "<<-" "<-" "<=<" "=<<" "<<=" "<==" "<=>" "<==>"
+                                        "==>" "=>" "=>>" ">=>" ">>=" ">>-" ">-" "-<" "-<<" ">->" "<-<" "<-|"
+                                        "<=|" "|=>" "|->" "<->" "<~~" "<~" "<~>" "~~" "~~>" "~>" "~-" "-~"
+                                        "~@" "[||]" "|]" "[|" "|}" "{|" "[<" ">]" "|>" "<|" "||>" "<||"
+                                        "|||>" "<|||" "<|>" "..." ".." ".=" "..<" ".?" "::" ":::" ":=" "::="
+                                        ":?" ":?>" "//" "///" "/*" "*/" "/=" "//=" "/==" "@_" "__" "???"
+                                        "<:<" ";;;"))
   ;; Don't enable globally, for performance
   ;; (global-ligature-mode t)
   :hook
@@ -1612,8 +1612,8 @@ are defining or executing a macro."
   (interactive)
   (let ((appearance (my/get-macos-appearance)))
     (cond
-     ((eq appearance 'dark) 'mocha)
-     ((eq appearance 'light) 'latte))))
+      ((eq appearance 'dark) 'mocha)
+      ((eq appearance 'light) 'latte))))
 
 (defun my/load-theme-by-current-theme ()
   "Load the right theme based on the current system theme."
@@ -1627,8 +1627,8 @@ are defining or executing a macro."
 (defun my/get-macos-appearance ()
   "Get macOS appearance, returns 'dark or 'light."
   (if (string-match-p "Dark"
-                      (shell-command-to-string "defaults read -g AppleInterfaceStyle 2>/dev/null"))
-      'dark
+        (shell-command-to-string "defaults read -g AppleInterfaceStyle 2>/dev/null"))
+    'dark
     'light))
 
 (defun my/disable-all-themes ()
@@ -1701,24 +1701,24 @@ are defining or executing a macro."
   ;; Wrap kind-icon to also show completion source with icons
   (defun my/kind-icon-with-source (metadata)
     "Show kind icon and completion source icon together."
-    (let ((kind-formatter (kind-icon-margin-formatter metadata))
-          (source-icon (cond
-                        ((eq (completion-metadata-get metadata 'category) 'eglot-capf) "server-network")
-                        ((eq (completion-metadata-get metadata 'category) 'cape-file) "file-document-outline")
-                        ((eq (completion-metadata-get metadata 'category) 'cape-dabbrev) "format-text")
-                        ((eq (completion-metadata-get metadata 'category) 'tempel) "code-braces")
-                        ((eq (completion-metadata-get metadata 'category) 'codeium) "robot")
-                        (t nil))))
+    (let ((kind-formatter (kind-icon-margin-formatter metadata)
+            (source-icon (cond
+                           ((eq (completion-metadata-get metadata 'category) 'eglot-capf) "server-network")
+                           ((eq (completion-metadata-get metadata 'category) 'cape-file) "file-document-outline")
+                           ((eq (completion-metadata-get metadata 'category) 'cape-dabbrev) "format-text")
+                           ((eq (completion-metadata-get metadata 'category) 'tempel) "code-braces")
+                           ((eq (completion-metadata-get metadata 'category) 'codeium) "robot")
+                           (t nil)))))
       (if source-icon
-          (lambda (cand)
-            (concat (funcall kind-formatter cand)
-                    " "
-                    (propertize " " 'display
-                                (svg-lib-icon source-icon nil
-                                              :height 0.85
-                                              :scale 1
-                                              :face 'font-lock-comment-face))
-                    " "))
+        (lambda (cand)
+          (concat (funcall kind-formatter cand)
+            " "
+            (propertize " " 'display
+              (svg-lib-icon source-icon nil
+                :height 0.85
+                :scale 1
+                :face 'font-lock-comment-face))
+            " "))
         kind-formatter)))
 
   ;; TODO:
@@ -1736,14 +1736,14 @@ are defining or executing a macro."
 (use-package vertico-posframe
   :custom
   (vertico-posframe-parameters
-   '((left-fringe . 4)
-     (right-fringe . 4)
-     (internal-border-width . 4)))
+    '((left-fringe . 4
+        (right-fringe . 4)
+        (internal-border-width . 4))))
   (vertico-multiform-commands
-   '((treemacs (:not posframe))
-     (consult-line (:not posframe))
-     (consult-ripgrep (:not posframe))
-     (t posframe)))
+    '((treemacs (:not posframe)
+        (consult-line (:not posframe))
+        (consult-ripgrep (:not posframe))
+        (t posframe))))
   :config
   ;; The `child-frame-border' face is unspecified by default, so posframe falls
   ;; back to the frame background colour, making the border invisible.
@@ -1755,7 +1755,7 @@ are defining or executing a macro."
   ;; theme loads, so it stays correct across both Mocha (dark) and Latte (light).
   (defun my/set-posframe-border ()
     (set-face-attribute 'child-frame-border nil
-                        :background (catppuccin-get-color 'surface1)))
+      :background (catppuccin-get-color 'surface1)))
   (add-hook 'after-load-theme-hook #'my/set-posframe-border)
   (my/set-posframe-border)
   (vertico-posframe-mode 1))
@@ -1799,17 +1799,17 @@ are defining or executing a macro."
   (require 'corfu-popupinfo)
   (corfu-popupinfo-mode)
   (add-hook 'emacs-startup-hook
-            (lambda ()
-              (run-with-idle-timer 0.5 nil #'global-corfu-mode)))
+    (lambda ()
+      (run-with-idle-timer 0.5 nil #'global-corfu-mode)))
   :bind (:map corfu-map
-              ("S-SPC"      . corfu-insert-separator)
-              ("TAB"        . corfu-next)
-              ([tab]        . corfu-next)                ;; In case "TAB" doesn't work
-              ("S-TAB"      . corfu-previous)
-              ([backtab]    . corfu-previous)            ;; In case "S-TAB" does't work
-              ("RET"        . corfu-insert)
-              ("M-g"        . corfu-info-location)       ;; Jump to definition
-              ("M-h"        . corfu-info-documentation)) ;; Show documentation
+          ("S-SPC"      . corfu-insert-separator)
+          ("TAB"        . corfu-next)
+          ([tab]        . corfu-next)                ;; In case "TAB" doesn't work
+          ("S-TAB"      . corfu-previous)
+          ([backtab]    . corfu-previous)            ;; In case "S-TAB" does't work
+          ("RET"        . corfu-insert)
+          ("M-g"        . corfu-info-location)       ;; Jump to definition
+          ("M-h"        . corfu-info-documentation)) ;; Show documentation
   :hook
   (eshell-mode . (lambda ()
                    (setq-local corfu-auto nil)
@@ -1841,8 +1841,8 @@ are defining or executing a macro."
 
   ;; Elisp mode: add cape-elisp-block for symbol completion
   (add-hook 'emacs-lisp-mode-hook
-            (lambda ()
-              (add-hook 'completion-at-point-functions #'cape-elisp-block nil t)))
+    (lambda ()
+      (add-hook 'completion-at-point-functions #'cape-elisp-block nil t)))
 
   ;; Org/Markdown: add cape-elisp-block for code blocks
   (defun my/setup-cape-elisp-block ()
@@ -1912,39 +1912,39 @@ are defining or executing a macro."
   (transient-define-prefix nav-transient-menu ()
     "Navigation commands menu."
     [
-     ["Changes"
-      ("c" "Last change" evil-goto-last-change)
-      ("p" "Previous hunk" diff-hl-previous-hunk)
-      ("n" "Next hunk" diff-hl-next-hunk)]
-     ["Things"
-      ("g" "Imenu" consult-imenu)
-      ("m" "Marks" consult-mark)
-      ("t" "TODOs" consult-todo)]
-     ["Position"
-      ("b" "Jump backward" evil-jump-backward)
-      ("f" "Jump forward" evil-jump-forward)
-      ("w" "Word" avy-goto-word-0)]]
+      ["Changes"
+        ("c" "Last change" evil-goto-last-change)
+        ("p" "Previous hunk" diff-hl-previous-hunk)
+        ("n" "Next hunk" diff-hl-next-hunk)]
+      ["Things"
+        ("g" "Imenu" consult-imenu)
+        ("m" "Marks" consult-mark)
+        ("t" "TODOs" consult-todo)]
+      ["Position"
+        ("b" "Jump backward" evil-jump-backward)
+        ("f" "Jump forward" evil-jump-forward)
+        ("w" "Word" avy-goto-word-0)]]
     [["Xref"
-      ("a" "Back" xref-go-back)
-      ("o" "Forward" xref-go-forward)
-      ("A" "Back / Stack" consult-xref-stack-backward)
-      ("O" "Forward / Stack" consult-xref-stack-forward)
-      ("d" "Definitions" xref-find-definitions)
-      ("r" "References" xref-find-references)
-      ("s" "Symbols" xref-find-apropos)
-      ("D" "Definitions (buffer)" xref-find-definitions-buffer)
-      ("R" "References (buffer)" xref-find-references-buffer)
-      ("S" "Symbols (buffer)" xref-find-apropos-buffer)]
-     ["Errors"
-      ("I" "Previous error" flycheck-previous-error)
-      ("i" "Next error" flycheck-next-error)]
-     ["Structure"
-      ("," "Function beginning" beginning-of-defun)
-      ("." "Function ending" end-of-defun)]
-     ["Folds"
-      ("zo" "Open" kirigami-open-fold)
-      ("zc" "Close" kirigami-close-fold)
-      ("za" "Toggle" kirigami-toggle-fold)]]))
+       ("a" "Back" xref-go-back)
+       ("o" "Forward" xref-go-forward)
+       ("A" "Back / Stack" consult-xref-stack-backward)
+       ("O" "Forward / Stack" consult-xref-stack-forward)
+       ("d" "Definitions" xref-find-definitions)
+       ("r" "References" xref-find-references)
+       ("s" "Symbols" xref-find-apropos)
+       ("D" "Definitions (buffer)" xref-find-definitions-buffer)
+       ("R" "References (buffer)" xref-find-references-buffer)
+       ("S" "Symbols (buffer)" xref-find-apropos-buffer)
+       ["Errors"
+         ("I" "Previous error" flycheck-previous-error)
+         ("i" "Next error" flycheck-next-error)]
+       ["Structure"
+         ("," "Function beginning" beginning-of-defun)
+         ("." "Function ending" end-of-defun)]
+       ["Folds"
+         ("zo" "Open" kirigami-open-fold)
+         ("zc" "Close" kirigami-close-fold)
+         ("za" "Toggle" kirigami-toggle-fold)]]]))
 
 (after-packages (evil transient)
   (evil-define-key 'normal 'global (kbd "s-u") #'nav-transient-menu)
@@ -1963,22 +1963,22 @@ are defining or executing a macro."
 (defun xref-find-definitions-buffer ()
   "Find definitions using the default xref buffer (bypasses consult-xref)."
   (interactive)
-  (let ((xref-show-xrefs-function #'xref--show-xref-buffer)
-        (xref-show-definitions-function #'xref-show-definitions-buffer))
+  (let ((xref-show-xrefs-function #'xref--show-xref-buffer
+          (xref-show-definitions-function #'xref-show-definitions-buffer)))
     (xref-find-definitions-at-point)))
 
 (defun xref-find-references-buffer ()
   "Find references using the default xref buffer (bypasses consult-xref)."
   (interactive)
-  (let ((xref-show-xrefs-function #'xref--show-xref-buffer)
-        (xref-show-definitions-function #'xref-show-definitions-buffer))
+  (let ((xref-show-xrefs-function #'xref--show-xref-buffer
+          (xref-show-definitions-function #'xref-show-definitions-buffer)))
     (xref-find-references-at-point)))
 
 (defun xref-find-apropos-buffer ()
   "Find apropos using the default xref buffer (bypasses consult-xref)."
   (interactive)
-  (let ((xref-show-xrefs-function #'xref--show-xref-buffer)
-        (xref-show-definitions-function #'xref-show-definitions-buffer))
+  (let ((xref-show-xrefs-function #'xref--show-xref-buffer
+          (xref-show-definitions-function #'xref-show-definitions-buffer)))
     (call-interactively 'xref-find-apropos)))
 
 (use-package wgrep
@@ -2021,8 +2021,8 @@ are defining or executing a macro."
 
 (use-package tempel
   :demand t
-  :bind (("M-+" . tempel-complete) ;; Alternative tempel-expand
-         ("M-*" . tempel-insert)))
+  :bind (("M-+" . tempel-complete ;; Alternative tempel-expand
+           ("M-*" . tempel-insert))))
 
 (use-package tempel-collection
   :ensure t
@@ -2079,11 +2079,11 @@ are defining or executing a macro."
   (setopt semext-provider (make-llm-openai :key (my/get-password "api.openai.com" "me")))
   :commands
   (semext-forward-part
-   semext-backward-part
-   semext-query-replace
-   semext-search-forward
-   semext-search-backward
-   semext-clear-cache))
+    semext-backward-part
+    semext-query-replace
+    semext-search-forward
+    semext-search-backward
+    semext-clear-cache))
 
 (use-package ast-grep
   :ensure t
@@ -2110,9 +2110,9 @@ are defining or executing a macro."
     "Enable editorconfig only when .editorconfig exists at project root."
     ;; Always reset first to clear any previous project's config
     (editorconfig-mode -1)
-    (when-let* ((project (project-current))
-                (root (project-root project))
-                (editorconfig-file (expand-file-name ".editorconfig" root)))
+    (when-let* ((project (project-current)
+                  (root (project-root project))
+                  (editorconfig-file (expand-file-name ".editorconfig" root))))
       (when (file-exists-p editorconfig-file)
         (editorconfig-apply))))
   :config
@@ -2131,11 +2131,11 @@ are defining or executing a macro."
   (interactive "sHostname: \nsUsername: ")
   (require 'auth-source)
   (let ((match (auth-source-search :host hostname
-                                   :user username
-                                   :require '(:secret)
-                                   :max 1)))
+                 :user username
+                 :require '(:secret)
+                 :max 1)))
     (if match
-        (funcall (plist-get (car match) :secret))
+      (funcall (plist-get (car match) :secret))
       (error "No password found for %s@%s in .authinfo" username hostname))))
 
 (use-package gptel
@@ -2145,41 +2145,41 @@ are defining or executing a macro."
   (gptel-stream t)
   (gptel-default-mode 'org-mode)
   (gptel-display-buffer-action
-   '((display-buffer-reuse-window display-buffer-in-side-window)
-     (side . right)
-     (window-width . 80)
-     (slot . 0)))
+    '((display-buffer-reuse-window display-buffer-in-side-window
+        (side . right)
+        (window-width . 80)
+        (slot . 0))))
   :init
   (defvar gptel-save-directory (expand-file-name "chats" user-emacs-directory)
     "Directory to save gptel conversations.")
   :config
   (defvar my/gptel-models
     `(("OpenAI GPT-5.4"
-       :model gpt-5.4
-       :backend-fn ,(lambda () (gptel-make-openai "OpenAI" :stream t :key (my/get-password "api.openai.com" "me")))))
+        :model gpt-5.4
+        :backend-fn ,(lambda () (gptel-make-openai "OpenAI" :stream t :key (my/get-password "api.openai.com" "me")))))
     `(("OpenAI GPT-5 Mini"
-       :model gpt-5-mini
-       :backend-fn ,(lambda () (gptel-make-openai "OpenAI" :stream t :key (my/get-password "api.openai.com" "me"))))
-      ("Claude Opus 4.6"
-       :model claude-opus-4-6
-       :backend-fn ,(lambda () (gptel-make-anthropic "Claude" :stream t :key (my/get-password "anthropic.com" "me"))))
-      ("Claude Sonnet 4.6"
-       :model claude-sonnet-4-6
-       :backend-fn ,(lambda () (gptel-make-anthropic "Claude" :stream t :key (my/get-password "anthropic.com" "me"))))
-      ("Claude Haiku 4.5"
-       :model claude-haiku-4-5-20251001
-       :backend-fn ,(lambda () (gptel-make-anthropic "Claude" :stream t :key (my/get-password "anthropic.com" "me"))))
-      ("Gemini Pro 3 (Latest)"
-       :model gemini-3-pro-latest
-       :backend-fn ,(lambda () (gptel-make-gemini "Gemini" :stream t :key (my/get-password "aistudio.google.com" "apikey"))))))
+        :model gpt-5-mini
+        :backend-fn ,(lambda () (gptel-make-openai "OpenAI" :stream t :key (my/get-password "api.openai.com" "me")))
+        ("Claude Opus 4.6"
+          :model claude-opus-4-6
+          :backend-fn ,(lambda () (gptel-make-anthropic "Claude" :stream t :key (my/get-password "anthropic.com" "me"))))
+        ("Claude Sonnet 4.6"
+          :model claude-sonnet-4-6
+          :backend-fn ,(lambda () (gptel-make-anthropic "Claude" :stream t :key (my/get-password "anthropic.com" "me"))))
+        ("Claude Haiku 4.5"
+          :model claude-haiku-4-5-20251001
+          :backend-fn ,(lambda () (gptel-make-anthropic "Claude" :stream t :key (my/get-password "anthropic.com" "me"))))
+        ("Gemini Pro 3 (Latest)"
+          :model gemini-3-pro-latest
+          :backend-fn ,(lambda () (gptel-make-gemini "Gemini" :stream t :key (my/get-password "aistudio.google.com" "apikey")))))))
 
   (defun my/gptel-select-model (&optional model-name)
     "Select a gptel model from `my/gptel-models`.
 If MODEL-NAME is provided, select it directly. Otherwise, prompt the user."
     (interactive
-     (list (completing-read "Select AI Model: " (mapcar #'car my/gptel-models) nil t)))
-    (let* ((name (or model-name (completing-read "Select AI Model: " (mapcar #'car my/gptel-models) nil t)))
-           (config (cdr (assoc name my/gptel-models))))
+      (list (completing-read "Select AI Model: " (mapcar #'car my/gptel-models) nil t)))
+    (let* ((name (or model-name (completing-read "Select AI Model: " (mapcar #'car my/gptel-models) nil t))
+             (config (cdr (assoc name my/gptel-models)))))
       (when config
         (when (plist-get config :model)
           (setq gptel-model (plist-get config :model)))
@@ -2194,13 +2194,13 @@ If MODEL-NAME is provided, select it directly. Otherwise, prompt the user."
     (interactive)
     (let ((buffer-name "AI Chat"))
       (if-let* ((window (get-buffer-window buffer-name)))
-          ;; If the sidebar is already open, close it.
-          (delete-window window)
+        ;; If the sidebar is already open, close it.
+        (delete-window window)
         ;; Else, create the sidebar
-        (let* ((chat-buffer (gptel buffer-name))
-               (window (get-buffer-window chat-buffer)))
+        (let* ((chat-buffer (gptel buffer-name)
+                 (window (get-buffer-window chat-buffer))))
           (display-buffer-in-side-window
-           chat-buffer gptel-display-buffer-action)
+            chat-buffer gptel-display-buffer-action)
           (when window
             (set-window-dedicated-p window t)
             (set-window-parameter window 'no-other-window t)
@@ -2225,10 +2225,10 @@ If MODEL-NAME is provided, select it directly. Otherwise, prompt the user."
     (when (and (boundp 'gptel-mode) gptel-mode)
       (unless (file-exists-p gptel-save-directory)
         (make-directory gptel-save-directory t))
-      (let* ((timestamp (format-time-string "%Y%m%d-%H%M%S"))
-             (buffer-name-clean (replace-regexp-in-string "[^a-zA-Z0-9_-]" "_" (buffer-name)))
-             (filename (expand-file-name (concat buffer-name-clean "-" timestamp ".org")
-                                         gptel-save-directory)))
+      (let* ((timestamp (format-time-string "%Y%m%d-%H%M%S")
+               (buffer-name-clean (replace-regexp-in-string "[^a-zA-Z0-9_-]" "_" (buffer-name)))
+               (filename (expand-file-name (concat buffer-name-clean "-" timestamp ".org")
+                           gptel-save-directory))))
         (write-region (point-min) (point-max) filename)
         (message "Saved chat to %s" filename))))
   (defun my/gptel-close-chat (&optional buffer)
@@ -2236,29 +2236,29 @@ If MODEL-NAME is provided, select it directly. Otherwise, prompt the user."
 If BUFFER is provided, close that buffer directly."
     (interactive)
     (let* ((gptel-buffers (cl-remove-if-not
-                           (lambda (b)
-                             (string-match-p "\\*\\(DeepSeek\\|Claude\\|Gemini\\)\\*"
-                                             (buffer-name b)))
-                           (buffer-list))))
+                            (lambda (b)
+                              (string-match-p "\\*\\(DeepSeek\\|Claude\\|Gemini\\)\\*"
+                                (buffer-name b)))
+                            (buffer-list))))
       (cond
-       (buffer (kill-buffer buffer))
-       ((or (derived-mode-p 'gptel-mode) (bound-and-true-p gptel-mode))
-        (kill-buffer (current-buffer)))
-       (t (let ((buf (completing-read "Close gptel buffer: "
-                                      (mapcar #'buffer-name gptel-buffers)
-                                      nil t)))
-            (when buf (kill-buffer buf)))))))
+        (buffer (kill-buffer buffer))
+        ((or (derived-mode-p 'gptel-mode) (bound-and-true-p gptel-mode)
+           (kill-buffer (current-buffer))))
+        (t (let ((buf (completing-read "Close gptel buffer: "
+                        (mapcar #'buffer-name gptel-buffers)
+                        nil t)))
+             (when buf (kill-buffer buf)))))))
   (defun my/gptel-select-chat ()
     "Select a gptel buffer to switch to."
     (interactive)
     (let* ((gptel-buffers (cl-remove-if-not
-                           (lambda (b)
-                             (string-match-p "\\*\\(DeepSeek\\|Claude\\|Gemini\\)\\*"
-                                             (buffer-name b)))
-                           (buffer-list)))
-           (buffer (completing-read "Select gptel buffer: "
-                                    (mapcar #'buffer-name gptel-buffers)
-                                    nil t)))
+                            (lambda (b)
+                              (string-match-p "\\*\\(DeepSeek\\|Claude\\|Gemini\\)\\*"
+                                (buffer-name b)))
+                            (buffer-list))
+             (buffer (completing-read "Select gptel buffer: "
+                       (mapcar #'buffer-name gptel-buffers)
+                       nil t))))
       (when buffer
         (switch-to-buffer buffer))))
   :hook
@@ -2272,10 +2272,10 @@ If BUFFER is provided, close that buffer directly."
   ("s-a" . gptel-menu)
   ("<f5>" . my/gptel-toggle-sidebar)
   (:map gptel-mode-map
-        ("C-c C-s" . my/gptel-save-chat)
-        ("C-c C-c" . my/gptel-send-at-eol)
-        ("C-c C-k" . my/gptel-close-chat)
-        ("C-c C-b" . my/gptel-select-chat)))
+    ("C-c C-s" . my/gptel-save-chat)
+    ("C-c C-c" . my/gptel-send-at-eol)
+    ("C-c C-k" . my/gptel-close-chat)
+    ("C-c C-b" . my/gptel-select-chat)))
 
 (use-package gptel-quick
   :ensure t
@@ -2290,19 +2290,19 @@ If BUFFER is provided, close that buffer directly."
   (:host github :repo "lizqwerscott/mcp.el")
   :init
   (setq mcp-hub-servers
-        `(("github" . (
-                       :command "docker"
-                       :args ("run" "-i" "--rm" "-e" ,(concat "GITHUB_PERSONAL_ACCESS_TOKEN=" (my/get-password "api.github.com" "jesse-c^mcp")) "ghcr.io/github/github-mcp-server")))
-          ("tavily" . (
-                       :command "npx"
-                       :args ("-y" "tavily-mcp@latest")
-                       :env (:TAVILY_API_KEY ,(my/get-password "tavily.com" "apikey"))))
-          ("playwright" . (
-                           :command "mcp-server-playwright"
-                           :args ()))
-          ("dash" . (
-                     :command "uvx"
-                     :args ("--from" "git+https://github.com/Kapeli/dash-mcp-server.git", "dash-mcp-server")))))
+    `(("github" . (
+                    :command "docker"
+                    :args ("run" "-i" "--rm" "-e" ,(concat "GITHUB_PERSONAL_ACCESS_TOKEN=" (my/get-password "api.github.com" "jesse-c^mcp")) "ghcr.io/github/github-mcp-server"))
+        ("tavily" . (
+                      :command "npx"
+                      :args ("-y" "tavily-mcp@latest")
+                      :env (:TAVILY_API_KEY ,(my/get-password "tavily.com" "apikey"))))
+        ("playwright" . (
+                          :command "mcp-server-playwright"
+                          :args ()))
+        ("dash" . (
+                    :command "uvx"
+                    :args ("--from" "git+https://github.com/Kapeli/dash-mcp-server.git", "dash-mcp-server"))))))
   :init
   ;; Defer MCP hub startup to improve Emacs startup performance
   (defun my/mcp-hub-start-deferred ()
@@ -2316,32 +2316,32 @@ If BUFFER is provided, close that buffer directly."
   (let ((tools (mcp-hub-get-all-tool :asyncp t :categoryp t)))
     (mapcar #'(lambda (tool)
                 (apply #'gptel-make-tool
-                       tool))
-            tools)))
+                  tool))
+      tools)))
 
 (defun gptel-mcp-use-tool ()
   (interactive)
   (let ((tools (mcp-hub-get-all-tool :asyncp t :categoryp t)))
     (mapcar #'(lambda (tool)
                 (let ((path (list (plist-get tool :category)
-                                  (plist-get tool :name))))
+                              (plist-get tool :name))))
                   (push (gptel-get-tool path)
-                        gptel-tools)))
-            tools)))
+                    gptel-tools)))
+      tools)))
 
 (defun gptel-mcp-close-use-tool ()
   (interactive)
   (let ((tools (mcp-hub-get-all-tool :asyncp t :categoryp t)))
     (mapcar #'(lambda (tool)
                 (let ((path (list (plist-get tool :category)
-                                  (plist-get tool :name))))
+                              (plist-get tool :name))))
                   (setq gptel-tools
-                        (cl-remove-if #'(lambda (tool)
-                                          (equal path
-                                                 (list (gptel-tool-category tool)
-                                                       (gptel-tool-name tool))))
-                                      gptel-tools))))
-            tools)))
+                    (cl-remove-if #'(lambda (tool)
+                                      (equal path
+                                        (list (gptel-tool-category tool)
+                                          (gptel-tool-name tool))))
+                      gptel-tools))))
+      tools)))
 
 (use-package acp
   :defer t)
@@ -2359,14 +2359,14 @@ If BUFFER is provided, close that buffer directly."
   (defun my/agent-shell-anthropic-auth-login ()
     (interactive)
     (setq agent-shell-anthropic-authentication
-          (agent-shell-anthropic-make-authentication :login t))
+      (agent-shell-anthropic-make-authentication :login t))
     (message "Anthropic authentication configured with login"))
 
   (defun my/agent-shell-anthropic-auth-api ()
     (interactive)
     (setq agent-shell-anthropic-authentication
-          (agent-shell-anthropic-make-authentication
-           :api-key (lambda () (my/get-password "anthropic.com" "me"))))
+      (agent-shell-anthropic-make-authentication
+        :api-key (lambda () (my/get-password "anthropic.com" "me"))))
     (message "Anthropic authentication configured with API key"))
 
   ;; Set default auth
@@ -2378,14 +2378,14 @@ If BUFFER is provided, close that buffer directly."
     "Use alternative Anthropic-compatible endpoint."
     (interactive)
     (setq agent-shell-anthropic-claude-environment
-          (agent-shell-make-environment-variables
-           "ANTHROPIC_BASE_URL" "https://api.z.ai/api/anthropic"
-           "ANTHROPIC_AUTH_TOKEN" (my/get-password "z.ai" "apikey")
-           "ANTHROPIC_MODEL" "glm-5.1"
-           "ANTHROPIC_DEFAULT_OPUS_MODEL" "glm-5.1"
-           "ANTHROPIC_DEFAULT_SONNET_MODEL" "glm-5.1"
-           "ANTHROPIC_DEFAULT_HAIKU_MODEL" "glm-5.1-flash"
-           "CLAUDE_CODE_SUBAGENT_MODEL" "glm-5.1"))
+      (agent-shell-make-environment-variables
+        "ANTHROPIC_BASE_URL" "https://api.z.ai/api/anthropic"
+        "ANTHROPIC_AUTH_TOKEN" (my/get-password "z.ai" "apikey")
+        "ANTHROPIC_MODEL" "glm-5.1"
+        "ANTHROPIC_DEFAULT_OPUS_MODEL" "glm-5.1"
+        "ANTHROPIC_DEFAULT_SONNET_MODEL" "glm-5.1"
+        "ANTHROPIC_DEFAULT_HAIKU_MODEL" "glm-5.1-flash"
+        "CLAUDE_CODE_SUBAGENT_MODEL" "glm-5.1"))
     (message "Agent shell: Using Z with Claude"))
 
   (defun my/agent-shell-anthropic-env-default ()
@@ -2395,16 +2395,16 @@ If BUFFER is provided, close that buffer directly."
     (message "Agent shell: Using standard Claude"))
 
   (setq agent-shell-google-authentication
-        (agent-shell-google-make-authentication :login t))
+    (agent-shell-google-make-authentication :login t))
   (setq agent-shell-openai-authentication
-        (agent-shell-openai-make-authentication
-         :api-key (lambda () (my/get-password "api.openai.com" "me"))))
+    (agent-shell-openai-make-authentication
+      :api-key (lambda () (my/get-password "api.openai.com" "me"))))
   (setq agent-shell-goose-authentication
-        (agent-shell-make-goose-authentication
-         :openai-api-key (lambda () (my/get-password "api.openai.com" "me"))))
+    (agent-shell-make-goose-authentication
+      :openai-api-key (lambda () (my/get-password "api.openai.com" "me"))))
   (setq agent-shell-google-authentication
-        (agent-shell-google-make-authentication
-         :api-key (lambda () (my/get-password "aistudio.google.com" "apikey"))))
+    (agent-shell-google-make-authentication
+      :api-key (lambda () (my/get-password "aistudio.google.com" "apikey"))))
 
   (defun my/agent-shell-opencode-lmstudio-qwen ()
     "Use LM Studio Qwen model via opencode's native LMStudio provider."
@@ -2430,9 +2430,9 @@ If BUFFER is provided, close that buffer directly."
 
   ;; Configure *agent-shell-diff* buffers to start in Emacs state
   (add-hook 'diff-mode-hook
-            (lambda ()
-              (when (string-match-p "\\*agent-shell-diff\\*" (buffer-name))
-                (evil-emacs-state)))))
+    (lambda ()
+      (when (string-match-p "\\*agent-shell-diff\\*" (buffer-name))
+        (evil-emacs-state)))))
 
 (use-package agent-shell-ediff
   :ensure t
@@ -2452,7 +2452,7 @@ If BUFFER is provided, close that buffer directly."
   ;; optionally set a timer, which might speed up things as the
   ;; codeium local language server takes ~0.2s to start up
   (add-hook 'emacs-startup-hook
-            (lambda () (run-with-timer 0.1 nil #'codeium-init)))
+    (lambda () (run-with-timer 0.1 nil #'codeium-init)))
 
   :defer t
   :config
@@ -2463,13 +2463,13 @@ If BUFFER is provided, close that buffer directly."
 
   ;; get codeium status in the modeline
   (setq codeium-mode-line-enable
-        (lambda (api) (not (memq api '(CancelRequest Heartbeat AcceptCompletion)))))
+    (lambda (api) (not (memq api '(CancelRequest Heartbeat AcceptCompletion)))))
   (add-to-list 'mode-line-format '(:eval (car-safe codeium-mode-line)) t)
 
   ;; use M-x codeium-diagnose to see apis/fields that would be sent to the local language server
   (setq codeium-api-enabled
-        (lambda (api)
-          (memq api '(GetCompletions Heartbeat CancelRequest GetAuthToken RegisterUser auth-redirect AcceptCompletion))))
+    (lambda (api)
+      (memq api '(GetCompletions Heartbeat CancelRequest GetAuthToken RegisterUser auth-redirect AcceptCompletion))))
 
   ;; Limit the string sent to codeium for better performance
   (defun my/codeium/documhttps://github.com/ent/text ()
@@ -2478,9 +2478,9 @@ If BUFFER is provided, close that buffer directly."
   ;; warning: this is measured by UTF-8 encoded bytes
   (defun my/codeium/document/cursor_offset ()
     (codeium-utf8-byte-length
-     (buffer-substring-no-properties (max (- (point) 3000) (point-min)) (point)
-                                     (setq codeium/document/text 'my/codeium/document/text)
-                                     (setq codeium/document/cursor_offset 'my/codeium/document/cursor_offset))))
+      (buffer-substring-no-properties (max (- (point) 3000) (point-min)) (point)
+        (setq codeium/document/text 'my/codeium/document/text)
+        (setq codeium/document/cursor_offset 'my/codeium/document/cursor_offset))))
   ;; https://github.com/yuzhou721/dotemacs/blob/a1c88c0ee489110f05e7d38ac0006e8f2064a7ab/lisp/config/init-ai.el#L37C1-L40C52
   (defun my/codeium ()
     "Decouple codeium from other completions"
@@ -2504,14 +2504,14 @@ If BUFFER is provided, close that buffer directly."
   :ensure t
   :defer t
   :commands mistty
-  :bind (("C-c s" . mistty)
-         :map mistty-prompt-map
+  :bind (("C-c s" . mistty
+           :map mistty-prompt-map
 
-         ;; fish: directory history
-         ("M-<up>" . mistty-send-key)
-         ("M-<down>" . mistty-send-key)
-         ("M-<left>" . mistty-send-key)
-         ("M-<right>" . mistty-send-key)))
+           ;; fish: directory history
+           ("M-<up>" . mistty-send-key)
+           ("M-<down>" . mistty-send-key)
+           ("M-<left>" . mistty-send-key)
+           ("M-<right>" . mistty-send-key))))
 
 (use-package shell-maker)
 
@@ -2545,35 +2545,35 @@ If BUFFER is provided, close that buffer directly."
 (defun ar/org-insert-link-dwim ()
   "Like `org-insert-link' but with personal dwim preferences."
   (interactive)
-  (let* ((point-in-link (org-in-regexp org-link-any-re 1))
-         (clipboard-url (when (string-match-p "^http" (current-kill 0))
-                          (current-kill 0)))
-         (region-content (when (region-active-p)
-                           (buffer-substring-no-properties (region-beginning)
-                                                           (region-end)))))
-    (cond ((and region-content clipboard-url (not point-in-link))
-           (delete-region (region-beginning) (region-end))
-           (insert (org-make-link-string clipboard-url region-content)))
-          ((and clipboard-url (not point-in-link))
-           (insert (org-make-link-string
-                    clipboard-url
-                    (read-string "title: " (ar/fetch-url-title clipboard-url)))))
-          (point-in-link
-           (let* ((context (org-element-context))
-                  (type (org-element-type context))
-                  (url (when (eq type 'link)
-                         (org-element-property :raw-link context))))
-             (if (and url (string-prefix-p "http" url))
-                 (let ((title (ar/fetch-url-title url)))
-                   (if title
-                       (progn
-                         (delete-region (org-element-property :begin context)
-                                        (org-element-property :end context))
-                         (insert (org-make-link-string url title)))
-                     (call-interactively 'org-insert-link)))
-               (call-interactively 'org-insert-link))))
-          (t
-           (call-interactively 'org-insert-link)))))
+  (let* ((point-in-link (org-in-regexp org-link-any-re 1)
+           (clipboard-url (when (string-match-p "^http" (current-kill 0))
+                            (current-kill 0)))
+           (region-content (when (region-active-p)
+                             (buffer-substring-no-properties (region-beginning)
+                               (region-end))))))
+    (cond ((and region-content clipboard-url (not point-in-link)
+             (delete-region (region-beginning) (region-end))
+             (insert (org-make-link-string clipboard-url region-content))))
+      ((and clipboard-url (not point-in-link)
+         (insert (org-make-link-string
+                   clipboard-url
+                   (read-string "title: " (ar/fetch-url-title clipboard-url))))))
+      (point-in-link
+        (let* ((context (org-element-context)
+                 (type (org-element-type context))
+                 (url (when (eq type 'link)
+                        (org-element-property :raw-link context)))))
+          (if (and url (string-prefix-p "http" url))
+            (let ((title (ar/fetch-url-title url)))
+              (if title
+                (progn
+                  (delete-region (org-element-property :begin context)
+                    (org-element-property :end context))
+                  (insert (org-make-link-string url title)))
+                (call-interactively 'org-insert-link)))
+            (call-interactively 'org-insert-link))))
+      (t
+        (call-interactively 'org-insert-link)))))
 
 (use-package org
   :ensure nil
@@ -2615,25 +2615,25 @@ If BUFFER is provided, close that buffer directly."
   (setq org-agenda-hide-tags-regexp nil)
   ;; Custom agenda commands
   (setq org-agenda-custom-commands
-        '(("d" "Today's tasks"
-           ((agenda "" ((org-agenda-span 1)
-                        (org-agenda-show-log t)
-                        (org-agenda-log-mode-items '(closed clock state))))
-            (todo "TODO" ((org-agenda-todo-ignore-scheduled t)))))
-          ("w" "Week view"
-           ((agenda "" ((org-agenda-span 7)
-                        (org-agenda-start-on-weekday nil)
-                        (org-agenda-start-day "today")
-                        (org-agenda-show-log t)
-                        (org-agenda-log-mode-items '(closed clock state))))
-            (todo "TODO" ((org-agenda-todo-ignore-scheduled t)))))
-          ("m" "Month view"
-           ((agenda "" ((org-agenda-span 30)
-                        (org-agenda-start-on-weekday nil)
-                        (org-agenda-start-day "today")
-                        (org-agenda-show-log t)
-                        (org-agenda-log-mode-items '(closed clock state))))
-            (todo "TODO" ((org-agenda-todo-ignore-scheduled t)))))))
+    '(("d" "Today's tasks"
+        ((agenda "" ((org-agenda-span 1
+                       (org-agenda-show-log t)
+                       (org-agenda-log-mode-items '(closed clock state))))
+           (todo "TODO" ((org-agenda-todo-ignore-scheduled t)))))
+        ("w" "Week view"
+          ((agenda "" ((org-agenda-span 7
+                         (org-agenda-start-on-weekday nil)
+                         (org-agenda-start-day "today")
+                         (org-agenda-show-log t)
+                         (org-agenda-log-mode-items '(closed clock state))))
+             (todo "TODO" ((org-agenda-todo-ignore-scheduled t))))))
+        ("m" "Month view"
+          ((agenda "" ((org-agenda-span 30
+                         (org-agenda-start-on-weekday nil)
+                         (org-agenda-start-day "today")
+                         (org-agenda-show-log t)
+                         (org-agenda-log-mode-items '(closed clock state))))
+             (todo "TODO" ((org-agenda-todo-ignore-scheduled t)))))))))
   ;; Auto-save agenda files when modified
   (advice-add 'org-agenda-todo :after #'org-save-all-org-buffers)
   (advice-add 'org-agenda-priority :after #'org-save-all-org-buffers)
@@ -2652,10 +2652,10 @@ If BUFFER is provided, close that buffer directly."
   (defun my/org-agenda-refresh-on-save ()
     "Refresh org-agenda buffers when an agenda file is saved."
     (when (and (derived-mode-p 'org-mode)
-               (member (buffer-file-name) (org-agenda-files)))
+            (member (buffer-file-name) (org-agenda-files)))
       (when (get-buffer "*Org Agenda*")
         (if my/org-agenda-current-key
-            (org-agenda nil my/org-agenda-current-key)
+          (org-agenda nil my/org-agenda-current-key)
           (with-current-buffer "*Org Agenda*"
             (org-agenda-redo-all t))))))
   (add-hook 'after-save-hook #'my/org-agenda-refresh-on-save)
@@ -2663,8 +2663,8 @@ If BUFFER is provided, close that buffer directly."
   (defun my/auto-refile-done-tasks ()
     "Prompt to refile DONE and CANCELLED tasks."
     (when (and (member org-state '("DONE" "CANCELLED"))
-               (org-get-heading t t t t)
-               (y-or-n-p "Refile this completed task? "))
+            (org-get-heading t t t t)
+            (y-or-n-p "Refile this completed task? "))
       (let ((org-refile-targets '((org-agenda-files :maxlevel . 2))))
         (org-refile))))
   ;; Uncomment the line below to enable auto-refile prompting
@@ -2672,12 +2672,12 @@ If BUFFER is provided, close that buffer directly."
   ;; Function to interactively collect tags
   (defun my/collect-tags ()
     "Collect tags one by one, stopping at empty input, and format them as :tag1:tag2:..."
-    (let ((tags '())
-          tag)
+    (let ((tags '()
+            tag))
       (while (not (string-empty-p (setq tag (read-string "Tag (empty to finish): "))))
         (push tag tags))
       (if tags
-          (concat ":" (string-join (nreverse tags) ":") ":")
+        (concat ":" (string-join (nreverse tags) ":") ":")
         "")))
   (defun my/org-toggle-statistics-cookie ()
     "Toggle a statistics cookie ([/] or [%]) on the current heading.
@@ -2685,69 +2685,69 @@ The cookie shows the count/percentage of DONE tasks among children."
     (interactive)
     (save-excursion
       (org-back-to-heading t)
-      (let* ((heading (org-get-heading t t t t))
-             (cookie-pattern "\\s-+\\[[0-9]*/[0-9%]*\\]"))
+      (let* ((heading (org-get-heading t t t t)
+               (cookie-pattern "\\s-+\\[[0-9]*/[0-9%]*\\]")))
         (if (string-match cookie-pattern heading)
-            ;; Remove existing cookie
-            (org-edit-headline (replace-match "" t t heading))
+          ;; Remove existing cookie
+          (org-edit-headline (replace-match "" t t heading))
           ;; Add new cookie
           (org-edit-headline (concat heading " [/]"))
           (org-update-statistics-cookies t)))))
   (setq org-capture-templates
-        '(("t" "Task" entry
-           (file org-tasks-path)
-           "* TODO %^{Description} %(my/collect-tags)\n  SCHEDULED: %^t"
-           :immediate-finish nil
-           :refile-targets ((org-agenda-files :maxlevel . 2)))))
+    '(("t" "Task" entry
+        (file org-tasks-path)
+        "* TODO %^{Description} %(my/collect-tags)\n  SCHEDULED: %^t"
+        :immediate-finish nil
+        :refile-targets ((org-agenda-files :maxlevel . 2)))))
   (defun my/load-org-babel-languages ()
     "Load org-babel languages on first org file."
     (org-babel-do-load-languages
-     'org-babel-load-languages
-     '((org . t)
-       (python . t)
-       (verb . t)
-       (emacs-lisp . t)
-       (shell . t)
-       (calc . t)
-       (elixir . t)
-       (rust . t)
-       (git-permalink . t)))
+      'org-babel-load-languages
+      '((org . t
+          (python . t)
+          (verb . t)
+          (emacs-lisp . t)
+          (shell . t)
+          (calc . t)
+          (elixir . t)
+          (rust . t)
+          (git-permalink . t))))
     (remove-hook 'org-mode-hook #'my/load-org-babel-languages))
   (add-hook 'org-mode-hook #'my/load-org-babel-languages)
   (defun my/warn-long-lines-org ()
     "Warn about long lines in org files with option to wrap them."
     (when (and (derived-mode-p 'org-mode)
-               (save-excursion
-                 (goto-char (point-min))
-                 (re-search-forward "^.\\{801,\\}$" nil t)))
+            (save-excursion
+              (goto-char (point-min))
+              (re-search-forward "^.\\{801,\\}$" nil t)))
       (let ((choice (read-char-choice
-                     "File contains very long lines. (w)rap lines, (s)ave anyway, or (c)ontinue? "
-                     '(?w ?s ?c))))
+                      "File contains very long lines. (w)rap lines, (s)ave anyway, or (c)ontinue? "
+                      '(?w ?s ?c))))
         (cond
-         ((eq choice ?w)
-          (my/wrap-long-lines-org 800)
-          (message "Long lines wrapped to 800 characters."))
-         ((eq choice ?s)
-          ;; Save anyway, do nothing
-          nil)
-         ((eq choice ?c)
-          (signal 'quit nil))))))
+          ((eq choice ?w
+             (my/wrap-long-lines-org 800)
+             (message "Long lines wrapped to 800 characters.")))
+          ((eq choice ?s
+             ;; Save anyway, do nothing
+             nil))
+          ((eq choice ?c
+             (signal 'quit nil)))))))
 
   (defun my/wrap-long-lines-org (limit)
     "Wrap lines longer than LIMIT characters in org-mode buffers."
     (save-excursion
       (goto-char (point-min))
       (while (not (eobp))
-        (let ((line-start (line-beginning-position))
-              (line-end (line-end-position)))
+        (let ((line-start (line-beginning-position)
+                (line-end (line-end-position))))
           (when (> (- line-end line-start) limit)
             (goto-char line-start)
             (while (and (< (current-column) limit)
-                        (< (point) line-end))
+                     (< (point) line-end))
               (forward-char))
             ;; Move back to find a good break point (space or punctuation)
             (while (and (> (current-column) 0)
-                        (not (looking-back "\\s-\\|[.,;!?]" 1)))
+                     (not (looking-back "\\s-\\|[.,;!?]" 1)))
               (backward-char))
             ;; If we couldn't find a good break point, use the limit
             (when (= (current-column) 0)
@@ -2763,21 +2763,21 @@ The cookie shows the count/percentage of DONE tasks among children."
   (org-mode . visual-line-mode)
   (org-mode . org-indent-mode)
   (org-after-todo-state-change .
-                               (lambda ()
-                                 (when (string= org-state "DONE")
-                                   (org-cycle))))
+    (lambda ()
+      (when (string= org-state "DONE")
+        (org-cycle))))
   (org-after-todo-state-change . org-update-parent-todo-statistics)
   (org-mode .
-            (lambda ()
-              (flycheck-mode 1)
-              (flycheck-select-checker 'org-long-lines-custom)))
+    (lambda ()
+      (flycheck-mode 1)
+      (flycheck-select-checker 'org-long-lines-custom)))
 
   (org-mode .
-            (lambda ()
-              (add-hook 'before-save-hook #'my/warn-long-lines-org nil t)
-              (add-hook 'before-save-hook
-                        (lambda () (org-update-statistics-cookies t))
-                        nil t))))
+    (lambda ()
+      (add-hook 'before-save-hook #'my/warn-long-lines-org nil t)
+      (add-hook 'before-save-hook
+        (lambda () (org-update-statistics-cookies t))
+        nil t))))
 
 (use-package ob-async
   :after org)
@@ -2797,45 +2797,45 @@ The cookie shows the count/percentage of DONE tasks among children."
   (setq org-return-follows-link  t)
   (transient-define-prefix org-structure-transient-menu ()
     ["Structure"
-     [("i" "Insert" org-meta-return)
-      ("t" "Toggle" org-toggle-heading)]]
+      [("i" "Insert" org-meta-return
+         ("t" "Toggle" org-toggle-heading))]]
     [("p" "Set property" org-set-property)])
   (transient-define-prefix org-transient-menu ()
     "Org command menu."
     ["Capture"
-     [("c" "All" org-capture)
-      ("C" "All (Roam)" org-roam-capture)]
-     [("k" "Task" (lambda () (interactive) (org-capture nil "t")))]]
+      [("c" "All" org-capture
+         ("C" "All (Roam)" org-roam-capture))]
+      [("k" "Task" (lambda () (interactive) (org-capture nil "t")))]]
     ["Navigation"
-     [("s" "Search" consult-org-roam-search)
-      ("f" "Find" org-roam-node-find)]
-     [("i" "Insert" org-roam-node-insert)
-      ("g" "Graph" org-roam-graph)]]
+      [("s" "Search" consult-org-roam-search
+         ("f" "Find" org-roam-node-find))]
+      [("i" "Insert" org-roam-node-insert
+         ("g" "Graph" org-roam-graph))]]
     ["Dailies"
-     [("t" "Goto today" org-roam-dailies-goto-today)
-      ("p" "Goto previous" org-roam-dailies-goto-previous-note)
-      ("n" "Goto next" org-roam-dailies-goto-next-note)]
-     [("T" "Capture today" org-roam-dailies-capture-today)
-      ("Y" "Capture yesterday" org-roam-dailies-capture-yesterday)]
-     [("p" "Find previous" org-roam-dailies-find-previous-note)
-      ("n" "Find next" org-roam-dailies-find-next-note)]]
+      [("t" "Goto today" org-roam-dailies-goto-today
+         ("p" "Goto previous" org-roam-dailies-goto-previous-note)
+         ("n" "Goto next" org-roam-dailies-goto-next-note))]
+      [("T" "Capture today" org-roam-dailies-capture-today
+         ("Y" "Capture yesterday" org-roam-dailies-capture-yesterday))]
+      [("p" "Find previous" org-roam-dailies-find-previous-note
+         ("n" "Find next" org-roam-dailies-find-next-note))]]
     ["Agenda"
-     [("d" "Day view" (lambda () (interactive) (my/org-agenda-with-key "d")))
-      ("w" "Week view" (lambda () (interactive) (my/org-agenda-with-key "w")))]
-     [("a" "Default" (lambda () (interactive) (my/org-agenda-with-key "a")))]]
+      [("d" "Day view" (lambda () (interactive) (my/org-agenda-with-key "d"))
+         ("w" "Week view" (lambda () (interactive) (my/org-agenda-with-key "w"))))]
+      [("a" "Default" (lambda () (interactive) (my/org-agenda-with-key "a")))]]
     [("S" "Structure" org-structure-transient-menu)])
   ;; Force global keybinding to override macOS system binding for cmd-o
   ;; (global-set-key (kbd "s-o") 'org-transient-menu)
   :bind
-  (("s-o" . org-transient-menu)
-   ("C-c n l" . org-roam-buffer-toggle)
-   ("C-c n f" . org-roam-node-find)
-   ("C-c n g" . org-roam-graph)
-   ("C-c n i" . org-roam-node-insert)
-   ("C-c n c" . org-roam-capture)
-   ("C-c n j" . org-roam-dailies-capture-today)
-   :map org-mode-map
-   ("C-M-i" . completion-at-point))
+  (("s-o" . org-transient-menu
+     ("C-c n l" . org-roam-buffer-toggle)
+     ("C-c n f" . org-roam-node-find)
+     ("C-c n g" . org-roam-graph)
+     ("C-c n i" . org-roam-node-insert)
+     ("C-c n c" . org-roam-capture)
+     ("C-c n j" . org-roam-dailies-capture-today)
+     :map org-mode-map
+     ("C-M-i" . completion-at-point)))
   :hook
   (after-init . org-roam-db-autosync-mode)
   (kill-emacs . (lambda ()
@@ -2905,7 +2905,7 @@ The cookie shows the count/percentage of DONE tasks among children."
   :load-path "user/"
   :hook (org-mode . org-link-favicon-mode)
   :commands (org-link-favicon-refresh-buffer
-             org-link-favicon-clear-cache))
+              org-link-favicon-clear-cache))
 
 ;;; UI
 
@@ -2920,19 +2920,19 @@ The cookie shows the count/percentage of DONE tasks among children."
   (compilation-filter . colourise-compilation-buffer)
   (gs-mode . (lambda ()
                (add-hook 'after-change-functions
-                         (lambda (start end _len)
-                           (let ((inhibit-read-only t))
-                             (ansi-color-apply-on-region start end)))
-                         nil t))))
+                 (lambda (start end _len)
+                   (let ((inhibit-read-only t))
+                     (ansi-color-apply-on-region start end)))
+                 nil t))))
 
 (add-hook 'emacs-startup-hook
-          (lambda () (run-with-timer 0.1 nil #'which-key-mode)))
+  (lambda () (run-with-timer 0.1 nil #'which-key-mode)))
 
 (defun my/set-frame-transparency (alpha-value)
   (if (and (>= alpha-value 0) (<= alpha-value 100))
-      (progn
-        (set-frame-parameter nil 'alpha alpha-value)
-        (message "Frame transparency set to %d%%" alpha-value))
+    (progn
+      (set-frame-parameter nil 'alpha alpha-value)
+      (message "Frame transparency set to %d%%" alpha-value))
     (message "Invalid transparency value. Please enter a number between 0 and 100.")))
 
 (my/set-frame-transparency 99)
@@ -2944,8 +2944,8 @@ Prompts user whether to enable transparency. If yes, asks for opacity value (0-1
 If no, restores full opacity. Only affects the active frame."
   (interactive)
   (if (y-or-n-p "Enable frame transparency? ")
-      (let ((alpha-value (read-number "Enter transparency value (0-100, default 99): " 99)))
-        (my/set-frame-transparency alpha-value))
+    (let ((alpha-value (read-number "Enter transparency value (0-100, default 99): " 99)))
+      (my/set-frame-transparency alpha-value))
     (progn
       (set-frame-parameter nil 'alpha 100)
       (message "Frame transparency disabled (full opacity restored)"))))
@@ -3008,9 +3008,9 @@ If no, restores full opacity. Only affects the active frame."
 (setq display-line-numbers-type 'relative)
 ;; https://github.com/daviwil/dotfiles/blob/6a819647464e733446056caabc2f8ba40469178f/.emacs.d/modules/dw-core.el#L90C1-L93C61
 (dolist (mode '(text-mode-hook
-                prog-mode-hook
-                conf-mode-hook
-                markdown-ts-mode-hook))
+                 prog-mode-hook
+                 conf-mode-hook
+                 markdown-ts-mode-hook))
   (add-hook mode (lambda () (display-line-numbers-mode 1))))
 
 (global-so-long-mode 1)
@@ -3037,8 +3037,8 @@ If no, restores full opacity. Only affects the active frame."
 (use-package affe)
 
 (use-package hl-todo
-  :hook ((prog-mode . hl-todo-mode)
-         (text-mode . hl-todo-mode)))
+  :hook ((prog-mode . hl-todo-mode
+           (text-mode . hl-todo-mode))))
 
 (use-package hydra
   :defer 1)
@@ -3048,27 +3048,27 @@ If no, restores full opacity. Only affects the active frame."
   :bind
   ("s-c" . casual-editkit-main-tmenu)
   (:map dired-mode-map
-        ("s-c" . casual-dired-tmenu))
+    ("s-c" . casual-dired-tmenu))
   (:map reb-mode-map
-        ("s-c" . casual-re-builder-tmenu))
+    ("s-c" . casual-re-builder-tmenu))
   (:map isearch-mode-map
-        ("s-c" . casual-isearch-tmenu))
+    ("s-c" . casual-isearch-tmenu))
   (:map Info-mode-map
-        ("s-c" . casual-info-tmenu))
+    ("s-c" . casual-info-tmenu))
   (:map ibuffer-mode-map
-        ("s-c" . casual-ibuffer-tmenu))
+    ("s-c" . casual-ibuffer-tmenu))
   ;; (:map calendar-mode-map
   ;;       ("s-c" . casual-calendar))
   (:map calc-mode-map
-        ("s-c" . casual-calc-tmenu))
+    ("s-c" . casual-calc-tmenu))
   (:map calc-alg-map
-        ("s-c" . casual-calc-tmenu))
+    ("s-c" . casual-calc-tmenu))
   (:map bookmark-bmenu-mode-map
-        ("s-c" . casual-bookmarks-tmenu))
+    ("s-c" . casual-bookmarks-tmenu))
   (:map org-agenda-mode-map
-        ("s-c" . casual-agenda-tmenu))
+    ("s-c" . casual-agenda-tmenu))
   (:map org-mode-map
-        ("s-c" . casual-org-tmenu)))
+    ("s-c" . casual-org-tmenu)))
 
 (use-package casual-avy
   :after (avy casual)
@@ -3079,7 +3079,7 @@ If no, restores full opacity. Only affects the active frame."
   ;; available in the *Completions* buffer, add it to the
   ;; `completion-list-mode-map'.
   :bind (:map minibuffer-local-map
-              ("M-A" . marginalia-cycle))
+          ("M-A" . marginalia-cycle))
   :init
   (marginalia-mode))
 
@@ -3101,12 +3101,12 @@ If no, restores full opacity. Only affects the active frame."
   :after evil
   :bind
   (:map evil-normal-state-map
-        ("zo" . kirigami-open-fold)
-        ("zO" . kirigami-open-fold-rec)
-        ("zc" . kirigami-close-fold)
-        ("za" . kirigami-toggle-fold)
-        ("zr" . kirigami-open-folds)
-        ("zm" . kirigami-close-folds)))
+    ("zo" . kirigami-open-fold)
+    ("zO" . kirigami-open-fold-rec)
+    ("zc" . kirigami-close-fold)
+    ("za" . kirigami-toggle-fold)
+    ("zr" . kirigami-open-folds)
+    ("zm" . kirigami-close-folds)))
 
 ;;; Language: All
 
@@ -3135,20 +3135,20 @@ If no, restores full opacity. Only affects the active frame."
   ;; Custom org-mode long lines checker
   (defun my/org-long-lines-checker (checker callback)
     "Custom flycheck checker function for long lines in org-mode."
-    (let ((errors '())
-          (line-num 1)
-          (threshold 1000))
+    (let ((errors '()
+            (line-num 1)
+            (threshold 1000)))
       (save-excursion
         (goto-char (point-min))
         (while (not (eobp))
           (let ((line-length (- (line-end-position) (line-beginning-position))))
             (when (> line-length threshold)
               (push (flycheck-error-new-at
-                     line-num 1 'warning
-                     (format "Line too long (%d characters, max %d)" line-length threshold)
-                     :checker checker
-                     :filename (buffer-file-name))
-                    errors)))
+                      line-num 1 'warning
+                      (format "Line too long (%d characters, max %d)" line-length threshold)
+                      :checker checker
+                      :filename (buffer-file-name))
+                errors)))
           (forward-line 1)
           (setq line-num (1+ line-num))))
       (funcall callback 'finished (reverse errors))))
@@ -3164,18 +3164,18 @@ If no, restores full opacity. Only affects the active frame."
 
   ;; Auto-show flycheck errors list in small bottom window
   (add-to-list 'display-buffer-alist
-               `(,(rx bos "*Flycheck errors*" eos)
-                 (display-buffer-reuse-window
-                  display-buffer-in-side-window)
-                 (side            . bottom)
-                 (reusable-frames . visible)
-                 (window-height   . 0.075)))
+    `(,(rx bos "*Flycheck errors*" eos)
+       (display-buffer-reuse-window
+         display-buffer-in-side-window)
+       (side            . bottom)
+       (reusable-frames . visible)
+       (window-height   . 0.075)))
 
   (defun my/flycheck-list-errors-auto ()
     "Auto-show flycheck errors list if errors exist, otherwise close it."
     (if flycheck-current-errors
-        (unless (get-buffer-window "*Flycheck errors*")
-          (flycheck-list-errors))
+      (unless (get-buffer-window "*Flycheck errors*")
+        (flycheck-list-errors))
       ;; Close if no errors
       (when-let* ((window (get-buffer-window "*Flycheck errors*")))
         (quit-window nil window))))
@@ -3196,8 +3196,8 @@ If no, restores full opacity. Only affects the active frame."
     (message "Flycheck auto-list disabled"))
 
   :hook
-  ((prog-mode . flycheck-mode)
-   (text-mode . flycheck-mode)))
+  ((prog-mode . flycheck-mode
+     (text-mode . flycheck-mode))))
 
 (use-package flyover
   :ensure t
@@ -3258,71 +3258,71 @@ If no, restores full opacity. Only affects the active frame."
   (transient-define-prefix dape-transient-menu ()
     "Transient for dape."
     [["Stepping"
-      ("n"  "Next" dape-next :transient t)
-      ("s"  "Step in" dape-step-in :transient t)
-      ("o"  "Step out" dape-step-out :transient t)
-      ("c"  "Continue" dape-continue :transient t)
-      ("r"  "Restart" dape-restart :transient t)]
-     ["Breakpoints"
-      ("bb" "Toggle" dape-breakpoint-toggle :transient nil)
-      ("be" "Expression" dape-breakpoint-expression :transient t)
-      ("bd" "Remove at pt" dape-breakpoint-remove-at-point :transient t)
-      ("bD" "Remove all" dape-breakpoint-remove-all :transient t)
-      ("bl" "Log" dape-breakpoint-log :transient t)]
-     ["Info"
-      ("ii" "Info" dape-info :transient nil)
-      ("im" "Memory" dape-memory :transient t)
-      ("is" "Select Stack" dape-select-stack :transient t)
-      ("R"  "Repl" dape-repl :transient nil)]
-     ["Quit"
-      ("qq" "Quit" dape-quit :transient nil)
-      ("qk" "Kill" dape-kill :transient nil)]])
+       ("n"  "Next" dape-next :transient t)
+       ("s"  "Step in" dape-step-in :transient t)
+       ("o"  "Step out" dape-step-out :transient t)
+       ("c"  "Continue" dape-continue :transient t)
+       ("r"  "Restart" dape-restart :transient t)
+       ["Breakpoints"
+         ("bb" "Toggle" dape-breakpoint-toggle :transient nil)
+         ("be" "Expression" dape-breakpoint-expression :transient t)
+         ("bd" "Remove at pt" dape-breakpoint-remove-at-point :transient t)
+         ("bD" "Remove all" dape-breakpoint-remove-all :transient t)
+         ("bl" "Log" dape-breakpoint-log :transient t)]
+       ["Info"
+         ("ii" "Info" dape-info :transient nil)
+         ("im" "Memory" dape-memory :transient t)
+         ("is" "Select Stack" dape-select-stack :transient t)
+         ("R"  "Repl" dape-repl :transient nil)]
+       ["Quit"
+         ("qq" "Quit" dape-quit :transient nil)
+         ("qk" "Kill" dape-kill :transient nil)]]])
   (add-to-list 'dape-configs
-               `(py modes (python-mode python-ts-mode)
-                    ensure (lambda (config) (dape-ensure-command config)
-                             (let ((python (dape-config-get config 'command)))
-                               (unless
-                                   (zerop
-                                    (call-process-shell-command
-                                     (format "%s -c \"import debugpy.adapter\"" python)))
-                                 (user-error "%s module debugpy is not installed"
-                                             python))))
-                    command dap-python-executable
-                    command-args ("-m" "debugpy.adapter" "--host" "0.0.0.0" "--port" :autoport)
-                    port :autoport
-                    :request "launch"
-                    :type "python"
-                    :mode "debug"
-                    :cwd dape-cwd
-                    :program dape-buffer-default
-                    :args []
-                    :justMyCode nil
-                    :console "integratedTerminal"
-                    :showReturnValue t
-                    :stopOnEntry nil))
+    `(py modes (python-mode python-ts-mode)
+       ensure (lambda (config) (dape-ensure-command config)
+                (let ((python (dape-config-get config 'command)))
+                  (unless
+                    (zerop
+                      (call-process-shell-command
+                        (format "%s -c \"import debugpy.adapter\"" python)))
+                    (user-error "%s module debugpy is not installed"
+                      python))))
+       command dap-python-executable
+       command-args ("-m" "debugpy.adapter" "--host" "0.0.0.0" "--port" :autoport)
+       port :autoport
+       :request "launch"
+       :type "python"
+       :mode "debug"
+       :cwd dape-cwd
+       :program dape-buffer-default
+       :args []
+       :justMyCode nil
+       :console "integratedTerminal"
+       :showReturnValue t
+       :stopOnEntry nil))
   (add-to-list 'dape-configs
-               `(pytest modes (python-mode python-ts-mode)
-                        ensure (lambda (config) (dape-ensure-command config)
-                                 (let ((python (dape-config-get config 'command)))
-                                   (unless
-                                       (zerop
-                                        (call-process-shell-command
-                                         (format "%s -c \"import debugpy.adapter\"" python)))
-                                     (user-error "%s module debugpy is not installed"
-                                                 python))))
-                        command dap-python-executable
-                        command-args ("-m" "debugpy.adapter" "--host" "0.0.0.0" "--port" :autoport)
-                        port :autoport
-                        :request "launch"
-                        :type "python"
-                        :mode "test"
-                        :cwd dape-cwd
-                        :module "pytest"
-                        :args [dape-buffer-default]
-                        :justMyCode nil
-                        :console "integratedTerminal"
-                        :showReturnValue t
-                        :stopOnEntry nil))
+    `(pytest modes (python-mode python-ts-mode)
+       ensure (lambda (config) (dape-ensure-command config)
+                (let ((python (dape-config-get config 'command)))
+                  (unless
+                    (zerop
+                      (call-process-shell-command
+                        (format "%s -c \"import debugpy.adapter\"" python)))
+                    (user-error "%s module debugpy is not installed"
+                      python))))
+       command dap-python-executable
+       command-args ("-m" "debugpy.adapter" "--host" "0.0.0.0" "--port" :autoport)
+       port :autoport
+       :request "launch"
+       :type "python"
+       :mode "test"
+       :cwd dape-cwd
+       :module "pytest"
+       :args [dape-buffer-default]
+       :justMyCode nil
+       :console "integratedTerminal"
+       :showReturnValue t
+       :stopOnEntry nil))
   :hook
   (dape-start . (lambda () (save-some-buffers t t)))
   (dape-compile . kill-buffer)
@@ -3373,11 +3373,11 @@ If no, restores full opacity. Only affects the active frame."
 
 ;; Elixir: lib/foo.ex <-> test/foo_test.exs
 (add-to-list 'find-sibling-rules
-             '("\\`\\(.*\\)/lib/\\(.*\\)\\.ex\\'"
-               "\\1/test/\\2_test.exs"))
+  '("\\`\\(.*\\)/lib/\\(.*\\)\\.ex\\'"
+     "\\1/test/\\2_test.exs"))
 (add-to-list 'find-sibling-rules
-             '("\\`\\(.*\\)/test/\\(.*\\)_test\\.exs\\'"
-               "\\1/lib/\\2.ex"))
+  '("\\`\\(.*\\)/test/\\(.*\\)_test\\.exs\\'"
+     "\\1/lib/\\2.ex"))
 
 (use-package mix
   :hook
@@ -3406,11 +3406,11 @@ If no, restores full opacity. Only affects the active frame."
 
 ;; Python: foo.py <-> test_foo.py
 (add-to-list 'find-sibling-rules
-             '("\\`\\(.*\\)/\\([^/]*\\)\\.py\\'"
-               "\\1/test_\\2.py"))
+  '("\\`\\(.*\\)/\\([^/]*\\)\\.py\\'"
+     "\\1/test_\\2.py"))
 (add-to-list 'find-sibling-rules
-             '("\\`\\(.*\\)/test_\\([^/]*\\)\\.py\\'"
-               "\\1/\\2.py"))
+  '("\\`\\(.*\\)/test_\\([^/]*\\)\\.py\\'"
+     "\\1/\\2.py"))
 
 (defun my/python-refactor-optional-to-union (start end)
   "Refactor Optional[X] to X | None in the region from START to END.
@@ -3422,30 +3422,30 @@ Only works in python-base-mode and derived modes."
     (save-restriction
       (narrow-to-region start end)
       (goto-char (point-min))
-      (let ((case-fold-search nil)
-            (count 0))
+      (let ((case-fold-search nil
+              (count 0)))
         ;; Match Optional[...] with balanced brackets, allowing whitespace
         (while (re-search-forward "\\bOptional\\[" nil t)
-          (let* ((opt-start (match-beginning 0))
-                 (bracket-start (1- (point))))
+          (let* ((opt-start (match-beginning 0)
+                   (bracket-start (1- (point)))))
             (goto-char bracket-start)
             (condition-case nil
-                (progn
-                  (forward-sexp)
-                  (let* ((bracket-end (point))
+              (progn
+                (forward-sexp)
+                (let* ((bracket-end (point)
                          (inner-type (string-trim
-                                      (buffer-substring-no-properties
-                                       (1+ bracket-start)
-                                       (1- bracket-end)))))
-                    (delete-region opt-start bracket-end)
-                    (insert inner-type " | None")
-                    (setq count (1+ count))))
+                                       (buffer-substring-no-properties
+                                         (1+ bracket-start)
+                                         (1- bracket-end))))))
+                  (delete-region opt-start bracket-end)
+                  (insert inner-type " | None")
+                  (setq count (1+ count))))
               (error
-               (message "Warning: Unbalanced brackets at position %d" opt-start)
-               (goto-char (1+ bracket-start))))))
+                (message "Warning: Unbalanced brackets at position %d" opt-start)
+                (goto-char (1+ bracket-start))))))
         (message "Refactored %d Optional type%s"
-                 count
-                 (if (= count 1) "" "s"))))))
+          count
+          (if (= count 1) "" "s"))))))
 
 (setq-default python-indent-offset 4)
 
@@ -3457,58 +3457,58 @@ Only works in python-base-mode and derived modes."
   :after pet
   :bind
   (:map python-base-mode-map
-        ("s-t" . python-pytest-dispatch)))
+    ("s-t" . python-pytest-dispatch)))
 
 (use-package pet
   :custom
   (pet-debug 1)
   :config
   (pet-def-config-accessor pre-commit-config
-                           :file-name ".pre-commit-config.yaml"
-                           :parser pet-parse-config-file)
+    :file-name ".pre-commit-config.yaml"
+    :parser pet-parse-config-file)
 
   ;; Handle local pre-commit hooks which don't have virtualenvs managed by pre-commit
   (advice-add 'pet-executable-find :around
-              (lambda (original-fn executable &optional search-globally)
-                "Skip pre-commit lookup for local hooks, but search poetry/pipenv/virtualenv normally.
+    (lambda (original-fn executable &optional search-globally)
+      "Skip pre-commit lookup for local hooks, but search poetry/pipenv/virtualenv normally.
 
 LOCAL hooks are defined in .pre-commit-config.yaml with 'repo: local' and
 run directly on the system. They don't have virtualenvs in the pre-commit
 database, but may be available via poetry, pipenv, or a project virtualenv."
-                (if-let* ((repo-config
-                           (and (not (string-prefix-p "python" executable))
-                                (seq-find
-                                 (lambda (repo)
-                                   (seq-find
-                                    (lambda (hook)
-                                      (equal (let-alist hook .id) executable))
-                                    (let-alist repo .hooks)))
-                                 (let-alist (pet-pre-commit-config) .repos))))
-                          (is-local (equal (let-alist repo-config .repo) "local")))
-                    ;; For local hooks, skip the pre-commit path logic and let it search through
-                    ;; poetry/pipenv/virtualenv/pyenv/system paths by temporarily disabling pre-commit checks
-                    (let ((pet-pre-commit-orig (symbol-function 'pet-use-pre-commit-p)))
-                      (unwind-protect
-                          (progn
-                            (advice-add 'pet-use-pre-commit-p :override #'ignore)
-                            (funcall original-fn executable search-globally))
-                        (advice-remove 'pet-use-pre-commit-p #'ignore)))
-                  ;; For non-local hooks, use the original logic
-                  (funcall original-fn executable search-globally))))
+      (if-let* ((repo-config
+                  (and (not (string-prefix-p "python" executable))
+                    (seq-find
+                      (lambda (repo)
+                        (seq-find
+                          (lambda (hook)
+                            (equal (let-alist hook .id) executable))
+                          (let-alist repo .hooks)))
+                      (let-alist (pet-pre-commit-config) .repos)))
+                  (is-local (equal (let-alist repo-config .repo) "local"))))
+        ;; For local hooks, skip the pre-commit path logic and let it search through
+        ;; poetry/pipenv/virtualenv/pyenv/system paths by temporarily disabling pre-commit checks
+        (let ((pet-pre-commit-orig (symbol-function 'pet-use-pre-commit-p)))
+          (unwind-protect
+            (progn
+              (advice-add 'pet-use-pre-commit-p :override #'ignore)
+              (funcall original-fn executable search-globally))
+            (advice-remove 'pet-use-pre-commit-p #'ignore)))
+        ;; For non-local hooks, use the original logic
+        (funcall original-fn executable search-globally))))
 
   (defun my/pet-python-setup ()
     (pet-mode 1)
     (setq-local python-shell-interpreter (pet-executable-find "python")
-                python-shell-virtualenv-root (pet-virtualenv-root)
-                python-pytest-executable (pet-executable-find "pytest")
-                dap-python-executable python-shell-interpreter
-                apheleia-formatter 'pet-ruff)
+      python-shell-virtualenv-root (pet-virtualenv-root)
+      python-pytest-executable (pet-executable-find "pytest")
+      dap-python-executable python-shell-interpreter
+      apheleia-formatter 'pet-ruff)
 
     (pet-eglot-setup)
     (pet-flycheck-setup)
 
     (setq-local flycheck-disabled-checkers
-                '(python-flake8 python-mypy python-pylint python-pyright))
+      '(python-flake8 python-mypy python-pylint python-pyright))
 
     ;; Replace default eglot-check -> python-flake8 with eglot-check -> python-ruff
     (setf (flycheck-checker-get 'eglot-check 'next-checkers) nil)
@@ -3613,22 +3613,22 @@ corresponding to the object keys and array indices that lead from
 the root to the element at POS."
   (named-let loop ((node (treesit-node-at pos)) (acc nil))
     (if-let* ((parent (treesit-parent-until
-                       node
-                       (lambda (n)
-                         (member (treesit-node-type n)
-                                 '("pair" "array"))))))
-        (loop parent
-              (cons
-               (pcase (treesit-node-type parent)
-                 ("pair"
-                  (treesit-node-text
-                   (treesit-node-child (treesit-node-child parent 0) 1) t))
-                 ("array"
-                  (named-let check ((i 1))
-                    (if (< pos (treesit-node-end (treesit-node-child parent i)))
-                        (/ (1- i) 2)
-                      (check (+ i 2))))))
-               acc))
+                        node
+                        (lambda (n)
+                          (member (treesit-node-type n)
+                            '("pair" "array"))))))
+      (loop parent
+        (cons
+          (pcase (treesit-node-type parent)
+            ("pair"
+              (treesit-node-text
+                (treesit-node-child (treesit-node-child parent 0) 1) t))
+            ("array"
+              (named-let check ((i 1))
+                (if (< pos (treesit-node-end (treesit-node-child parent i)))
+                  (/ (1- i) 2)
+                  (check (+ i 2))))))
+          acc))
       acc)))
 
 (defun esy/json-path-at-point (point &optional kill)
@@ -3637,10 +3637,10 @@ the root to the element at POS."
 Interactively, POINT is point and KILL is the prefix argument."
   (interactive "d\nP" json-ts-mode)
   (let ((path (mapconcat (lambda (o) (format "%s" o))
-                         (esy/json-path-to-position point)
-                         ".")))
+                (esy/json-path-to-position point)
+                ".")))
     (if kill
-        (progn (kill-new path) (message "Copied: %s" path))
+      (progn (kill-new path) (message "Copied: %s" path))
       (message path))
     path))
 
@@ -3675,9 +3675,9 @@ Interactively, POINT is point and KILL is the prefix argument."
 (defun just-transient--find-justfile ()
   "Find the Justfile in the project root or VC root."
   (let* ((project-root (or (and (fboundp 'projectile-project-root)
-                                (projectile-project-root))
-                           (locate-dominating-file default-directory ".git")))
-         (justfile (and project-root (expand-file-name "justfile" project-root))))
+                             (projectile-project-root))
+                         (locate-dominating-file default-directory ".git"))
+           (justfile (and project-root (expand-file-name "justfile" project-root)))))
     (when (and justfile (file-exists-p justfile))
       justfile)))
 
@@ -3688,92 +3688,92 @@ Interactively, POINT is point and KILL is the prefix argument."
     (let ((recipes '()))
       (goto-char (point-min))
       (while (re-search-forward "^\\([a-zA-Z0-9_-]+\\):" nil t)
-        (let ((recipe (match-string 1))
-              (docstring (save-excursion
-                           (if (re-search-backward "^# ?\\(.*\\)$" (line-beginning-position 0) t)
+        (let ((recipe (match-string 1)
+                (docstring (save-excursion
+                             (if (re-search-backward "^# ?\\(.*\\)$" (line-beginning-position 0) t)
                                (match-string 1)
-                             ""))))
+                               "")))))
           (push (cons recipe docstring) recipes)))
       (nreverse recipes))))
 
 (defun just-transient--run-recipe-compilation (recipe)
   "Run just RECIPE in the project root with proper environment handling."
-  (let* ((default-directory (file-name-directory (just-transient--find-justfile)))
-         (buffer-name (format "*just:%s*" recipe))
-         (shell (or (getenv "SHELL") "/bin/sh"))
-         (cmd (format "%s -c 'cd %s && just %s'"
-                      shell
-                      (shell-quote-argument default-directory)
-                      recipe)))
+  (let* ((default-directory (file-name-directory (just-transient--find-justfile))
+           (buffer-name (format "*just:%s*" recipe))
+           (shell (or (getenv "SHELL") "/bin/sh"))
+           (cmd (format "%s -c 'cd %s && just %s'"
+                  shell
+                  (shell-quote-argument default-directory)
+                  recipe))))
     ;; Set custom compilation buffer name
     (let ((compilation-buffer-name-function
-           (lambda (_mode) buffer-name)))
+            (lambda (_mode) buffer-name)))
       ;; Start compilation with shell execution
       (compile cmd))))
 
 (defun just-transient--run-recipe-interactive-shell (recipe)
   "Run just RECIPE in the project root using a proper shell."
-  (let ((default-directory (file-name-directory (just-transient--find-justfile)))
-        (cmd (format "just %s" recipe))
-        (buffer-name (format "*just:%s*" recipe)))
+  (let ((default-directory (file-name-directory (just-transient--find-justfile))
+          (cmd (format "just %s" recipe))
+          (buffer-name (format "*just:%s*" recipe))))
 
     (cond
-     ;; If vterm is available, use it
-     ((fboundp 'vterm)
-      (let ((vterm-buffer (generate-new-buffer buffer-name)))
-        (with-current-buffer vterm-buffer
-          (vterm-mode)
-          (vterm-send-string (format "cd %s && %s\n"
-                                     (shell-quote-argument default-directory)
-                                     cmd)))
-        (display-buffer vterm-buffer)))
+      ;; If vterm is available, use it
+      ((fboundp 'vterm
+         (let ((vterm-buffer (generate-new-buffer buffer-name)))
+           (with-current-buffer vterm-buffer
+             (vterm-mode)
+             (vterm-send-string (format "cd %s && %s\n"
+                                  (shell-quote-argument default-directory)
+                                  cmd)))
+           (display-buffer vterm-buffer))))
 
-     ;; If shell-pop is available
-     ((fboundp 'shell-pop)
-      (let ((shell-pop-shell-type '("shell" "*shell*" (lambda () (shell))))
-            (shell-pop-term-shell (getenv "SHELL")))
-        (shell-pop--shell-buffer-name buffer-name)
-        (shell-pop 1)
-        (comint-send-string nil (concat cmd "\n"))))
+      ;; If shell-pop is available
+      ((fboundp 'shell-pop
+         (let ((shell-pop-shell-type '("shell" "*shell*" (lambda () (shell)))
+                 (shell-pop-term-shell (getenv "SHELL"))))
+           (shell-pop--shell-buffer-name buffer-name)
+           (shell-pop 1)
+           (comint-send-string nil (concat cmd "\n")))))
 
-     ;; Otherwise use a normal shell buffer
-     (t
-      (let ((shell-buffer (get-buffer-create buffer-name)))
-        (with-current-buffer shell-buffer
-          (shell)
-          (goto-char (point-max))
-          (comint-send-string nil (concat "cd " (shell-quote-argument default-directory) "\n"))
-          (comint-send-string nil (concat cmd "\n")))
-        (display-buffer shell-buffer))))))
+      ;; Otherwise use a normal shell buffer
+      (t
+        (let ((shell-buffer (get-buffer-create buffer-name)))
+          (with-current-buffer shell-buffer
+            (shell)
+            (goto-char (point-max))
+            (comint-send-string nil (concat "cd " (shell-quote-argument default-directory) "\n"))
+            (comint-send-string nil (concat cmd "\n")))
+          (display-buffer shell-buffer))))))
 
 
 (defun just-transient--make-transient ()
   "Create and invoke the transient menu for Just recipes."
   (interactive)
-  (let* ((justfile (just-transient--find-justfile))
-         (recipes (and justfile (just-transient--parse-recipes justfile)))
-         (used-prefixes (make-hash-table :test 'equal))
-         (menu-items '()))
+  (let* ((justfile (just-transient--find-justfile)
+           (recipes (and justfile (just-transient--parse-recipes justfile)))
+           (used-prefixes (make-hash-table :test 'equal))
+           (menu-items '())))
 
     (if (not justfile)
-        (message "No Justfile found in project root or VC root.")
+      (message "No Justfile found in project root or VC root.")
 
       ;; Build menu items by looping over all recipes
       (dolist (recipe recipes)
-        (let* ((recipe-name (car recipe))
-               (doc (cdr recipe))
-               ;; Use first character as prefix, fallback to next available if taken
-               (prefix (substring recipe-name 0 1))
-               (counter 0)
-               (description (if (string-empty-p doc)
+        (let* ((recipe-name (car recipe)
+                 (doc (cdr recipe))
+                 ;; Use first character as prefix, fallback to next available if taken
+                 (prefix (substring recipe-name 0 1))
+                 (counter 0)
+                 (description (if (string-empty-p doc)
                                 recipe-name
-                              (format "%s: %s" recipe-name doc))))
+                                (format "%s: %s" recipe-name doc)))))
 
           ;; Find an available prefix if the first character is taken
           (while (and (gethash prefix used-prefixes) (< counter 26))
             (setq counter (1+ counter))
             (if (< counter (length recipe-name))
-                (setq prefix (substring recipe-name counter (1+ counter)))
+              (setq prefix (substring recipe-name counter (1+ counter)))
               (setq prefix (char-to-string (+ ?a counter)))))
 
           ;; Mark prefix as used
@@ -3781,15 +3781,15 @@ Interactively, POINT is point and KILL is the prefix argument."
 
           ;; Add the menu item
           (push `(,prefix ,description
-                          (lambda () (interactive) (just-transient--run-recipe-compilation ,recipe-name)))
-                menu-items)))
+                   (lambda () (interactive) (just-transient--run-recipe-compilation ,recipe-name)))
+            menu-items)))
 
       ;; Define and invoke the transient menu
       (eval
-       `(transient-define-prefix just-transient-menu ()
-          "Run a Justfile recipe."
-          ["Recipes"
-           ,@(nreverse menu-items)]))
+        `(transient-define-prefix just-transient-menu ()
+           "Run a Justfile recipe."
+           ["Recipes"
+             ,@(nreverse menu-items)]))
 
       (just-transient-menu))))
 
@@ -3885,8 +3885,8 @@ Interactively, POINT is point and KILL is the prefix argument."
   :commands (eros-mode eros-eval-defun)
   :hook (emacs-lisp-mode-hook . eros-mode)
   :bind (:map emacs-lisp-mode-map
-              ("C-c C-c" . eros-eval-defun)
-              ("C-c C-k" . eval-buffer)))
+          ("C-c C-c" . eros-eval-defun)
+          ("C-c C-k" . eval-buffer)))
 
 (use-package inspector
   :defer t
@@ -3922,13 +3922,13 @@ closing parenthesis, LASTF will be called."
   (lambda ()
     (interactive)
     (cond
-     ((use-region-p)
-      (call-interactively regionf))
-     ((or (-contains? '(?\) ?\") (char-before))
-          (-contains? '(?\ ?\)) (char-after)))
-      (call-interactively lastf))
-     (t
-      (call-interactively defunf)))))
+      ((use-region-p
+         (call-interactively regionf)))
+      ((or (-contains? '(?\) ?\") (char-before))
+         (-contains? '(?\ ?\)) (char-after))
+         (call-interactively lastf)))
+      (t
+        (call-interactively defunf)))))
 
 (after-packages (eros)
   (bind-key "C-'" (im/eval-dwim #'eros-eval-last-sexp #'eval-region #'eros-eval-defun)))
@@ -3956,11 +3956,11 @@ result instead of `message'."
 
 ;; Go: foo.go <-> foo_test.go
 (add-to-list 'find-sibling-rules
-             '("\\`\\(.*\\)/\\([^/]*\\)\\.go\\'"
-               "\\1/\\2_test.go"))
+  '("\\`\\(.*\\)/\\([^/]*\\)\\.go\\'"
+     "\\1/\\2_test.go"))
 (add-to-list 'find-sibling-rules
-             '("\\`\\(.*\\)/\\([^/]*\\)_test\\.go\\'"
-               "\\1/\\2.go"))
+  '("\\`\\(.*\\)/\\([^/]*\\)_test\\.go\\'"
+     "\\1/\\2.go"))
 
 ;;; Language: PDF
 
@@ -3972,7 +3972,7 @@ result instead of `message'."
 (use-package tomlparse
   :init
   (add-to-list 'treesit-language-source-alist
-               '(toml "https://github.com/tree-sitter-grammars/tree-sitter-toml"))
+    '(toml "https://github.com/tree-sitter-grammars/tree-sitter-toml"))
   (unless (treesit-language-available-p 'toml)
     (treesit-install-language-grammar 'toml)))
 
@@ -3988,11 +3988,11 @@ result instead of `message'."
         (save-restriction
           (widen)
           (while (and (< (point-min) (point) ;; Doesn't error if point is at beginning of buffer
-                         (condition-case nil
-                             (progn
-                               (nxml-backward-up-element) ; always returns nil
-                               t)
-                           (error nil))))
+                        (condition-case nil
+                          (progn
+                            (nxml-backward-up-element) ; always returns nil
+                            t)
+                          (error nil))))
             (setq path (cons (xmltok-start-tag-local-name) path))))
         (let ((result (format "/%s" (mapconcat 'identity path "/"))))
           (when (called-interactively-p t)
