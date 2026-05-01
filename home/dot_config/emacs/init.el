@@ -103,17 +103,6 @@
   (package-install-upgrade-built-in t)
   (ad-redefinition-action 'accept)
   :init
-  ;; Add prompt indicator to `completing-read-multiple'.
-  ;; We display [CRM<separator>], e.g., [CRM,] if the separator is a comma.
-  (defun crm-indicator (args)
-    (cons (format "[CRM%s] %s"
-                  (replace-regexp-in-string
-                   "\\`\\[.*?]\\*\\|\\[.*?]\\*\\'" ""
-                   crm-separator)
-                  (car args))
-          (cdr args)))
-  (advice-add #'completing-read-multiple :filter-args #'crm-indicator)
-
   ;; Do not allow the cursor in the minibuffer prompt
   (setq minibuffer-prompt-properties
         '(read-only t cursor-intangible t face minibuffer-prompt))
@@ -284,10 +273,19 @@ PACKAGES should be a list of package names as symbols."
 
 (use-package vc-git :ensure nil :demand t)
 
+(use-package vc
+  :ensure nil
+  :custom
+  (vc-async-checkin t)
+  (vc-display-failed-async-commands t)
+  :config
+  (vc-auto-revert-mode 1))
+
 (use-package project
   :ensure nil
   :after (consult vc-git transient)
   :init
+  (setq project-prune-zombie-projects '((always . always)))
   (setq project-vc-extra-root-markers '(;; Org
                                         "TODO.org"
                                         ;; Clojure(Script)
@@ -330,9 +328,11 @@ PACKAGES should be a list of package names as symbols."
       ("s" "Search" consult-ripgrep)
       ("b" "Buffers" consult-project-buffer)
       ("f" "Files" project-find-file)
+      ("F" "Files (root)" project-root-find-file)
       ("l" "Line" consult-line)
       ("d" "Layout" project-dired)
-      ("i" "Sibling" find-sibling-file)]
+      ("i" "Sibling" find-sibling-file)
+      ("w" "Matching worktree buf" project-find-matching-buffer)]
      ["Execution"
       ("r" "Run" project-run)
       ("c" "Compile" project-compile)]
@@ -342,6 +342,7 @@ PACKAGES should be a list of package names as symbols."
       ("n" "Rename tab" my/rename-tab-to-project-name)
       ("p" "Switch (Known)" project-switch-project)
       ("P" "Switch (All)" consult-ghq-switch-project)
+      ("S" "Save buffers" project-save-some-buffers)
       ("k" "Kill buffers" project-kill-buffers)]])
   (defun project-run (command)
     "Run COMMAND in the current project's root directory."
@@ -838,6 +839,7 @@ If the current buffer has no process, execute BODY immediately."
   :ensure nil
   :custom
   (treesit-font-lock-level 2)
+  (treesit-auto-install-grammar 'ask)
   :config
   (defun my/treesit-disable-in-large-buffers ()
     (when (> (buffer-size) 100000)
@@ -850,12 +852,6 @@ If the current buffer has no process, execute BODY immediately."
   :hook
   (find-file-hook . my/treesit-disable-in-large-buffers))
 
-(use-package treesit-auto
-  :custom
-  (treesit-auto-install 'prompt)
-  :config
-  ;; Defer treesit-auto to run after file is opened
-  (setq treesit-auto-install 'prompt))
 
 ;;; LSP
 
@@ -1516,6 +1512,8 @@ If the current buffer has no process, execute BODY immediately."
 (scroll-bar-mode  -1)
 (tool-bar-mode    -1)
 (tooltip-mode     -1)
+(when (featurep 'tty-child-frames)
+  (tty-tip-mode 1))
 (menu-bar-mode    -1)
 (setq visible-bell 1)
 
@@ -1957,7 +1955,9 @@ are defining or executing a macro."
   ;; Tip: Default functions that create buffers
   ;; (xref-show-xrefs-function #'xref-show-definitions-completing-read)
   ;; (xref-show-definitions-function #'xref-show-definitions-completing-read))
-  (xref-history-storage 'xref-window-local-history))
+  (xref-history-storage 'xref-window-local-history)
+  :config
+  (global-xref-mouse-mode 1))
 
 ;; Helper commands for buffer-based xref (override consult-xref default)
 (defun xref-find-definitions-buffer ()
@@ -3360,16 +3360,11 @@ If no, restores full opacity. Only affects the active frame."
   :demand t
   :config
   (add-to-list 'treesit-language-source-alist '(elixir "https://github.com/elixir-lang/tree-sitter-elixir"))
-  (add-to-list 'treesit-language-source-alist '(heex "https://github.com/phoenixframework/tree-sitter-heex"))
-  (unless (treesit-language-available-p 'elixir)
-    (treesit-install-language-grammar 'elixir)))
+  (add-to-list 'treesit-language-source-alist '(heex "https://github.com/phoenixframework/tree-sitter-heex")))
 
 (use-package heex-ts-mode
   :ensure nil   ;; built-in
-  :demand t
-  :config
-  (unless (treesit-language-available-p 'heex)
-    (treesit-install-language-grammar 'heex)))
+  :demand t)
 
 ;; Elixir: lib/foo.ex <-> test/foo_test.exs
 (add-to-list 'find-sibling-rules
@@ -3668,9 +3663,7 @@ Interactively, POINT is point and KILL is the prefix argument."
   :mode ("\\.just\\'" . just-ts-mode)
   :after transient
   :config
-  (add-to-list 'treesit-language-source-alist '(just "https://github.com/IndianBoy42/tree-sitter-just"))
-  (unless (treesit-language-available-p 'just)
-    (treesit-install-language-grammar 'just)))
+  (add-to-list 'treesit-language-source-alist '(just "https://github.com/IndianBoy42/tree-sitter-just")))
 
 (defun just-transient--find-justfile ()
   "Find the Justfile in the project root or VC root."
@@ -3800,11 +3793,7 @@ Interactively, POINT is point and KILL is the prefix argument."
   :defer t
   :config
   (add-to-list 'treesit-language-source-alist '(markdown "https://github.com/tree-sitter-grammars/tree-sitter-markdown" "split_parser" "tree-sitter-markdown/src"))
-  (add-to-list 'treesit-language-source-alist '(markdown-inline "https://github.com/tree-sitter-grammars/tree-sitter-markdown" "split_parser" "tree-sitter-markdown-inline/src"))
-  (unless (treesit-language-available-p 'markdown)
-    (treesit-install-language-grammar 'markdown))
-  (unless (treesit-language-available-p 'markdown-inline)
-    (treesit-install-language-grammar 'markdown-inline)))
+  (add-to-list 'treesit-language-source-alist '(markdown-inline "https://github.com/tree-sitter-grammars/tree-sitter-markdown" "split_parser" "tree-sitter-markdown-inline/src")))
 
 ;;; Language: ePub
 
@@ -3972,9 +3961,7 @@ result instead of `message'."
 (use-package tomlparse
   :init
   (add-to-list 'treesit-language-source-alist
-               '(toml "https://github.com/tree-sitter-grammars/tree-sitter-toml"))
-  (unless (treesit-language-available-p 'toml)
-    (treesit-install-language-grammar 'toml)))
+               '(toml "https://github.com/tree-sitter-grammars/tree-sitter-toml")))
 
 ;;; Language: XML
 
