@@ -1,0 +1,6 @@
+autoload -U promptinit; promptinit
+if (( $+functions[prompt_pure_setup] )); then
+  prompt pure
+else
+  print -P "%F{yellow}warning: pure prompt not installed%f"
+fi
