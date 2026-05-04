@@ -22,6 +22,14 @@ function buildKittyCommand(isDarkMode)
 	return "kitty +kitten themes --reload-in=all --config-file-name themes.conf Catppuccin-" .. capitalizedTheme
 end
 
+function buildTerminalScript(isDarkMode)
+	local catppuccinTheme = themeToCatppuccinTheme(isDarkMode)
+	local capitalizedTheme = catppuccinTheme:sub(1, 1):upper() .. catppuccinTheme:sub(2)
+	local profileName = "Catppuccin " .. capitalizedTheme
+
+	return string.format([[osascript -e 'tell application "Terminal"' -e 'set default settings to settings set "%s"' -e 'repeat with w in windows' -e 'repeat with t in tabs of w' -e 'set current settings of t to settings set "%s"' -e 'end repeat' -e 'end repeat' -e 'end tell']], profileName, profileName)
+end
+
 function buildEmacsCommand(isDarkMode)
 	local catppuccinTheme = themeToCatppuccinTheme(isDarkMode)
 
@@ -51,6 +59,7 @@ cb = function(observedNotificationName)
 		-- Relying on new auto-switching in Kitty v0.38
 		-- { builder = buildKittyCommand, appName = "kitty" },
 		{ builder = buildEmacsCommand, appName = "emacs" },
+		{ builder = buildTerminalScript, appName = "terminal" },
 		-- TODO: Neovim
 		-- TODO: Helix
 	}
