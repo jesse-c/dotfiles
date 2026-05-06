@@ -27,7 +27,16 @@ function buildTerminalScript(isDarkMode)
 	local capitalizedTheme = catppuccinTheme:sub(1, 1):upper() .. catppuccinTheme:sub(2)
 	local profileName = "Catppuccin " .. capitalizedTheme
 
-	return string.format([[osascript -e 'tell application "Terminal"' -e 'set default settings to settings set "%s"' -e 'repeat with w in windows' -e 'repeat with t in tabs of w' -e 'set current settings of t to settings set "%s"' -e 'end repeat' -e 'end repeat' -e 'end tell']], profileName, profileName)
+	local defaultsCmd = string.format(
+		"defaults write com.apple.Terminal 'Default Window Settings' '%s' && defaults write com.apple.Terminal 'Startup Window Settings' '%s'",
+		profileName, profileName
+	)
+	local appleScriptCmd = string.format(
+		[[osascript -e 'tell application "System Events"' -e 'if (name of processes) contains "Terminal" then' -e 'tell application "Terminal"' -e 'set default settings to settings set "%s"' -e 'repeat with w in windows' -e 'repeat with t in tabs of w' -e 'set current settings of t to settings set "%s"' -e 'end repeat' -e 'end repeat' -e 'end tell' -e 'end if' -e 'end tell']],
+		profileName, profileName
+	)
+
+	return defaultsCmd .. " ; " .. appleScriptCmd
 end
 
 function buildEmacsCommand(isDarkMode)
