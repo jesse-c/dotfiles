@@ -520,7 +520,20 @@ This includes buffers visible in windows or tab-bar tabs."
   :config
   ;; Prevent evil-collection-forge from trying to set bindings before forge is ready
   (setq forge-add-default-bindings nil)
-  (evil-collection-init))
+  (evil-collection-init)
+  ;; `corfu-map` lives in `minor-mode-map-alist`, which evil's emulation
+  ;; keymaps override. `evil-define-key` attaches bindings to an
+  ;; auxiliary keymap that evil checks at the right priority, so
+  ;; TAB/RET work when the popup is visible.
+  ;;
+  ;; `corfu-map` is only active while the popup is showing, so these
+  ;; bindings have no effect outside of completion.
+  (with-eval-after-load 'corfu
+    (evil-define-key 'insert corfu-map
+      (kbd "TAB") #'corfu-next
+      [tab] #'corfu-next
+      (kbd "RET") #'corfu-insert
+      [return] #'corfu-insert)))
 
 ;; Add surrounding:
 ;;
@@ -895,6 +908,9 @@ If the current buffer has no process, execute BODY immediately."
   (eglot-autoshutdown t)
   (eglot-events-buffer-size 0)
   (eglot-sync-connect nil) ;; The value of nil or 0 means don’t block at all during the waiting period
+  (eglot-workspace-configuration
+   ‘(:Lua (:diagnostics (:unusedLocalExclude ["_*"]
+                         :globals ["hs" "spoon"]))))
   :config
   ;; Defer eglot startup to improve file opening performance
   (defun my/eglot-ensure-deferred ()
