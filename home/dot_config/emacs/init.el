@@ -1166,6 +1166,7 @@ If the current buffer has no process, execute BODY immediately."
   (add-to-list 'apheleia-formatters '(fish-indent . ("fish_indent")))
   (add-to-list 'apheleia-mode-alist '(fish-mode . fish-indent))
   (add-to-list 'apheleia-mode-alist '(ruby-ts-mode . rufo))
+  (add-to-list 'apheleia-mode-alist '(emacs-lisp-mode . nil))
   (add-to-list 'apheleia-formatters '(stylua . ("stylua" "--indent-type" "Spaces" "--indent-width" "2" "-")))
   (add-to-list 'apheleia-mode-alist '(lua-mode . stylua))
   (add-to-list 'apheleia-mode-alist '(lua-ts-mode . stylua))
