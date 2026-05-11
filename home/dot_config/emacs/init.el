@@ -976,8 +976,7 @@ If the current buffer has no process, execute BODY immediately."
   (lua-ts-mode . my/eglot-ensure-deferred)
   (markdown-mode . my/eglot-ensure-deferred)
   (markdown-ts-mode . my/eglot-ensure-deferred)
-  (python-mode . my/eglot-ensure-deferred)
-  (python-ts-mode . my/eglot-ensure-deferred)
+  (python-base-mode . my/eglot-ensure-deferred)
   (rust-mode . my/eglot-ensure-deferred)
   (rust-ts-mode . my/eglot-ensure-deferred)
   (swift-mode . my/eglot-ensure-deferred)
@@ -992,6 +991,7 @@ If the current buffer has no process, execute BODY immediately."
   (vespa-schema-mode . my/eglot-ensure-deferred)
   (yaml-mode . my/eglot-ensure-deferred)
   (yaml-ts-mode . my/eglot-ensure-deferred)
+  (pkl-mode . my/eglot-ensure-deferred)
   :bind
   ("s-l" . eglot-transient-menu)
   :config
@@ -1044,11 +1044,8 @@ If the current buffer has no process, execute BODY immediately."
                `(rust-ts-mode . ,(eglot-alternatives
                                   '(("rust-analyzer")))))
   (add-to-list 'eglot-server-programs
-               `(python-mode . ,(eglot-alternatives
-                                 '(("ty" "server")))))
-  (add-to-list 'eglot-server-programs
-               `(python-ts-mode . ,(eglot-alternatives
-                                    '(("ty" "server")))))
+               `(python-base-mode . ,(eglot-alternatives
+                                       '(("ty" "server")))))
   (add-to-list 'eglot-server-programs
                `(vespa-schema-mode . ,(eglot-alternatives
                                        (list (list "java" "-jar" (expand-file-name "~/.local/bin/vespa-lsp.jar"))))))
@@ -1157,9 +1154,8 @@ If the current buffer has no process, execute BODY immediately."
 ;; Formatting
 
 (use-package apheleia
-  :hook
-  (prog-mode . apheleia-mode)
   :config
+  (apheleia-global-mode +1)
   (add-to-list 'apheleia-mode-alist '(json-ts-mode . denofmt-ts))
   (add-to-list 'apheleia-mode-alist '(typescript-ts-mode . denofmt-ts))
   (add-to-list 'apheleia-mode-alist '(python-base-mode . ruff))
@@ -1169,11 +1165,7 @@ If the current buffer has no process, execute BODY immediately."
   (add-to-list 'apheleia-mode-alist '(emacs-lisp-mode . nil))
   (add-to-list 'apheleia-formatters '(stylua . ("stylua" "--indent-type" "Spaces" "--indent-width" "2" "-")))
   (add-to-list 'apheleia-mode-alist '(lua-mode . stylua))
-  (add-to-list 'apheleia-mode-alist '(lua-ts-mode . stylua))
-  (add-to-list 'apheleia-formatters
-               `(pet-ruff . ((or (pet-executable-find "ruff")
-                                 (car (alist-get 'ruff apheleia-formatters)))
-                             ,@(cdr (alist-get 'ruff apheleia-formatters))))))
+  (add-to-list 'apheleia-mode-alist '(lua-ts-mode . stylua)))
 
 ;; Scrolling
 
@@ -2082,19 +2074,35 @@ are defining or executing a macro."
 (global-set-key (kbd "s-/") 'comment-line)
 
 ;; Structured editing
+
 (use-package combobulate
   :ensure t
   (:host github :repo "mickeynp/combobulate")
   :custom
   (combobulate-key-prefix "C-c o")
   :hook
+  (css-mode . combobulate-mode)
+  (css-ts-mode . combobulate-mode)
   (go-mode . combobulate-mode)
   (go-ts-mode . combobulate-mode)
+  (html-mode . combobulate-mode)
   (json-mode . combobulate-mode)
   (json-ts-mode . combobulate-mode)
+  (js-mode . combobulate-mode)
+  (js-ts-mode . combobulate-mode)
+  (jsx-mode . combobulate-mode)
+  (markdown-mode . combobulate-mode)
+  (markdown-ts-mode . combobulate-mode)
   (python-base-mode . combobulate-mode)
+  (ruby-mode . combobulate-mode)
+  (ruby-ts-mode . combobulate-mode)
+  (rust-mode . combobulate-mode)
+  (rust-ts-mode . combobulate-mode)
   (toml-mode . combobulate-mode)
   (toml-ts-mode . combobulate-mode)
+  (tsx-ts-mode . combobulate-mode)
+  (typescript-mode . combobulate-mode)
+  (typescript-ts-mode . combobulate-mode)
   (yaml-mode . combobulate-mode)
   (yaml-ts-mode . combobulate-mode))
 
@@ -2262,13 +2270,11 @@ are defining or executing a macro."
 If BUFFER is provided, close that buffer directly."
     (interactive)
     (let* ((gptel-buffers (cl-remove-if-not
-                           (lambda (b)
-                             (string-match-p "\\*\\(DeepSeek\\|Claude\\|Gemini\\)\\*"
-                                             (buffer-name b)))
+                           (lambda (b) (with-current-buffer b (bound-and-true-p gptel-mode)))
                            (buffer-list))))
       (cond
        (buffer (kill-buffer buffer))
-       ((or (derived-mode-p 'gptel-mode) (bound-and-true-p gptel-mode))
+       ((bound-and-true-p gptel-mode)
         (kill-buffer (current-buffer)))
        (t (let ((buf (completing-read "Close gptel buffer: "
                                       (mapcar #'buffer-name gptel-buffers)
@@ -2278,9 +2284,7 @@ If BUFFER is provided, close that buffer directly."
     "Select a gptel buffer to switch to."
     (interactive)
     (let* ((gptel-buffers (cl-remove-if-not
-                           (lambda (b)
-                             (string-match-p "\\*\\(DeepSeek\\|Claude\\|Gemini\\)\\*"
-                                             (buffer-name b)))
+                           (lambda (b) (with-current-buffer b (bound-and-true-p gptel-mode)))
                            (buffer-list)))
            (buffer (completing-read "Select gptel buffer: "
                                     (mapcar #'buffer-name gptel-buffers)
@@ -2430,11 +2434,51 @@ If BUFFER is provided, close that buffer directly."
   (evil-define-key 'insert agent-shell-mode-map (kbd "RET") #'newline)
   (evil-define-key 'normal agent-shell-mode-map (kbd "RET") #'comint-send-input)
 
-  ;; Configure *agent-shell-diff* buffers to start in Emacs state
+  ;; Configure `*agent-shell-diff*` buffers to start in Emacs state
   (add-hook 'diff-mode-hook
             (lambda ()
               (when (string-match-p "\\*agent-shell-diff\\*" (buffer-name))
-                (evil-emacs-state)))))
+                (evil-emacs-state))))
+
+  ;; Auto-approve read-only shell commands for any agent without prompting.
+  (setq agent-shell-permission-responder-function
+        (lambda (permission)
+          (let* (;; The human-readable command title from the tool call (e.g. `ls -la`)
+                 (title (map-elt (map-elt permission :tool-call) :title))
+                 ;; Regex matching safe read-only commands at the start of the title
+                 (safe-re (rx bos (or "ls" "grep" "rg" "cat" "bat" "find" "fd"
+                                      "head" "tail" "wc" "echo" "which" "type"
+                                      "less" "file" "stat")
+                              (or eos " " "\n")))
+                 ;; Regex matching execution flags that make find/fd dangerous
+                 (exec-re (rx (or "-exec" "--exec" "-ok" (seq "-x" (or eos " ")))))
+                 ;; Regex matching shell operators that make any command dangerous
+                 (dangerous-re (rx (or " | " " > " " < " " && " " || " ";" "`" "$(")))
+                 ;; Find the "allow always" option from the permission request
+                 (choice (seq-find (lambda (o)
+                                     (equal (map-elt o :kind) "allow_always"))
+                                   (map-elt permission :options)))
+                 (safe-p (and title
+                              (string-match-p safe-re title)
+                              (not (string-match-p exec-re title))
+                              (not (string-match-p dangerous-re title)))))
+            (cond
+             ;; `:tool-call` or `:title` missing, permission structure may have changed
+             ((null title)
+              (message "agent-shell-permission-responder: no :title in permission %S" permission))
+             ;; Safe command but no `allow_always` option, options format may have changed
+             ((and safe-p (null choice))
+              (message "agent-shell-permission-responder: no allow_always option for %S" title))
+             ;; Safe command with `allow_always` — auto-approve
+             ((and safe-p choice)
+              (funcall (map-elt permission :respond)
+                       (map-elt choice :option-id)))
+             ;; Log why a safe-looking command was blocked (for debugging)
+             ((and title (string-match-p safe-re title))
+              (message "agent-shell-permission-responder: blocking %S (exec=%s dangerous=%s)"
+                       title
+                       (string-match-p exec-re title)
+                       (string-match-p dangerous-re title))))))))
 
 (use-package agent-shell-ediff
   :ensure t
@@ -2474,7 +2518,7 @@ If BUFFER is provided, close that buffer directly."
           (memq api '(GetCompletions Heartbeat CancelRequest GetAuthToken RegisterUser auth-redirect AcceptCompletion))))
 
   ;; Limit the string sent to codeium for better performance
-  (defun my/codeium/documhttps://github.com/ent/text ()
+  (defun my/codeium/document/text ()
     (buffer-substring-no-properties (max (- (point) 3000) (point-min)) (min (+ (point) 1000) (point-max))))
   ;; if you change the text, you should also change the cursor_offset
   ;; warning: this is measured by UTF-8 encoded bytes
@@ -2503,6 +2547,7 @@ If BUFFER is provided, close that buffer directly."
   :defer 1)
 
 (use-package mistty
+  :disabled
   :ensure t
   :defer t
   :commands mistty
@@ -2516,6 +2561,12 @@ If BUFFER is provided, close that buffer directly."
          ("M-<right>" . mistty-send-key)))
 
 (use-package shell-maker)
+
+(use-package ghostel)
+
+(use-package evil-ghostel
+  :after (ghostel evil)
+  :hook (ghostel-mode . evil-ghostel-mode))
 
 ;;; Notes
 
@@ -3207,13 +3258,15 @@ If no, restores full opacity. Only affects the active frame."
   :hook ((flycheck-mode . flyover-mode))
   :custom
   ;; Checker settings
-  (flyover-checkers '(flycheck))
+  (flyover-checkers '(flycheck flymake))
   (flyover-levels '(error warning info))
 
   ;; Appearance
   (flyover-use-theme-colors t)
   (flyover-background-lightness 45)
   (flyover-percent-darker 40)
+
+  ;; Text tinting
   (flyover-text-tint 'lighter)
   (flyover-text-tint-percent 50)
 
@@ -3237,7 +3290,11 @@ If no, restores full opacity. Only affects the active frame."
   (flyover-max-line-length 80)
 
   ;; Performance
-  (flyover-debounce-interval 0.2))
+  (flyover-debounce-interval 0.2)
+  (flyover-cursor-debounce-interval 0.3)
+
+  ;; Completion integration
+  (flyover-hide-during-completion t))
 
 (setq user-emacs-cache-directory (expand-file-name ".cache" user-emacs-directory))
 
@@ -3249,6 +3306,7 @@ If no, restores full opacity. Only affects the active frame."
   (dape-buffer-window-arrangement 'right)
   (dape-breakpoint-margin-string "●")
   (dape-default-breakpoints-file (expand-file-name "dap-breakpoints" user-emacs-cache-directory))
+  (window-sides-vertical t)
   :commands (dape)
   :config
   ;; To not display info and/or buffers on startup
@@ -3289,7 +3347,7 @@ If no, restores full opacity. Only affects the active frame."
                                      (format "%s -c \"import debugpy.adapter\"" python)))
                                  (user-error "%s module debugpy is not installed"
                                              python))))
-                    command dap-python-executable
+                    command python-shell-interpreter
                     command-args ("-m" "debugpy.adapter" "--host" "0.0.0.0" "--port" :autoport)
                     port :autoport
                     :request "launch"
@@ -3312,7 +3370,7 @@ If no, restores full opacity. Only affects the active frame."
                                          (format "%s -c \"import debugpy.adapter\"" python)))
                                      (user-error "%s module debugpy is not installed"
                                                  python))))
-                        command dap-python-executable
+                        command python-shell-interpreter
                         command-args ("-m" "debugpy.adapter" "--host" "0.0.0.0" "--port" :autoport)
                         port :autoport
                         :request "launch"
@@ -3330,6 +3388,11 @@ If no, restores full opacity. Only affects the active frame."
   (dape-compile . kill-buffer)
   ;; Pulse source line (performance hit)
   (dape-display-source . pulse-momentary-highlight-one-line)
+  ;; Persist breakpoints across sessions
+  ;;
+  ;; Ignore errors as the breakpoints file may not exist.
+  (kill-emacs . (lambda () (ignore-errors (dape-breakpoint-save))))
+  (after-init . (lambda () (ignore-errors (dape-breakpoint-load))))
   :bind
   (("s-d" . dape-transient-menu)))
 
@@ -3495,11 +3558,6 @@ database, but may be available via poetry, pipenv, or a project virtualenv."
 
   (defun my/pet-python-setup ()
     (pet-mode 1)
-    (setq-local python-shell-interpreter (pet-executable-find "python")
-                python-shell-virtualenv-root (pet-virtualenv-root)
-                python-pytest-executable (pet-executable-find "pytest")
-                dap-python-executable python-shell-interpreter
-                apheleia-formatter 'pet-ruff)
 
     (pet-eglot-setup)
     (pet-flycheck-setup)
@@ -3986,12 +4044,12 @@ result instead of `message'."
         (let ((result (format "/%s" (mapconcat 'identity path "/"))))
           (when (called-interactively-p t)
             (message "%s" result))
-          result)))
+          result))))
 
-    (defun my/nxml-where-copy ()
-      "Copy the hierarchy of XML elements the point is on to the clipboard."
-      (interactive)
-      (let ((path (nxml-where))))
+  (defun my/nxml-where-copy ()
+    "Copy the hierarchy of XML elements the point is on to the clipboard."
+    (interactive)
+    (let ((path (my/nxml-where)))
       (kill-new path))))
 
 ;;; Language: pkl
