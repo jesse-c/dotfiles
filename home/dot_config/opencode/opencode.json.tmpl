@@ -27,7 +27,12 @@
         },
         "dash-mcp-server": {
             "type": "local",
-            "command": ["dash-mcp-server"]
+            "command": [
+                "uvx",
+                "--from",
+                "git+https://github.com/Kapeli/dash-mcp-server.git",
+                "dash-mcp-server"
+            ]
         },
         "emacs": {
             "type": "local",
@@ -38,7 +43,39 @@
                 "run",
                 "emacs-mcp-server"
             ]
-        }
+        },
+        "cua": {
+            "type": "local",
+            "command": [
+                "uvx",
+                "--from",
+                "cua-cli[mcp]",
+                "cua",
+                "serve-mcp"
+            ]
+        },
+        "playwright": {
+            "type": "local",
+            "command": [
+                "npx",
+                "-y",
+                "@playwright/mcp@latest"
+            ]
+        },
+        "exa": {
+            "type": "remote",
+            "url": "https://mcp.exa.ai/mcp",
+            "headers": {}
+        },
+        "tavily": {
+            "type": "local",
+            "command": [
+                "npx",
+                "-y",
+                "tavily-mcp@latest"
+            ]
+        },
+
     },
     "provider": {
         "lmstudio": {

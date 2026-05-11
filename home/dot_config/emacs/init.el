@@ -2186,6 +2186,7 @@ are defining or executing a macro."
   :after transient
   :custom
   (gptel-use-tools t)
+  (gptel-confirm-tool-calls t)
   (gptel-stream t)
   (gptel-default-mode 'org-mode)
   (gptel-display-buffer-action
@@ -2197,41 +2198,23 @@ are defining or executing a macro."
   (defvar gptel-save-directory (expand-file-name "chats" user-emacs-directory)
     "Directory to save gptel conversations.")
   :config
-  (defvar my/gptel-models
-    `(("OpenAI GPT-5.4"
-       :model gpt-5.4
-       :backend-fn ,(lambda () (gptel-make-openai "OpenAI" :stream t :key (my/get-password "api.openai.com" "me")))))
-    `(("OpenAI GPT-5 Mini"
-       :model gpt-5-mini
-       :backend-fn ,(lambda () (gptel-make-openai "OpenAI" :stream t :key (my/get-password "api.openai.com" "me"))))
-      ("Claude Opus 4.6"
-       :model claude-opus-4-6
-       :backend-fn ,(lambda () (gptel-make-anthropic "Claude" :stream t :key (my/get-password "anthropic.com" "me"))))
-      ("Claude Sonnet 4.6"
-       :model claude-sonnet-4-6
-       :backend-fn ,(lambda () (gptel-make-anthropic "Claude" :stream t :key (my/get-password "anthropic.com" "me"))))
-      ("Claude Haiku 4.5"
-       :model claude-haiku-4-5-20251001
-       :backend-fn ,(lambda () (gptel-make-anthropic "Claude" :stream t :key (my/get-password "anthropic.com" "me"))))
-      ("Gemini Pro 3 (Latest)"
-       :model gemini-3-pro-latest
-       :backend-fn ,(lambda () (gptel-make-gemini "Gemini" :stream t :key (my/get-password "aistudio.google.com" "apikey"))))))
+  (require 'gptel-integrations)
 
-  (defun my/gptel-select-model (&optional model-name)
-    "Select a gptel model from `my/gptel-models`.
-If MODEL-NAME is provided, select it directly. Otherwise, prompt the user."
-    (interactive
-     (list (completing-read "Select AI Model: " (mapcar #'car my/gptel-models) nil t)))
-    (let* ((name (or model-name (completing-read "Select AI Model: " (mapcar #'car my/gptel-models) nil t)))
-           (config (cdr (assoc name my/gptel-models))))
-      (when config
-        (when (plist-get config :model)
-          (setq gptel-model (plist-get config :model)))
-        (setq gptel-backend (funcall (plist-get config :backend-fn)))
-        (message "Switched gptel backend: %s" name))))
+  ;; Register backends once at startup; switch via gptel-menu (s-a)
+  (setq gptel-backend
+        (gptel-make-anthropic "Claude"
+          :stream t
+          :key (lambda () (my/get-password "anthropic.com" "me")))
+        gptel-model 'claude-sonnet-4-6)
 
-  ;; Set Claude as default
-  (my/gptel-select-model "Claude Sonnet 4.5")
+  (gptel-make-openai "OpenAI"
+    :stream t
+    :key (lambda () (my/get-password "api.openai.com" "me")))
+
+  (gptel-make-gemini "Gemini"
+    :stream t
+    :key (lambda () (my/get-password "aistudio.google.com" "apikey")))
+
   (defun my/gptel-toggle-sidebar ()
     "Toggle a custom sidebar for a persistent buffer."
     ;; https://github.com/nehrbash/dotfiles/blob/main/Emacs.org#gpt
@@ -2262,7 +2245,6 @@ If MODEL-NAME is provided, select it directly. Otherwise, prompt the user."
     (interactive)
     (call-interactively 'end-of-buffer)
     (call-interactively 'gptel-send))
-  (require 'gptel-integrations)
   (defun my/gptel-save-chat ()
     "Save current gptel buffer to chat directory with timestamp."
     (interactive)
@@ -2342,11 +2324,19 @@ If BUFFER is provided, close that buffer directly."
                        :args ("-y" "tavily-mcp@latest")
                        :env (:TAVILY_API_KEY ,(my/get-password "tavily.com" "apikey"))))
           ("playwright" . (
-                           :command "mcp-server-playwright"
-                           :args ()))
+                           :command "npx"
+                           :args ("-y" "@playwright/mcp@latest")))
           ("dash" . (
                      :command "uvx"
-                     :args ("--from" "git+https://github.com/Kapeli/dash-mcp-server.git", "dash-mcp-server")))))
+                     :args ("--from" "git+https://github.com/Kapeli/dash-mcp-server.git" "dash-mcp-server")))
+          ("emacs" . (
+                       :command "uv"
+                       :args ("--directory" "/Users/jesse/src/github.com/jesse-c/emacs-mcp-server" "run" "emacs-mcp-server")))
+          ("cua" . (
+                     :command "uvx"
+                     :args ("--from" "cua-cli[mcp]" "cua" "serve-mcp")
+                     :env (:CUA_USE_HOST_COMPUTER_SERVER "true")))
+          ("exa" . (:url "https://mcp.exa.ai/mcp"))))
   :init
   ;; Defer MCP hub startup to improve Emacs startup performance
   (defun my/mcp-hub-start-deferred ()
@@ -2354,38 +2344,6 @@ If BUFFER is provided, close that buffer directly."
     (run-with-idle-timer 2.0 nil #'mcp-hub-start-all-server))
   :hook
   (after-init . my/mcp-hub-start-deferred))
-
-(defun gptel-mcp-register-tool ()
-  (interactive)
-  (let ((tools (mcp-hub-get-all-tool :asyncp t :categoryp t)))
-    (mapcar #'(lambda (tool)
-                (apply #'gptel-make-tool
-                       tool))
-            tools)))
-
-(defun gptel-mcp-use-tool ()
-  (interactive)
-  (let ((tools (mcp-hub-get-all-tool :asyncp t :categoryp t)))
-    (mapcar #'(lambda (tool)
-                (let ((path (list (plist-get tool :category)
-                                  (plist-get tool :name))))
-                  (push (gptel-get-tool path)
-                        gptel-tools)))
-            tools)))
-
-(defun gptel-mcp-close-use-tool ()
-  (interactive)
-  (let ((tools (mcp-hub-get-all-tool :asyncp t :categoryp t)))
-    (mapcar #'(lambda (tool)
-                (let ((path (list (plist-get tool :category)
-                                  (plist-get tool :name))))
-                  (setq gptel-tools
-                        (cl-remove-if #'(lambda (tool)
-                                          (equal path
-                                                 (list (gptel-tool-category tool)
-                                                       (gptel-tool-name tool))))
-                                      gptel-tools))))
-            tools)))
 
 (use-package acp
   :defer t)

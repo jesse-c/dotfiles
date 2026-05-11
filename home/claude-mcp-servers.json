@@ -22,22 +22,10 @@
         "GITHUB_PERSONAL_ACCESS_TOKEN": ""
       }
     },
-    "prefect": {
-      "command": "uvx",
-      "args": ["--from", "prefect-mcp", "prefect-mcp-server"]
-    },
-    "notion": {
-      "type": "sse",
-      "url": "https://mcp.notion.com/sse"
-    },
     "exa": {
       "type": "http",
       "url": "https://mcp.exa.ai/mcp",
       "headers": {}
-    },
-    "linear": {
-      "command": "npx",
-      "args": ["-y", "mcp-remote", "https://mcp.linear.app/mcp"]
     },
     "emacs": {
       "command": "uv",
@@ -51,6 +39,17 @@
     "railway": {
       "command": "npx",
       "args": ["-y", "@railway/mcp-server"]
+    },
+    "cua": {
+      "command": "uvx",
+      "args": ["--from", "cua-cli[mcp]", "cua", "serve-mcp"],
+      "env": {
+        "CUA_USE_HOST_COMPUTER_SERVER": "true"
+      }
+    },
+    "playwright": {
+      "command": "npx",
+      "args": ["-y", "@playwright/mcp@latest"]
     }
   }
 }
