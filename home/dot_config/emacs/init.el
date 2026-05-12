@@ -2430,6 +2430,28 @@ If BUFFER is provided, close that buffer directly."
     (setq agent-shell-opencode-default-model-id nil)
     (message "OpenCode: Using default model"))
 
+  (defun my/agent-shell-codex-omlx ()
+    "Use oMLX local endpoint with Codex."
+    (interactive)
+    (setq agent-shell-openai-authentication
+          (agent-shell-openai-make-authentication :api-key "1234"))
+    (setq agent-shell-openai-codex-environment
+          (agent-shell-make-environment-variables
+           "OPENAI_BASE_URL" "http://127.0.0.1:8000/v1"
+           "OMLX_API_KEY" "1234"))
+    (setq agent-shell-openai-default-model-id "Qwen3.6-35B-A3B-4bit")
+    (message "Codex: Using oMLX (Qwen)"))
+
+  (defun my/agent-shell-codex-default ()
+    "Reset Codex to default OpenAI settings."
+    (interactive)
+    (setq agent-shell-openai-authentication
+          (agent-shell-openai-make-authentication
+           :api-key (lambda () (my/get-password "api.openai.com" "me"))))
+    (setq agent-shell-openai-codex-environment nil)
+    (setq agent-shell-openai-default-model-id nil)
+    (message "Codex: Using OpenAI"))
+
   ;; Evil state-specific RET behavior: insert mode = newline, normal mode = send
   (evil-define-key 'insert agent-shell-mode-map (kbd "RET") #'newline)
   (evil-define-key 'normal agent-shell-mode-map (kbd "RET") #'comint-send-input)
