@@ -2466,10 +2466,12 @@ If BUFFER is provided, close that buffer directly."
             (cond
              ;; `:tool-call` or `:title` missing, permission structure may have changed
              ((null title)
-              (message "agent-shell-permission-responder: no :title in permission %S" permission))
+              (message "agent-shell-permission-responder: no :title in permission %S" permission)
+              nil)
              ;; Safe command but no `allow_always` option, options format may have changed
              ((and safe-p (null choice))
-              (message "agent-shell-permission-responder: no allow_always option for %S" title))
+              (message "agent-shell-permission-responder: no allow_always option for %S" title)
+              nil)
              ;; Safe command with `allow_always` — auto-approve
              ((and safe-p choice)
               (funcall (map-elt permission :respond)
@@ -2479,7 +2481,8 @@ If BUFFER is provided, close that buffer directly."
               (message "agent-shell-permission-responder: blocking %S (exec=%s dangerous=%s)"
                        title
                        (string-match-p exec-re title)
-                       (string-match-p dangerous-re title))))))))
+                       (string-match-p dangerous-re title))
+              nil))))))
 
 (use-package agent-shell-ediff
   :ensure t
