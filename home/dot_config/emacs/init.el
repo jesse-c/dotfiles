@@ -3283,7 +3283,7 @@ If no, restores full opacity. Only affects the active frame."
   :hook ((flycheck-mode . flyover-mode))
   :custom
   ;; Checker settings
-  (flyover-checkers '(flycheck flymake))
+  (flyover-checkers '(flycheck))
   (flyover-levels '(error warning info))
 
   ;; Appearance
