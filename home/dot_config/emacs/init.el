@@ -909,8 +909,9 @@ If the current buffer has no process, execute BODY immediately."
   (eglot-events-buffer-size 0)
   (eglot-sync-connect nil) ;; The value of nil or 0 means don’t block at all during the waiting period
   (eglot-workspace-configuration
-   ‘(:Lua (:diagnostics (:unusedLocalExclude ["_*"]
-                         :globals ["hs" "spoon"]))))
+   '(:Lua (:diagnostics (:unusedLocalExclude ["_*"]
+                         :globals ["hs" "spoon"]))
+     :rust-analyzer (:diagnostics (:disabled ["unlinked-file"]))))
   :config
   ;; Defer eglot startup to improve file opening performance
   (defun my/eglot-ensure-deferred ()
