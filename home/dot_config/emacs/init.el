@@ -2512,7 +2512,7 @@ If BUFFER is provided, close that buffer directly."
   :custom
   (agent-shell-ediff-quick-quit t)
   :config
-  (agent-shell-ediff-mode 1))
+  (agent-shell-ediff-mode -1))
 
 (use-package codeium
   :ensure t
