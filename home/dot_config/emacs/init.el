@@ -892,7 +892,6 @@ If the current buffer has no process, execute BODY immediately."
   :hook
   (find-file-hook . my/treesit-disable-in-large-buffers))
 
-
 ;;; LSP
 
 (use-package eglot
