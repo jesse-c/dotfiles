@@ -2394,6 +2394,20 @@ If BUFFER is provided, close that buffer directly."
            "CLAUDE_CODE_SUBAGENT_MODEL" "glm-5.1"))
     (message "Agent shell: Using Z with Claude"))
 
+  (defun my/agent-shell-anthropic-env-deepseek ()
+    "Use DeepSeek Anthropic-compatible endpoint."
+    (interactive)
+    (setq agent-shell-anthropic-claude-environment
+          (agent-shell-make-environment-variables
+           "ANTHROPIC_BASE_URL" "https://api.deepseek.com/anthropic"
+           "ANTHROPIC_AUTH_TOKEN" (my/get-password "deepseek.com" "apikey")
+           "ANTHROPIC_MODEL" "deepseek-v4-pro"
+           "ANTHROPIC_DEFAULT_OPUS_MODEL" "deepseek-v4-pro"
+           "ANTHROPIC_DEFAULT_SONNET_MODEL" "deepseek-v4-pro"
+           "ANTHROPIC_DEFAULT_HAIKU_MODEL" "deepseek-v4-flash"
+           "CLAUDE_CODE_SUBAGENT_MODEL" "deepseek-v4-pro"))
+    (message "Agent shell: Using DeepSeek with Claude"))
+
   (defun my/agent-shell-anthropic-env-default ()
     "Use standard Claude environment."
     (interactive)
