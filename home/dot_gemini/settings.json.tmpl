@@ -31,7 +31,7 @@
     "playwright": {
       "type": "stdio",
       "command": "npx",
-      "args": ["@playwright/mcp@latest"],
+      "args": ["y", "@playwright/mcp@latest"],
       "env": {}
     },
     "github": {
@@ -48,22 +48,10 @@
         "GITHUB_PERSONAL_ACCESS_TOKEN": "{{ onepasswordRead "op://Personal/GitHub/API Keys/2cnp2x7mnbocwfk6hztik6drxa" }}"
       }
     },
-    "prefect": {
-      "command": "uvx",
-      "args": ["--from", "prefect-mcp", "prefect-mcp-server"]
-    },
-    "notion": {
-      "type": "sse",
-      "url": "https://mcp.notion.com/sse"
-    },
     "exa": {
       "type": "http",
       "url": "https://mcp.exa.ai/mcp",
       "headers": {}
-    },
-    "linear": {
-      "command": "npx",
-      "args": ["-y", "mcp-remote", "https://mcp.linear.app/mcp"]
     },
     "emacs": {
       "command": "uv",
