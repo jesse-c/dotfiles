@@ -8,10 +8,10 @@ hs.window.animationDuration = 0
 switcher = hs.window.switcher.new(hs.window.filter.new():setCurrentSpace(true):setDefaultFilter())
 switcher.ui.showThumbnails = false
 
-hs.hotkey.bind("alt", "tab", "Next window", function()
+hs.hotkey.bind("alt", "tab", nil, function()
   switcher:next()
 end)
-hs.hotkey.bind("alt-shift", "tab", "Prev window", function()
+hs.hotkey.bind("alt-shift", "tab", nil, function()
   switcher:previous()
 end)
 
