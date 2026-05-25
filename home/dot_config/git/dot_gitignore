@@ -1,27 +1,24 @@
 .cache
 
-# macOS
+# OS
+## macOS
 .DS_Store
 
-# Elm
-*.elmi
-*.elmo
-
-# Vim
+# Editors
+## Vim
 Session.vim
 
-# Elixir
-els_lsp/
+## Jujutsu
+.jj
 
-# Emacs
+## Emacs
 TODO.org
 .agent-shell
 
-# Aider
-.aider.*
-
-# Jujutsu
-.jj
-
-# Anthropic
+# Apps
+## Anthropic
 .claude
+
+# Languages
+## Elixir
+els_lsp/
