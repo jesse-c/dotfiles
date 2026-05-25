@@ -1008,6 +1008,12 @@ If the current buffer has no process, execute BODY immediately."
                `(elixir-ts-mode . ,(eglot-alternatives
                                     '(("expert" "--stdio")))))
   (add-to-list 'eglot-server-programs
+               `(heex-mode . ,(eglot-alternatives
+                               '(("expert" "--stdio")))))
+  (add-to-list 'eglot-server-programs
+               `(heex-ts-mode . ,(eglot-alternatives
+                                  '(("expert" "--stdio")))))
+  (add-to-list 'eglot-server-programs
                `(go-mode . ,(eglot-alternatives
                              '(("gopls")))))
   (add-to-list 'eglot-server-programs
