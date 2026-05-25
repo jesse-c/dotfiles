@@ -1162,7 +1162,9 @@ If the current buffer has no process, execute BODY immediately."
 (use-package apheleia
   :config
   (apheleia-global-mode +1)
-  (add-to-list 'apheleia-mode-alist '(json-ts-mode . denofmt-ts))
+  (add-to-list 'apheleia-formatters '(denofmt-json . ("deno" "fmt" "--indent-width" "2" "--ext" "json" "-")))
+  (add-to-list 'apheleia-mode-alist '(json-mode . denofmt-json))
+  (add-to-list 'apheleia-mode-alist '(json-ts-mode . denofmt-json))
   (add-to-list 'apheleia-mode-alist '(typescript-ts-mode . denofmt-ts))
   (add-to-list 'apheleia-mode-alist '(python-base-mode . ruff))
   (add-to-list 'apheleia-formatters '(fish-indent . ("fish_indent")))
