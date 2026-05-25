@@ -583,7 +583,7 @@
     "elpaca-menu-lock-file" :recipe
     (:source nil :package "elpaca" :id elpaca :repo
       "https://github.com/progfolio/elpaca.git" :ref
-      "abda553407b8769006c241a8b2f0381fe66ad613" :depth 1 :inherit
+      "7df390bb4f337c1adfc61e20261b946538cd6a91" :depth 1 :inherit
       ignore :files
       (:defaults "elpaca-test.el" (:exclude "extensions")) :build
       (:not elpaca-activate) :type git :protocol https))
@@ -594,7 +594,7 @@
       "extensions/elpaca-use-package.el" :build
       (:not elpaca-build-docs) :source "Elpaca extensions" :id
       elpaca-use-package :type git :protocol https :inherit t :depth
-      treeless :ref "abda553407b8769006c241a8b2f0381fe66ad613"))
+      treeless :ref "7df390bb4f337c1adfc61e20261b946538cd6a91"))
   (elsa :source "elpaca-menu-lock-file" :recipe
     (:package "elsa" :fetcher github :repo "emacs-elsa/Elsa" :files
       (:defaults "bin") :source "elpaca-menu-lock-file" :id elsa :type
@@ -669,8 +669,9 @@
   (evil-ghostel :source "elpaca-menu-lock-file" :recipe
     (:package "evil-ghostel" :fetcher github :repo "dakra/ghostel"
       :files ("extensions/evil-ghostel/evil-ghostel.el") :source
-      "MELPA" :id evil-ghostel :type git :protocol https :inherit t
-      :depth treeless :ref "c2d8c8a28c9745c4cd1a2b111149a28002a25f22"))
+      "elpaca-menu-lock-file" :id evil-ghostel :type git :protocol
+      https :inherit t :depth treeless :ref
+      "45d02cd0abb2dd182b69a43407fa41bed48c305a"))
   (evil-org :source "elpaca-menu-lock-file" :recipe
     (:package "evil-org" :fetcher github :repo
       "Somelauw/evil-org-mode" :files
@@ -823,8 +824,9 @@
     (:package "ghostel" :fetcher github :repo "dakra/ghostel" :files
       (:defaults "etc" "src" "vendor" "build.zig" "build.zig.zon"
         "symbols.map")
-      :source "MELPA" :id ghostel :type git :protocol https :inherit t
-      :depth treeless :ref "c2d8c8a28c9745c4cd1a2b111149a28002a25f22"))
+      :source "elpaca-menu-lock-file" :id ghostel :type git :protocol
+      https :inherit t :depth treeless :ref
+      "45d02cd0abb2dd182b69a43407fa41bed48c305a"))
   (ghub :source "elpaca-menu-lock-file" :recipe
     (:package "ghub" :fetcher github :repo "magit/ghub" :files
       ("lisp/*.el" "docs/*.texi" ".dir-locals.el") :source
