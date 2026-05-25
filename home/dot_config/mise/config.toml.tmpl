@@ -9,7 +9,7 @@ erlang = "28.3.1"
 elixir = "1.19.5-otp-28"
 go = "1.25.6"
 zig = "0.15.2"
-rust = { version = "1.93.0", components = "rust-src,llvm-tools,rust-analyzer" }
+rust = { version = "1.93.0", components = "rust-src,llvm-tools,rust-analyzer,rustfmt" }
 racket = "9.0"
 node = "25.5.0"
 lua = "5.4.7"
@@ -31,7 +31,6 @@ pipx = "latest"
 "npm:@zed-industries/codex-acp" = "latest"
 "cargo:https://github.com/cola-io/codex-acp" = "branch:main"
 "npm:vscode-langservers-extracted" = "latest"
-"npm:@google/gemini-cli" = "latest"
 "npm:tavily" = "latest"
 "npm:@openai/codex" = "latest"
 "npm:typescript-language-server" = "latest"
@@ -80,7 +79,6 @@ meson = "latest"
 java = "temurin-25.0.2+10.0.LTS"
 "http:llmster" = { version = "0.0.11-1", url = 'https://llmster.lmstudio.ai/download/{{ "{{" }} version {{ "}}" }}-{{ "{{" }} os(macos="darwin") {{ "}}" }}-{{ "{{" }} arch() {{ "}}" }}.full.tar.gz' }
 "pipx:podman-compose" = "latest"
-"pipx:snowflake-cli" = "latest"
 
 [settings]
 idiomatic_version_file_enable_tools = ["python", "node", "ruby"]
