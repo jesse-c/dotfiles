@@ -1,0 +1,32 @@
+{{- $computerName := output "scutil" "--get" "ComputerName" | trim -}}
+{{- $personalComputerName := onepasswordRead "op://Personal/Local - Laptop - Personal/computer name" -}}
+{{- $laptopItem := "Local - Laptop - Work" -}}
+{{- if eq $computerName $personalComputerName -}}
+{{-   $laptopItem = "Local - Laptop - Personal" -}}
+{{- end -}}
+encryption = "gpg"
+[gpg]
+recipient = {{ onepasswordRead (printf "op://Personal/%s/signingkey" $laptopItem) | quote }}
+[data]
+name = {{ printf "%s %s" (onepasswordRead "op://Personal/Jesse Claven/Identification/first name") (onepasswordRead "op://Personal/Jesse Claven/Identification/last name") | quote }}
+identity_file = {{ onepasswordRead (printf "op://Personal/%s/identity file" $laptopItem) | quote }}
+forge_github_username = "jesse-c^forge"
+emacs_pr_review_github_username = "jesse-c^emacs-pr-review"
+emacs_mcp_username = "jesse-c^mcp"
+openai_username_1 = "me"
+openai_username_2 = "apikey"
+lm_studio = "lm-studio"
+hosts = '''
+Host hurin
+  HostName hurin.local
+  User jesse
+'''
+cmd_copy = "pbcopy"
+cmd_paste = "pbpaste"
+[data.personal]
+email = {{ onepasswordRead "op://Personal/Jesse Claven/Internet Details/email" | quote }}
+phone_no = {{ onepasswordRead "op://Personal/Jesse Claven/Address/default phone" | quote }}
+signingkey = {{ onepasswordRead (printf "op://Personal/%s/signingkey" $laptopItem) | quote }}
+[data.work.himalaya]
+imap_passwd_cmd = "TODO"
+smtp_passwd_cmd = "TODO"
