@@ -1,5 +1,11 @@
 #!/bin/bash
 
+{{ if lookPath "vale" }}
 # dot_vale.ini hash: {{ include "dot_vale.ini" | sha256sum }}
 
 vale sync
+{{ else }}
+
+echo "vale is missing"
+
+{{ end }}
