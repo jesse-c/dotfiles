@@ -3,4 +3,6 @@
 {{- $mcpConfig := (include "claude-mcp-servers.json" | fromJson) -}}
 {{- $mcpConfig = ($mcpConfig | setValueAtPath "mcpServers.github.env.GITHUB_PERSONAL_ACCESS_TOKEN" (onepasswordRead "op://Personal/GitHub/API Keys/2cnp2x7mnbocwfk6hztik6drxa")) -}}
 
+{{- if .chezmoi.stdin }}
 {{ fromJson .chezmoi.stdin | setValueAtPath "mcpServers" $mcpConfig.mcpServers | toPrettyJson }}
+{{- end }}
