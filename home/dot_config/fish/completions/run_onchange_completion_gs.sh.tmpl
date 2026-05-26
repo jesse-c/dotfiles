@@ -1,5 +1,13 @@
 #!/bin/bash
 
+{{ if lookPath "gs" }}
+
 # git-spice CLI version: {{ output "git-spice" "version" "--short" | trim }}
 
 git-spice shell completion fish >"$HOME/.config/fish/completions/gs.fish"
+
+{{ else }}
+
+echo "gs is missing"
+
+{{ end }}

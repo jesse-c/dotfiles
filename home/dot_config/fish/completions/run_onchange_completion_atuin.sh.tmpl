@@ -1,5 +1,13 @@
 #!/bin/bash
 
+{{ if lookPath "atuin" }}
+
 # atuin version: {{ output "atuin" "--version" | trim }}
 
 atuin gen-completions --shell fish --out-dir $HOME
+
+{{ else }}
+
+echo "atuin is missing"
+
+{{ end }}

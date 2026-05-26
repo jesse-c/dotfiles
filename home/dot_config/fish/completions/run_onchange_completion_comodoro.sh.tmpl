@@ -1,5 +1,13 @@
 #!/bin/bash
 
+{{ if lookPath "comodoro" }}
+
 # Comodoro CLI version: {{ output "comodoro" "--version" | splitList "\n" | first | trim }}
 
 comodoro completion fish --dir "$HOME/.config/fish/completions/"
+
+{{ else }}
+
+echo "comodoro is missing"
+
+{{ end }}

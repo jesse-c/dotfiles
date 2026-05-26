@@ -1,5 +1,13 @@
 #!/bin/bash
 
+{{ if lookPath "kind" }}
+
 # kind version: {{ output "kind" "--version" | trim }}
 
 kind completion fish > "$HOME/.config/fish/completions/kind.fish"
+
+{{ else }}
+
+echo "kind is missing"
+
+{{ end }}

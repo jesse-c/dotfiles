@@ -1,5 +1,13 @@
 #!/bin/bash
 
+{{ if lookPath "mise" }}
+
 # Mise version: {{ output "mise" "--version" | trim }}
 
 mise completion fish > "$HOME/.config/fish/completions/mise.fish"
+
+{{ else }}
+
+echo "mise is missing"
+
+{{ end }}

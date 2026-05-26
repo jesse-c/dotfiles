@@ -1,5 +1,13 @@
 #!/bin/bash
 
+{{ if lookPath "rg" }}
+
 # ripgrep version: {{ output "rg" "-V" | trim }}
 
 rg --generate complete-fish > ~/.config/fish/completions/rg.fish
+
+{{ else }}
+
+echo "rg is missing"
+
+{{ end }}
