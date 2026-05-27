@@ -2002,7 +2002,9 @@ are defining or executing a macro."
   ;; (xref-show-definitions-function #'xref-show-definitions-completing-read))
   (xref-history-storage 'xref-window-local-history)
   :config
-  (global-xref-mouse-mode 1))
+  ;; Available in Emacs 31.1+.
+  (when (fboundp 'global-xref-mouse-mode)
+    (global-xref-mouse-mode 1)))
 
 ;; Helper commands for buffer-based xref (override consult-xref default)
 (defun xref-find-definitions-buffer ()
