@@ -306,6 +306,7 @@ PACKAGES should be a list of package names as symbols."
   (vc-async-checkin t)
   (vc-display-failed-async-commands t)
   :config
+  (require 'autorevert)
   (vc-auto-revert-mode 1))
 
 (use-package project
