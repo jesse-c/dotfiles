@@ -889,7 +889,8 @@ If the current buffer has no process, execute BODY immediately."
   (setq major-mode-remap-alist
         '((python-mode . python-ts-mode)
           (rust-mode . rust-ts-mode)
-          (bash-mode . bash-ts-mode)))
+          (bash-mode . bash-ts-mode)
+          (typescript-mode . typescript-ts-mode)))
   :hook
   (find-file-hook . my/treesit-disable-in-large-buffers))
 
@@ -1166,7 +1167,10 @@ If the current buffer has no process, execute BODY immediately."
   (add-to-list 'apheleia-formatters '(denofmt-json . ("deno" "fmt" "--indent-width" "2" "--ext" "json" "-")))
   (add-to-list 'apheleia-mode-alist '(json-mode . denofmt-json))
   (add-to-list 'apheleia-mode-alist '(json-ts-mode . denofmt-json))
+  (add-to-list 'apheleia-formatters '(denofmt-ts . ("deno" "fmt" "--ext" "ts" "-")))
+  (add-to-list 'apheleia-formatters '(denofmt-tsx . ("deno" "fmt" "--ext" "tsx" "-")))
   (add-to-list 'apheleia-mode-alist '(typescript-ts-mode . denofmt-ts))
+  (add-to-list 'apheleia-mode-alist '(tsx-ts-mode . denofmt-tsx))
   (add-to-list 'apheleia-mode-alist '(python-base-mode . ruff))
   (add-to-list 'apheleia-formatters '(fish-indent . ("fish_indent")))
   (add-to-list 'apheleia-mode-alist '(fish-mode . fish-indent))
