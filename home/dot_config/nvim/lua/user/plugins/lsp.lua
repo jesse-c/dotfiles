@@ -9,10 +9,11 @@ return {
     "neovim/nvim-lspconfig",
     dependencies = { "saghen/blink.cmp" },
     config = function(_, opts)
-      local lspconfig = require("lspconfig")
+      local lsp_augroup = vim.api.nvim_create_augroup("user-lsp", { clear = true })
 
       -- Setup LSP attach autocmd for keymaps and other settings
       vim.api.nvim_create_autocmd("LspAttach", {
+        group = lsp_augroup,
         desc = "LSP actions",
         callback = function(event)
           local opts_keymap = { buffer = event.buf }
@@ -43,19 +44,10 @@ return {
       -- Configure diagnostics with modern sign approach and styling
       vim.diagnostic.config({
         virtual_text = {
+          current_line = true,
           spacing = 2,
           prefix = "●",
           suffix = "",
-          format = function(diagnostic)
-            -- Show full message on current line, truncate others
-            local current_line = vim.fn.line(".") - 1 -- Convert to 0-based
-            local message = diagnostic.message
-
-            if diagnostic.lnum ~= current_line and #message > 50 then
-              message = message:sub(1, 47) .. "..."
-            end
-            return message
-          end,
         },
         signs = {
           text = {
@@ -81,13 +73,6 @@ return {
       vim.api.nvim_set_hl(0, "DiagnosticVirtualTextWarn", { fg = "#f5a97f", italic = true, blend = 20 })
       vim.api.nvim_set_hl(0, "DiagnosticVirtualTextInfo", { fg = "#8aadf4", italic = true, blend = 20 })
       vim.api.nvim_set_hl(0, "DiagnosticVirtualTextHint", { fg = "#8bd5ca", italic = true, blend = 20 })
-
-      -- Refresh diagnostics on cursor movement to update truncation
-      vim.api.nvim_create_autocmd("CursorMoved", {
-        callback = function()
-          vim.diagnostic.show(nil, 0, nil, { virtual_text = true })
-        end,
-      })
 
       -- Configure LSP servers with explicit commands
       local capabilities = require("blink.cmp").get_lsp_capabilities()
@@ -130,6 +115,7 @@ return {
         capabilities = capabilities,
       }
       vim.api.nvim_create_autocmd("FileType", {
+        group = lsp_augroup,
         pattern = "flix",
         callback = function()
           vim.lsp.start(flix_config)
@@ -144,9 +130,10 @@ return {
           cmd = { "java", "-jar", vespa_jar_path },
           filetypes = { "vespa-schema" },
           root_dir = lsp_util.find_git_ancestor,
-          capabilities = custom_capabilities,
+          capabilities = capabilities,
         }
         vim.api.nvim_create_autocmd("FileType", {
+          group = lsp_augroup,
           pattern = "vespa-schema",
           callback = function()
             vim.lsp.start(vespa_config)

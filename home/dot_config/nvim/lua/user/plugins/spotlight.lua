@@ -34,11 +34,6 @@ return {
     event = { "BufRead" },
   },
   {
-    "ibhagwan/fzf-lua",
-    dependencies = { "nvim-tree/nvim-web-devicons" },
-    config = true,
-  },
-  {
     "folke/flash.nvim",
     event = "VeryLazy",
     opts = {},
