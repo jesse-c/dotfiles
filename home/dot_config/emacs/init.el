@@ -1726,7 +1726,7 @@ are defining or executing a macro."
 
 (use-package nerd-icons
   :custom
-  (nerd-icons-font-family "Symbols Nerd Font Mono"))
+  (nerd-icons-font-family "JetBrainsMono Nerd Font Mono"))
 
 (use-package nerd-icons-completion
   :after (nerd-icons marginalia)
