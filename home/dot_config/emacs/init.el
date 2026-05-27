@@ -2984,7 +2984,7 @@ The cookie shows the count/percentage of DONE tasks among children."
   :after org
   :hook
   (org-mode . org-modern-mode)
-  (org-agenda-finalize-hook . org-modern-agenda)
+  (org-agenda-finalize . org-modern-agenda)
   :custom
   (org-modern-tag t)
   (org-modern-star 'replace))
