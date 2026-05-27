@@ -1,4 +1,5 @@
 #!/bin/sh
 
 DIR="$HOME/.config/emacs/server"
-[ -d "$DIR" ] && chmod 700 "$DIR"
+mkdir -p "$DIR"
+chmod 700 "$DIR"
