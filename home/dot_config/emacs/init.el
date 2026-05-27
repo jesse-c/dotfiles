@@ -3007,6 +3007,7 @@ The cookie shows the count/percentage of DONE tasks among children."
   :after (org org-roam))
 
 (use-package org-link-favicon
+  :disabled
   :ensure nil
   :after (org nerd-icons)
   :load-path "user/"
