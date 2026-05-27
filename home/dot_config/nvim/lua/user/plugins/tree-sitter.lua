@@ -3,78 +3,67 @@ return {
     "nvim-treesitter/nvim-treesitter",
     event = { "BufRead" },
     cmd = {
-      "TSBufDisable",
-      "TSBufEnable",
-      "TSBufToggle",
-      "TSDisable",
-      "TSEnable",
-      "TSToggle",
       "TSInstall",
-      "TSInstallInfo",
-      "TSInstallSync",
-      "TSModuleInfo",
+      "TSInstallFromGrammar",
+      "TSLog",
       "TSUninstall",
       "TSUpdate",
-      "TSUpdateSync",
     },
     build = ":TSUpdate",
     config = function()
-      require("nvim-treesitter.configs").setup({
-        ensure_installed = {
-          -- Core languages (always useful)
-          "lua",
-          "vim",
-          "vimdoc",
-          "query",
-          "markdown",
-          "markdown_inline",
-          -- Your languages from Emacs/LSP config
-          "bash",
-          "c",
-          "clojure",
-          "elixir",
-          "go",
-          "javascript",
-          "typescript",
-          "python",
-          "rust",
-          "swift",
-          "yaml",
-          "toml",
-          "latex",
-          "json",
-          "html",
-          "css",
-          -- Additional useful parsers
-          "diff",
-          "regex",
-          "printf",
-        },
-        sync_install = false,
-        auto_install = true, -- Auto-install missing parsers when entering buffer
-        ignore_install = {},
-        highlight = {
-          enable = true,
-          disable = {},
-          additional_vim_regex_highlighting = false,
-        },
-        incremental_selection = {
-          enable = true,
-          keymaps = {
-            init_selection = "gnn",
-            node_incremental = "grn",
-            scope_incremental = "grc",
-            node_decremental = "grm",
-          },
-        },
-        indent = {
-          enable = true,
-          disable = { "python" }, -- Python indentation can be problematic
-        },
-      })
+      local languages = {
+        -- Core languages (always useful)
+        "lua",
+        "vim",
+        "vimdoc",
+        "query",
+        "markdown",
+        "markdown_inline",
+        -- Your languages from Emacs/LSP config
+        "bash",
+        "c",
+        "clojure",
+        "elixir",
+        "go",
+        "javascript",
+        "typescript",
+        "python",
+        "rust",
+        "swift",
+        "yaml",
+        "toml",
+        "latex",
+        "json",
+        "html",
+        "css",
+        -- Additional useful parsers
+        "diff",
+        "regex",
+        "printf",
+      }
 
-      vim.opt.foldmethod = "expr"
-      vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+      local treesitter = require("nvim-treesitter")
+
+      treesitter.setup()
+      treesitter.install(languages)
+
+      vim.api.nvim_create_autocmd("FileType", {
+        group = vim.api.nvim_create_augroup("user-treesitter", { clear = true }),
+        callback = function()
+          local ok = pcall(vim.treesitter.start)
+
+          if not ok then
+            return
+          end
+
+          vim.wo.foldmethod = "expr"
+          vim.wo.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+
+          if vim.bo.filetype ~= "python" then
+            vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+          end
+        end
+      })
     end,
   },
   {
@@ -82,53 +71,55 @@ return {
     dependencies = "nvim-treesitter/nvim-treesitter",
     event = { "BufRead" },
     config = function()
-      require("nvim-treesitter.configs").setup({
-        textobjects = {
-          select = {
-            enable = true,
-            lookahead = true,
-            keymaps = {
-              ["af"] = "@function.outer",
-              ["if"] = "@function.inner",
-              ["ac"] = "@class.outer",
-              ["ic"] = "@class.inner",
-              ["aa"] = "@parameter.outer",
-              ["ia"] = "@parameter.inner",
-              ["ab"] = "@block.outer",
-              ["ib"] = "@block.inner",
-            },
-          },
-          move = {
-            enable = true,
-            set_jumps = true,
-            goto_next_start = {
-              ["]m"] = "@function.outer",
-              ["]]"] = "@class.outer",
-            },
-            goto_next_end = {
-              ["]M"] = "@function.outer",
-              ["]["] = "@class.outer",
-            },
-            goto_previous_start = {
-              ["[m"] = "@function.outer",
-              ["[["] = "@class.outer",
-            },
-            goto_previous_end = {
-              ["[M"] = "@function.outer",
-              ["[]"] = "@class.outer",
-            },
-          },
-          swap = {
-            enable = true,
-            swap_next = {
-              ["<leader>a"] = "@parameter.inner",
-            },
-            swap_previous = {
-              ["<leader>A"] = "@parameter.inner",
-            },
-          },
+      require("nvim-treesitter-textobjects").setup({
+        select = {
+          lookahead = true,
+        },
+        move = {
+          set_jumps = true,
         },
       })
+
+      local select = require("nvim-treesitter-textobjects.select")
+      local move = require("nvim-treesitter-textobjects.move")
+      local swap = require("nvim-treesitter-textobjects.swap")
+
+      local function select_textobject(capture)
+        return function()
+          select.select_textobject(capture, "textobjects")
+        end
+      end
+
+      local function goto_textobject(fn, capture)
+        return function()
+          move[fn](capture, "textobjects")
+        end
+      end
+
+      vim.keymap.set({ "x", "o" }, "af", select_textobject("@function.outer"))
+      vim.keymap.set({ "x", "o" }, "if", select_textobject("@function.inner"))
+      vim.keymap.set({ "x", "o" }, "ac", select_textobject("@class.outer"))
+      vim.keymap.set({ "x", "o" }, "ic", select_textobject("@class.inner"))
+      vim.keymap.set({ "x", "o" }, "aa", select_textobject("@parameter.outer"))
+      vim.keymap.set({ "x", "o" }, "ia", select_textobject("@parameter.inner"))
+      vim.keymap.set({ "x", "o" }, "ab", select_textobject("@block.outer"))
+      vim.keymap.set({ "x", "o" }, "ib", select_textobject("@block.inner"))
+
+      vim.keymap.set({ "n", "x", "o" }, "]m", goto_textobject("goto_next_start", "@function.outer"))
+      vim.keymap.set({ "n", "x", "o" }, "]]", goto_textobject("goto_next_start", "@class.outer"))
+      vim.keymap.set({ "n", "x", "o" }, "]M", goto_textobject("goto_next_end", "@function.outer"))
+      vim.keymap.set({ "n", "x", "o" }, "][", goto_textobject("goto_next_end", "@class.outer"))
+      vim.keymap.set({ "n", "x", "o" }, "[m", goto_textobject("goto_previous_start", "@function.outer"))
+      vim.keymap.set({ "n", "x", "o" }, "[[", goto_textobject("goto_previous_start", "@class.outer"))
+      vim.keymap.set({ "n", "x", "o" }, "[M", goto_textobject("goto_previous_end", "@function.outer"))
+      vim.keymap.set({ "n", "x", "o" }, "[]", goto_textobject("goto_previous_end", "@class.outer"))
+
+      vim.keymap.set("n", "<leader>a", function()
+        swap.swap_next("@parameter.inner", "textobjects")
+      end)
+      vim.keymap.set("n", "<leader>A", function()
+        swap.swap_previous("@parameter.inner", "textobjects")
+      end)
     end,
   },
 }
