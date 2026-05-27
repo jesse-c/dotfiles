@@ -3706,7 +3706,8 @@ database, but may be available via poetry, pipenv, or a project virtualenv."
 (use-package swift-ts-mode
   :config
   (add-to-list 'treesit-language-source-alist
-               '(swift "https://github.com/alex-pinkus/tree-sitter-swift")))
+               '(swift "https://github.com/alex-pinkus/tree-sitter-swift"
+                       "with-generated-files")))
 
 (use-package flycheck-swift
   :after (swift-mode flycheck)
