@@ -3714,6 +3714,16 @@ database, but may be available via poetry, pipenv, or a project virtualenv."
   :hook
   (flycheck-mode . flycheck-swift-setup))
 
+;;; Language: TypeScript
+
+(with-eval-after-load 'treesit
+  (add-to-list 'treesit-language-source-alist
+               '(typescript "https://github.com/tree-sitter/tree-sitter-typescript"
+                            "master" "typescript/src"))
+  (add-to-list 'treesit-language-source-alist
+               '(tsx "https://github.com/tree-sitter/tree-sitter-typescript"
+                     "master" "tsx/src")))
+
 ;;; Language: JSON
 
 (use-package json-mode)
