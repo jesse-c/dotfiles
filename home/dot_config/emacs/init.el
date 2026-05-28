@@ -334,6 +334,15 @@ PACKAGES should be a list of package names as symbols."
     (if-let* ((root (when-let* ((p (project-current))) (project-root p))))
         (find-file (expand-file-name "TODO.org" root))
       (user-error "[Project] Not in a project")))
+  (defun my/project-find-file-all ()
+    "Project find-file including hidden and gitignored files."
+    (interactive)
+    (let* ((root (project-root (project-current t)))
+           (default-directory root)
+           (consult-fd-args (if (stringp consult-fd-args)
+                                (concat consult-fd-args " --hidden --no-ignore")
+                              (append consult-fd-args '("--hidden --no-ignore")))))
+      (consult-fd root)))
   (setq src-dir (expand-file-name "~/src/"))
   (setq forges-dirs '("github.com" "gitlab.com"))
   (defun my/auto-discover-projects ()
@@ -356,7 +365,7 @@ PACKAGES should be a list of package names as symbols."
       ("s" "Search" consult-ripgrep)
       ("b" "Buffers" consult-project-buffer)
       ("f" "Files" project-find-file)
-      ("F" "Files (root)" project-root-find-file)
+      ("F" "Files (all)" my/project-find-file-all)
       ("l" "Line" consult-line)
       ("d" "Layout" project-dired)
       ("i" "Sibling" find-sibling-file)
@@ -3024,8 +3033,22 @@ The cookie shows the count/percentage of DONE tasks among children."
   (defun colourise-compilation-buffer ()
     (let ((inhibit-read-only t))
       (ansi-color-apply-on-region compilation-filter-start (point))))
+
+  (defun my/ansi-colourise-log-buffer ()
+    "Apply ANSI colours to a `.log' buffer and follow incremental updates."
+    (when (and buffer-file-name
+               (string-match-p "\\.log\\'" buffer-file-name))
+      (let ((inhibit-read-only t))
+        (ansi-color-apply-on-region (point-min) (point-max)))
+      (add-hook 'after-change-functions
+                (lambda (start end _len)
+                  (let ((inhibit-read-only t))
+                    (ansi-color-apply-on-region start end)))
+                nil t)))
   :hook
   (compilation-filter . colourise-compilation-buffer)
+  (find-file . my/ansi-colourise-log-buffer)
+  (after-revert . my/ansi-colourise-log-buffer)
   (gs-mode . (lambda ()
                (add-hook 'after-change-functions
                          (lambda (start end _len)
