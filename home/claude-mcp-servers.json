@@ -30,9 +30,9 @@
     "emacs": {
       "command": "uv",
       "args": [
-        "--directory",
-        "/Users/jesse/src/github.com/jesse-c/emacs-mcp-server",
         "run",
+        "--directory",
+        "${HOME}/src/github.com/jesse-c/emacs-mcp-server",
         "emacs-mcp-server"
       ]
     },
