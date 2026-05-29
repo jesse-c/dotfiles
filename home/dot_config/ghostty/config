@@ -14,6 +14,9 @@ macos-titlebar-style = transparent
 window-padding-x = 6
 window-padding-y = 0
 
+# Don't dim inactive splits (default is 0.7).
+unfocused-split-opacity = 1
+
 # background-opacity = 0.95
 # background-blur = true
 background-blur = macos-glass-regular
