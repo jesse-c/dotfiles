@@ -4163,6 +4163,82 @@ result instead of `message'."
 
 (add-to-list 'auto-mode-alist '("\\.pkl\\'" . pkl-mode))
 
+;;; macOS Calendar
+
+(defconst my/calendar-jxa-script "\
+ObjC.import('EventKit');
+function run() {
+  const store = $.EKEventStore.alloc.init;
+  const EKEvent = $.EKEntityTypeEvent;
+  const status = $.EKEventStore.authorizationStatusForEntityType(EKEvent);
+  if (status !== 3) { // not full/authorized -> request once
+    let answered = false, ok = false;
+    const cb = function(granted, err) { ok = granted; answered = true; };
+    if (store.respondsToSelector('requestFullAccessToEventsCompletion:')) {
+      store.requestFullAccessToEventsCompletion(cb);
+    } else {
+      store.requestAccessToEntityTypeCompletion(EKEvent, cb);
+    }
+    const deadline = $.NSDate.dateWithTimeIntervalSinceNow(15);
+    while (!answered && $.NSDate.date.compare(deadline) < 0) {
+      $.NSRunLoop.currentRunLoop.runModeBeforeDate(
+        $.NSDefaultRunLoopMode, $.NSDate.dateWithTimeIntervalSinceNow(0.02));
+    }
+    if (!ok) return 'NO_ACCESS';
+  }
+
+  const now = $.NSDate.date;
+  const cal = $.NSCalendar.currentCalendar;
+  const start = now.dateByAddingTimeInterval(-86400);
+  const end = cal.dateByAddingUnitValueToDateOptions($.NSCalendarUnitDay, 7, now, 0);
+  const pred = store.predicateForEventsWithStartDateEndDateCalendars(start, end, $());
+  const found = store.eventsMatchingPredicate(pred);
+
+  const list = [];
+  for (let i = 0; i < found.count; i++) {
+    const e = found.objectAtIndex(i);
+    if (!e.isAllDay) list.push(e);
+  }
+  const t = function(d) { return d.timeIntervalSince1970; };
+  list.sort(function(a, b) { return t(a.startDate) - t(b.startDate); });
+
+  const nowT = t(now);
+  const isNow = function(e) { return t(e.startDate) <= nowT && t(e.endDate) > nowT; };
+  let chosen = list.find(isNow);
+  if (!chosen) chosen = list.find(function(e) { return t(e.startDate) > nowT; });
+  if (!chosen) return 'NONE';
+
+  return ObjC.unwrap(chosen.title) || '(untitled)';
+}"
+  "JXA program (run via osascript) printing the current or next calendar event.")
+
+(defun my/calendar-current-or-next-event ()
+  "Return the title of the current macOS Calendar event, or the next one.
+Return nil when there are no events or Calendar access was denied.  Called
+interactively, echo the title (or a status message).  Reads events via
+EventKit through osascript; the first run prompts for access."
+  (interactive)
+  (let* ((out (with-temp-buffer
+                (call-process-region my/calendar-jxa-script nil
+                                     "osascript" nil t nil "-l" "JavaScript")
+                (string-trim (buffer-string))))
+         (line (car (last (s-lines out)))) ; ignore any stray output
+         (title (unless (member line '("NONE" "NO_ACCESS")) line)))
+    (when (called-interactively-p 'interactive)
+      (message "%s"
+               (pcase line
+                 ("NONE" "No events in the next 7 days")
+                 ("NO_ACCESS" "Calendar access denied — grant Emacs access in System Settings › Privacy & Security › Calendars")
+                 (_ title))))
+    title))
+
+(defun my/calendar-insert-current-or-next-event ()
+  "Insert the current/next macOS Calendar event title at point."
+  (interactive)
+  (if-let ((title (my/calendar-current-or-next-event)))
+      (insert title)
+    (message "No current or upcoming calendar event to insert")))
+
 ;;; Dotfiles
 
 (use-package chezmoi
