@@ -2958,6 +2958,94 @@ The cookie shows the count/percentage of DONE tasks among children."
       ("w" "Week view" (lambda () (interactive) (my/org-agenda-with-key "w")))]
      [("a" "Default" (lambda () (interactive) (my/org-agenda-with-key "a")))]]
     [("S" "Structure" org-structure-transient-menu)])
+
+  ;; Auto-show org-roam backlinks in a scrollable bottom window, à la
+  ;; Flycheck's errors list. The window appears when the node at point has
+  ;; backlinks and disappears when it does not. Its height fits the content
+  ;; up to `my/org-roam-backlinks-window-max-height' lines, scrolling beyond.
+  (add-to-list 'display-buffer-alist
+               `(,(rx bos "*org-roam*" eos)
+                 (display-buffer-reuse-window
+                  display-buffer-in-side-window)
+                 (side              . bottom)
+                 (slot              . 1)
+                 (window-height     . 10)
+                 (window-parameters . ((no-delete-other-windows . t)))))
+
+  (defvar my/org-roam-backlinks-window-max-height 10
+    "Max body height (in lines) of the org-roam backlinks bottom window.")
+
+  (defun my/org-roam-backlinks-fit-window (&rest _)
+    "Fit the *org-roam* side window to its content, bounded.
+Runs after each render so the height tracks the node at point. The
+height is preserved afterwards so `balance-windows' (and similar)
+leave this window alone; the preservation is released around our own
+fit so re-renders can still resize it."
+    (when-let* ((w (get-buffer-window org-roam-buffer)))
+      (when (window-parameter w 'window-side)
+        (window-preserve-size w nil nil)  ; release so we can resize
+        (fit-window-to-buffer w my/org-roam-backlinks-window-max-height 4)
+        (window-preserve-size w nil t)))) ; re-preserve against balance-windows
+
+  (defun my/org-roam-collapse-node-sections (&rest _)
+    "Collapse each backlink/reflink node section in the *org-roam* buffer.
+Keeps section headings and node titles visible, folding their previews.
+Run after render because org-roam does not apply
+`magit-section-initial-visibility-alist' to its own sections."
+    (when (get-buffer org-roam-buffer)
+      (with-current-buffer org-roam-buffer
+        (when (and (derived-mode-p 'magit-section-mode)
+                   (bound-and-true-p magit-root-section))
+          (cl-labels ((walk (sec)
+                        (when (eq (oref sec type) 'org-roam-node-section)
+                          (magit-section-hide sec))
+                        (dolist (c (oref sec children)) (walk c))))
+            (dolist (c (oref magit-root-section children)) (walk c)))))))
+
+  (defun my/org-roam-backlinks-after-render (&rest _)
+    "Collapse node sections, then fit the *org-roam* side window.
+Collapse first so the window is fitted to the folded height."
+    (my/org-roam-collapse-node-sections)
+    (my/org-roam-backlinks-fit-window))
+
+  (advice-add 'org-roam-buffer-render-contents :after
+              #'my/org-roam-backlinks-after-render)
+
+  (defvar my/org-roam-backlinks-auto--running nil
+    "Reentrancy guard for `my/org-roam-backlinks-auto'.")
+
+  (defun my/org-roam-backlinks-auto (&rest _)
+    "Show *org-roam* in a bottom window iff the node at point has backlinks.
+Hide it again when the current buffer is not a node, or the node has
+none. Designed to run from `window-selection-change-functions'."
+    (unless (or my/org-roam-backlinks-auto--running
+                (minibufferp)
+                (string= (buffer-name) org-roam-buffer))
+      (let ((my/org-roam-backlinks-auto--running t))
+        (let* ((node (and (buffer-file-name)
+                          (org-roam-file-p)
+                          (ignore-errors (org-roam-node-at-point))))
+               (backlinks (and node (org-roam-backlinks-get node)))
+               (visible (eq (org-roam-buffer--visibility) 'visible)))
+          (cond
+           ((and backlinks (not visible)) (org-roam-buffer-toggle))
+           ((and (not backlinks) visible) (org-roam-buffer-toggle)))))))
+
+  (defun my/org-roam-backlinks-auto-enable ()
+    "Enable the automatic org-roam backlinks bottom window."
+    (interactive)
+    (add-hook 'window-selection-change-functions #'my/org-roam-backlinks-auto)
+    (message "Org-roam backlinks auto-window enabled"))
+
+  (defun my/org-roam-backlinks-auto-disable ()
+    "Disable the automatic org-roam backlinks bottom window."
+    (interactive)
+    (remove-hook 'window-selection-change-functions #'my/org-roam-backlinks-auto)
+    (when (eq (org-roam-buffer--visibility) 'visible)
+      (org-roam-buffer-toggle))
+    (message "Org-roam backlinks auto-window disabled"))
+
+  (my/org-roam-backlinks-auto-enable)
   ;; Force global keybinding to override macOS system binding for cmd-o
   ;; (global-set-key (kbd "s-o") 'org-transient-menu)
   :bind
