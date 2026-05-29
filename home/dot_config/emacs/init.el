@@ -523,7 +523,25 @@ This includes buffers visible in windows or tab-bar tabs."
   :hook (org-mode . evil-org-mode)
   :config
   (require 'evil-org-agenda)
-  (evil-org-agenda-set-keys))
+  (evil-org-agenda-set-keys)
+  ;; RET in normal state follows the link at point (e.g. org-roam node links).
+  ;; `org-return-follows-link' only applies when RET runs `org-return', which it
+  ;; doesn't in evil normal state, so bind it explicitly here.
+  (evil-define-key 'normal org-mode-map
+    (kbd "RET") #'org-open-at-point
+    (kbd "<return>") #'org-open-at-point)
+  ;; M-RET: insert a same-level heading without splitting the current line.
+  ;; In evil normal state point sits on the last char, so plain `org-meta-return'
+  ;; carries that char onto the new heading. `org-insert-heading-respect-content'
+  ;; inserts after the line's content instead; then drop into insert state.
+  (defun my/org-insert-heading-same-level ()
+    "Insert a new same-level heading after the current content and enter insert state."
+    (interactive)
+    (org-insert-heading-respect-content)
+    (evil-insert-state))
+  (evil-define-key '(normal insert) org-mode-map
+    (kbd "M-RET") #'my/org-insert-heading-same-level
+    (kbd "M-<return>") #'my/org-insert-heading-same-level))
 
 (use-package evil-collection
   :after (evil magit forge)
