@@ -4341,7 +4341,7 @@ EventKit through osascript; the first run prompts for access."
 (defun my/calendar-insert-current-or-next-event ()
   "Insert the current/next macOS Calendar event title at point."
   (interactive)
-  (if-let ((title (my/calendar-current-or-next-event)))
+  (if-let* ((title (my/calendar-current-or-next-event)))
       (insert title)
     (message "No current or upcoming calendar event to insert")))
 
