@@ -41,34 +41,6 @@
 (add-hook 'after-init-hook #'elpaca-process-queues)
 (elpaca `(,@elpaca-order))
 
-;; elpaca--log-updates and elpaca-git--merge both use @{u} (upstream tracking
-;; branch), which fails when elpaca checks packages out in detached HEAD state.
-;; FETCH_HEAD is always set by the preceding git fetch step and works regardless
-;; of HEAD state.
-(with-eval-after-load 'elpaca-git
-  (cl-defmethod elpaca--log-updates ((e (elpaca git)))
-    "Log updates for :type `git' E."
-    (elpaca--signal e nil 'update-log)
-    (let* ((default-directory (elpaca<-source-dir e))
-           (date (string-trim (elpaca-process-output "git" "show" "-s" "--format=%ci"))))
-      (elpaca--make-process e
-        :name "log-updates"
-        :command (list "git" "--no-pager" "log" "--reverse" (concat "--since=" date)
-                       "--pretty=%h %s (%ch)" "..FETCH_HEAD")
-        :sentinel (lambda (process event)
-                    (elpaca--process-sentinel nil nil process event)))))
-
-  (defun elpaca-git--merge (e)
-    "Merge E's fetched commits."
-    (let* ((default-directory (elpaca<-source-dir e))
-           (rev (elpaca-process-output "git" "rev-parse" "HEAD")))
-      (process-put (elpaca--make-process e
-                     :name "merge"
-                     :command '("git" "merge" "--ff-only" "FETCH_HEAD")
-                     :sentinel #'elpaca-git--merge-process-sentinel)
-                   :elpaca-git-rev rev)
-      (elpaca--signal e "Merging updates" 'merging))))
-
 ;; Set before setting up use-package via Elpaca
 (setq use-package-enable-imenu-support t
       use-package-always-ensure t)
