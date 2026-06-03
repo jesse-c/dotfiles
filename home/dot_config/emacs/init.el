@@ -2628,6 +2628,91 @@ If BUFFER is provided, close that buffer directly."
 
 (use-package ghostel)
 
+(defun my/ghostty-tab-candidates ()
+  "Return alist of (LABEL . (WIN-IDX . TAB-IDX)) for all Ghostty tabs."
+  (let ((script "tell application \"Ghostty\"
+    set out to \"\"
+    set wi to 1
+    repeat with w in windows
+      set ti to 1
+      repeat with tb in tabs of w
+        set out to out & wi & \"|\" & ti & \"|\" & (name of tb) & \"\n\"
+        set ti to ti + 1
+      end repeat
+      set wi to wi + 1
+    end repeat
+    return out
+  end tell")
+        (tmp (make-temp-file "ghostty-list" nil ".applescript")))
+    (unwind-protect
+        (let* ((raw (progn (with-temp-file tmp (insert script))
+                           (string-trim (shell-command-to-string
+                                         (concat "osascript " (shell-quote-argument tmp))))))
+               (lines (seq-filter (lambda (l) (not (string-empty-p l)))
+                                  (split-string raw "\n")))
+               (multi (> (length (seq-uniq
+                                  (mapcar (lambda (l) (substring l 0 (string-search "|" l)))
+                                          lines)))
+                         1)))
+          (mapcar (lambda (line)
+                    (let* ((p1 (string-search "|" line))
+                           (p2 (string-search "|" line (1+ p1)))
+                           (wi (string-to-number (substring line 0 p1)))
+                           (ti (string-to-number (substring line (1+ p1) p2)))
+                           (name (substring line (1+ p2)))
+                           (label (if multi (format "Win %d: %s" wi name) name)))
+                      (cons label (cons wi ti))))
+                  lines))
+      (delete-file tmp))))
+
+(defun my/ghostty-send-text-to-tab (win-idx tab-idx text)
+  "Send TEXT to Ghostty window WIN-IDX tab TAB-IDX, then submit."
+  (interactive
+   (minibuffer-with-setup-hook
+       (lambda () (when (bound-and-true-p corfu-mode) (corfu-mode -1)))
+     (let* ((candidates (my/ghostty-tab-candidates))
+            (choice (completing-read "Tab: " candidates nil t))
+            (target (cdr (assoc choice candidates)))
+            (text (read-string "Text: ")))
+       (list (car target) (cdr target) text))))
+  (let ((tmp (make-temp-file "ghostty-send")))
+    (unwind-protect
+        (progn
+          (with-temp-file tmp (insert text))
+          (call-process
+           "osascript" nil nil nil
+           "-e" (format "
+  tell application \"Ghostty\"
+    set t to focused terminal of tab %d of window %d
+    set txt to do shell script \"cat %s\"
+    input text txt to t
+    send key \"return\" to t
+  end tell" tab-idx win-idx (shell-quote-argument tmp))))
+      (delete-file tmp))))
+
+(defun my/ghostty-send-region-to-tab (text win-idx tab-idx)
+    "Send region to a Ghostty tab selected from a completing-read list."
+    (interactive
+     (let* ((text (buffer-substring-no-properties (region-beginning) (region-end))))
+       (minibuffer-with-setup-hook
+           (lambda () (when (bound-and-true-p corfu-mode) (corfu-mode -1)))
+         (let* ((candidates (my/ghostty-tab-candidates))
+                (target (cdr (assoc (completing-read "Tab: " candidates nil t) candidates))))
+           (list text (car target) (cdr target))))))
+    (let ((tmp (make-temp-file "ghostty-send")))
+      (unwind-protect
+          (progn
+            (with-temp-file tmp (insert text))
+            (call-process
+             "osascript" nil nil nil
+             "-e" (format "
+  tell application \"Ghostty\"
+    set t to focused terminal of tab %d of window %d
+    set txt to do shell script \"cat %s\"
+    input text txt to t
+  end tell" tab-idx win-idx (shell-quote-argument tmp))))
+        (delete-file tmp))))
+
 (use-package evil-ghostel
   :after (ghostel evil)
   :hook (ghostel-mode . evil-ghostel-mode))
