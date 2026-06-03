@@ -993,6 +993,7 @@ If the current buffer has no process, execute BODY immediately."
   (javascript-mode . my/eglot-ensure-deferred)
   (typescript-mode . my/eglot-ensure-deferred)
   (typescript-ts-mode . my/eglot-ensure-deferred)
+  (tsx-ts-mode . my/eglot-ensure-deferred)
   (typst-ts-mode . my/eglot-ensure-deferred)
   (vespa-schema-mode . my/eglot-ensure-deferred)
   (yaml-mode . my/eglot-ensure-deferred)
@@ -1027,13 +1028,16 @@ If the current buffer has no process, execute BODY immediately."
                                 '(("gopls")))))
   (add-to-list 'eglot-server-programs
                `(javascript-mode . ,(eglot-alternatives
-                                     '(("deno" "lsp")))))
+                                     '(("typescript-language-server" "--stdio")))))
   (add-to-list 'eglot-server-programs
                `(typescript-mode . ,(eglot-alternatives
-                                     '(("deno" "lsp")))))
+                                     '(("typescript-language-server" "--stdio")))))
   (add-to-list 'eglot-server-programs
                `(typescript-ts-mode . ,(eglot-alternatives
-                                        '(("deno" "lsp")))))
+                                        '(("typescript-language-server" "--stdio")))))
+  (add-to-list 'eglot-server-programs
+               `(tsx-ts-mode . ,(eglot-alternatives
+                                 '(("typescript-language-server" "--stdio")))))
   (add-to-list 'eglot-server-programs
                `(latex-mode . ,(eglot-alternatives
                                 '(("texlab")))))
