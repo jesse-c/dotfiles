@@ -42,10 +42,8 @@ return {
         "printf",
       }
 
-      local treesitter = require("nvim-treesitter")
-
-      treesitter.setup()
-      treesitter.install(languages)
+      require("nvim-treesitter").setup()
+      require("nvim-treesitter.configs").setup({ ensure_installed = languages })
 
       vim.api.nvim_create_autocmd("FileType", {
         group = vim.api.nvim_create_augroup("user-treesitter", { clear = true }),
