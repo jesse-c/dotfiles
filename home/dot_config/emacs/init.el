@@ -362,6 +362,10 @@ PACKAGES should be a list of package names as symbols."
     (let ((default-directory (project-root (project-current t))))
       (compile command)))
   (add-to-list 'project-switch-commands '(project-run "Run" ?r))
+  ;; Drop the built-in `project-find-regexp' entry so `g' isn't bound twice
+  ;; once we add `consult-ripgrep' below under the same key.
+  (setq project-switch-commands
+        (assq-delete-all 'project-find-regexp project-switch-commands))
   (add-to-list 'project-switch-commands '(consult-ripgrep "Find regexp" ?g))
   (add-to-list 'project-switch-commands '(project-dired "Dired" ?d))
   (add-to-list 'project-switch-commands '(magit-status "Magit" ?m))
@@ -1163,6 +1167,12 @@ If the current buffer has no process, execute BODY immediately."
 (use-package apheleia
   :config
   (apheleia-global-mode +1)
+  ;; NOTE: these deno fmt mappings for JSON/TS/TSX are global. Prettier-based
+  ;; repos (e.g. swapcommerce/window-shop-monorepo) override them per-project
+  ;; via a checked-in .dir-locals.el that sets `apheleia-formatter' to
+  ;; `prettier', because deno fmt's style diverges from Prettier and fails
+  ;; those repos' lint. If you add more Prettier repos, add a .dir-locals.el
+  ;; there too rather than changing these globals.
   (add-to-list 'apheleia-formatters '(denofmt-json . ("deno" "fmt" "--indent-width" "2" "--ext" "json" "-")))
   (add-to-list 'apheleia-mode-alist '(json-mode . denofmt-json))
   (add-to-list 'apheleia-mode-alist '(json-ts-mode . denofmt-json))
