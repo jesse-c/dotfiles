@@ -893,7 +893,8 @@ If the current buffer has no process, execute BODY immediately."
         '((python-mode . python-ts-mode)
           (rust-mode . rust-ts-mode)
           (bash-mode . bash-ts-mode)
-          (typescript-mode . typescript-ts-mode)))
+          (typescript-mode . typescript-ts-mode)
+          (json-mode . json-ts-mode)))
   :hook
   (find-file-hook . my/treesit-disable-in-large-buffers))
 
@@ -3836,6 +3837,10 @@ database, but may be available via poetry, pipenv, or a project virtualenv."
                      "master" "tsx/src")))
 
 ;;; Language: JSON
+
+(with-eval-after-load 'treesit
+  (add-to-list 'treesit-language-source-alist
+               '(json "https://github.com/tree-sitter/tree-sitter-json")))
 
 (use-package json-mode)
 
