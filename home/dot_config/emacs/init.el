@@ -999,9 +999,13 @@ If the current buffer has no process, execute BODY immediately."
   (yaml-mode . my/eglot-ensure-deferred)
   (yaml-ts-mode . my/eglot-ensure-deferred)
   (pkl-mode . my/eglot-ensure-deferred)
+  (sql-mode . my/eglot-ensure-deferred)
   :bind
   ("s-l" . eglot-transient-menu)
   :config
+  (add-to-list 'eglot-server-programs
+               `(sql-mode . ,(eglot-alternatives
+                              '(("sqls")))))
   (add-to-list 'eglot-server-programs
                `(clojure-mode . ,(eglot-alternatives
                                   '(("clojure-lsp")))))
