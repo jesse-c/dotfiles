@@ -82,7 +82,6 @@
   (push "^/Applications/Emacs\\.app/Contents/Resources/lisp/.*\\.el\\(\\.gz\\)?$"
         compile-angel-excluded-files-regexps)
 
-
   ;; A global mode that compiles .el files before they are loaded
   ;; using `load' or `require'.
   (compile-angel-on-load-mode 1))
