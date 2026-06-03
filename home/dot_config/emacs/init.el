@@ -222,9 +222,6 @@ PACKAGES should be a list of package names as symbols."
 
 ;; macOS
 
-(when (memq window-system '(mac ns))
-  (setq dired-use-ls-dired nil))
-
 (setq delete-by-moving-to-trash t)
 (if (eq system-type 'darwin)
     (setq trash-directory "~/.Trash"))
@@ -1685,8 +1682,21 @@ are defining or executing a macro."
   :ensure nil
   :commands (dired)
   :custom
-  (dired-listing-switches "-agho --group-directories-first")
-  (dired-kill-when-opening-new-dired-buffer t))
+  ;; macOS ships BSD `ls`, which rejects GNU options like
+  ;; `--group-directories-first` and `--dired`. Prefer GNU coreutils'
+  ;; `gls` (`brew install coreutils`) when present, else fall back to
+  ;; BSD-safe switches and suppress the `--dired` flag.
+  (dired-listing-switches
+   (if (or (not (eq system-type 'darwin)) (executable-find "gls"))
+       "-agho --group-directories-first"
+     "-agho"))
+  (dired-kill-when-opening-new-dired-buffer t)
+  :config
+  (when (eq system-type 'darwin)
+    (if (executable-find "gls")
+        (setq insert-directory-program "gls"
+              dired-use-ls-dired t)
+      (setq dired-use-ls-dired nil))))
 
 ;; Themes
 (defun my/theme-by-current-theme ()
