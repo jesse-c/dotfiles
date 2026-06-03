@@ -1,6 +1,7 @@
 return {
   {
     "nvim-treesitter/nvim-treesitter",
+    branch = "main",
     event = { "BufRead" },
     cmd = {
       "TSInstall",
@@ -43,7 +44,7 @@ return {
       }
 
       require("nvim-treesitter").setup()
-      require("nvim-treesitter.configs").setup({ ensure_installed = languages })
+      require("nvim-treesitter").install(languages)
 
       vim.api.nvim_create_autocmd("FileType", {
         group = vim.api.nvim_create_augroup("user-treesitter", { clear = true }),
