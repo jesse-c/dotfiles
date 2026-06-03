@@ -315,6 +315,23 @@ PACKAGES should be a list of package names as symbols."
                                 (concat consult-fd-args " --hidden --no-ignore")
                               (append consult-fd-args '("--hidden --no-ignore")))))
       (consult-fd root)))
+  (defun my/project-search-all ()
+    "Project ripgrep including hidden and gitignored files.
+Useful .git files (config, hooks/, COMMIT_EDITMSG) are searchable, but
+noisy internals (objects/, rr-cache/, logs/, modules/, lfs/) are skipped."
+    (interactive)
+    (let* ((root (project-root (project-current t)))
+           (default-directory root)
+           (extra (concat " --hidden --no-ignore"
+                          " --glob !.git/objects/"
+                          " --glob !.git/rr-cache/"
+                          " --glob !.git/logs/"
+                          " --glob !.git/modules/"
+                          " --glob !.git/lfs/"))
+           (consult-ripgrep-args (if (stringp consult-ripgrep-args)
+                                     (concat consult-ripgrep-args extra)
+                                   (append consult-ripgrep-args (list extra)))))
+      (consult-ripgrep root)))
   (setq src-dir (expand-file-name "~/src/"))
   (setq forges-dirs '("github.com" "gitlab.com"))
   (defun my/auto-discover-projects ()
@@ -335,6 +352,7 @@ PACKAGES should be a list of package names as symbols."
     "Project command menu."
     [["Navigation"
       ("s" "Search" consult-ripgrep)
+      ("S" "Search (all)" my/project-search-all)
       ("b" "Buffers" consult-project-buffer)
       ("f" "Files" project-find-file)
       ("F" "Files (all)" my/project-find-file-all)
@@ -351,7 +369,6 @@ PACKAGES should be a list of package names as symbols."
       ("n" "Rename tab" my/rename-tab-to-project-name)
       ("p" "Switch (Known)" project-switch-project)
       ("P" "Switch (All)" consult-ghq-switch-project)
-      ("S" "Save buffers" project-save-some-buffers)
       ("k" "Kill buffers" project-kill-buffers)]])
   (defun project-run (command)
     "Run COMMAND in the current project's root directory."
@@ -1319,10 +1336,11 @@ If the current buffer has no process, execute BODY immediately."
   ;; Until the package is updated to use consult-source-project-buffer
   (defvaralias 'consult--source-project-buffer 'consult-source-project-buffer)
 
-  ;; Include hidden files/folders (e.g. .github) in ripgrep searches
+  ;; Default project search (the "Search" entry) respects .gitignore and skips
+  ;; hidden files.  Use "Search (all)" (S) to include hidden/gitignored files.
   (setq consult-ripgrep-args
         "rg --null --line-buffered --color=never --max-columns=1000 --path-separator /\
-         --smart-case --no-heading --with-filename --line-number --search-zip --hidden")
+         --smart-case --no-heading --with-filename --line-number --search-zip")
 
   ;; Optionally configure the narrowing key.
   ;; Both < and C-+ work reasonably well.
