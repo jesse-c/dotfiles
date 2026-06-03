@@ -14,6 +14,7 @@ Session.vim
 ## Emacs
 TODO.org
 .agent-shell
+.dir-locals.el
 
 # Apps
 ## Anthropic
