@@ -382,6 +382,7 @@ noisy internals (objects/, rr-cache/, logs/, modules/, lfs/) are skipped."
   (add-to-list 'project-switch-commands '(consult-ripgrep "Find regexp" ?g))
   (add-to-list 'project-switch-commands '(project-dired "Dired" ?d))
   (add-to-list 'project-switch-commands '(magit-status "Magit" ?m))
+  (add-to-list 'project-switch-commands '(my/project-find-file-all "Find file (all)" ?F))
   :bind
   ("s-p" . project-transient-menu))
 
