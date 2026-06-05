@@ -1,9 +1,17 @@
 [env]
-SCHEME = "racket"
 NODE_OPTIONS = "--no-deprecation"
+{{ if eq .chezmoi.hostname "Plinth" }}
+SCHEME = "racket"
+{{ else if eq .chezmoi.hostname "Dais" }}
+PHP_CONFIGURE_OPTIONS = "--with-openssl=/opt/homebrew/opt/openssl@3"
+PKG_CONFIG_PATH = "/opt/homebrew/opt/openssl@3/lib/pkgconfig:/opt/homebrew/opt/icu4c@78/lib/pkgconfig:/opt/homebrew/opt/libxml2/lib/pkgconfig:/opt/homebrew/opt/libzip/lib/pkgconfig:/opt/homebrew/opt/curl/lib/pkgconfig:/opt/homebrew/opt/gd/lib/pkgconfig:/opt/homebrew/opt/oniguruma/lib/pkgconfig:/opt/homebrew/opt/zlib/lib/pkgconfig:/opt/homebrew/opt/libpq/lib/pkgconfig"
+CPPFLAGS = "-I/opt/homebrew/opt/openssl@3/include"
+LDFLAGS = "-L/opt/homebrew/opt/openssl@3/lib"
+{{ end }}
+
 
 [tools]
-python = ["3.10", "3.11", "3.12", "3.13", "3.14"]
+python = ["3.12", "3.10", "3.11", "3.13", "3.14"]
 clojure = "1.12.4.1602"
 erlang = "28.3.1"
 elixir = "1.19.5-otp-28"
@@ -75,6 +83,12 @@ meson = "latest"
 java = "temurin-25.0.2+10.0.LTS"
 "http:llmster" = { version = "0.0.11-1", url = 'https://llmster.lmstudio.ai/download/{{ "{{" }} version {{ "}}" }}-{{ "{{" }} os(macos="darwin") {{ "}}" }}-{{ "{{" }} arch() {{ "}}" }}.full.tar.gz' }
 "pipx:podman-compose" = "latest"
+uv = "latest"
+"npm:pnpm" = "latest"
+"npm:@earendil-works/pi-coding-agent" = "latest"
+"github:can1357/oh-my-pi" = "latest"
+"npm:playwright" = "latest"
+gcloud = "latest"
 
 [settings]
 idiomatic_version_file_enable_tools = ["python", "node", "ruby"]

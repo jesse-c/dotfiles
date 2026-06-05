@@ -1,13 +1,31 @@
 Host *
   AddKeysToAgent yes
   UseKeychain yes
-  IdentityFile {{ .identity_file }}
   {{- if and (eq .chezmoi.os "darwin") (stat "/Applications/1Password.app") }}
-  IdentityAgent "~/.1password/agent.sock"
+  IdentityAgent "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
+  {{- end -}}
+  {{ if eq .chezmoi.hostname "Plinth" -}}
+  IdentityFile {{ .identity_file }}
   {{- end }}
   PasswordAuthentication no
   ChallengeResponseAuthentication no
   HashKnownHosts yes
+
+{{ if eq .chezmoi.hostname "Plinth" }}
 {{ if .hosts }}
 {{ .hosts }}
-{{- end }}
+{{ end }}
+
+{{ else if eq .chezmoi.hostname "Dais" }}
+Host github.com
+  HostName github.com
+  User git
+  IdentityFile ~/.ssh/github-work.pub
+  IdentitiesOnly yes
+
+Host github-personal
+  HostName github.com
+  User git
+  IdentityFile ~/.ssh/github-personal.pub
+  IdentitiesOnly yes
+{{ end }}
