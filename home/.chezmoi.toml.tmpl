@@ -7,20 +7,26 @@
 encryption = "gpg"
 [gpg]
 recipient = {{ onepasswordRead (printf "op://Personal/%s/signingkey" $laptopItem) | quote }}
+[diff]
+exclude = ["scripts"]
 [data]
 name = {{ printf "%s %s" (onepasswordRead "op://Personal/Jesse Claven/Identification/first name") (onepasswordRead "op://Personal/Jesse Claven/Identification/last name") | quote }}
 identity_file = {{ onepasswordRead (printf "op://Personal/%s/identity file" $laptopItem) | quote }}
+computer_name = {{ $computerName | quote }}
 forge_github_username = "jesse-c^forge"
 emacs_pr_review_github_username = "jesse-c^emacs-pr-review"
 emacs_mcp_username = "jesse-c^mcp"
 openai_username_1 = "me"
 openai_username_2 = "apikey"
 lm_studio = "lm-studio"
+{{ if eq .chezmoi.hostname "Plinth" }}
 hosts = '''
 Host hurin
   HostName hurin.local
   User jesse
 '''
+{{ else if eq .chezmoi.hostname "Dais" }}
+{{ end }}
 cmd_copy = "pbcopy"
 cmd_paste = "pbpaste"
 [data.personal]
