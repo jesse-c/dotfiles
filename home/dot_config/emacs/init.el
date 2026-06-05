@@ -3051,6 +3051,7 @@ The cookie shows the count/percentage of DONE tasks among children."
       ("g" "Graph" org-roam-graph)]]
     ["Dailies"
      [("t" "Goto today" org-roam-dailies-goto-today)
+      ("y" "Goto yesterday" org-roam-dailies-goto-yesterday)
       ("p" "Goto previous" org-roam-dailies-goto-previous-note)
       ("n" "Goto next" org-roam-dailies-goto-next-note)]
      [("T" "Capture today" org-roam-dailies-capture-today)
