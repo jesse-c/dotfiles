@@ -2645,7 +2645,9 @@ If BUFFER is provided, close that buffer directly."
   (eshell-load-hook . eat-eshell-mode))
 
 (use-package vterm
-  :defer 1)
+  :defer 1
+  :init
+  (setq vterm-always-compile-module t))
 
 (use-package mistty
   :disabled
@@ -2663,7 +2665,9 @@ If BUFFER is provided, close that buffer directly."
 
 (use-package shell-maker)
 
-(use-package ghostel)
+(use-package ghostel
+  :init
+  (setq ghostel-module-auto-install 'download))
 
 (defun my/ghostty-tab-candidates ()
   "Return alist of (LABEL . (WIN-IDX . TAB-IDX)) for all Ghostty tabs."
