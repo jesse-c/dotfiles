@@ -51,7 +51,8 @@
 
 (add-to-list 'load-path (expand-file-name "user/" user-emacs-directory))
 
-(setq elpaca-lock-file (expand-file-name "lock.el" user-emacs-directory))
+;; Disabled for now due to issues with HEAD or so
+;; (setq elpaca-lock-file (expand-file-name "lock.el" user-emacs-directory))
 
 (defun my/elpaca-save-lock-file ()
   "Write the elpaca lock file to `elpaca-lock-file' without prompting."
