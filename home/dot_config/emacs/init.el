@@ -41,6 +41,33 @@
 (add-hook 'after-init-hook #'elpaca-process-queues)
 (elpaca `(,@elpaca-order))
 
+;; Fix for elpaca bug where mono-repo secondary packages (lv,
+;; magit-section, evil-ghostel, embark-consult, etc.) end up stuck
+;; `active+nil-current-step` after their dependency finishes, because
+;; `elpaca--continue-if-active` requires current-step to be non-nil. Run
+;; a periodic scanner during queue processing that kicks off any stuck
+;; packages. Stops once all queues complete.
+(with-eval-after-load 'elpaca
+  (defvar my/elpaca-unstick-timer nil)
+  (defun my/elpaca-unstick ()
+    (let ((found nil))
+      (cl-loop for (_id . e) in (elpaca--queued)
+               when (and (eq (elpaca--status e) 'active)
+                         (null (elpaca<-conditions e))
+                         (null (elpaca<-current-step e)))
+               do (setq found t) (elpaca-continue e))
+      (unless found
+        ;; Stop if nothing is stuck and all queues done
+        (when (cl-loop for q in (reverse elpaca--queues)
+                       always (cl-loop for (_ . e) in (elpaca-q<-elpacas q)
+                                       always (memq (elpaca--status e)
+                                                    '(finished failed))))
+          (when my/elpaca-unstick-timer
+            (cancel-timer my/elpaca-unstick-timer)
+            (setq my/elpaca-unstick-timer nil))))))
+  (setq my/elpaca-unstick-timer
+        (run-with-timer 1 2 #'my/elpaca-unstick)))
+
 ;; Set before setting up use-package via Elpaca
 (setq use-package-enable-imenu-support t
       use-package-always-ensure t)
