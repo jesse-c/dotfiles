@@ -339,6 +339,10 @@ PACKAGES should be a list of package names as symbols."
                                 (concat consult-fd-args " --hidden --no-ignore")
                               (append consult-fd-args '("--hidden --no-ignore")))))
       (consult-fd root)))
+  (defun my/project-search-here ()
+    "Project ripgrep from the current buffer's directory and deeper."
+    (interactive)
+    (consult-ripgrep default-directory))
   (defun my/project-search-all ()
     "Project ripgrep including hidden and gitignored files.
 Useful .git files (config, hooks/, COMMIT_EDITMSG) are searchable, but
@@ -377,6 +381,7 @@ noisy internals (objects/, rr-cache/, logs/, modules/, lfs/) are skipped."
     [["Navigation"
       ("s" "Search" consult-ripgrep)
       ("S" "Search (all)" my/project-search-all)
+      ("." "Search (here)" my/project-search-here)
       ("b" "Buffers" consult-project-buffer)
       ("f" "Files" project-find-file)
       ("F" "Files (all)" my/project-find-file-all)
