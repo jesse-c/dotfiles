@@ -696,8 +696,6 @@ This includes buffers visible in windows or tab-bar tabs."
   :after (transient all-the-icons isearch)
   :commands
   (magit-status magit-blame magit-blame-quit)
-  :custom
-  (magit-git-executable "/opt/homebrew/bin/git")
   :init
   (setopt magit-format-file-function #'magit-format-file-all-the-icons)
   :bind
@@ -714,9 +712,11 @@ This includes buffers visible in windows or tab-bar tabs."
   ;; buffers and C-x M-g in any Magit enabled buffer)
   (transient-append-suffix 'magit-dispatch "!"
     '("*" "My Magit Cmds" th/magit-aux-commands))
-  (let ((git-path "/Applications/Xcode.app/Contents/Developer/usr/bin/git"))
-    (when (file-exists-p git-path)
-      (setq magit-git-executable git-path))))
+  (setq magit-git-executable
+        (cl-find-if #'file-executable-p
+                    (list "/Applications/Xcode.app/Contents/Developer/usr/bin/git"
+                          "/opt/homebrew/bin/git"
+                          (executable-find "git")))))
 
 (use-package magit-prime
   :after magit
