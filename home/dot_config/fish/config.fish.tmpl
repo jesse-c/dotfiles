@@ -7,8 +7,6 @@ if status is-interactive
 
     set -gx MISE_GITHUB_TOKEN '{{ onepasswordRead "op://Personal/GitHub/API Keys/Mise" }}'
 
-    mise activate fish | source
-
     export HOMEBREW_NO_ANALYTICS=1
     export HOMEBREW_NO_ENV_HINTS=1
 
@@ -194,10 +192,12 @@ if status is-interactive
 
     bind \cg forget # Normal mode
     bind -M insert \cg forget # Insert mode
+end
 
-    # Local ----------------------------------------------------------------------
+mise activate fish | source
 
-    if test -e ~/.config/.fish/local.fish
-        source ~/.config/fish/local.fish
-    end
+# Local ----------------------------------------------------------------------
+
+if test -e ~/.config/fish/local.fish
+    source ~/.config/fish/local.fish
 end
