@@ -4447,40 +4447,74 @@ function run() {
 
   const nowT = t(now);
   const isNow = function(e) { return t(e.startDate) <= nowT && t(e.endDate) > nowT; };
-  let chosen = list.find(isNow);
-  if (!chosen) chosen = list.find(function(e) { return t(e.startDate) > nowT; });
-  if (!chosen) return 'NONE';
-
-  return ObjC.unwrap(chosen.title) || '(untitled)';
+  const current = list.find(isNow);
+  const next = list.find(function(e) { return t(e.startDate) > nowT; });
+  const fmt = function(e) { return e ? (ObjC.unwrap(e.title) || '(untitled)') : 'NONE'; };
+  return 'CURRENT:' + fmt(current) + '\\nNEXT:' + fmt(next);
 }"
-  "JXA program (run via osascript) printing the current or next calendar event.")
+  "JXA program (run via osascript) printing current and next calendar events on separate tagged lines.")
 
-(defun my/calendar-current-or-next-event ()
-  "Return the title of the current macOS Calendar event, or the next one.
-Return nil when there are no events or Calendar access was denied.  Called
-interactively, echo the title (or a status message).  Reads events via
-EventKit through osascript; the first run prompts for access."
-  (interactive)
+(defun my/calendar--fetch ()
+  "Run the JXA script and return (CURRENT . NEXT), or the symbol `no-access'.
+CURRENT and NEXT are strings or nil."
   (let* ((out (with-temp-buffer
                 (call-process-region my/calendar-jxa-script nil
                                      "osascript" nil t nil "-l" "JavaScript")
                 (string-trim (buffer-string))))
-         (line (car (last (s-lines out)))) ; ignore any stray output
-         (title (unless (member line '("NONE" "NO_ACCESS")) line)))
-    (when (called-interactively-p 'interactive)
-      (message "%s"
-               (pcase line
-                 ("NONE" "No events in the next 7 days")
-                 ("NO_ACCESS" "Calendar access denied — grant Emacs access in System Settings › Privacy & Security › Calendars")
-                 (_ title))))
-    title))
+         (lines (s-lines out))
+         (tagged (seq-filter (lambda (l) (string-match-p "^\\(CURRENT\\|NEXT\\):" l)) lines)))
+    (if (member "NO_ACCESS" lines)
+        'no-access
+      (let ((current-line (seq-find (lambda (l) (string-prefix-p "CURRENT:" l)) tagged))
+            (next-line    (seq-find (lambda (l) (string-prefix-p "NEXT:" l))    tagged)))
+        (cons (let ((v (and current-line (substring current-line (length "CURRENT:")))))
+                (unless (equal v "NONE") v))
+              (let ((v (and next-line (substring next-line (length "NEXT:")))))
+                (unless (equal v "NONE") v)))))))
 
-(defun my/calendar-insert-current-or-next-event ()
-  "Insert the current/next macOS Calendar event title at point."
+(defun my/calendar-current-event ()
+  "Return the title of the currently active macOS Calendar event, or nil.
+Called interactively, echo the title or a status message."
   (interactive)
-  (if-let* ((title (my/calendar-current-or-next-event)))
+  (let ((result (my/calendar--fetch)))
+    (if (eq result 'no-access)
+        (progn
+          (when (called-interactively-p 'interactive)
+            (message "Calendar access denied — grant Emacs access in System Settings › Privacy & Security › Calendars"))
+          nil)
+      (let ((title (car result)))
+        (when (called-interactively-p 'interactive)
+          (message "%s" (or title "No current event")))
+        title))))
+
+(defun my/calendar-next-event ()
+  "Return the title of the next upcoming macOS Calendar event, or nil.
+Called interactively, echo the title or a status message."
+  (interactive)
+  (let ((result (my/calendar--fetch)))
+    (if (eq result 'no-access)
+        (progn
+          (when (called-interactively-p 'interactive)
+            (message "Calendar access denied — grant Emacs access in System Settings › Privacy & Security › Calendars"))
+          nil)
+      (let ((title (cdr result)))
+        (when (called-interactively-p 'interactive)
+          (message "%s" (or title "No upcoming events in the next 7 days")))
+        title))))
+
+(defun my/calendar-insert-current-event ()
+  "Insert the current macOS Calendar event title at point."
+  (interactive)
+  (if-let* ((title (my/calendar-current-event)))
       (insert title)
-    (message "No current or upcoming calendar event to insert")))
+    (message "No current calendar event to insert")))
+
+(defun my/calendar-insert-next-event ()
+  "Insert the next macOS Calendar event title at point."
+  (interactive)
+  (if-let* ((title (my/calendar-next-event)))
+      (insert title)
+    (message "No upcoming calendar event to insert")))
 
 ;;; Dotfiles
 
