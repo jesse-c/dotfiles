@@ -3976,6 +3976,11 @@ database, but may be available via poetry, pipenv, or a project virtualenv."
   :hook
   (flycheck-mode . flycheck-swift-setup))
 
+;;; Language: JavaScript
+
+(add-to-list 'auto-mode-alist '("\\.cjs\\'" . js-ts-mode))
+(add-to-list 'auto-mode-alist '("\\.mjs\\'" . js-ts-mode))
+
 ;;; Language: TypeScript
 
 (with-eval-after-load 'treesit
