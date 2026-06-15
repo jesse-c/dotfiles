@@ -2767,12 +2767,21 @@ If BUFFER is provided, close that buffer directly."
 (defun my/ghostty-send-region-to-tab (text win-idx tab-idx)
     "Send region to a Ghostty tab selected from a completing-read list."
     (interactive
-     (let* ((text (buffer-substring-no-properties (region-beginning) (region-end))))
+     (let* ((beg (region-beginning))
+            (end (region-end))
+            (text (buffer-substring-no-properties beg end))
+            (source (when (buffer-file-name)
+                      (format "# %s:%d-%d\n"
+                              (buffer-file-name)
+                              (line-number-at-pos beg)
+                              (line-number-at-pos end))))
+            (include-source (and source (y-or-n-p "Include source? ")))
+            (final-text (if include-source (concat source text) text)))
        (minibuffer-with-setup-hook
            (lambda () (when (bound-and-true-p corfu-mode) (corfu-mode -1)))
          (let* ((candidates (my/ghostty-tab-candidates))
                 (target (cdr (assoc (completing-read "Tab: " candidates nil t) candidates))))
-           (list text (car target) (cdr target))))))
+           (list final-text (car target) (cdr target))))))
     (let ((tmp (make-temp-file "ghostty-send")))
       (unwind-protect
           (progn
@@ -2786,6 +2795,22 @@ If BUFFER is provided, close that buffer directly."
     input text txt to t
   end tell" tab-idx win-idx (shell-quote-argument tmp))))
         (delete-file tmp))))
+
+(defun my/copy-region-with-source ()
+  "Copy region to kill ring, optionally prefixed with file path and line range."
+  (interactive)
+  (let* ((beg (region-beginning))
+         (end (region-end))
+         (text (buffer-substring-no-properties beg end))
+         (source (when (buffer-file-name)
+                   (format "# %s:%d-%d\n"
+                           (buffer-file-name)
+                           (line-number-at-pos beg)
+                           (line-number-at-pos end))))
+         (include-source (and source (y-or-n-p "Include source? ")))
+         (final-text (if include-source (concat source text) text)))
+    (kill-new final-text)
+    (message "Copied%s" (if include-source " with source" ""))))
 
 (use-package evil-ghostel
   :after (ghostel evil)
