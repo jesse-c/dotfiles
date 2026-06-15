@@ -692,6 +692,16 @@ This includes buffers visible in windows or tab-bar tabs."
 
   (add-hook 'git-commit-setup-hook #'my/conventional-commit-prompt))
 
+;; Shim for magit-diff.el as it uses `any' (commit f45a9ed "Use any"),
+;; which is a new Emacs 31 built-in aliased to `member-if'.
+;;
+;; The compat library only loads compat-31.el on Emacs < 31, so on
+;; this pre-release dev build (31.0.50, Sept 2025) where `any' hasn't
+;; landed yet, nothing defines it and magit errors with (void-function
+;; any). Remove this once the Emacs build in use includes `any'.
+(unless (fboundp 'any)
+  (defalias 'any #'cl-member-if))
+
 (use-package magit
   :after (transient all-the-icons isearch)
   :commands
