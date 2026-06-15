@@ -2,6 +2,16 @@
 
 ;;; Code:
 
+;; Emacs 31.0.50 pretest builds predate `set-local', which lands later in the
+;; 31 dev cycle. Compat only shims it for `emacs-major-version' < 31, so on a
+;; 31.x build it is neither native nor shimmed -> void-function. Vertico, Corfu
+;; and Forge call it (Vertico on every minibuffer setup), which breaks M-x.
+;; Self-disables once the running Emacs gains `set-local' natively.
+(unless (fboundp 'set-local)
+  (defun set-local (variable value)
+    "Make VARIABLE buffer local and set it to VALUE."
+    (set (make-local-variable variable) value)))
+
 ;; Using Elpaca instead
 (setq package-enable-at-startup nil)
 
