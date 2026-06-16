@@ -723,10 +723,13 @@ This includes buffers visible in windows or tab-bar tabs."
   (transient-append-suffix 'magit-dispatch "!"
     '("*" "My Magit Cmds" th/magit-aux-commands))
   (setq magit-git-executable
-        (cl-find-if #'file-executable-p
-                    (list "/Applications/Xcode.app/Contents/Developer/usr/bin/git"
-                          "/opt/homebrew/bin/git"
-                          (executable-find "git")))))
+        (let* ((xcode-dev (string-trim (shell-command-to-string "xcode-select -p 2>/dev/null")))
+               (candidates (delq nil
+                                 (list (unless (string-empty-p xcode-dev)
+                                         (concat xcode-dev "/usr/bin/git"))
+                                       "/opt/homebrew/bin/git"
+                                       (executable-find "git")))))
+          (cl-find-if #'file-executable-p candidates))))
 
 (use-package magit-prime
   :after magit
