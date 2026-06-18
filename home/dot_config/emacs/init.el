@@ -129,6 +129,8 @@
   (package-install-upgrade-built-in t)
   (ad-redefinition-action 'accept)
   :init
+  (when (>= emacs-major-version 31)
+    (setq kill-region-dwim 'emacs-word))
   ;; Do not allow the cursor in the minibuffer prompt
   (setq minibuffer-prompt-properties
         '(read-only t cursor-intangible t face minibuffer-prompt))
@@ -303,7 +305,10 @@ PACKAGES should be a list of package names as symbols."
   (vc-display-failed-async-commands t)
   :config
   (require 'autorevert)
-  (vc-auto-revert-mode 1))
+  (vc-auto-revert-mode 1)
+  (when (>= emacs-major-version 31)
+    (setq vc-dir-hide-up-to-date-on-revert t)
+    (setq vc-allow-rewriting-published-history t)))
 
 (use-package project
   :ensure nil
@@ -934,18 +939,20 @@ If the current buffer has no process, execute BODY immediately."
   :ensure nil
   :custom
   (treesit-font-lock-level 2)
-  (treesit-auto-install-grammar 'ask)
+  (treesit-auto-install-grammar t)
   :config
   (defun my/treesit-disable-in-large-buffers ()
     (when (> (buffer-size) 100000)
       (setq-local treesit-font-lock-level 1)))
   :init
-  (setq major-mode-remap-alist
-        '((python-mode . python-ts-mode)
-          (rust-mode . rust-ts-mode)
-          (bash-mode . bash-ts-mode)
-          (typescript-mode . typescript-ts-mode)
-          (json-mode . json-ts-mode)))
+  (if (>= emacs-major-version 31)
+      (setq treesit-enabled-modes t)
+    (setq major-mode-remap-alist
+          '((python-mode . python-ts-mode)
+            (rust-mode . rust-ts-mode)
+            (bash-mode . bash-ts-mode)
+            (typescript-mode . typescript-ts-mode)
+            (json-mode . json-ts-mode))))
   :hook
   (find-file-hook . my/treesit-disable-in-large-buffers))
 
@@ -958,11 +965,11 @@ If the current buffer has no process, execute BODY immediately."
   ;; https://github.com/minad/corfu/wiki#filter-list-of-all-possible-completions-with-completion-style-like-orderless
   (setq completion-category-overrides '((eglot (styles orderless))
                                         (eglot-capf (styles orderless))))
-  (add-to-list 'major-mode-remap-alist
-               '(conf-toml-mode . toml-ts-mode))
+  (when (< emacs-major-version 31)
+    (add-to-list 'major-mode-remap-alist
+                 '(conf-toml-mode . toml-ts-mode)))
   :custom
   (eglot-autoshutdown t)
-  (eglot-events-buffer-size 0)
   (eglot-sync-connect nil) ;; The value of nil or 0 means don’t block at all during the waiting period
   (eglot-workspace-configuration
    '(:Lua (:diagnostics (:unusedLocalExclude ["_*"]
@@ -1012,12 +1019,17 @@ If the current buffer has no process, execute BODY immediately."
 
   (advice-add 'jsonrpc--json-encode :around #'my/eglot-sanitize-diagnostic-messages)
 
-  ;; Remove code action display from eldoc to avoid duplication with sideline-eglot
-  (defun my/eglot-remove-code-action-eldoc ()
-    "Remove eglot code action display from eldoc-documentation-functions."
-    (remove-hook 'eldoc-documentation-functions #'eglot-code-action-suggestion t))
-
-  (add-hook 'eglot-managed-mode-hook #'my/eglot-remove-code-action-eldoc)
+  (if (>= emacs-major-version 31)
+      (progn
+        (setq eglot-events-buffer-config '(:size 0 :format full))
+        (setq eglot-code-action-indications nil)
+        (setq eglot-documentation-renderer 'markdown-ts-view-mode))
+    (setq eglot-events-buffer-size 0)
+    ;; Remove code action display from eldoc to avoid duplication with sideline-eglot
+    (defun my/eglot-remove-code-action-eldoc ()
+      "Remove eglot code action display from eldoc-documentation-functions."
+      (remove-hook 'eldoc-documentation-functions #'eglot-code-action-suggestion t))
+    (add-hook 'eglot-managed-mode-hook #'my/eglot-remove-code-action-eldoc))
 
   :hook
   (clojure-mode . my/eglot-ensure-deferred)
@@ -3482,6 +3494,11 @@ If no, restores full opacity. Only affects the active frame."
   :after (avy casual)
   :commands casual-avy-tmenu)
 
+(use-package ibuffer
+  :ensure nil
+  :custom
+  (ibuffer-human-readable-size (>= emacs-major-version 31)))
+
 (use-package marginalia
   ;; Bind `marginalia-cycle' locally in the minibuffer.  To make the binding
   ;; available in the *Completions* buffer, add it to the
@@ -4227,6 +4244,7 @@ Interactively, POINT is point and KILL is the prefix argument."
 ;;; Language: Markdown
 
 (use-package markdown-ts-mode
+  :if (< emacs-major-version 31)
   :mode ("\\.md\\'" . markdown-ts-mode)
   :defer t
   :config
