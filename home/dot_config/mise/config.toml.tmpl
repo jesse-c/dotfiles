@@ -1,5 +1,8 @@
 [env]
 NODE_OPTIONS = "--no-deprecation"
+# gcloud's bootstrap defaults to system python3 (3.9), which is unsupported and
+# fails to import urllib3. Pin it to mise's python 3.12 (always installed).
+CLOUDSDK_PYTHON = "{{ .chezmoi.homeDir }}/.local/share/mise/installs/python/3.12/bin/python3"
 {{ if eq .chezmoi.hostname "Plinth" }}
 SCHEME = "racket"
 {{ else if eq .chezmoi.hostname "Dais" }}
