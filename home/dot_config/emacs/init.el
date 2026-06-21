@@ -2687,9 +2687,29 @@ If BUFFER is provided, close that buffer directly."
 
 (use-package shell-maker)
 
+;; Tip: `C-u M-x` ghostel for an additional Ghostel terminal
 (use-package ghostel
+  :bind (("C-x m" . ghostel)
+         :map ghostel-semi-char-mode-map
+         ("C-s"  . consult-line)
+         ("C-k"  . my/ghostel-send-C-k-and-kill)
+         ("M-p" . (lambda () (interactive) (ghostel-send-key "p" "ctrl")))
+         ("M-n" . (lambda () (interactive) (ghostel-send-key "n" "ctrl")))
+         :map project-prefix-map
+         ("m" . ghostel-project)
+         ("M" . ghostel-project-list-buffers))
   :init
-  (setq ghostel-module-auto-install 'download))
+  (setq ghostel-module-auto-install 'download)
+  :config
+  (defun my/ghostel-send-C-k-and-kill ()
+    "Send `C-k' to ghostel.
+Like normal Emacs `C-k'.  Kill to end of line and put content in kill-ring."
+    (interactive)
+    (kill-ring-save (point) (line-end-position))
+    (ghostel-send-key "k" "ctrl"))
+  (add-to-list 'project-switch-commands '(ghostel-project "Ghostel") t)
+  (add-to-list 'project-switch-commands '(ghostel-project-list-buffers "Ghostel buffers") t)
+  (add-to-list 'ghostel-eval-cmds '("magit-status-setup-buffer" magit-status-setup-buffer)))
 
 (defun my/ghostty-tab-candidates ()
   "Return alist of (LABEL . (WIN-IDX . TAB-IDX)) for all Ghostty tabs."
