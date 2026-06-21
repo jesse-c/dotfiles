@@ -4441,6 +4441,10 @@ result instead of `message'."
 
 (add-to-list 'auto-mode-alist '("\\.pkl\\'" . pkl-mode))
 
+;;; Language: HTML
+
+(add-to-list 'treesit-language-source-alist '(html "https://github.com/tree-sitter/tree-sitter-html"))
+
 ;;; macOS Calendar
 
 (defconst my/calendar-jxa-script "\
