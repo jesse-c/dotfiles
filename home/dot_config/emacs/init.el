@@ -884,7 +884,9 @@ If the current buffer has no process, execute BODY immediately."
   :defer 1
   :custom
   (git-link-use-commit t)
-  (git-link-add-to-kill-ring t))
+  (git-link-add-to-kill-ring t)
+  :config
+  (require 'git-link-transient))
 
 ;; Why was this line changed
 (use-package git-messenger
