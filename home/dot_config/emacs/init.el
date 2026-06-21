@@ -2736,8 +2736,10 @@ If BUFFER is provided, close that buffer directly."
      (let* ((candidates (my/ghostty-tab-candidates))
             (choice (completing-read "Tab: " candidates nil t))
             (target (cdr (assoc choice candidates)))
-            (text (read-string "Text: ")))
-       (list (car target) (cdr target) text))))
+            (text (read-string "Text: "))
+            (msg (read-string "Message (optional): "))
+            (final-text (if (string-empty-p msg) text (concat msg "\n\n" text))))
+       (list (car target) (cdr target) final-text))))
   (let ((tmp (make-temp-file "ghostty-send")))
     (unwind-protect
         (progn
@@ -2765,7 +2767,9 @@ If BUFFER is provided, close that buffer directly."
                               (line-number-at-pos beg)
                               (line-number-at-pos end))))
             (include-source (and source (y-or-n-p "Include source? ")))
-            (final-text (if include-source (concat source text) text)))
+            (msg (read-string "Message (optional): "))
+            (body (if include-source (concat source text) text))
+            (final-text (if (string-empty-p msg) body (concat msg "\n\n" body))))
        (minibuffer-with-setup-hook
            (lambda () (when (bound-and-true-p corfu-mode) (corfu-mode -1)))
          (let* ((candidates (my/ghostty-tab-candidates))
