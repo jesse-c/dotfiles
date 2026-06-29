@@ -1039,6 +1039,9 @@ If the current buffer has no process, execute BODY immediately."
   (yaml-ts-mode . my/eglot-ensure-deferred)
   (pkl-mode . my/eglot-ensure-deferred)
   (sql-mode . my/eglot-ensure-deferred)
+  (just-mode . my/eglot-ensure-deferred)
+  (sh-mode . my/eglot-ensure-deferred)
+  (bash-ts-mode . my/eglot-ensure-deferred)
   :bind
   ("s-l" . eglot-transient-menu)
   :config
@@ -1138,6 +1141,12 @@ If the current buffer has no process, execute BODY immediately."
   (add-to-list 'eglot-server-programs
                `(lua-ts-mode . ,(eglot-alternatives
                                  '(("lua-language-server")))))
+  (add-to-list 'eglot-server-programs
+               `(just-ts-mode . ,(eglot-alternatives
+                                  '(("just-lsp")))))
+  (add-to-list 'eglot-server-programs
+               `((sh-mode bash-ts-mode) . ,(eglot-alternatives
+                                            '(("bash-language-server" "start")))))
 
   (transient-define-prefix eglot-server-menu ()
     "Eglot server commands."
