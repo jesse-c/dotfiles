@@ -4459,6 +4459,12 @@ result instead of `message'."
     (let ((path (my/nxml-where)))
       (kill-new path))))
 
+;;; Language: Terraform
+
+(use-package terraform-mode
+  :hook
+  (terraform-mode . outline-minor-mode))
+
 ;;; Language: pkl
 
 (define-derived-mode pkl-mode prog-mode "pkl"
