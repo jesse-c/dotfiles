@@ -702,7 +702,7 @@ This includes buffers visible in windows or tab-bar tabs."
   (transient-append-suffix 'magit-dispatch "!"
     '("*" "My Magit Cmds" th/magit-aux-commands))
   (setq magit-git-executable
-        (let* ((xcode-dev (string-trim (shell-command-to-string "xcode-select -p 2>/dev/null")))
+        (let* ((xcode-dev (string-trim (shell-command-to-string "/usr/bin/xcode-select -p 2>/dev/null")))
                (candidates (delq nil
                                  (list (unless (string-empty-p xcode-dev)
                                          (concat xcode-dev "/usr/bin/git"))
