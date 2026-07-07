@@ -2698,7 +2698,9 @@ If BUFFER is provided, close that buffer directly."
 
 (use-package shell-maker)
 
-;; Tip: `C-u M-x` ghostel for an additional Ghostel terminal
+;; Tip: `C-c u M-x` ghostel for an additional Ghostel terminal
+;;
+;; Universal-argument is mapped to `to C-c u`.
 (use-package ghostel
   :bind (("C-x m" . ghostel)
          :map ghostel-semi-char-mode-map
