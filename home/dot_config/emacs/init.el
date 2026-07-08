@@ -2564,6 +2564,10 @@ If BUFFER is provided, close that buffer directly."
   ;; Evil state-specific RET behavior: insert mode = newline, normal mode = send
   (evil-define-key 'insert agent-shell-mode-map (kbd "RET") #'newline)
   (evil-define-key 'normal agent-shell-mode-map (kbd "RET") #'comint-send-input)
+  ;; shell-maker's `g` prefix shadowing Evil's tab-bar bindings
+  (evil-define-key 'normal agent-shell-mode-map
+    (kbd "gt") #'tab-bar-switch-to-next-tab
+    (kbd "gT") #'tab-bar-switch-to-prev-tab)
 
   ;; Configure `*agent-shell-diff*` buffers to start in Emacs state
   (add-hook 'diff-mode-hook
