@@ -2853,9 +2853,27 @@ Like normal Emacs `C-k'.  Kill to end of line and put content in kill-ring."
     (kill-new final-text)
     (message "Copied%s" (if include-source " with source" ""))))
 
+;; Tip: On state modes:
+;;
+;; - `C-z` to toggle between Emacs escape modes
+;; - `C-S-z` to toggle between Ghostel escape modes
 (use-package evil-ghostel
   :after (ghostel evil)
-  :hook (ghostel-mode . evil-ghostel-mode))
+  :hook (ghostel-mode . evil-ghostel-mode)
+  :config
+  (evil-define-key '(normal insert emacs) evil-ghostel-mode-map
+    (kbd "C-S-z") #'evil-ghostel-toggle-send-escape)
+  (with-eval-after-load 'doom-modeline
+    (doom-modeline-def-segment my/evil-ghostel-escape
+      "Show the evil-ghostel ESC routing mode."
+      (when (bound-and-true-p evil-ghostel-mode)
+        (propertize (format " ESC:%s" evil-ghostel--escape-mode)
+                    'face (doom-modeline-face 'doom-modeline-buffer-minor-mode))))
+    (advice-add 'evil-ghostel-toggle-send-escape :after
+                (lambda (&rest _) (force-mode-line-update)))
+    (doom-modeline-def-modeline 'main
+      '(eldoc bar window-state workspace-name window-number modals matches follow buffer-info remote-host buffer-position word-count parrot selection-info)
+      '(compilation objed-state misc-info project-name persp-name battery grip irc mu4e gnus github debug repl lsp minor-modes my/evil-ghostel-escape input-method indent-info buffer-encoding major-mode process vcs check time))))
 
 ;;; Notes
 
