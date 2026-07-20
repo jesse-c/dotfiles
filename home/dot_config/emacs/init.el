@@ -1270,6 +1270,9 @@ If the current buffer has no process, execute BODY immediately."
 
 (global-tab-line-mode)
 
+(global-set-key (kbd "C-<tab>") #'tab-bar-switch-to-next-tab)
+(global-set-key (kbd "C-S-<tab>") #'tab-bar-switch-to-prev-tab)
+
 ;; Actions
 
 (use-package consult
