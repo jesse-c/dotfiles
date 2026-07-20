@@ -1042,6 +1042,7 @@ If the current buffer has no process, execute BODY immediately."
   (just-mode . my/eglot-ensure-deferred)
   (sh-mode . my/eglot-ensure-deferred)
   (bash-ts-mode . my/eglot-ensure-deferred)
+  (terraform-mode . my/eglot-ensure-deferred)
   :bind
   ("s-l" . eglot-transient-menu)
   :config
@@ -1147,6 +1148,9 @@ If the current buffer has no process, execute BODY immediately."
   (add-to-list 'eglot-server-programs
                `((sh-mode bash-ts-mode) . ,(eglot-alternatives
                                             '(("bash-language-server" "start")))))
+  (add-to-list 'eglot-server-programs
+               `(terraform-mode . ,(eglot-alternatives
+                                    '(("terraform-ls" "serve")))))
 
   (transient-define-prefix eglot-server-menu ()
     "Eglot server commands."
