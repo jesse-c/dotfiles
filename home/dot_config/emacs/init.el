@@ -2866,7 +2866,10 @@ Like normal Emacs `C-k'.  Kill to end of line and put content in kill-ring."
   :hook (ghostel-mode . evil-ghostel-mode)
   :config
   (evil-define-key '(normal insert emacs) evil-ghostel-mode-map
-    (kbd "C-S-z") #'evil-ghostel-toggle-send-escape)
+    (kbd "C-S-z")   #'evil-ghostel-toggle-send-escape
+    (kbd "C-<tab>") #'tab-bar-switch-to-next-tab
+    (kbd "C-S-<tab>") #'tab-bar-switch-to-prev-tab
+    (kbd "C-w")     evil-window-map)
   (with-eval-after-load 'doom-modeline
     (doom-modeline-def-segment my/evil-ghostel-escape
       "Show the evil-ghostel ESC routing mode."
