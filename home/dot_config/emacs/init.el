@@ -687,6 +687,14 @@ This includes buffers visible in windows or tab-bar tabs."
   (magit-status magit-blame magit-blame-quit)
   :init
   (setopt magit-format-file-function #'magit-format-file-all-the-icons)
+  ;; Bleeding-edge Magit (HEAD) calls `all' (a list predicate) in the
+  ;; :safe predicates of `git-commit-trailers' and
+  ;; `magit-branch-name-suggestions', but this Emacs 31 build predates
+  ;; it.  Without this shim, staging in any repo whose dir-/file-locals
+  ;; set either variable fails during `hack-local-variables' with
+  ;; "or: Symbol's function definition is void: all".
+  (unless (fboundp 'all)
+    (defalias 'all #'cl-every))
   :bind
   (:map magit-status-mode-map
         ("*" . th/magit-aux-commands))
@@ -755,52 +763,11 @@ This includes buffers visible in windows or tab-bar tabs."
 (use-package browse-at-remote
   :after magit)
 
-;; Backfill vc-run-delayed-success for Emacs 31 (removed from upstream)
-;; Must be defined before diff-hl loads
-;; Source: https://github.com/emacs-mirror/emacs/blob/ab6382087021152b91d5bc9395fed68aa2d9c32b/lisp/vc/vc-dispatcher.el#L318
-(unless (fboundp 'vc-run-delayed-success)
-  (defmacro vc-run-delayed-success (okstatus &rest body)
-    "Execute BODY when the current buffer's process exits successfully.
-This means the current buffer's process exits normally (i.e., does not
-die to a signal) with status not exceeding OKSTATUS.
-If the current buffer has no process, execute BODY immediately."
-    (declare (indent 1) (debug (def-body)))
-    `(vc-exec-after (lambda () ,@body) ,okstatus))
-
-  (defun vc-wait-for-process-before-save (proc message)
-    "Make Emacs wait for PROC before saving buffers under current VC tree.
-  If waiting for PROC takes more than a second, display MESSAGE.
-
-  This is used to implement `vc-async-checkin'.  It effectively switches
-  to a synchronous checkin in the case that the user asks to save a buffer
-  under the tree in which the checkin operation is running.
-
-  The hook installed by this function will make Emacs unconditionally wait
-  for PROC if the root of the current VC tree couldn't be determined, and
-  whenever writing out a buffer which doesn't have any `buffer-file-name'
-  yet."
-    (letrec ((root (vc-root-dir))
-             (hook
-              (lambda ()
-                (cond ((not (process-live-p proc))))
-                (remove-hook 'before-save-hook hook)
-                ((or (and buffer-file-name
-                          (or (not root)))
-                     (file-in-directory-p buffer-file-name
-                                          root)))
-                ;; No known buffer file name but we are saving:
-                ;; perhaps writing out a `special-mode' buffer.
-                ;; A `before-save-hook' cannot know whether or
-                ;; not it'll be written out under ROOT.
-                ;; Err on the side of switching to synchronous.
-                (not buffer-file-name
-                     (with-delayed-message (1 message)
-                       (while (process-live-p proc))))
-                (when (input-pending-p)
-                  (discard-input))
-                (sit-for 0.05
-                         (remove-hook 'before-save-hook hook)))))
-      (add-hook 'before-save-hook hook))))
+;; Do NOT backfill `vc-run-delayed-success': this Emacs build's
+;; `vc-exec-after' takes a process (not an okstatus integer) as its SUCCESS
+;; arg, so a backfill makes diff-hl's async updates throw `processp, 1' in
+;; vc--process-sentinel on every save.  diff-hl already falls back to
+;; `diff-hl--when-done' when the symbol is absent.
 
 (use-package diff-hl
   :hook ((prog-mode . diff-hl-mode)
