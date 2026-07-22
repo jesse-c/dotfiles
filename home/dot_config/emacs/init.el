@@ -2838,8 +2838,12 @@ Like normal Emacs `C-k'.  Kill to end of line and put content in kill-ring."
   (evil-define-key '(normal insert emacs) evil-ghostel-mode-map
     (kbd "C-S-z")   #'evil-ghostel-toggle-send-escape
     (kbd "C-<tab>") #'tab-bar-switch-to-next-tab
-    (kbd "C-S-<tab>") #'tab-bar-switch-to-prev-tab
-    (kbd "C-w")     evil-window-map)
+    (kbd "C-S-<tab>") #'tab-bar-switch-to-prev-tab)
+  ;; evil-ghostel registers "w" in its ctrl-passthrough list, binding C-w in
+  ;; insert state to send ctrl-w to the terminal via evil-define-key* (immediate).
+  ;; Use evil-define-key* here too so our override wins after normalisation.
+  (evil-define-key* '(normal insert emacs) evil-ghostel-mode-map
+    (kbd "C-w") evil-window-map)
   (with-eval-after-load 'doom-modeline
     (doom-modeline-def-segment my/evil-ghostel-escape
       "Show the evil-ghostel ESC routing mode."
