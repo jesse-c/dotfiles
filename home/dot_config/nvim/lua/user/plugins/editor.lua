@@ -1,5 +1,17 @@
 return {
   {
+    -- Tip: ys<motion><char> to add, cs<old><new> to change, ds<char> to delete
+    --      e.g. ysiw` wraps word in backticks, cs`' swaps them, ds` removes
+    "kylechui/nvim-surround",
+    event = "VeryLazy",
+    opts = {},
+  },
+  {
+    "gregorias/nvim-surround-wk",
+    dependencies = { "kylechui/nvim-surround", "folke/which-key.nvim" },
+    config = true,
+  },
+  {
     "windwp/nvim-autopairs",
     event = "InsertEnter",
     opts = {}, -- this is equalent to setup({}) function
