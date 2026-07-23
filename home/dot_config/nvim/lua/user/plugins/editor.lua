@@ -12,6 +12,13 @@ return {
     config = true,
   },
   {
+    -- Tip: searches TODO/FIXME/HACK/NOTE/PERF across the project; <leader>st to list with Telescope
+    "folke/todo-comments.nvim",
+    dependencies = { "nvim-lua/plenary.nvim" },
+    event = "VeryLazy",
+    opts = {},
+  },
+  {
     "windwp/nvim-autopairs",
     event = "InsertEnter",
     opts = {}, -- this is equalent to setup({}) function
