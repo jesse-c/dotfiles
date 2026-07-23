@@ -64,7 +64,17 @@ return {
         { "<D-p>", group = "project" },
         { "<D-b>", "<cmd>Telescope buffers<cr>", desc = "Buffers" },
         { "<D-p>s", "<cmd>Telescope live_grep<cr>", desc = "Search (ripgrep)" },
+        {
+          "<D-p>.",
+          function() require("telescope.builtin").live_grep({ cwd = vim.fn.expand("%:p:h") }) end,
+          desc = "Search (here)",
+        },
         { "<D-p>f", "<cmd>Telescope find_files<cr>", desc = "Files" },
+        {
+          "<D-p>,",
+          function() require("telescope.builtin").find_files({ cwd = vim.fn.expand("%:p:h") }) end,
+          desc = "Files (here)",
+        },
         { "<D-p>l", "<cmd>Telescope current_buffer_fuzzy_find<cr>", desc = "Line (current buffer)" },
         { "<D-p>d", "<cmd>Neotree toggle<cr>", desc = "Dired (file explorer)" },
 
@@ -175,6 +185,22 @@ return {
         -- Xref
         { "<D-u>a", "<C-o>", desc = "Back" },
         { "<D-u>o", "<C-i>", desc = "Forward" },
+        { "<D-u>d", "<cmd>Telescope lsp_definitions<cr>", desc = "Definitions" },
+        { "<D-u>r", "<cmd>Telescope lsp_references<cr>", desc = "References" },
+        { "<D-u>s", "<cmd>Telescope lsp_workspace_symbols<cr>", desc = "Symbols" },
+
+        -- Errors
+        { "<D-u>i", function() vim.diagnostic.goto_next() end, desc = "Next error" },
+        { "<D-u>I", function() vim.diagnostic.goto_prev() end, desc = "Previous error" },
+
+        -- Structure
+        { "<D-u>,", "[m", desc = "Function beginning" },
+        { "<D-u>.", "]M", desc = "Function ending" },
+
+        -- Folds
+        { "<D-u>zo", "zo", desc = "Open fold" },
+        { "<D-u>zc", "zc", desc = "Close fold" },
+        { "<D-u>za", "za", desc = "Toggle fold" },
 
         -- Comment mappings
         { "gcc", desc = "Toggle line comment" },
