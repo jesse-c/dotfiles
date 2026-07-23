@@ -731,6 +731,8 @@ This includes buffers visible in windows or tab-bar tabs."
 (use-package git-spice
   :load-path "~/src/github.com/jesse-c/git-spice.el"
   :after magit
+  :custom
+  (git-spice-executable "git-spice")
   :config
   (git-spice-setup-magit-section))
 
