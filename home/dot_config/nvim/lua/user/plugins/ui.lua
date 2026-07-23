@@ -99,7 +99,7 @@ return {
     config = function()
       require("lualine").setup({
         options = { theme = "catppuccin-mocha", globalstatus = true, section_separators = "", component_separators = "" },
-        extensions = { "nvim-tree", "lazy" },
+        extensions = { "neo-tree", "lazy" },
       })
     end,
   },

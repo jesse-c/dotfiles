@@ -66,7 +66,7 @@ return {
         { "<D-p>s", "<cmd>Telescope live_grep<cr>", desc = "Search (ripgrep)" },
         { "<D-p>f", "<cmd>Telescope find_files<cr>", desc = "Files" },
         { "<D-p>l", "<cmd>Telescope current_buffer_fuzzy_find<cr>", desc = "Line (current buffer)" },
-        { "<D-p>d", "<cmd>NvimTreeToggle<cr>", desc = "Dired (file explorer)" },
+        { "<D-p>d", "<cmd>Neotree toggle<cr>", desc = "Dired (file explorer)" },
 
         -- Embark-like DWIM (Do What I Mean) - C-; equivalent
         {
