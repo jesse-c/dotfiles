@@ -80,14 +80,21 @@ return {
       -- Define filetypes for each server
       local server_filetypes = {
         clojure_lsp = { "clojure" },
-        elixir_ls = { "elixir" },
+        elixir_ls = { "elixir", "heex" },
         gopls = { "go" },
-        denols = { "javascript", "typescript" },
+        -- ts_ls handles regular TS/JS projects (tsconfig/package.json)
+        -- denols handles Deno projects (deno.json) — mutually exclusive via root_markers
+        ts_ls = { "javascript", "typescript", "javascriptreact", "typescriptreact" },
+        denols = { "javascript", "typescript", "javascriptreact", "typescriptreact" },
         texlab = { "tex", "bib" },
         yamlls = { "yaml" },
         sourcekit = { "swift" },
         rust_analyzer = { "rust" },
-        basedpyright = { "python" },
+        ty = { "python" },
+        lua_ls = { "lua" },
+        bashls = { "sh", "bash" },
+        sqls = { "sql" },
+        terraformls = { "terraform", "tf" },
         marksman = { "markdown" },
         tinymist = { "typst" },
         taplo = { "toml" },
@@ -122,6 +129,25 @@ return {
         end,
       })
 
+      -- PKL LSP (matches Emacs Eglot config)
+      local pkl_jar_path = vim.fn.expand("~/.local/bin/pkl-lsp.jar")
+      if vim.fn.filereadable(pkl_jar_path) == 1 then
+        local pkl_config = {
+          name = "pkl_lsp",
+          cmd = { "java", "-jar", pkl_jar_path },
+          filetypes = { "pkl" },
+          root_dir = lsp_util.find_git_ancestor,
+          capabilities = capabilities,
+        }
+        vim.api.nvim_create_autocmd("FileType", {
+          group = lsp_augroup,
+          pattern = "pkl",
+          callback = function()
+            vim.lsp.start(pkl_config)
+          end,
+        })
+      end
+
       -- Vespa Schema LSP (matches Emacs Eglot config)
       local vespa_jar_path = vim.fn.expand("~/.local/bin/vespa-lsp.jar")
       if vim.fn.filereadable(vespa_jar_path) == 1 then
@@ -148,14 +174,19 @@ return {
           cmd = { "clojure-lsp" },
         },
         elixir_ls = {
-          cmd = { "elixir-ls" },
+          cmd = { "expert", "--stdio" },
           root_markers = { "mix.exs", ".git" },
         },
         gopls = {
           cmd = { "gopls" },
         },
+        ts_ls = {
+          cmd = { "typescript-language-server", "--stdio" },
+          root_markers = { "tsconfig.json", "jsconfig.json", "package.json" },
+        },
         denols = {
           cmd = { "deno", "lsp" },
+          root_markers = { "deno.json", "deno.jsonc" },
         },
         texlab = {
           cmd = { "texlab" },
@@ -169,17 +200,20 @@ return {
         rust_analyzer = {
           cmd = { "rust-analyzer" },
         },
-        basedpyright = {
-          cmd = { "basedpyright-langserver", "--stdio" },
-          settings = {
-            basedpyright = {
-              analysis = {
-                autoSearchPaths = true,
-                useLibraryCodeForTypes = true,
-                diagnosticMode = "workspace",
-              },
-            },
-          },
+        ty = {
+          cmd = { "ty", "server" },
+        },
+        lua_ls = {
+          cmd = { "lua-language-server" },
+        },
+        bashls = {
+          cmd = { "bash-language-server", "start" },
+        },
+        sqls = {
+          cmd = { "sqls" },
+        },
+        terraformls = {
+          cmd = { "terraform-ls", "serve" },
         },
         marksman = {
           cmd = { "marksman" },
