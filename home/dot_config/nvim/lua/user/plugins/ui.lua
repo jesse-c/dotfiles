@@ -14,17 +14,16 @@ return {
         integrations = {
           alpha = true,
           neogit = true,
-          cmp = true,
+          blink_cmp = true,
           gitsigns = true,
           nvimtree = true,
           treesitter = true,
-          notify = true,
+          notify = false,
           which_key = true,
           dropbar = {
             enabled = false,
             color_mode = true, -- enable color for kind's texts, not just kind's icons
           },
-          fidget = true,
           neotest = true,
           lsp_trouble = true,
         },
@@ -96,11 +95,11 @@ return {
   },
   {
     "nvim-lualine/lualine.nvim",
-    dependencies = { "nvim-tree/nvim-web-devicons", "catppuccin/nvim" },
+    dependencies = { "catppuccin/nvim" },
     config = function()
       require("lualine").setup({
         options = { theme = "catppuccin-mocha", globalstatus = true, section_separators = "", component_separators = "" },
-        extensions = { "neo-tree", "lazy" },
+        extensions = { "nvim-tree", "lazy" },
       })
     end,
   },
@@ -108,6 +107,10 @@ return {
     "echasnovski/mini.icons",
     version = false,
     opts = {},
+    config = function(_, opts)
+      require("mini.icons").setup(opts)
+      MiniIcons.mock_nvim_web_devicons()
+    end,
   },
   {
     "nvim-neotest/nvim-nio",

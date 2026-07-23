@@ -56,7 +56,6 @@ vim.o.scrolloff = 4
 
 -- Current line
 
-vim.o.ruler = true
 vim.o.cursorline = true
 
 -- Quitting

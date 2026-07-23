@@ -1,16 +1,11 @@
 return {
   {
     "nvim-telescope/telescope.nvim",
-    tag = "0.1.5",
     dependencies = {
       "nvim-lua/plenary.nvim",
       "nvim-telescope/telescope-fzf-native.nvim",
     },
     cmd = "Telescope",
-    event = { "BufRead" },
-    keys = {
-      -- Removed old bindings - now using Cmd+p project menu
-    },
     config = function()
       local telescope = require("telescope")
 
@@ -31,7 +26,6 @@ return {
   {
     "nvim-telescope/telescope-fzf-native.nvim",
     build = "make",
-    event = { "BufRead" },
   },
   {
     "folke/flash.nvim",
