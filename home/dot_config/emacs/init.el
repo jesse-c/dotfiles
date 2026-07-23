@@ -318,6 +318,10 @@ PACKAGES should be a list of package names as symbols."
                                 (concat consult-fd-args " --hidden --no-ignore")
                               (append consult-fd-args '("--hidden --no-ignore")))))
       (consult-fd root)))
+  (defun my/project-find-file-here ()
+    "Project find-file from the current buffer's directory and deeper."
+    (interactive)
+    (consult-fd default-directory))
   (defun my/project-search-here ()
     "Project ripgrep from the current buffer's directory and deeper."
     (interactive)
@@ -364,6 +368,7 @@ noisy internals (objects/, rr-cache/, logs/, modules/, lfs/) are skipped."
       ("b" "Buffers" consult-project-buffer)
       ("f" "Files" project-find-file)
       ("F" "Files (all)" my/project-find-file-all)
+      ("," "Files (here)" my/project-find-file-here)
       ("l" "Line" consult-line)
       ("d" "Layout" project-dired)
       ("i" "Sibling" find-sibling-file)
