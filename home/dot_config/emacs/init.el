@@ -1172,17 +1172,6 @@ This includes buffers visible in windows or tab-bar tabs."
   :config
   (eglot-booster-mode))
 
-(use-package flycheck-eglot
-  :diminish
-  :after (flycheck eglot)
-  :custom
-  (flycheck-eglot-exclusive nil)
-  :config
-  (global-flycheck-eglot-mode 1)
-  ;; Ensure they're correctly initialised
-  (flycheck-define-error-level 'error :severity 100 :compilation-level 2)
-  (flycheck-define-error-level 'warning :severity 50 :compilation-level 1)
-  (flycheck-define-error-level 'info :severity 0 :compilation-level 0))
 
 ;; Undo
 
@@ -3615,7 +3604,9 @@ If no, restores full opacity. Only affects the active frame."
     :modes '(org-mode))
   (add-to-list 'flycheck-checkers 'org-long-lines-custom)
   (setq-default flycheck-python-checkers '(ruff))
-  (setq flycheck-display-errors-function nil) ;; Using Flyover
+  (setq flycheck-display-errors-function nil) ;; Using flycheck-annotate-mode
+  (setq flycheck-eglot-exclusive nil)
+  (global-flycheck-eglot-mode 1)
   (setq flycheck-disabled-checkers '(python-flake8 python-mypy python-pylint python-pyright))
   (setq flycheck-checker-error-threshold 500)
 
@@ -3654,51 +3645,9 @@ If no, restores full opacity. Only affects the active frame."
 
   :hook
   ((prog-mode . flycheck-mode)
-   (text-mode . flycheck-mode)))
+   (text-mode . flycheck-mode)
+   (flycheck-mode . flycheck-annotate-mode)))
 
-(use-package flyover
-  :ensure t
-  :after (flycheck flycheck-eglot eglot)
-  :hook ((flycheck-mode . flyover-mode))
-  :custom
-  ;; Checker settings
-  (flyover-checkers '(flycheck))
-  (flyover-levels '(error warning info))
-
-  ;; Appearance
-  (flyover-use-theme-colors t)
-  (flyover-background-lightness 45)
-  (flyover-percent-darker 40)
-
-  ;; Text tinting
-  (flyover-text-tint 'lighter)
-  (flyover-text-tint-percent 50)
-
-  ;; Icons
-  (flyover-info-icon "ⓘ")
-  (flyover-warning-icon "⚠")
-  (flyover-error-icon "✘")
-  (flyover-icon-left-padding 0.7)
-  (flyover-icon-right-padding 0.9)
-
-  ;; Display settings
-  (flyover-hide-checker-name nil)
-  (flyover-show-virtual-line nil)
-  (flyover-virtual-line-type 'curved-dotted-arrow)
-  (flyover-line-position-offset 1)
-  (flyover-show-error-id t)
-  (flyover-show-at-eol t)
-
-  ;; Message wrapping
-  (flyover-wrap-messages t)
-  (flyover-max-line-length 80)
-
-  ;; Performance
-  (flyover-debounce-interval 0.2)
-  (flyover-cursor-debounce-interval 0.3)
-
-  ;; Completion integration
-  (flyover-hide-during-completion t))
 
 (setq user-emacs-cache-directory (expand-file-name ".cache" user-emacs-directory))
 
