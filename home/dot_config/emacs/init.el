@@ -1165,6 +1165,11 @@ This includes buffers visible in windows or tab-bar tabs."
 (use-package undo-fu
   :ensure t)
 
+(use-package undo-fu-session
+  :after undo-fu
+  :config
+  (undo-fu-session-global-mode))
+
 (use-package vundo
   :ensure t
   (:host github :repo "casouri/vundo")
