@@ -3595,6 +3595,7 @@ If no, restores full opacity. Only affects the active frame."
   (global-flycheck-eglot-mode 1)
   (setq flycheck-disabled-checkers '(python-flake8 python-mypy python-pylint python-pyright))
   (setq flycheck-checker-error-threshold 500)
+  (setq flycheck-fixable-indicator 'left-fringe)
 
   ;; Auto-show flycheck errors list in small bottom window
   (add-to-list 'display-buffer-alist
