@@ -2537,6 +2537,10 @@ If BUFFER is provided, close that buffer directly."
       ("Q" "Remove" agent-shell-prompt-queue-remove)
       ("R" "Resume" agent-shell-prompt-queue-resume)]])
 
+  ;; Show completed edit diffs expanded inline in the chat by default
+  ;; (PR #92).
+  (setq agent-shell-tool-use-expand-by-default t)
+
   ;; Configure `*agent-shell-diff*` buffers to start in Emacs state
   (add-hook 'diff-mode-hook
             (lambda ()
