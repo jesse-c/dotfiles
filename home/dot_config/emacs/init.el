@@ -2680,6 +2680,7 @@ If BUFFER is provided, close that buffer directly."
 (use-package ghostel
   :bind (("C-x m" . ghostel)
          :map ghostel-semi-char-mode-map
+         ("C-q"  . delete-window)
          ("C-s"  . consult-line)
          ("C-k"  . my/ghostel-send-C-k-and-kill)
          ;; I'm used to go up/down the shell history with M-n/p from eshell
