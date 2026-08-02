@@ -743,8 +743,6 @@ This includes buffers visible in windows or tab-bar tabs."
 ;; You can enable it manually with M-x magit-todos-mode.
 ;; (magit-todos-mode 1)
 
-(use-package magit-popup
-  :after magit)
 
 (use-package magit-delta
   :after magit
