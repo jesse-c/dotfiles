@@ -1321,10 +1321,6 @@ This includes buffers visible in windows or tab-bar tabs."
    ;; :preview-key "M-."
    :preview-key '(:debounce 0.4 any))
 
-  ;; Workaround for consult-project-extra using old internal API
-  ;; Until the package is updated to use consult-source-project-buffer
-  (defvaralias 'consult--source-project-buffer 'consult-source-project-buffer)
-
   ;; Default project search (the "Search" entry) respects .gitignore and skips
   ;; hidden files.  Use "Search (all)" (S) to include hidden/gitignored files.
   (setq consult-ripgrep-args
