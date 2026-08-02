@@ -920,7 +920,8 @@ This includes buffers visible in windows or tab-bar tabs."
                  '(conf-toml-mode . toml-ts-mode)))
   :custom
   (eglot-autoshutdown t)
-  (eglot-sync-connect nil) ;; The value of nil or 0 means don’t block at all during the waiting period
+  (eglot-sync-connect nil)
+  (eglot-max-file-watches 1000) ;; The value of nil or 0 means don’t block at all during the waiting period
   (eglot-workspace-configuration
    '(:Lua (:diagnostics (:unusedLocalExclude ["_*"]
                          :globals ["hs" "spoon"]))
