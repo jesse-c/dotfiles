@@ -2007,7 +2007,8 @@ are defining or executing a macro."
      ["Position"
       ("b" "Jump backward" evil-jump-backward)
       ("f" "Jump forward" evil-jump-forward)
-      ("w" "Word" avy-goto-word-0)]]
+      ("w" "Goto word" avy-goto-word-0)
+      ("W" "Goto menu" casual-avy-tmenu)]]
     [["Xref"
       ("a" "Back" xref-go-back)
       ("o" "Forward" xref-go-forward)
@@ -2021,7 +2022,8 @@ are defining or executing a macro."
       ("S" "Symbols (buffer)" xref-find-apropos-buffer)]
      ["Errors"
       ("I" "Previous error" flycheck-previous-error)
-      ("i" "Next error" flycheck-next-error)]
+      ("i" "Next error" flycheck-next-error)
+      ("e" "Goto format error" apheleia-goto-error)]
      ["Structure"
       ("," "Function beginning" beginning-of-defun)
       ("." "Function ending" end-of-defun)]
