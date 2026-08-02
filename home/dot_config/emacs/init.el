@@ -3353,12 +3353,13 @@ none. Designed to run from `window-selection-change-functions'."
   (compilation-filter . colourise-compilation-buffer)
   (find-file . my/ansi-colourise-log-buffer)
   (after-revert . my/ansi-colourise-log-buffer)
-  (gs-mode . (lambda ()
-               (add-hook 'after-change-functions
-                         (lambda (start end _len)
-                           (let ((inhibit-read-only t))
-                             (ansi-color-apply-on-region start end)))
-                         nil t))))
+  (fundamental-mode . (lambda ()
+                        (when (string-match-p "\\*gs\\*" (buffer-name))
+                          (add-hook 'after-change-functions
+                                    (lambda (start end _len)
+                                      (let ((inhibit-read-only t))
+                                        (ansi-color-apply-on-region start end)))
+                                    nil t)))))
 
 (add-hook 'emacs-startup-hook
           (lambda () (run-with-timer 0.1 nil #'which-key-mode)))
