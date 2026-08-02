@@ -1611,8 +1611,6 @@ are defining or executing a macro."
                 executing-kbd-macro)
       (funcall-interactively quit))))
 
-(use-package smex)  ;; show recent commands when invoking Alt-x (or Cmd+Shift+p)
-
 (use-package repeat
   :ensure nil
   :hook (after-init . repeat-mode)
