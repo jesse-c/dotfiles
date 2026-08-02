@@ -700,20 +700,7 @@ This includes buffers visible in windows or tab-bar tabs."
   ;; "or: Symbol's function definition is void: all".
   (unless (fboundp 'all)
     (defalias 'all #'cl-every))
-  :bind
-  (:map magit-status-mode-map
-        ("*" . th/magit-aux-commands))
   :config
-  (transient-define-prefix th/magit-aux-commands ()
-    "My personal auxiliary magit commands."
-    ["Auxiliary commands"
-     ("d" "Difftastic Diff (dwim)" th/magit-diff-with-difftastic)
-     ("s" "Difftastic Show" th/magit-show-with-difftastic)])
-  ;; I want my personal commands transient to be bound to * and be shown
-  ;; in the Magit dispatch transient (which is bound to ? in Magit status
-  ;; buffers and C-x M-g in any Magit enabled buffer)
-  (transient-append-suffix 'magit-dispatch "!"
-    '("*" "My Magit Cmds" th/magit-aux-commands))
   (setq magit-git-executable
         (let* ((xcode-dev (string-trim (shell-command-to-string "/usr/bin/xcode-select -p 2>/dev/null")))
                (candidates (delq nil
