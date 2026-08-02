@@ -691,7 +691,7 @@ This includes buffers visible in windows or tab-bar tabs."
   :commands
   (magit-status magit-blame magit-blame-quit)
   :init
-  (setopt magit-format-file-function #'magit-format-file-all-the-icons)
+  (setopt magit-format-file-function #'magit-format-file-nerd-icons)
   ;; Bleeding-edge Magit (HEAD) calls `all' (a list predicate) in the
   ;; :safe predicates of `git-commit-trailers' and
   ;; `magit-branch-name-suggestions', but this Emacs 31 build predates
@@ -701,6 +701,7 @@ This includes buffers visible in windows or tab-bar tabs."
   (unless (fboundp 'all)
     (defalias 'all #'cl-every))
   :config
+  (setq magit-diff-use-indicator-faces t)
   (setq magit-git-executable
         (let* ((xcode-dev (string-trim (shell-command-to-string "/usr/bin/xcode-select -p 2>/dev/null")))
                (candidates (delq nil
