@@ -2532,10 +2532,10 @@ If BUFFER is provided, close that buffer directly."
     (kbd "gT") #'tab-bar-switch-to-prev-tab)
 
   (transient-append-suffix 'agent-shell-help-menu '(1)
-    [["Queue"
-      ("q" "Queue request" agent-shell-queue-request)
-      ("Q" "Remove pending" agent-shell-remove-pending-request)
-      ("R" "Resume pending" agent-shell-resume-pending-requests)]])
+    [["Prompt queue"
+      ("q" "Queue" agent-shell-prompt-queue)
+      ("Q" "Remove" agent-shell-prompt-queue-remove)
+      ("R" "Resume" agent-shell-prompt-queue-resume)]])
 
   ;; Configure `*agent-shell-diff*` buffers to start in Emacs state
   (add-hook 'diff-mode-hook
