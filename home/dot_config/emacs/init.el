@@ -712,10 +712,9 @@ This includes buffers visible in windows or tab-bar tabs."
   :config
   (setq magit-diff-use-indicator-faces t)
   (setq magit-git-executable
-        (let* ((xcode-dev (string-trim (shell-command-to-string "/usr/bin/xcode-select -p 2>/dev/null")))
+        (let* ((xcrun-git (string-trim (shell-command-to-string "xcrun --find git 2>/dev/null")))
                (candidates (delq nil
-                                 (list (unless (string-empty-p xcode-dev)
-                                         (concat xcode-dev "/usr/bin/git"))
+                                 (list (unless (string-empty-p xcrun-git) xcrun-git)
                                        "/opt/homebrew/bin/git"
                                        (executable-find "git")))))
           (cl-find-if #'file-executable-p candidates))))
