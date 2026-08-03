@@ -1758,11 +1758,6 @@ are defining or executing a macro."
 (use-package all-the-icons
   :if (display-graphic-p))
 
-(use-package all-the-icons-completion
-  :after (marginalia all-the-icons)
-  :hook (marginalia-mode . all-the-icons-completion-marginalia-setup)
-  :config
-  (all-the-icons-completion-mode))
 
 (use-package nerd-icons-dired
   :after (nerd-icons)
@@ -1775,10 +1770,8 @@ are defining or executing a macro."
 (use-package nerd-icons-completion
   :after (nerd-icons marginalia)
   :config
-  (nerd-icons-completion-mode))
-;; This is being setup elsewhere
-;; :hook
-;; (marginalia-mode . nerd-icons-completion-marginalia-setup))
+  (nerd-icons-completion-mode)
+  (nerd-icons-completion-marginalia-setup))
 
 (use-package kind-icon
   :after corfu
@@ -3549,7 +3542,11 @@ If no, restores full opacity. Only affects the active frame."
   :bind (:map minibuffer-local-map
               ("M-A" . marginalia-cycle))
   :init
-  (marginalia-mode))
+  (marginalia-mode)
+  :config
+  (add-to-list 'marginalia-command-categories '(helpful-callable . function))
+  (add-to-list 'marginalia-command-categories '(helpful-variable . variable))
+  (add-to-list 'marginalia-command-categories '(helpful-command . command)))
 
 ;; Movement
 
