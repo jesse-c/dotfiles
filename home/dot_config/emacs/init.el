@@ -2033,7 +2033,9 @@ are defining or executing a macro."
      ["Folds"
       ("zo" "Open" kirigami-open-fold)
       ("zc" "Close" kirigami-close-fold)
-      ("za" "Toggle" kirigami-toggle-fold)]]))
+      ("za" "Toggle" kirigami-toggle-fold)
+      ("zr" "Open all" kirigami-open-folds)
+      ("zm" "Close all" kirigami-close-folds)]]))
 
 (after-packages (evil transient)
   (evil-define-key 'normal 'global (kbd "s-u") #'nav-transient-menu)
