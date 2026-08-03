@@ -1779,10 +1779,9 @@ are defining or executing a macro."
   (nerd-icons-font-family "JetBrainsMono Nerd Font Mono"))
 
 (use-package nerd-icons-completion
-  :after (nerd-icons marginalia)
+  :after nerd-icons
   :config
-  (nerd-icons-completion-mode)
-  (nerd-icons-completion-marginalia-setup))
+  (nerd-icons-completion-mode))
 
 (use-package kind-icon
   :after corfu
