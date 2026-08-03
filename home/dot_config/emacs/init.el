@@ -105,6 +105,8 @@
   :init
   (when (>= emacs-major-version 31)
     (setq kill-region-dwim 'emacs-word))
+  (when (display-graphic-p)
+    (context-menu-mode))
   ;; Do not allow the cursor in the minibuffer prompt
   (setq minibuffer-prompt-properties
         '(read-only t cursor-intangible t face minibuffer-prompt))
@@ -3563,9 +3565,34 @@ If no, restores full opacity. Only affects the active frame."
   :init
   (marginalia-mode)
   :config
+  ;; helpful
   (add-to-list 'marginalia-command-categories '(helpful-callable . function))
   (add-to-list 'marginalia-command-categories '(helpful-variable . variable))
-  (add-to-list 'marginalia-command-categories '(helpful-command . command)))
+  (add-to-list 'marginalia-command-categories '(helpful-command  . command))
+  ;; org
+  (add-to-list 'marginalia-command-categories '(org-goto   . org-heading))
+  (add-to-list 'marginalia-command-categories '(org-refile . org-heading))
+  ;; project.el
+  (add-to-list 'marginalia-command-categories '(project-find-file        . project-file))
+  (add-to-list 'marginalia-command-categories '(project-switch-to-buffer . buffer))
+  ;; consult
+  (add-to-list 'marginalia-command-categories '(consult-find                 . file))
+  (add-to-list 'marginalia-command-categories '(consult-completion-in-region . imenu))
+  ;; prompt → category classification (karthink)
+  (pcase-dolist (`(,regexp . ,category)
+                 '(("\\burl\\b"          . url)
+                   ("\\bHistory\\b"      . history)
+                   ("\\bdefinitions?\\b" . xref-location)
+                   ("\\bxref\\b"         . xref-location)))
+    (setf (alist-get regexp marginalia-prompt-categories nil nil #'equal)
+          category))
+  ;; show project-relative paths in buffer annotations (shfx)
+  (define-advice marginalia--buffer-file (:around (fn &rest args) my/project-relative)
+    (let ((path (apply fn args)))
+      (if-let* ((root (abbreviate-file-name (marginalia--project-root)))
+                ((string-prefix-p root path)))
+          (string-remove-prefix root path)
+        path))))
 
 ;; Movement
 
