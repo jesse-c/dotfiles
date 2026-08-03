@@ -555,6 +555,15 @@ This includes buffers visible in windows or tab-bar tabs."
   :config
   ;; Prevent evil-collection-forge from trying to set bindings before forge is ready
   (setq forge-add-default-bindings nil)
+  ;; evil-collection-agent-shell binds `gt' to open the transcript,
+  ;; clobbering Evil's tab switching. Its setup runs after our
+  ;; agent-shell config, so rebind via its setup hook to win.
+  (defun my/evil-collection-agent-shell-keep-tab-keys (mode _keymaps &rest _)
+    (when (eq mode 'agent-shell)
+      (evil-define-key 'normal agent-shell-mode-map
+        (kbd "gt") #'tab-bar-switch-to-next-tab
+        (kbd "gT") #'tab-bar-switch-to-prev-tab)))
+  (add-hook 'evil-collection-setup-hook #'my/evil-collection-agent-shell-keep-tab-keys)
   (evil-collection-init)
   ;; `corfu-map` lives in `minor-mode-map-alist`, which evil's emulation
   ;; keymaps override. `evil-define-key` attaches bindings to an
@@ -2520,11 +2529,6 @@ If BUFFER is provided, close that buffer directly."
   (evil-define-key 'normal agent-shell-mode-map (kbd "RET") #'comint-send-input)
   (evil-define-key '(normal insert) agent-shell-mode-map
     (kbd "s-a") #'agent-shell-help-menu)
-
-  ;; shell-maker's `g` prefix shadowing Evil's tab-bar bindings
-  (evil-define-key 'normal agent-shell-mode-map
-    (kbd "gt") #'tab-bar-switch-to-next-tab
-    (kbd "gT") #'tab-bar-switch-to-prev-tab)
 
   (transient-append-suffix 'agent-shell-help-menu '(1)
     [["Prompt queue"
