@@ -277,6 +277,7 @@ PACKAGES should be a list of package names as symbols."
   :custom
   (vc-async-checkin t)
   (vc-display-failed-async-commands t)
+  (auto-revert-check-vc-info t)
   :config
   (require 'autorevert)
   (vc-auto-revert-mode 1)
@@ -915,12 +916,14 @@ This includes buffers visible in windows or tab-bar tabs."
   :custom
   (eglot-autoshutdown t)
   (eglot-sync-connect nil)
+  (eglot-extend-to-xref t)
   (eglot-max-file-watches 1000) ;; The value of nil or 0 means don’t block at all during the waiting period
   (eglot-workspace-configuration
    '(:Lua (:diagnostics (:unusedLocalExclude ["_*"]
                          :globals ["hs" "spoon"]))
      :rust-analyzer (:diagnostics (:disabled ["unlinked-file"]))))
   :config
+  (fset #'jsonrpc--log-event #'ignore)
   ;; Defer eglot startup to improve file opening performance
   (defun my/eglot-ensure-deferred ()
     "Start eglot after a short delay to improve file opening performance."
@@ -1440,6 +1443,14 @@ This includes buffers visible in windows or tab-bar tabs."
   (:map vertico-map
         ("C-c e" . embark-export))
   :config
+  ;; Tip: after invoking avy (e.g. C-'), press "." at the next candidate
+  ;; to run embark-act at that location without moving point there first.
+  (defun my/avy-action-embark (pt)
+    (unwind-protect
+        (save-excursion (goto-char pt) (embark-act))
+      (select-window (cdr (ring-ref avy-ring 0))))
+    t)
+  (setf (alist-get ?. avy-dispatch-alist) 'my/avy-action-embark)
 
   (defun my/embark-pytest-def-p ()
     "Return non-nil if point is inside a Python test function in a test_*.py file and python-ts-mode is active."
@@ -1812,6 +1823,15 @@ are defining or executing a macro."
   (vertico-cycle t)
   :init
   (vertico-mode))
+
+(use-package vertico-directory
+  :ensure nil
+  :after vertico
+  ;; Tip: M-DEL deletes one path component at a time when navigating
+  ;; files, e.g. ~/foo/bar/baz → ~/foo/bar/ instead of
+  ;; letter-by-letter.
+  :bind (:map vertico-map
+              ("M-DEL" . vertico-directory-delete-word)))
 
 (use-package vertico-posframe
   :custom
