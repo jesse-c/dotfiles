@@ -2529,6 +2529,33 @@ If BUFFER is provided, close that buffer directly."
   (evil-define-key '(normal insert) agent-shell-mode-map
     (kbd "s-a") #'agent-shell-help-menu)
 
+  ;; Fragment folding: TAB toggles, zo opens, zc closes (Evil-style)
+  (defun my/agent-shell-open-fragment ()
+    "Expand fragment at point (zo)."
+    (interactive)
+    (when-let* ((target (agent-shell-ui--enclosing-fragment-position))
+                (state (get-text-property target 'agent-shell-ui-state))
+                ((map-elt state :collapsed)))
+      (save-excursion
+        (goto-char target)
+        (agent-shell-ui--toggle-fragment-at-point))))
+
+  (defun my/agent-shell-close-fragment ()
+    "Collapse fragment at point (zc)."
+    (interactive)
+    (when-let* ((target (agent-shell-ui--enclosing-fragment-position))
+                (state (get-text-property target 'agent-shell-ui-state))
+                ((not (map-elt state :collapsed))))
+      (save-excursion
+        (goto-char target)
+        (agent-shell-ui--toggle-fragment-at-point))))
+
+  (evil-define-key 'normal agent-shell-mode-map
+    (kbd "TAB") #'agent-shell-ui-toggle-fragment
+    (kbd "<tab>") #'agent-shell-ui-toggle-fragment
+    (kbd "zo") #'my/agent-shell-open-fragment
+    (kbd "zc") #'my/agent-shell-close-fragment)
+
   (transient-append-suffix 'agent-shell-help-menu '(1)
     [["Prompt queue"
       ("q" "Queue" agent-shell-prompt-queue)
