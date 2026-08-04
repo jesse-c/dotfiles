@@ -659,26 +659,33 @@ This includes buffers visible in windows or tab-bar tabs."
                           default-directory))
                 (cache-dir (expand-file-name ".cache" root))
                 (cache-file (expand-file-name "commit-scopes.txt" cache-dir)))
-      (unless (file-exists-p cache-dir)
-        (make-directory cache-dir t))
-      (make-process
-       :name "commit-scope-refresh"
-       :buffer nil
-       :command (list "git" "-C" root "log" "--pretty=format:%s")
-       :sentinel (lambda (proc _event)
-                   (when (eq (process-status proc) 'exit)
-                     (with-temp-buffer
-                       (insert (with-current-buffer (process-buffer proc) ""))
-                       (goto-char (point-min))
-                       (let (scopes)
-                         (while (re-search-forward
-                                 "\\(?:feat\\|fix\\|docs\\|style\\|refactor\\|perf\\|test\\|build\\|ci\\|cd\\|chore\\|revert\\)(\\([^)]+\\))"
-                                 nil t)
-                           (dolist (s (split-string (match-string 1) "," t "[ \t]+"))
-                             (push (string-trim s) scopes)))
-                         (write-region
-                          (mapconcat #'identity (delete-dups scopes) "\n")
-                          nil cache-file nil 'silent))))))))
+      (let ((existing (gethash root my/commit-scope-processes)))
+        (unless (and existing (process-live-p existing))
+          (unless (file-exists-p cache-dir)
+            (make-directory cache-dir t))
+          (let* ((buf (generate-new-buffer " *commit-scope-refresh*"))
+                 (proc (make-process
+                        :name "commit-scope-refresh"
+                        :buffer buf
+                        :command (list "git" "-C" root "log" "--pretty=format:%s" "-n" "500")
+                        :sentinel (lambda (proc _event)
+                                    (when (eq (process-status proc) 'exit)
+                                      (with-current-buffer (process-buffer proc)
+                                        (goto-char (point-min))
+                                        (let (scopes)
+                                          (while (re-search-forward
+                                                  "\\(?:feat\\|fix\\|docs\\|style\\|refactor\\|perf\\|test\\|build\\|ci\\|cd\\|chore\\|revert\\)(\\([^)]+\\))"
+                                                  nil t)
+                                            (dolist (s (split-string (match-string 1) "," t "[ \t]+"))
+                                              (push (string-trim s) scopes)))
+                                          (write-region
+                                           (mapconcat #'identity (delete-dups scopes) "\n")
+                                           nil cache-file nil 'silent)))
+                                      (kill-buffer (process-buffer proc)))))))
+            (puthash root proc my/commit-scope-processes))))))
+
+  (defvar my/commit-scope-processes (make-hash-table :test 'equal)
+    "Map of project root -> active commit-scope-refresh process.")
 
   (defun my/get-commit-scopes ()
     "Return cached scopes, triggering a background refresh for next time."
