@@ -2734,6 +2734,16 @@ If BUFFER is provided, close that buffer directly."
   :config
   (agent-shell-ediff-mode -1))
 
+(use-package knockknock
+  :ensure t
+  (:host github :repo "xenodium/knockknock"))
+
+(use-package agent-shell-knockknock
+  :ensure t
+  (:host github :repo "xenodium/agent-shell-knockknock")
+  :after (agent-shell knockknock)
+  :hook (agent-shell-mode . agent-shell-knockknock-mode))
+
 (use-package codeium
   :ensure t
   (:host github :repo "Exafunction/codeium.el")
