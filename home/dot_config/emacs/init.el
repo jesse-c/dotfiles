@@ -279,7 +279,7 @@ PACKAGES should be a list of package names as symbols."
   :custom
   (vc-async-checkin t)
   (vc-display-failed-async-commands t)
-  (auto-revert-check-vc-info t)
+  (auto-revert-check-vc-info nil)
   :config
   (require 'autorevert)
   (vc-auto-revert-mode 1)
