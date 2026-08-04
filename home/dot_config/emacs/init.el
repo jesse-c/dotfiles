@@ -458,7 +458,26 @@ This includes buffers visible in windows or tab-bar tabs."
     (delete-other-windows)
     (scratch-buffer))
 
-  (add-hook 'easysession-new-session-hook #'my-empty-easysession))
+  (add-hook 'easysession-new-session-hook #'my-empty-easysession)
+
+  (with-eval-after-load 'agent-shell
+    (easysession-add-managed-major-mode 'agent-shell-mode
+      :save (lambda ()
+              (list (cons 'config-id
+                          (map-elt (map-elt agent-shell--state :agent-config)
+                                   :identifier))
+                    (cons 'session-id
+                          (map-elt (map-elt agent-shell--state :session) :id))))
+      :restore (lambda (state)
+                 (let* ((data (alist-get 'data state))
+                        (config-id (alist-get 'config-id data))
+                        (config (when config-id
+                                  (agent-shell--resolve-config-designator config-id)))
+                        (default-directory (alist-get 'default-directory state)))
+                   (agent-shell--start :config config
+                                       :session-id (alist-get 'session-id data)
+                                       :new-session t
+                                       :no-focus t))))))
 
 ;;; Modal
 
