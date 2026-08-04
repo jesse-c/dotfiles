@@ -97,6 +97,9 @@ gcloud = "latest"
 "npm:bash-language-server" = "latest"
 deno = "latest"
 "npm:pi-acp" = "latest"
+{{- if eq .chezmoi.hostname "Plinth" }}
+"github:pimalaya/himalaya" = "latest"
+{{- end }}
 
 [settings]
 idiomatic_version_file_enable_tools = ["python", "node", "ruby"]
