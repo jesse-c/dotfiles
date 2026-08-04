@@ -2598,11 +2598,14 @@ If BUFFER is provided, close that buffer directly."
     (kbd "zo") #'my/agent-shell-open-fragment
     (kbd "zc") #'my/agent-shell-close-fragment)
 
-  (transient-append-suffix 'agent-shell-help-menu '(1)
-    [["Prompt queue"
-      ("q" "Queue" agent-shell-prompt-queue)
-      ("Q" "Remove" agent-shell-prompt-queue-remove)
-      ("R" "Resume" agent-shell-prompt-queue-resume)]])
+  ;; Prompt queue isn't in the package's transient-define-prefix, so add it.
+  ;; Guard against double-addition if init.el is reloaded mid-session.
+  (unless (ignore-errors (transient-get-suffix 'agent-shell-help-menu "q"))
+    (transient-append-suffix 'agent-shell-help-menu '(1)
+      [["Prompt queue"
+        ("q" "Queue" agent-shell-prompt-queue)
+        ("Q" "Remove" agent-shell-prompt-queue-remove)
+        ("R" "Resume" agent-shell-prompt-queue-resume)]]))
 
   ;; Show completed edit diffs expanded inline in the chat by default
   ;; (PR #92).
