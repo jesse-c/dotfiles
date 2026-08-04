@@ -537,6 +537,71 @@ This includes buffers visible in windows or tab-bar tabs."
 
   (evil-mode 1))
 
+;;; Evil mark indicators in left margin
+(defvar-local my/evil-mark-overlays nil)
+
+(defun my/evil-mark-refresh ()
+  "Redraw Evil mark indicators in the left margin of the current buffer."
+  (mapc #'delete-overlay my/evil-mark-overlays)
+  (setq my/evil-mark-overlays nil)
+  (let ((by-line (make-hash-table :test #'eql)))
+    (dolist (entry evil-markers-alist)
+      (let* ((char (car entry))
+             (marker (cdr entry))
+             (pos (and (markerp marker)
+                       (or (and (>= char ?a) (<= char ?z))
+                           (and (>= char ?A) (<= char ?Z)))
+                       (marker-position marker))))
+        (when pos
+          (let ((line (line-number-at-pos pos)))
+            (puthash line
+                     (cons (cons (car entry) pos)
+                           (gethash line by-line nil))
+                     by-line)))))
+    (let ((max-width 0))
+      (maphash (lambda (_line marks)
+                 (setq max-width (max max-width (length marks))))
+               by-line)
+      (maphash (lambda (_line marks)
+                 (let* ((marks (sort marks (lambda (a b) (< (cdr a) (cdr b)))))
+                        (pos (cdar marks))
+                        (label (mapconcat (lambda (m) (char-to-string (car m))) marks ""))
+                        (padded (concat label (make-string (- max-width (length label)) ?\s)))
+                        (ov (make-overlay pos (1+ pos))))
+                   (overlay-put ov 'before-string
+                                (propertize " "
+                                  'display `((margin left-margin)
+                                             ,(propertize padded
+                                                'face 'font-lock-warning-face))))
+                   (push ov my/evil-mark-overlays)))
+               by-line)
+      (setq left-margin-width max-width)
+      (dolist (win (get-buffer-window-list nil nil t))
+        (set-window-margins win max-width (cdr (window-margins win)))))))
+
+(defun my/evil-mark-ensure-margin ()
+  "Restore left margin width after window changes."
+  (when (and (boundp 'my/evil-mark-overlays) my/evil-mark-overlays)
+    (set-window-margins nil left-margin-width (cdr (window-margins nil)))))
+
+(defun my/evil-mark-or-delete (char)
+  "Set mark CHAR, or delete it if already at point."
+  (interactive (list (evil-read-key)))
+  (let* ((existing (assq char evil-markers-alist))
+         (marker (and existing (markerp (cdr existing)) (cdr existing)))
+         (pos (and marker (marker-position marker))))
+    (if (and pos (= pos (point)))
+        (evil-delete-marks (char-to-string char))
+      (evil-set-marker char)))
+  (my/evil-mark-refresh))
+
+(advice-add 'evil-set-marker :after (lambda (&rest _) (my/evil-mark-refresh)))
+(advice-add 'evil-delete-marks :after (lambda (&rest _) (my/evil-mark-refresh)))
+(add-hook 'window-configuration-change-hook #'my/evil-mark-ensure-margin)
+
+(with-eval-after-load 'evil
+  (evil-define-key 'normal 'global (kbd "m") #'my/evil-mark-or-delete))
+
 ;; Make Cmd+Q (s-q) close frame without killing Emacs daemon
 (defun my/quit-or-close-frame ()
   "Close frame if running as daemon, otherwise quit Emacs."
