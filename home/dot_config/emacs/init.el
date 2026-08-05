@@ -378,7 +378,8 @@ noisy internals (objects/, rr-cache/, logs/, modules/, lfs/) are skipped."
       ("w" "Matching worktree buf" project-find-matching-buffer)]
      ["Execution"
       ("r" "Run" project-run)
-      ("c" "Compile" project-compile)]
+      ("c" "Compile" project-compile)
+      ("T" "Terminal(s)" ghostel-project-list-buffers)]
      ["Management"
       ("t" "New tab" tab-new)
       ("C" "Close tab" tab-close)
