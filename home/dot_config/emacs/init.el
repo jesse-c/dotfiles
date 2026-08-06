@@ -2631,6 +2631,18 @@ If BUFFER is provided, close that buffer directly."
     (setq agent-shell-openai-default-model-id nil)
     (message "Codex: Using OpenAI"))
 
+  (defun my/agent-shell-copy-session-name ()
+    "Copy the current session name to the kill ring."
+    (declare (modes agent-shell-mode))
+    (interactive)
+    (unless (derived-mode-p 'agent-shell-mode)
+      (user-error "Not in a shell"))
+    (if-let* ((title (map-nested-elt (agent-shell--state) '(:session :title))))
+        (progn
+          (kill-new title)
+          (message "Copied session name: %s" title))
+      (user-error "No active session")))
+
   ;; Evil state-specific RET behavior: insert mode = newline, normal mode = send
   (evil-define-key 'insert agent-shell-mode-map (kbd "RET") #'newline)
   (evil-define-key 'normal agent-shell-mode-map (kbd "RET") #'comint-send-input)
