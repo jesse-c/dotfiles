@@ -379,7 +379,8 @@ noisy internals (objects/, rr-cache/, logs/, modules/, lfs/) are skipped."
      ["Execution"
       ("r" "Run" project-run)
       ("c" "Compile" project-compile)
-      ("T" "Terminal(s)" ghostel-project-list-buffers)]
+      ("T" "Terminal(s)" ghostel-project-list-buffers)
+      ("G" "New terminal" my/ghostel-project-new)]
      ["Management"
       ("t" "New tab" tab-new)
       ("C" "Close tab" tab-close)
@@ -423,6 +424,14 @@ noisy internals (objects/, rr-cache/, logs/, modules/, lfs/) are skipped."
   (interactive "sSuffix: ")
   (when-let* ((project-name (file-name-nondirectory (directory-file-name (my/project-root)))))
     (tab-rename (format "%s / %s" project-name suffix))))
+
+(defun my/ghostel-project-new ()
+  "Create a new ghostel terminal for the current project."
+  (interactive)
+  (let* ((default-directory (project-root (project-current t)))
+         (ghostel-buffer-name (ghostel--project-buffer-name default-directory))
+         (current-prefix-arg '-))
+    (call-interactively #'ghostel)))
 
 (use-package easysession
   :custom
