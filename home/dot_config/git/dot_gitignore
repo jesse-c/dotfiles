@@ -1,4 +1,5 @@
 .cache
+tmp/
 
 # OS
 ## macOS
@@ -27,3 +28,4 @@ els_lsp/
 
 # AI
 .rtk/
+.playwright-mcp/
