@@ -384,6 +384,7 @@ noisy internals (objects/, rr-cache/, logs/, modules/, lfs/) are skipped."
       ("t" "New tab" tab-new)
       ("C" "Close tab" tab-close)
       ("n" "Rename tab" my/rename-tab-to-project-name)
+      ("N" "Rename tab (suffix)" my/rename-tab-to-project-name-with-suffix)
       ("p" "Switch (Known)" project-switch-project)
       ("P" "Switch (All)" consult-ghq-switch-project)
       ("k" "Kill buffers" project-kill-buffers)]])
@@ -416,6 +417,12 @@ noisy internals (objects/, rr-cache/, logs/, modules/, lfs/) are skipped."
   (interactive)
   (when-let* ((project-name (file-name-nondirectory (directory-file-name (my/project-root)))))
     (tab-rename project-name)))
+
+(defun my/rename-tab-to-project-name-with-suffix (suffix)
+  "Rename the current tab to the project name with SUFFIX."
+  (interactive "sSuffix: ")
+  (when-let* ((project-name (file-name-nondirectory (directory-file-name (my/project-root)))))
+    (tab-rename (format "%s / %s" project-name suffix))))
 
 (use-package easysession
   :custom
