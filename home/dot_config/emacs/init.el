@@ -2705,6 +2705,42 @@ If BUFFER is provided, close that buffer directly."
   ;; (PR #92).
   (setq agent-shell-tool-use-expand-by-default t)
 
+  ;; Codeium's completion start reaches into the read-only comint
+  ;; output, since ;; it includes part of the prompt, before the
+  ;; process-mark.
+  ;;
+  ;; So `corfu-insert` fails with "Text is read-only". Clamp the start
+  ;; to the `process-mark` and strip the corresponding prefix from
+  ;; candidates.
+  (defun my/agent-shell-codeium-capf ()
+    "Codeium completion restricted to the writable input region."
+    (when-let* ((result (codeium-completion-at-point))
+                (beg (car result))
+                (end (cadr result))
+                (table (caddr result))
+                (props (cdddr result))
+                (proc (get-buffer-process (current-buffer)))
+                (input-start (marker-position (process-mark proc))))
+      (if (< beg input-start)
+          (let* ((ro-prefix (buffer-substring-no-properties beg input-start))
+                 (ro-len (length ro-prefix))
+                 (adjusted (delq nil
+                                 (mapcar (lambda (c)
+                                           (when (string-prefix-p ro-prefix c)
+                                             (substring c ro-len)))
+                                         (all-completions ro-prefix table)))))
+            (when adjusted
+              (apply #'list input-start end adjusted props)))
+        result)))
+  (add-hook 'agent-shell-mode-hook
+            (lambda ()
+              (setq-local completion-at-point-functions
+                          (mapcar (lambda (f)
+                                    (if (eq f 'codeium-completion-at-point)
+                                        #'my/agent-shell-codeium-capf
+                                      f))
+                                  completion-at-point-functions))))
+
   ;; Configure `*agent-shell-diff*` buffers to start in Emacs state
   (add-hook 'diff-mode-hook
             (lambda ()
