@@ -823,12 +823,12 @@ This includes buffers visible in windows or tab-bar tabs."
   :config
   (setq magit-diff-use-indicator-faces t)
   (setq magit-git-executable
-        (let* ((xcrun-git (string-trim (shell-command-to-string "xcrun --find git 2>/dev/null")))
-               (candidates (delq nil
-                                 (list (unless (string-empty-p xcrun-git) xcrun-git)
-                                       "/opt/homebrew/bin/git"
-                                       (executable-find "git")))))
-          (cl-find-if #'file-executable-p candidates))))
+        (let ((xcrun-git (string-trim
+                          (shell-command-to-string "/usr/bin/xcrun --find git 2>/dev/null"))))
+          (if (and (not (string-empty-p xcrun-git))
+                   (file-executable-p xcrun-git))
+              xcrun-git
+            (or (executable-find "git") "/opt/homebrew/bin/git")))))
 
 (use-package magit-prime
   :after magit
