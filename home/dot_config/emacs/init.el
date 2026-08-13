@@ -4489,13 +4489,6 @@ Interactively, POINT is point and KILL is the prefix argument."
   :defer t
   :commands org-babel-execute:verb)
 
-;;; Language: Shell
-
-(use-package modern-sh
-  :hook
-  (sh-mode . modern-sh-mode)
-  (bash-mode . modern-sh-mode))
-
 ;;; Language: Typst
 
 ;; typst-ts-compile.el has ;;;###autoload on define-compilation-mode,
