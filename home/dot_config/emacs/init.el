@@ -849,7 +849,10 @@ This includes buffers visible in windows or tab-bar tabs."
   :custom
   (git-spice-executable "git-spice")
   :config
-  (git-spice-setup-magit-section))
+  (git-spice-setup-magit-section)
+  (transient-append-suffix 'magit-dispatch "!"
+    '("%" "Git Spice" git-spice-menu))
+  (evil-define-key* 'normal magit-status-mode-map (kbd "~") #'git-spice-menu))
 
 (use-package magit-todos
   :after magit
