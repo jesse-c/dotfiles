@@ -830,6 +830,13 @@ This includes buffers visible in windows or tab-bar tabs."
     (defalias 'all #'cl-every))
   :config
   (setq magit-diff-use-indicator-faces t)
+  (defun my/magit-checkout-detach ()
+    "Detach HEAD at the current commit."
+    (interactive)
+    (magit-run-git "checkout" "--detach")
+    (magit-refresh))
+  (transient-append-suffix 'magit-branch "l"
+    '("D" "detach" my/magit-checkout-detach))
   (setq magit-git-executable
         (let ((xcrun-git (string-trim
                           (shell-command-to-string "/usr/bin/xcrun --find git 2>/dev/null"))))
