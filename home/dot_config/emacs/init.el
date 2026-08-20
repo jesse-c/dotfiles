@@ -102,6 +102,9 @@
   (tab-always-indent 'complete)
   (package-install-upgrade-built-in t)
   (ad-redefinition-action 'accept)
+  (comment-auto-fill-only-comments t)
+  :hook
+  (prog-mode . auto-fill-mode)
   :init
   (when (>= emacs-major-version 31)
     (setq kill-region-dwim 'emacs-word))
