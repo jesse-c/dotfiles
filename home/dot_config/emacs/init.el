@@ -2711,8 +2711,10 @@ If BUFFER is provided, close that buffer directly."
   (evil-define-key 'normal agent-shell-mode-map
     (kbd "TAB") #'agent-shell-ui-toggle-fragment
     (kbd "<tab>") #'agent-shell-ui-toggle-fragment
-    (kbd "zo") #'my/agent-shell-open-fragment
-    (kbd "zc") #'my/agent-shell-close-fragment)
+    (kbd "zo") #'kirigami-open-fold
+    (kbd "zc") #'kirigami-close-fold
+    (kbd "zr") #'kirigami-open-folds
+    (kbd "zm") #'kirigami-close-folds)
 
   ;; Prompt queue isn't in the package's transient-define-prefix, so add it.
   ;; Guard against double-addition if init.el is reloaded mid-session.
@@ -3796,6 +3798,7 @@ If no, restores full opacity. Only affects the active frame."
   :ensure nil   ;; built-in
   :hook (prog-mode . hs-minor-mode))
 
+
 (use-package kirigami
   :after evil
   :bind
@@ -3805,7 +3808,22 @@ If no, restores full opacity. Only affects the active frame."
         ("zc" . kirigami-close-fold)
         ("za" . kirigami-toggle-fold)
         ("zr" . kirigami-open-folds)
-        ("zm" . kirigami-close-folds)))
+        ("zm" . kirigami-close-folds))
+  :config
+  ;; agent-shell uses its own fragment fold system
+  (add-to-list 'kirigami-fold-list
+               `((agent-shell-mode)
+                 :toggle    agent-shell-ui-toggle-fragment
+                 :open      my/agent-shell-open-fragment
+                 :open-rec  my/agent-shell-open-fragment
+                 :close     my/agent-shell-close-fragment
+                 :open-all  ,(lambda ()
+                               (setq agent-shell-ui--fold-toggle-state 'collapsed)
+                               (agent-shell-ui-toggle-all-fragments))
+                 :close-all ,(lambda ()
+                               (setq agent-shell-ui--fold-toggle-state 'expanded)
+                               (agent-shell-ui-toggle-all-fragments)))
+               t))
 
 ;;; Language: All
 
