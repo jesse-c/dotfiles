@@ -426,7 +426,7 @@ noisy internals (objects/, rr-cache/, logs/, modules/, lfs/) are skipped."
   "Rename the current tab to the project name with SUFFIX."
   (interactive "sSuffix: ")
   (when-let* ((project-name (file-name-nondirectory (directory-file-name (my/project-root)))))
-    (tab-rename (format "%s / %s" project-name suffix))))
+    (tab-rename (format "%s • %s" project-name suffix))))
 
 (defun my/ghostel-project-terminal ()
   "List project terminals, or offer to create one if there are none."
