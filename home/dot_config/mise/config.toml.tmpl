@@ -99,6 +99,9 @@ deno = "latest"
 {{- if eq .chezmoi.hostname "Plinth" }}
 "github:pimalaya/himalaya" = "latest"
 {{- end }}
+{{- if eq .chezmoi.hostname "Dais" }}
+"npm:firebase-tools" = "latest"
+{{- end }}
 
 [settings]
 idiomatic_version_file_enable_tools = ["python", "node", "ruby"]
