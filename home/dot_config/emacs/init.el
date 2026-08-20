@@ -2244,8 +2244,9 @@ are defining or executing a macro."
 (use-package jinx
   :defer 1
   :hook
-  ;; Only enable spell checking in text modes, not prog-mode (code)
-  ((text-mode org-mode markdown-mode) . jinx-mode))
+  ;; Text modes + agent-shell input area only, as the output is
+  ;; read-only, so jinx skips it.
+  ((text-mode org-mode markdown-mode agent-shell-mode) . jinx-mode))
 
 ;; Documentation
 
