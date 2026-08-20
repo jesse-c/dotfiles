@@ -431,7 +431,10 @@ noisy internals (objects/, rr-cache/, logs/, modules/, lfs/) are skipped."
 (defun my/ghostel-project-terminal ()
   "List project terminals, or offer to create one if there are none."
   (interactive)
-  (if (ghostel--project-buffers)
+  (if (seq-some (lambda (buffer)
+                  (with-current-buffer buffer
+                    (derived-mode-p 'ghostel-mode)))
+                (project-buffers (project-current t)))
       (ghostel-project-list-buffers)
     (when (y-or-n-p "No project terminals. Create one?")
       (my/ghostel-project-new))))
@@ -2919,7 +2922,7 @@ If BUFFER is provided, close that buffer directly."
          ("M-n" . (lambda () (interactive) (ghostel-send-key "n" "ctrl")))
          :map project-prefix-map
          ("m" . ghostel-project)
-         ("M" . ghostel-project-list-buffers))
+         ("M" . my/ghostel-project-terminal))
   :init
   (setq ghostel-module-auto-install 'download)
   :config
@@ -2930,7 +2933,7 @@ Like normal Emacs `C-k'.  Kill to end of line and put content in kill-ring."
     (kill-ring-save (point) (line-end-position))
     (ghostel-send-key "k" "ctrl"))
   (add-to-list 'project-switch-commands '(ghostel-project "Ghostel") t)
-  (add-to-list 'project-switch-commands '(ghostel-project-list-buffers "Ghostel buffers") t)
+  (add-to-list 'project-switch-commands '(my/ghostel-project-terminal "Ghostel buffers") t)
   (add-to-list 'ghostel-eval-cmds '("magit-status-setup-buffer" magit-status-setup-buffer)))
 
 (defun my/ghostty-tab-candidates ()
