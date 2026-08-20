@@ -834,22 +834,23 @@ This includes buffers visible in windows or tab-bar tabs."
   ;; "or: Symbol's function definition is void: all".
   (unless (fboundp 'all)
     (defalias 'all #'cl-every))
+  :custom
+  (magit-diff-use-indicator-faces t)
+  (magit-git-executable
+        (let ((xcrun-git (string-trim
+                          (shell-command-to-string "/usr/bin/xcrun --find git 2>/dev/null"))))
+          (if (and (not (string-empty-p xcrun-git))
+                   (file-executable-p xcrun-git))
+              xcrun-git
+            (or (executable-find "git") "/opt/homebrew/bin/git"))))
   :config
-  (setq magit-diff-use-indicator-faces t)
   (defun my/magit-checkout-detach ()
     "Detach HEAD at the current commit."
     (interactive)
     (magit-run-git "checkout" "--detach")
     (magit-refresh))
   (transient-append-suffix 'magit-branch "l"
-    '("D" "detach" my/magit-checkout-detach))
-  (setq magit-git-executable
-        (let ((xcrun-git (string-trim
-                          (shell-command-to-string "/usr/bin/xcrun --find git 2>/dev/null"))))
-          (if (and (not (string-empty-p xcrun-git))
-                   (file-executable-p xcrun-git))
-              xcrun-git
-            (or (executable-find "git") "/opt/homebrew/bin/git")))))
+    '("D" "detach" my/magit-checkout-detach)))
 
 (use-package magit-prime
   :after magit
