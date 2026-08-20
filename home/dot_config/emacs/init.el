@@ -2767,47 +2767,43 @@ If BUFFER is provided, close that buffer directly."
                 (evil-emacs-state))))
 
   ;; Auto-approve read-only shell commands for any agent without prompting.
+  ;; Titles may be wrapped in backticks (e.g. "`ls -la`"), so strip them.
+  ;; Piped commands (e.g. `git log | rg foo`) are safe if every segment is safe.
   (setq agent-shell-permission-responder-function
-        (lambda (permission)
-          (let* (;; The human-readable command title from the tool call (e.g. `ls -la`)
-                 (title (map-elt (map-elt permission :tool-call) :title))
-                 ;; Regex matching safe read-only commands at the start of the title
-                 (safe-re (rx bos (or "ls" "grep" "rg" "cat" "bat" "find" "fd"
-                                      "head" "tail" "wc" "echo" "which" "type"
-                                      "less" "file" "stat")
-                              (or eos " " "\n")))
-                 ;; Regex matching execution flags that make find/fd dangerous
-                 (exec-re (rx (or "-exec" "--exec" "-ok" (seq "-x" (or eos " ")))))
-                 ;; Regex matching shell operators that make any command dangerous
-                 (dangerous-re (rx (or " | " " > " " < " " && " " || " ";" "`" "$(")))
-                 ;; Find the "allow always" option from the permission request
-                 (choice (seq-find (lambda (o)
-                                     (equal (map-elt o :kind) "allow_always"))
-                                   (map-elt permission :options)))
-                 (safe-p (and title
-                              (string-match-p safe-re title)
-                              (not (string-match-p exec-re title))
-                              (not (string-match-p dangerous-re title)))))
-            (cond
-             ;; `:tool-call` or `:title` missing, permission structure may have changed
-             ((null title)
-              (message "agent-shell-permission-responder: no :title in permission %S" permission)
-              nil)
-             ;; Safe command but no `allow_always` option, options format may have changed
-             ((and safe-p (null choice))
-              (message "agent-shell-permission-responder: no allow_always option for %S" title)
-              nil)
-             ;; Safe command with `allow_always` — auto-approve
-             ((and safe-p choice)
-              (funcall (map-elt permission :respond)
-                       (map-elt choice :option-id)))
-             ;; Log why a safe-looking command was blocked (for debugging)
-             ((and title (string-match-p safe-re title))
-              (message "agent-shell-permission-responder: blocking %S (exec=%s dangerous=%s)"
-                       title
-                       (string-match-p exec-re title)
-                       (string-match-p dangerous-re title))
-              nil))))))
+        (let ((safe-re (rx bos (or "ls" "grep" "rg" "cat" "bat" "find" "fd"
+                                   "head" "tail" "wc" "echo" "which" "type"
+                                   "less" "file" "stat" "logfire-trace"
+                                   "git log" "git diff" "git show" "git status"
+                                   "git branch" "git tag" "git rev-parse"
+                                   "git remote" "git stash list")
+                               (or eos " " "\n")))
+              (exec-re (rx (or "-exec" "--exec" "-ok" (seq "-x" (or eos " ")))))
+              (dangerous-re (rx (or " > " " < " " && " " || " ";" "`" "$("))))
+          (lambda (permission)
+            (let* ((raw-title (map-elt (map-elt permission :tool-call) :title))
+                   (title (and raw-title (string-trim raw-title "`+" "`+"))))
+                   (segments (and title (split-string title " | ")))
+                   (choice (seq-find (lambda (o)
+                                       (equal (map-elt o :kind) "allow_always"))
+                                     (map-elt permission :options)))
+                   (safe-p (and title
+                                (seq-every-p
+                                 (lambda (seg)
+                                   (let ((s (string-trim seg)))
+                                     (and (string-match-p safe-re s)
+                                          (not (string-match-p exec-re s))
+                                          (not (string-match-p dangerous-re s)))))
+                                 segments))))
+              (cond
+               ((null title)
+                (message "agent-shell-permission-responder: no :title in permission %S" permission)
+                nil)
+               ((and safe-p (null choice))
+                (message "agent-shell-permission-responder: no allow_always option for %S" title)
+                nil)
+               ((and safe-p choice)
+                (funcall (map-elt permission :respond)
+                         (map-elt choice :option-id)))))))))
 
 (use-package agent-shell-ediff
   :ensure t
