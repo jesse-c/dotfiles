@@ -409,6 +409,13 @@ noisy internals (objects/, rr-cache/, logs/, modules/, lfs/) are skipped."
   (add-to-list 'project-switch-commands '(project-dired "Dired" ?d))
   (add-to-list 'project-switch-commands '(magit-status "Magit" ?m))
   (add-to-list 'project-switch-commands '(my/project-find-file-all "Find file (all)" ?F))
+  (defun my/project-agent-shell ()
+    "Start agent-shell in the current project root."
+    (interactive)
+    (let ((default-directory (project-root (project-current t))))
+      (agent-shell)))
+  (with-eval-after-load 'agent-shell
+    (add-to-list 'project-switch-commands '(my/project-agent-shell "Agent shell" ?a)))
   :bind
   ("s-p" . project-transient-menu))
 
@@ -2562,13 +2569,14 @@ If BUFFER is provided, close that buffer directly."
 (use-package agent-shell
   :after (acp shell-maker)
   :defer 1
+  :custom
+  (agent-shell-file-completion-enabled t)
+  (agent-shell-header-style nil)
+  (agent-shell-anthropic-key nil)
+  (agent-shell-show-welcome-message nil)
+  (agent-shell-prefer-viewport-interaction nil)
+  (agent-shell-activity-group-expand-by-default 'latest)
   :config
-  (setq agent-shell-file-completion-enabled t)
-  (setq agent-shell-header-style nil)
-  (setq agent-shell-anthropic-key nil)
-  (setq agent-shell-show-welcome-message nil)
-  (setq agent-shell-prefer-viewport-interaction nil)
-
   (defun my/agent-shell-anthropic-auth-login ()
     (interactive)
     (setq agent-shell-anthropic-authentication
