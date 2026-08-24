@@ -836,12 +836,12 @@ This includes buffers visible in windows or tab-bar tabs."
   :custom
   (magit-diff-use-indicator-faces t)
   (magit-git-executable
-        (let ((xcrun-git (string-trim
-                          (shell-command-to-string "/usr/bin/xcrun --find git 2>/dev/null"))))
-          (if (and (not (string-empty-p xcrun-git))
-                   (file-executable-p xcrun-git))
-              xcrun-git
-            (or (executable-find "git") "/opt/homebrew/bin/git"))))
+   (or (with-temp-buffer
+         (and (eq 0 (call-process "/usr/bin/xcrun" nil '(t nil) nil "--find" "git"))
+              (let ((git (string-trim (buffer-string))))
+                (and (file-executable-p git) git))))
+       (executable-find "git")
+       "/opt/homebrew/bin/git"))
   :config
   (defun my/magit-checkout-detach ()
     "Detach HEAD at the current commit."
