@@ -4863,6 +4863,101 @@ Show FALLBACK-MESSAGE interactively when there's no event."
       (insert title)
     (message "No recently finished calendar event to insert")))
 
+(defconst my/calendar-jxa-today-script "\
+ObjC.import('EventKit');
+function run() {
+  const store = $.EKEventStore.alloc.init;
+  const EKEvent = $.EKEntityTypeEvent;
+  const status = $.EKEventStore.authorizationStatusForEntityType(EKEvent);
+  if (status !== 3) {
+    let answered = false, ok = false;
+    const cb = function(granted, err) { ok = granted; answered = true; };
+    if (store.respondsToSelector('requestFullAccessToEventsCompletion:')) {
+      store.requestFullAccessToEventsCompletion(cb);
+    } else {
+      store.requestAccessToEntityTypeCompletion(EKEvent, cb);
+    }
+    const deadline = $.NSDate.dateWithTimeIntervalSinceNow(15);
+    while (!answered && $.NSDate.date.compare(deadline) < 0) {
+      $.NSRunLoop.currentRunLoop.runModeBeforeDate(
+        $.NSDefaultRunLoopMode, $.NSDate.dateWithTimeIntervalSinceNow(0.02));
+    }
+    if (!ok) return 'NO_ACCESS';
+  }
+
+  const now = $.NSDate.date;
+  const tz = $.NSTimeZone.localTimeZone;
+  const tzOffset = tz.secondsFromGMTForDate(now);
+  const nowT = now.timeIntervalSince1970;
+  const dayStart = Math.floor((nowT + tzOffset) / 86400) * 86400 - tzOffset;
+  const startOfDay = $.NSDate.dateWithTimeIntervalSince1970(dayStart);
+  const endOfDay = $.NSDate.dateWithTimeIntervalSince1970(dayStart + 86400);
+
+  const pred = store.predicateForEventsWithStartDateEndDateCalendars(startOfDay, endOfDay, $());
+  const found = store.eventsMatchingPredicate(pred);
+
+  const list = [];
+  for (let i = 0; i < found.count; i++) {
+    const e = found.objectAtIndex(i);
+    if (!e.isAllDay) list.push(e);
+  }
+  list.sort(function(a, b) {
+    return a.startDate.timeIntervalSince1970 - b.startDate.timeIntervalSince1970;
+  });
+
+  if (list.length === 0) return 'NONE';
+
+  const fmt = $.NSDateFormatter.alloc.init;
+  fmt.dateFormat = $('HH:mm');
+  return list.map(function(e) {
+    const start = ObjC.unwrap(fmt.stringFromDate(e.startDate));
+    const end   = ObjC.unwrap(fmt.stringFromDate(e.endDate));
+    const title = ObjC.unwrap(e.title) || '(untitled)';
+    return start + '-' + end + '\\t' + title;
+  }).join('\\n');
+}"
+  "JXA program returning today's non-all-day events as HH:MM-HH:MM TAB title lines.")
+
+(defun my/calendar--fetch-today ()
+  "Return today's events as ((DISPLAY . TITLE) ...), nil if none, or `no-access'."
+  (let* ((out (with-temp-buffer
+                (call-process-region my/calendar-jxa-today-script nil
+                                     "osascript" nil t nil "-l" "JavaScript")
+                (string-trim (buffer-string)))))
+    (cond
+     ((equal out "NO_ACCESS") 'no-access)
+     ((equal out "NONE") nil)
+     (t (mapcar (lambda (line)
+                  (pcase (split-string line "\t" t)
+                    (`(,time ,title) (cons (format "%-12s %s" time title) title))))
+                (s-lines out))))))
+
+(defun my/calendar-pick-event ()
+  "Pick a calendar event from today via `completing-read'.
+Returns the event title string, or nil if none available."
+  (interactive)
+  (let ((events (my/calendar--fetch-today)))
+    (cond
+     ((eq events 'no-access)
+      (message "Calendar access denied — grant Emacs access in System Settings › Privacy & Security › Calendars")
+      nil)
+     ((null events)
+      (message "No events today")
+      nil)
+     (t
+      (let* ((picked (completing-read "Event: " (mapcar #'car events) nil t))
+             (entry  (assoc picked events)))
+        (when (called-interactively-p 'interactive)
+          (message "%s" (cdr entry)))
+        (cdr entry))))))
+
+(defun my/calendar-insert-picked-event ()
+  "Pick a calendar event from today and insert its title at point."
+  (interactive)
+  (if-let* ((title (my/calendar-pick-event)))
+      (insert title)
+    (message "No event inserted")))
+
 ;;; Dotfiles
 
 (use-package chezmoi
