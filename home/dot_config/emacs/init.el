@@ -383,7 +383,7 @@ noisy internals (objects/, rr-cache/, logs/, modules/, lfs/) are skipped."
       ("r" "Run" project-run)
       ("c" "Compile" project-compile)
       ("T" "Terminal(s)" my/ghostel-project-terminal)
-      ("G" "New terminal" my/ghostel-project-new)]
+      ("G" "New terminal" (lambda () (interactive) (ghostel-project '-)))]
      ["Management"
       ("t" "New tab" tab-new)
       ("C" "Close tab" tab-close)
@@ -444,15 +444,7 @@ noisy internals (objects/, rr-cache/, logs/, modules/, lfs/) are skipped."
                 (project-buffers (project-current t)))
       (ghostel-project-list-buffers)
     (when (y-or-n-p "No project terminals. Create one?")
-      (my/ghostel-project-new))))
-
-(defun my/ghostel-project-new ()
-  "Create a new ghostel terminal for the current project."
-  (interactive)
-  (let* ((default-directory (project-root (project-current t)))
-         (ghostel-buffer-name (ghostel--project-buffer-name default-directory))
-         (current-prefix-arg '-))
-    (call-interactively #'ghostel)))
+      (ghostel-project))))
 
 (use-package easysession
   :custom
