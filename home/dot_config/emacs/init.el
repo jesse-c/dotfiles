@@ -2781,60 +2781,13 @@ If BUFFER is provided, close that buffer directly."
                 (evil-emacs-state))))
 
   ;; Auto-approve read-only shell commands for any agent without prompting.
-  ;; Titles may be wrapped in backticks (e.g. "`ls -la`"), so strip them.
-  ;; Chained commands (e.g. `git log | rg foo`, `ps ax | rg foo || true`) are
-  ;; safe if every segment is safe.
+  ;; The predicate lives in user/my-agent-shell-safe.el.  Keep it there: this
+  ;; `:config' block runs under dynamic binding, because `:after' expands to
+  ;; nested `eval-after-load', so a lambda closing over a `let' written here
+  ;; captures nothing and signals `void-variable' on every call.
+  (require 'my-agent-shell-safe)
   (setq agent-shell-permission-responder-function
-        (let ((safe-re (rx bos (or "ls" "grep" "rg" "cat" "bat" "find" "Find" "fd"
-                                   "head" "tail" "wc" "echo" "which" "type"
-                                   "less" "file" "stat" "logfire-trace"
-                                   "ps" "true"
-                                   "git log" "git diff" "git show" "git status"
-                                   "git branch" "git tag" "git rev-parse"
-                                   "git remote" "git stash list"
-                                   "pnpm exec eslint" "pnpm exec jest"
-                                   "pnpm exec tsc"
-                                   ;; gh read-only: view/list/status/checks/diff/search only
-                                   "gh pr view" "gh pr list" "gh pr status"
-                                   "gh pr checks" "gh pr diff"
-                                   "gh issue view" "gh issue list" "gh issue status"
-                                   "gh repo view" "gh repo list"
-                                   "gh run view" "gh run list"
-                                   "gh release view" "gh release list"
-                                   "gh search")
-                               (or eos " " "\n")))
-              (pnpm-filter-re (rx bos "pnpm --filter " (one-or-more (not space)) " "
-                                  (or "test" "lint" "typecheck" "tsc" "build" "check")
-                                  (or eos " " "\n")))
-              (exec-re (rx (or "-exec" "--exec" "-ok" (seq "-x" (or eos " ")))))
-              (dangerous-re (rx (or " > " " < " ";" "`" "$(")))
-              (chain-re (rx " " (or "||" "&&" "|") " ")))
-          (lambda (permission)
-            (let* ((raw-title (map-elt (map-elt permission :tool-call) :title))
-                   (title (and raw-title (string-trim raw-title "`+" "`+")))
-                   (segments (and title (split-string title chain-re)))
-                   (choice (seq-find (lambda (o)
-                                       (equal (map-elt o :kind) "allow_always"))
-                                     (map-elt permission :options)))
-                   (safe-p (and title
-                                (seq-every-p
-                                 (lambda (seg)
-                                   (let ((s (string-trim seg)))
-                                     (and (or (string-match-p safe-re s)
-                                              (string-match-p pnpm-filter-re s))
-                                          (not (string-match-p exec-re s))
-                                          (not (string-match-p dangerous-re s)))))
-                                 segments))))
-              (cond
-               ((null title)
-                (message "agent-shell-permission-responder: no :title in permission %S" permission)
-                nil)
-               ((and safe-p (null choice))
-                (message "agent-shell-permission-responder: no allow_always option for %S" title)
-                nil)
-               ((and safe-p choice)
-                (funcall (map-elt permission :respond)
-                         (map-elt choice :option-id)))))))))
+        #'my/agent-shell-permission-responder))
 
 (use-package agent-shell-ediff
   :ensure t
