@@ -2520,7 +2520,7 @@ If BUFFER is provided, close that buffer directly."
 (use-package gptel-quick
   :ensure t
   (:host github :repo "karthink/gptel-quick")
-  :after (gptel posframe pdf-tools embark)
+  :after (gptel posframe embark)
   :commands gptel-quick
   :config
   (keymap-set embark-general-map "?" #'gptel-quick))
