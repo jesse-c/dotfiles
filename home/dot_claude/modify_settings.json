@@ -1,0 +1,10 @@
+{{- /* chezmoi:modify-template */ -}}
+
+{{- if .chezmoi.stdin -}}
+{{- /* Work laptop only */ -}}
+{{- if eq .chezmoi.hostname "Dais" -}}
+{{ fromJson .chezmoi.stdin | setValueAtPath "env.LOGFIRE_MCP_URL" "https://logfire-eu.pydantic.dev/mcp" | toPrettyJson }}
+{{- else -}}
+{{ .chezmoi.stdin }}
+{{- end -}}
+{{- end }}

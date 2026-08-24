@@ -8,20 +8,6 @@
         "dash-mcp-server"
       ]
     },
-    "github": {
-      "command": "docker",
-      "args": [
-        "run",
-        "-i",
-        "--rm",
-        "-e",
-        "GITHUB_PERSONAL_ACCESS_TOKEN",
-        "ghcr.io/github/github-mcp-server"
-      ],
-      "env": {
-        "GITHUB_PERSONAL_ACCESS_TOKEN": ""
-      }
-    },
     "exa": {
       "type": "http",
       "url": "https://mcp.exa.ai/mcp",
@@ -39,17 +25,6 @@
     "railway": {
       "command": "npx",
       "args": ["-y", "@railway/mcp-server"]
-    },
-    "cua": {
-      "command": "uvx",
-      "args": ["--from", "cua-cli[mcp]", "cua", "serve-mcp"],
-      "env": {
-        "CUA_USE_HOST_COMPUTER_SERVER": "true"
-      }
-    },
-    "playwright": {
-      "command": "npx",
-      "args": ["-y", "@playwright/mcp@latest"]
     }
   }
 }
