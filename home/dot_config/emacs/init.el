@@ -820,7 +820,7 @@ This includes buffers visible in windows or tab-bar tabs."
   (defalias 'any #'cl-member-if))
 
 (use-package magit
-  :after (transient all-the-icons isearch)
+  :after (transient isearch)
   :commands
   (magit-status magit-blame magit-blame-quit)
   :init
