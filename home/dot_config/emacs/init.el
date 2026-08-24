@@ -1909,10 +1909,6 @@ are defining or executing a macro."
 
 ;; Icons
 
-(use-package all-the-icons
-  :if (display-graphic-p))
-
-
 (use-package nerd-icons-dired
   :after (nerd-icons)
   :hook (dired-mode . nerd-icons-dired-mode))
