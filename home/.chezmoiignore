@@ -44,3 +44,8 @@ Library
 .config/swaylock
 .config/hyprland
 {{- end }}
+
+{{- /* Work laptop only */}}
+{{- if ne .chezmoi.hostname "Dais" }}
+.config/fish/functions/pi.fish
+{{- end }}
