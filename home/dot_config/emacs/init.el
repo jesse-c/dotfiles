@@ -1584,7 +1584,8 @@ This includes buffers visible in windows or tab-bar tabs."
         (save-excursion (goto-char pt) (embark-act))
       (select-window (cdr (ring-ref avy-ring 0))))
     t)
-  (setf (alist-get ?. avy-dispatch-alist) 'my/avy-action-embark)
+  (with-eval-after-load 'avy
+    (setf (alist-get ?. avy-dispatch-alist) 'my/avy-action-embark))
 
   (defun my/embark-pytest-def-p ()
     "Return non-nil if point is inside a Python test function in a test_*.py file and python-ts-mode is active."
