@@ -108,8 +108,7 @@
   :init
   (when (>= emacs-major-version 31)
     (setq kill-region-dwim 'emacs-word))
-  (when (display-graphic-p)
-    (context-menu-mode))
+  (context-menu-mode)
   ;; Do not allow the cursor in the minibuffer prompt
   (setq minibuffer-prompt-properties
         '(read-only t cursor-intangible t face minibuffer-prompt))
