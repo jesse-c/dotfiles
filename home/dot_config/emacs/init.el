@@ -246,16 +246,24 @@ PACKAGES should be a list of package names as symbols."
   (setq exec-path-from-shell-shell-name "/opt/homebrew/bin/fish")
   (setq exec-path-from-shell-arguments nil)
   (setq exec-path-from-shell-variables '("PATH" "MANPATH"))
-  :if (memq window-system '(mac ns))
+  :if (or (daemonp) (memq window-system '(mac ns)))
   :config
-  (exec-path-from-shell-initialize))
+  (exec-path-from-shell-initialize)
+  ;; fish neither adds nor removes duplicate `PATH` entries, so one that
+  ;; has been inherited once survives every restart.
+  ;;
+  ;; Drop them where `PATH` is last rewritten, so ordering doesn't
+  ;; matter.
+  (setenv "PATH" (string-join (delete-dups (split-string (getenv "PATH") ":")) ":"))
+  (setq exec-path (delete-dups exec-path)))
 
 ;; Manually ensure Homebrew paths are available
-(when (and (memq window-system '(mac ns))
+(when (and (or (daemonp) (memq window-system '(mac ns)))
            (file-directory-p "/opt/homebrew/bin"))
-  (add-to-list 'exec-path "/opt/homebrew/bin" t)
-  (add-to-list 'exec-path "/opt/homebrew/sbin" t)
-  (setenv "PATH" (concat "/opt/homebrew/bin:" "/opt/homebrew/sbin:" (getenv "PATH"))))
+  (dolist (dir '("/opt/homebrew/bin" "/opt/homebrew/sbin"))
+    (add-to-list 'exec-path dir t)
+    (unless (member dir (split-string (getenv "PATH") ":"))
+      (setenv "PATH" (concat dir ":" (getenv "PATH"))))))
 
 ;; https://www.blogbyben.com/2022/05/gotcha-emacs-on-mac-os-too-many-files.html
 (defun my/file-notify-rm-all-watches ()
