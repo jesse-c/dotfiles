@@ -2689,8 +2689,32 @@ If BUFFER is provided, close that buffer directly."
           (message "Copied session name: %s" title))
       (user-error "No active session")))
 
-  ;; Evil state-specific RET behavior: insert mode = newline, normal mode = send
-  (evil-define-key 'insert agent-shell-mode-map (kbd "RET") #'newline)
+  ;; Evil state-specific RET/TAB behavior:
+  ;;   corfu popup visible → select/cycle candidate
+  ;;   otherwise → newline / indent  (normal mode RET still sends)
+  ;;
+  ;; Background: corfu activates corfu-map via minor-mode-overriding-map-alist
+  ;; under completion-in-region-mode, not via a top-level minor-mode entry.
+  ;; evil-define-key doesn't find that association, so the major-mode binding
+  ;; here always wins over the corfu-map evil aux-keymap approach.  We check
+  ;; corfu--candidates directly instead.
+  (evil-define-key 'insert agent-shell-mode-map
+    (kbd "RET") (lambda () (interactive)
+                  (if (and (bound-and-true-p corfu--candidates) corfu--candidates)
+                      (corfu-insert)
+                    (newline)))
+    [return]    (lambda () (interactive)
+                  (if (and (bound-and-true-p corfu--candidates) corfu--candidates)
+                      (corfu-insert)
+                    (newline)))
+    (kbd "TAB") (lambda () (interactive)
+                  (if (and (bound-and-true-p corfu--candidates) corfu--candidates)
+                      (corfu-next)
+                    (indent-for-tab-command)))
+    [tab]       (lambda () (interactive)
+                  (if (and (bound-and-true-p corfu--candidates) corfu--candidates)
+                      (corfu-next)
+                    (indent-for-tab-command))))
   (evil-define-key 'normal agent-shell-mode-map (kbd "RET") #'comint-send-input)
   (evil-define-key '(normal insert) agent-shell-mode-map
     (kbd "s-a") #'agent-shell-help-menu)
