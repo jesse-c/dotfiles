@@ -453,6 +453,10 @@ noisy internals (objects/, rr-cache/, logs/, modules/, lfs/) are skipped."
     (when (y-or-n-p "No project terminals. Create one?")
       (ghostel-project))))
 
+(use-package winner
+  :ensure nil
+  :hook (after-init . winner-mode))
+
 (use-package easysession
   :custom
   (easysession-mode-line-misc-info t)  ; Display the session in the modeline
@@ -1314,6 +1318,10 @@ This includes buffers visible in windows or tab-bar tabs."
 
 ;; Undo
 
+(setq undo-limit        (* 10  1024 1024))   ;; 10 MB  (default 160 KB)
+(setq undo-strong-limit (* 100 1024 1024))   ;; 100 MB (default 240 KB)
+(setq undo-outer-limit  (* 1024 1024 1024))  ;; 1 GB   (default 24 MB)
+
 (use-package undo-fu
   :ensure t)
 
@@ -1839,6 +1847,13 @@ are defining or executing a macro."
        "-agho --group-directories-first"
      "-agho"))
   (dired-kill-when-opening-new-dired-buffer t)
+  (dired-dwim-target t)
+  (dired-recursive-copies 'always)
+  (dired-create-destination-dirs 'ask)
+  (dired-clean-confirm-killing-deleted-buffers nil)
+  (dired-mouse-drag-files t)
+  :hook
+  (dired-mode . dired-hide-details-mode)
   :config
   (when (eq system-type 'darwin)
     (if (executable-find "gls")
