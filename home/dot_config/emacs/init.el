@@ -1060,9 +1060,18 @@ This includes buffers visible in windows or tab-bar tabs."
                  '(conf-toml-mode . toml-ts-mode)))
   :custom
   (eglot-autoshutdown t)
-  (eglot-sync-connect nil)
+  (eglot-sync-connect 0)   ;; 0 = async, nil = block indefinitely (wrong), t/number = sync timeout
   (eglot-extend-to-xref t)
-  (eglot-max-file-watches 1000) ;; The value of nil or 0 means don’t block at all during the waiting period
+  (eglot-max-file-watches 1000)
+  ;; Formatting is handled by apheleia; color/link/lens are noise.
+  ;; Inlay hints and document highlights are kept.
+  (eglot-ignored-server-capabilities
+   ‘(:documentFormattingProvider
+     :documentRangeFormattingProvider
+     :documentOnTypeFormattingProvider
+     :colorProvider
+     :documentLinkProvider
+     :codeLensProvider))
   (eglot-workspace-configuration
    '(:Lua (:diagnostics (:unusedLocalExclude ["_*"]
                          :globals ["hs" "spoon"]))
