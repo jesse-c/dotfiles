@@ -901,6 +901,12 @@ This includes buffers visible in windows or tab-bar tabs."
 (use-package pr-review
   :defer 1)
 
+(use-package gh-dashboard
+  :load-path "user/"
+  :after magit
+  :commands gh-dashboard
+  :bind ("C-c g d" . gh-dashboard))
+
 (use-package git-modes
   :after magit)
 
@@ -1868,7 +1874,10 @@ are defining or executing a macro."
     (if (executable-find "gls")
         (setq insert-directory-program "gls"
               dired-use-ls-dired t)
-      (setq dired-use-ls-dired nil))))
+      (setq dired-use-ls-dired nil)))
+  (evil-define-key 'normal dired-mode-map
+    "y" #'dired-copy-filename-as-kill
+    "Y" (lambda () (interactive) (dired-copy-filename-as-kill 0))))
 
 ;; Themes
 (defun my/theme-by-current-theme ()
@@ -2854,6 +2863,19 @@ If BUFFER is provided, close that buffer directly."
   (:host github :repo "xenodium/agent-shell-knockknock")
   :after (agent-shell knockknock)
   :hook (agent-shell-mode . agent-shell-knockknock-mode))
+
+;; Temp fixes for two upstream bugs, both in user/my-agent-shell-patches.el:
+;; acp reporting benign agent stderr as errors, and acp swallowing handler
+;; errors into a log buffer that's disabled by default.  They advise internal
+;; functions, so each install checks its targets still exist and warns rather
+;; than failing when an update renames one.
+(require 'my-agent-shell-patches)
+
+(with-eval-after-load 'acp
+  (my/agent-shell-patches-install my/acp-patches))
+
+(with-eval-after-load 'agent-shell
+  (my/agent-shell-patches-install my/agent-shell-patches))
 
 (use-package codeium
   :ensure t
@@ -4315,6 +4337,14 @@ database, but may be available via poetry, pipenv, or a project virtualenv."
 (add-to-list 'auto-mode-alist '("\\.cjs\\'" . js-ts-mode))
 (add-to-list 'auto-mode-alist '("\\.mjs\\'" . js-ts-mode))
 
+(use-package ob-deno
+  :after org
+  :config
+  (add-to-list 'org-babel-load-languages '(deno . t))
+  (org-babel-do-load-languages 'org-babel-load-languages
+                               org-babel-load-languages)
+  (add-to-list 'org-src-lang-modes '("deno" . js-ts)))
+
 ;;; Language: TypeScript
 
 (with-eval-after-load 'treesit
@@ -4324,6 +4354,14 @@ database, but may be available via poetry, pipenv, or a project virtualenv."
   (add-to-list 'treesit-language-source-alist
                '(tsx "https://github.com/tree-sitter/tree-sitter-typescript"
                      "master" "tsx/src")))
+
+(use-package ob-ts-node
+  :after org
+  :config
+  (ob-ts-node-setup)
+  (add-to-list 'org-babel-load-languages '(ts-node . t))
+  (org-babel-do-load-languages 'org-babel-load-languages
+                               org-babel-load-languages))
 
 ;;; Language: JSON
 
@@ -4589,14 +4627,6 @@ Interactively, POINT is point and KILL is the prefix argument."
   :after (flycheck)
   :hook
   (emacs-lisp-mode . flycheck-package-setup))
-
-(use-package elsa
-  :defer t)
-
-(use-package flycheck-elsa
-  :after (flycheck elsa)
-  :hook
-  (emacs-lisp-mode . flycheck-elsa-setup))
 
 (use-package eros
   :commands (eros-mode eros-eval-defun)
