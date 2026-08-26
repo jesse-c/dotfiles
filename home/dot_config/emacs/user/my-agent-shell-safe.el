@@ -47,6 +47,10 @@
       (or eos " " "\n"))
   "Commands that only read, so need no confirmation.")
 
+(defconst my/agent-shell-safe-web-re
+  (rx bos (or "Fetch" "Find") " Web " (or "Fetch" "Search"))
+  "Web tool calls (WebFetch, WebSearch) that are always safe to auto-approve.")
+
 (defconst my/agent-shell-safe-pnpm-filter-re
   (rx bos "pnpm --filter " (one-or-more (not space)) " "
       (or "test" "lint" "typecheck" "tsc" "build" "check")
@@ -74,10 +78,12 @@ not mistaken for a read-only command.")
 (defun my/agent-shell-safe--segment-p (segment)
   "Return non-nil when SEGMENT is a read-only command."
   (let ((s (string-trim segment)))
-    (and (or (string-match-p my/agent-shell-safe-command-re s)
-             (string-match-p my/agent-shell-safe-pnpm-filter-re s))
-         (not (string-match-p my/agent-shell-safe-exec-re s))
-         (not (string-match-p my/agent-shell-safe-dangerous-re s)))))
+    ;; Web tool calls are safe regardless of URL/query characters.
+    (or (string-match-p my/agent-shell-safe-web-re s)
+        (and (or (string-match-p my/agent-shell-safe-command-re s)
+                 (string-match-p my/agent-shell-safe-pnpm-filter-re s))
+             (not (string-match-p my/agent-shell-safe-exec-re s))
+             (not (string-match-p my/agent-shell-safe-dangerous-re s))))))
 
 (defun my/agent-shell-safe-command-p (title)
   "Return non-nil when TITLE is a read-only command safe to auto-approve.

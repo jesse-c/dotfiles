@@ -21,7 +21,14 @@
     "`pnpm --filter web test`"
     "`pnpm exec tsc`"
     "`gh pr view 1`"
-    "`gh search prs --author me`")
+    "`gh search prs --author me`"
+    ;; Web tools — URLs/queries may contain & and ? which are not shell operators here.
+    "Fetch Web Fetch"
+    "Fetch Web Fetch https://example.com"
+    "Fetch Web Fetch https://example.com?foo=bar&baz=qux"
+    "Find Web Search"
+    "Find Web Search some query terms"
+    "Find Web Search query with & ampersand")
   "Titles that must be auto-approved without prompting.")
 
 (defconst my-agent-shell-safe-tests--unsafe
