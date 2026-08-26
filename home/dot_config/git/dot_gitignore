@@ -9,6 +9,9 @@ tmp/
 ## Vim
 Session.vim
 
+## Git
+.worktrees/
+
 ## Jujutsu
 .jj
 
