@@ -4577,7 +4577,19 @@ Interactively, POINT is point and KILL is the prefix argument."
 
 (use-package verb
   :defer t
-  :commands org-babel-execute:verb)
+  :commands org-babel-execute:verb
+  :config
+  ;; verb adds itself to org-babel-load-languages on load, which
+  ;; causes a recursive load cycle in ob-async subprocesses (org ->
+  ;; ob-verb -> org).
+  ;;
+  ;; The autoload on `org-babel-execute:verb` is
+  ;; enough.
+  ;;
+  ;; Remove it from the eager-load list, so subprocesses don't try to
+  ;; require it during startup.
+  (setq org-babel-load-languages
+        (assoc-delete-all 'verb org-babel-load-languages)))
 
 ;;; Language: Typst
 
