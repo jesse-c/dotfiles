@@ -28,7 +28,28 @@
     "Fetch Web Fetch https://example.com?foo=bar&baz=qux"
     "Find Web Search"
     "Find Web Search some query terms"
-    "Find Web Search query with & ampersand")
+    "Find Web Search query with & ampersand"
+    ;; Bare Fetch <URL> format (alternative WebFetch title style).
+    "Fetch https://example.com"
+    "Fetch http://example.com"
+    "Fetch https://pages.cs.wisc.edu/~remzi/Naur.pdf"
+    ;; Read tool — file reads are always safe.
+    "Read /Users/jesse.claven/.claude/skills/pr-review/review-guide.md"
+    "Read ~/some/file.el"
+    ;; Linear read-only tools (get/list/search).
+    "mcp__plugin_linear_linear__get_issue"
+    "mcp__plugin_linear_linear__list_issues"
+    "mcp__plugin_linear_linear__search_documentation"
+    ;; Notion fetch — read-only page retrieval.
+    "mcp__plugin_Notion_notion__notion-fetch"
+    "mcp__plugin_Notion_notion__notion-fetch https://app.notion.com/p/SomePage"
+    ;; make test is a read-only test runner.
+    "make test"
+    "`make test`"
+    "`make test 2>&1`"
+    ;; find with /dev/null redirect — 2>/dev/null is not a file write.
+    "`find /tmp -name foo 2>/dev/null`"
+    "`find /Users/jesse.claven/src -name reports_repo.py 2>/dev/null | head -5`")
   "Titles that must be auto-approved without prompting.")
 
 (defconst my-agent-shell-safe-tests--unsafe

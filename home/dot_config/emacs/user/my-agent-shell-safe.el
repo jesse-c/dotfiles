@@ -36,6 +36,7 @@
               "git remote" "git stash list"
               "pnpm exec eslint" "pnpm exec jest"
               "pnpm exec tsc"
+              "make test"
               ;; gh read-only: view/list/status/checks/diff/search only
               "gh pr view" "gh pr list" "gh pr status"
               "gh pr checks" "gh pr diff"
@@ -48,8 +49,22 @@
   "Commands that only read, so need no confirmation.")
 
 (defconst my/agent-shell-safe-web-re
-  (rx bos (or "Fetch" "Find") " Web " (or "Fetch" "Search"))
+  (rx bos
+      (or (seq (or "Fetch" "Find") " Web " (or "Fetch" "Search"))
+          (seq "Fetch " (or "https://" "http://"))))
   "Web tool calls (WebFetch, WebSearch) that are always safe to auto-approve.")
+
+(defconst my/agent-shell-safe-notion-re
+  (rx bos "mcp__plugin_Notion_notion__notion-fetch")
+  "Notion fetch tool calls that are always safe to auto-approve.")
+
+(defconst my/agent-shell-safe-read-tool-re
+  (rx bos "Read " (or "/" "~"))
+  "Read tool calls (file reads) that are always safe to auto-approve.")
+
+(defconst my/agent-shell-safe-linear-re
+  (rx bos "mcp__plugin_linear_linear__" (or "get_" "list_" "search_"))
+  "Linear MCP read-only tool calls (get/list/search) that are safe to auto-approve.")
 
 (defconst my/agent-shell-safe-pnpm-filter-re
   (rx bos "pnpm --filter " (one-or-more (not space)) " "
@@ -67,6 +82,19 @@
 Matched anywhere and regardless of spacing, so `echo x >>~/.zshrc' is
 not mistaken for a read-only command.")
 
+(defconst my/agent-shell-safe-harmless-redirect-re
+  (rx (one-or-more space)
+      (optional (one-or-more digit))
+      ">"
+      (or "/dev/null"
+          (seq "&" (one-or-more digit))))
+  "Output redirections that suppress output but don't write files.
+Covers 2>/dev/null, >/dev/null, and 2>&1 style redirects.")
+
+(defun my/agent-shell-safe--strip-harmless-redirects (s)
+  "Return S with harmless output-suppression redirects removed."
+  (replace-regexp-in-string my/agent-shell-safe-harmless-redirect-re "" s))
+
 (defconst my/agent-shell-safe-chain-re
   (rx " " (or "||" "&&" "|") " ")
   "Separator for chained commands.  Every segment must be safe on its own.")
@@ -77,13 +105,20 @@ not mistaken for a read-only command.")
 
 (defun my/agent-shell-safe--segment-p (segment)
   "Return non-nil when SEGMENT is a read-only command."
-  (let ((s (string-trim segment)))
-    ;; Web tool calls are safe regardless of URL/query characters.
+  (let* ((s (string-trim segment))
+         ;; Strip harmless output-suppression redirects before checking for
+         ;; dangerous metacharacters, so 2>/dev/null and 2>&1 don't block
+         ;; otherwise-safe commands like find or make test.
+         (s-clean (my/agent-shell-safe--strip-harmless-redirects s)))
+    ;; Read-only MCP/tool calls safe regardless of path or URL characters.
     (or (string-match-p my/agent-shell-safe-web-re s)
-        (and (or (string-match-p my/agent-shell-safe-command-re s)
-                 (string-match-p my/agent-shell-safe-pnpm-filter-re s))
-             (not (string-match-p my/agent-shell-safe-exec-re s))
-             (not (string-match-p my/agent-shell-safe-dangerous-re s))))))
+        (string-match-p my/agent-shell-safe-notion-re s)
+        (string-match-p my/agent-shell-safe-read-tool-re s)
+        (string-match-p my/agent-shell-safe-linear-re s)
+        (and (or (string-match-p my/agent-shell-safe-command-re s-clean)
+                 (string-match-p my/agent-shell-safe-pnpm-filter-re s-clean))
+             (not (string-match-p my/agent-shell-safe-exec-re s-clean))
+             (not (string-match-p my/agent-shell-safe-dangerous-re s-clean))))))
 
 (defun my/agent-shell-safe-command-p (title)
   "Return non-nil when TITLE is a read-only command safe to auto-approve.
