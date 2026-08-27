@@ -1152,7 +1152,7 @@ This includes buffers visible in windows or tab-bar tabs."
   (lua-mode . my/eglot-ensure-deferred)
   (lua-ts-mode . my/eglot-ensure-deferred)
   (markdown-mode . my/eglot-ensure-deferred)
-  (markdown-ts-mode . my/eglot-ensure-deferred)
+  (md-ts-mode . my/eglot-ensure-deferred)
   (python-base-mode . my/eglot-ensure-deferred)
   (rust-mode . my/eglot-ensure-deferred)
   (rust-ts-mode . my/eglot-ensure-deferred)
@@ -1254,7 +1254,7 @@ This includes buffers visible in windows or tab-bar tabs."
                `(markdown-mode . ,(eglot-alternatives
                                    '(("marksman")))))
   (add-to-list 'eglot-server-programs
-               `(markdown-ts-mode . ,(eglot-alternatives
+               `(md-ts-mode . ,(eglot-alternatives
                                       '(("marksman")))))
   (add-to-list 'eglot-server-programs
                `(typst-ts-mode . ,(eglot-alternatives
@@ -2335,7 +2335,7 @@ are defining or executing a macro."
   (js-ts-mode . combobulate-mode)
   (jsx-mode . combobulate-mode)
   (markdown-mode . combobulate-mode)
-  (markdown-ts-mode . combobulate-mode)
+  (md-ts-mode . combobulate-mode)
   (python-base-mode . combobulate-mode)
   (ruby-mode . combobulate-mode)
   (ruby-ts-mode . combobulate-mode)
@@ -3724,7 +3724,7 @@ If no, restores full opacity. Only affects the active frame."
 (dolist (mode '(text-mode-hook
                 prog-mode-hook
                 conf-mode-hook
-                markdown-ts-mode-hook))
+                md-ts-mode-hook))
   (add-hook mode (lambda () (display-line-numbers-mode 1))))
 
 (global-so-long-mode 1)
@@ -4560,13 +4560,25 @@ Interactively, POINT is point and KILL is the prefix argument."
 
 ;;; Language: Markdown
 
-(use-package markdown-ts-mode
-  :if (< emacs-major-version 31)
-  :mode ("\\.md\\'" . markdown-ts-mode)
-  :defer t
+(use-package md-ts-mode
+  :ensure t
   :config
   (add-to-list 'treesit-language-source-alist '(markdown "https://github.com/tree-sitter-grammars/tree-sitter-markdown" "split_parser" "tree-sitter-markdown/src"))
-  (add-to-list 'treesit-language-source-alist '(markdown-inline "https://github.com/tree-sitter-grammars/tree-sitter-markdown" "split_parser" "tree-sitter-markdown-inline/src")))
+  (add-to-list 'treesit-language-source-alist '(markdown-inline "https://github.com/tree-sitter-grammars/tree-sitter-markdown" "split_parser" "tree-sitter-markdown-inline/src"))
+  (md-ts-mode-enable-global))
+
+(use-package grip-mode
+  :ensure t
+  :custom
+  (grip-command 'mdopen)
+  (grip-preview-in-webkit t)
+  ;; mdopen's startup path has no sleep before webkit navigates,
+  ;; unlike the Python grip path. WebKit hits the server before it's
+  ;; ready, and shows blank. A small sleep on first enable avoids
+  ;; that.
+  (grip-sleep-time 2)
+  :bind (:map markdown-mode-command-map
+              ("g" . grip-mode)))
 
 ;;; Language: ePub
 
