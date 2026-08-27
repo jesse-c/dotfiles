@@ -901,12 +901,6 @@ This includes buffers visible in windows or tab-bar tabs."
 (use-package pr-review
   :defer 1)
 
-(use-package gh-dashboard
-  :load-path "user/"
-  :after magit
-  :commands gh-dashboard
-  :bind ("C-c g d" . gh-dashboard))
-
 (use-package git-modes
   :after magit)
 
@@ -4337,14 +4331,6 @@ database, but may be available via poetry, pipenv, or a project virtualenv."
 (add-to-list 'auto-mode-alist '("\\.cjs\\'" . js-ts-mode))
 (add-to-list 'auto-mode-alist '("\\.mjs\\'" . js-ts-mode))
 
-(use-package ob-deno
-  :after org
-  :config
-  (add-to-list 'org-babel-load-languages '(deno . t))
-  (org-babel-do-load-languages 'org-babel-load-languages
-                               org-babel-load-languages)
-  (add-to-list 'org-src-lang-modes '("deno" . js-ts)))
-
 ;;; Language: TypeScript
 
 (with-eval-after-load 'treesit
@@ -4354,14 +4340,6 @@ database, but may be available via poetry, pipenv, or a project virtualenv."
   (add-to-list 'treesit-language-source-alist
                '(tsx "https://github.com/tree-sitter/tree-sitter-typescript"
                      "master" "tsx/src")))
-
-(use-package ob-ts-node
-  :after org
-  :config
-  (ob-ts-node-setup)
-  (add-to-list 'org-babel-load-languages '(ts-node . t))
-  (org-babel-do-load-languages 'org-babel-load-languages
-                               org-babel-load-languages))
 
 ;;; Language: JSON
 
