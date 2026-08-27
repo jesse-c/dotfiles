@@ -29,6 +29,9 @@
     "Find Web Search"
     "Find Web Search some query terms"
     "Find Web Search query with & ampersand"
+    ;; "Web search:" / "Web fetch:" prefix format.
+    "Web search: Peter Naur Programming as Theory Building full text PDF HTML"
+    "Web fetch: https://example.com"
     ;; Bare Fetch <URL> format (alternative WebFetch title style).
     "Fetch https://example.com"
     "Fetch http://example.com"

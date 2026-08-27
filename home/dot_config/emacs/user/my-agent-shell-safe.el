@@ -51,7 +51,8 @@
 (defconst my/agent-shell-safe-web-re
   (rx bos
       (or (seq (or "Fetch" "Find") " Web " (or "Fetch" "Search"))
-          (seq "Fetch " (or "https://" "http://"))))
+          (seq "Fetch " (or "https://" "http://"))
+          (seq "Web " (or "fetch" "search") ":")))
   "Web tool calls (WebFetch, WebSearch) that are always safe to auto-approve.")
 
 (defconst my/agent-shell-safe-notion-re
