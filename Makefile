@@ -5,6 +5,8 @@ TEST_DIR := tests
 .PHONY: test
 test: ## Run the Emacs Lisp unit tests
 	$(EMACS) -Q --batch \
+	  --eval '(setq load-prefer-newer t)' \
 	  -L $(USER_DIR) -L $(TEST_DIR) \
 	  -l my-agent-shell-safe-tests \
+	  -l my-agent-shell-patches-tests \
 	  -f ert-run-tests-batch-and-exit
