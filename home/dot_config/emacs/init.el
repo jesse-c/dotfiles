@@ -428,7 +428,12 @@ noisy internals (objects/, rr-cache/, logs/, modules/, lfs/) are skipped."
         (assq-delete-all 'project-find-regexp project-switch-commands))
   (add-to-list 'project-switch-commands '(consult-ripgrep "Find regexp" ?g))
   (add-to-list 'project-switch-commands '(project-dired "Dired" ?d))
-  (add-to-list 'project-switch-commands '(magit-status "Magit" ?m))
+  (defun my/project-magit-status ()
+    "Start magit-status in the current project root."
+    (interactive)
+    (let ((default-directory (project-root (project-current t))))
+      (magit-status)))
+  (add-to-list 'project-switch-commands '(my/project-magit-status "Magit" ?m))
   (add-to-list 'project-switch-commands '(my/project-find-file-all "Find file (all)" ?F))
   (defun my/project-agent-shell ()
     "Start agent-shell in the current project root."
