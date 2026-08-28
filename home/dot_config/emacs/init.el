@@ -2985,8 +2985,8 @@ Like normal Emacs `C-k'.  Kill to end of line and put content in kill-ring."
     (interactive)
     (kill-ring-save (point) (line-end-position))
     (ghostel-send-key "k" "ctrl"))
-  (add-to-list 'project-switch-commands '(ghostel-project "Ghostel") t)
-  (add-to-list 'project-switch-commands '(my/ghostel-project-terminal "Ghostel buffers") t)
+  (add-to-list 'project-switch-commands '(ghostel-project "Terminal" ?t))
+  (add-to-list 'project-switch-commands '(my/ghostel-project-terminal "Terminals" ?T))
   (add-to-list 'ghostel-eval-cmds '("magit-status-setup-buffer" magit-status-setup-buffer)))
 
 (defun my/ghostty-tab-candidates ()
