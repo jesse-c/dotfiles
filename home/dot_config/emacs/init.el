@@ -372,6 +372,19 @@ noisy internals (objects/, rr-cache/, logs/, modules/, lfs/) are skipped."
           (message "Done adding projects from %s" forge-path))))
 
     (message "Project discovery complete"))
+  (defun my/copy-project-root ()
+    "Select from known projects and yank the root path to the kill ring."
+    (interactive)
+    (let* ((roots (project-known-project-roots))
+           (chosen (completing-read "Copy project root: " roots nil t)))
+      (kill-new chosen)
+      (message "Yanked: %s" chosen)))
+  (defun my/copy-project-root-current ()
+    "Yank the current project's root path to the kill ring."
+    (interactive)
+    (let ((root (project-root (project-current t))))
+      (kill-new root)
+      (message "Yanked: %s" root)))
   (transient-define-prefix project-transient-menu ()
     "Project command menu."
     [["Navigation"
@@ -398,7 +411,8 @@ noisy internals (objects/, rr-cache/, logs/, modules/, lfs/) are skipped."
       ("N" "Rename tab (suffix)" my/rename-tab-to-project-name-with-suffix)
       ("p" "Switch (Known)" project-switch-project)
       ("P" "Switch (All)" consult-ghq-switch-project)
-      ("k" "Kill buffers" project-kill-buffers)]])
+      ("k" "Kill buffers" project-kill-buffers)
+      ("y" "Yank root" my/copy-project-root-current)]])
   (defun project-run (command)
     "Run COMMAND in the current project's root directory."
     (interactive (list (read-shell-command "Run command: "
