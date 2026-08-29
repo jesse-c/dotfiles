@@ -2877,18 +2877,21 @@ If BUFFER is provided, close that buffer directly."
   :after (agent-shell knockknock)
   :hook (agent-shell-mode . agent-shell-knockknock-mode))
 
-;; Temp fixes for two upstream bugs, both in user/my-agent-shell-patches.el:
-;; acp reporting benign agent stderr as errors, and acp swallowing handler
-;; errors into a log buffer that's disabled by default.  They advise internal
-;; functions, so each install checks its targets still exist and warns rather
-;; than failing when an update renames one.
-(require 'my-agent-shell-patches)
-
-(with-eval-after-load 'acp
-  (my/agent-shell-patches-install my/acp-patches))
-
-(with-eval-after-load 'agent-shell
-  (my/agent-shell-patches-install my/agent-shell-patches))
+;; Temp fixes for two upstream bugs, both in
+;; user/my-agent-shell-patches.el.
+;;
+;; acp reporting benign agent stderr as errors, and acp swallowing
+;; handler errors into a log buffer that's disabled by default. They
+;; advise internal functions, so each install checks its targets still
+;; exist and warns rather than failing when an update renames one.
+;;
+;; The file is optional, holds throwaway fixes that come and go, so
+;; tolerate it being absent.
+(when (require 'my-agent-shell-patches nil t)
+  (with-eval-after-load 'acp
+    (my/agent-shell-patches-install my/acp-patches))
+  (with-eval-after-load 'agent-shell
+    (my/agent-shell-patches-install my/agent-shell-patches)))
 
 (use-package codeium
   :ensure t
