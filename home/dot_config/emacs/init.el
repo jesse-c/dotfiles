@@ -388,17 +388,18 @@ noisy internals (objects/, rr-cache/, logs/, modules/, lfs/) are skipped."
   (transient-define-prefix project-transient-menu ()
     "Project command menu."
     [["Navigation"
+      ("b" "Buffers" consult-project-buffer)
+      ("l" "Line" consult-line)
+      ("d" "Dirs" project-dired)
+      ("i" "Sibling file" find-sibling-file)
+      ("w" "Matching worktree buf" project-find-matching-buffer)]
+     ["Search"
       ("s" "Search" consult-ripgrep)
       ("S" "Search (all)" my/project-search-all)
       ("." "Search (here)" my/project-search-here)
-      ("b" "Buffers" consult-project-buffer)
       ("f" "Files" project-find-file)
       ("F" "Files (all)" my/project-find-file-all)
-      ("," "Files (here)" my/project-find-file-here)
-      ("l" "Line" consult-line)
-      ("d" "Layout" project-dired)
-      ("i" "Sibling" find-sibling-file)
-      ("w" "Matching worktree buf" project-find-matching-buffer)]
+      ("," "Files (here)" my/project-find-file-here)]
      ["Execution"
       ("r" "Run" project-run)
       ("c" "Compile" project-compile)
