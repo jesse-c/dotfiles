@@ -2303,7 +2303,23 @@ are defining or executing a macro."
   :hook
   ;; Text modes + agent-shell input area only, as the output is
   ;; read-only, so jinx skips it.
-  ((text-mode org-mode markdown-mode agent-shell-mode) . jinx-mode))
+  ((text-mode org-mode markdown-mode agent-shell-mode) . jinx-mode)
+  :config
+  ;; Embark integration
+  ;;
+  ;; Register jinx overlays as a first-class target so embark-act on a
+  ;; misspelling shows correct/next/previous actions. Snippet from
+  ;; minad, jinx author[1].
+  ;;
+  ;; [1]: https://github.com/minad/jinx/discussions/213
+  (with-eval-after-load 'embark
+    (embark-define-overlay-target jinx category (eq %p 'jinx-overlay))
+    (add-to-list 'embark-target-finders 'embark-target-jinx-at-point)
+    (add-to-list 'embark-keymap-alist '(jinx jinx-repeat-map embark-general-map))
+    (add-to-list 'embark-repeat-actions #'jinx-next)
+    (add-to-list 'embark-repeat-actions #'jinx-previous)
+    (add-to-list 'embark-target-injection-hooks
+                 (list #'jinx-correct #'embark--ignore-target))))
 
 ;; Documentation
 
