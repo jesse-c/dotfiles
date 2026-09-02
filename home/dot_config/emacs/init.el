@@ -441,8 +441,6 @@ noisy internals (objects/, rr-cache/, logs/, modules/, lfs/) are skipped."
     (interactive)
     (let ((default-directory (project-root (project-current t))))
       (agent-shell)))
-  (with-eval-after-load 'agent-shell
-    (add-to-list 'project-switch-commands '(my/project-agent-shell "Agent shell" ?a)))
   :bind
   ("s-p" . project-transient-menu))
 
@@ -2627,7 +2625,7 @@ If BUFFER is provided, close that buffer directly."
 
 (use-package agent-shell
   :after (acp shell-maker)
-  :defer 1
+  :demand t
   :custom
   (agent-shell-file-completion-enabled t)
   (agent-shell-header-style nil)
@@ -2873,7 +2871,8 @@ If BUFFER is provided, close that buffer directly."
   ;; captures nothing and signals `void-variable' on every call.
   (require 'my-agent-shell-safe)
   (setq agent-shell-permission-responder-function
-        #'my/agent-shell-permission-responder))
+        #'my/agent-shell-permission-responder)
+  (add-to-list 'project-switch-commands '(my/project-agent-shell "Agent shell" ?a)))
 
 (use-package agent-shell-ediff
   :ensure t
@@ -2989,6 +2988,7 @@ If BUFFER is provided, close that buffer directly."
 ;;
 ;; Universal-argument is mapped to `to C-c u`.
 (use-package ghostel
+  :demand t
   :bind (("C-x m" . ghostel)
          :map ghostel-semi-char-mode-map
          ("C-q"  . delete-window)
@@ -3010,9 +3010,9 @@ Like normal Emacs `C-k'.  Kill to end of line and put content in kill-ring."
     (interactive)
     (kill-ring-save (point) (line-end-position))
     (ghostel-send-key "k" "ctrl"))
+  (add-to-list 'ghostel-eval-cmds '("magit-status-setup-buffer" magit-status-setup-buffer))
   (add-to-list 'project-switch-commands '(ghostel-project "Terminal" ?t))
-  (add-to-list 'project-switch-commands '(my/ghostel-project-terminal "Terminals" ?T))
-  (add-to-list 'ghostel-eval-cmds '("magit-status-setup-buffer" magit-status-setup-buffer)))
+  (add-to-list 'project-switch-commands '(my/ghostel-project-terminal "Terminals" ?T)))
 
 (defun my/ghostty-tab-candidates ()
   "Return alist of (LABEL . (WIN-IDX . TAB-IDX)) for all Ghostty tabs."
