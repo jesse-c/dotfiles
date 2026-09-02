@@ -26,14 +26,19 @@
 (require 'seq)
 (require 'subr-x)
 
+(defconst my/agent-shell-safe-logfire-re
+  (rx bos "logfire-trace ")
+  "logfire-trace is a read-only query tool; SQL args may contain > operators.")
+
 (defconst my/agent-shell-safe-command-re
   (rx bos (or "ls" "grep" "rg" "cat" "bat" "find" "Find" "fd"
               "head" "tail" "wc" "echo" "which" "type"
-              "less" "file" "stat" "logfire-trace"
+              "less" "file" "stat"
+              "awk" "base64" "nl"
               "ps" "true"
               "git log" "git diff" "git show" "git status"
               "git branch" "git tag" "git rev-parse"
-              "git remote" "git stash list"
+              "git remote" "git stash list" "git cat-file"
               "pnpm exec eslint" "pnpm exec jest"
               "pnpm exec tsc"
               "make test"
@@ -66,6 +71,15 @@
 (defconst my/agent-shell-safe-linear-re
   (rx bos "mcp__plugin_linear_linear__" (or "get_" "list_" "search_"))
   "Linear MCP read-only tool calls (get/list/search) that are safe to auto-approve.")
+
+(defconst my/agent-shell-safe-gh-api-re
+  (rx bos "gh api ")
+  "gh api calls that default to GET (read-only).")
+
+(defconst my/agent-shell-safe-gh-api-write-re
+  (rx (or "--method" "-X" "--field" "--raw-field" "--input"
+          (seq " -" (any "f" "F") (or eos " "))))
+  "Flags that turn a gh api call into a write operation.")
 
 (defconst my/agent-shell-safe-pnpm-filter-re
   (rx bos "pnpm --filter " (one-or-more (not space)) " "
@@ -104,6 +118,12 @@ Covers 2>/dev/null, >/dev/null, and 2>&1 style redirects.")
   "Return TITLE stripped of wrapping backticks and whitespace."
   (string-trim title "[ \t\n`]+" "[ \t\n`]+"))
 
+(defun my/agent-shell-safe--mask-quotes (s)
+  "Return S with single-quoted spans replaced by harmless placeholders.
+Prevents metacharacters inside quotes (awk comparisons, jq pipes)
+from triggering false positives in dangerous-re and chain splitting."
+  (replace-regexp-in-string "'[^']*'" "'_'" s))
+
 (defun my/agent-shell-safe--segment-p (segment)
   "Return non-nil when SEGMENT is a read-only command."
   (let* ((s (string-trim segment))
@@ -116,6 +136,10 @@ Covers 2>/dev/null, >/dev/null, and 2>&1 style redirects.")
         (string-match-p my/agent-shell-safe-notion-re s)
         (string-match-p my/agent-shell-safe-read-tool-re s)
         (string-match-p my/agent-shell-safe-linear-re s)
+        (string-match-p my/agent-shell-safe-logfire-re s)
+        (and (string-match-p my/agent-shell-safe-gh-api-re s-clean)
+             (not (string-match-p my/agent-shell-safe-gh-api-write-re s-clean))
+             (not (string-match-p my/agent-shell-safe-dangerous-re s-clean)))
         (and (or (string-match-p my/agent-shell-safe-command-re s-clean)
                  (string-match-p my/agent-shell-safe-pnpm-filter-re s-clean))
              (not (string-match-p my/agent-shell-safe-exec-re s-clean))
@@ -127,7 +151,8 @@ TITLE is an agent-shell tool-call title, optionally wrapped in backticks.
 A chained command is safe only when every one of its segments is."
   (when (and (stringp title)
              (not (string-empty-p (string-trim title))))
-    (let ((segments (split-string (my/agent-shell-safe--unquote title)
+    (let ((segments (split-string (my/agent-shell-safe--mask-quotes
+                                   (my/agent-shell-safe--unquote title))
                                   my/agent-shell-safe-chain-re)))
       (and segments
            (seq-every-p #'my/agent-shell-safe--segment-p segments)))))

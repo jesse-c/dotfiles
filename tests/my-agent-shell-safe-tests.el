@@ -52,7 +52,9 @@
     "`make test 2>&1`"
     ;; find with /dev/null redirect — 2>/dev/null is not a file write.
     "`find /tmp -name foo 2>/dev/null`"
-    "`find /Users/jesse.claven/src -name reports_repo.py 2>/dev/null | head -5`")
+    "`find /Users/jesse.claven/src -name reports_repo.py 2>/dev/null | head -5`"
+    ;; logfire-trace: SQL args contain >> JSON operators, not shell redirects.
+    "logfire-trace query -S 7d --limit 200 \"WITH decisions AS (SELECT attributes->>'nudge.id' AS nudge_id FROM records WHERE span_name = 'nudge-engine.generate.decision')\")")
   "Titles that must be auto-approved without prompting.")
 
 (defconst my-agent-shell-safe-tests--unsafe
