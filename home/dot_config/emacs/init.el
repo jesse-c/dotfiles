@@ -1087,7 +1087,7 @@ This includes buffers visible in windows or tab-bar tabs."
   ;; Formatting is handled by apheleia; color/link/lens are noise.
   ;; Inlay hints and document highlights are kept.
   (eglot-ignored-server-capabilities
-   ‘(:documentFormattingProvider
+   '(:documentFormattingProvider
      :documentRangeFormattingProvider
      :documentOnTypeFormattingProvider
      :colorProvider
