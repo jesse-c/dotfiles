@@ -1423,6 +1423,10 @@ This includes buffers visible in windows or tab-bar tabs."
 (use-package consult
   :defer 1
   :after (xref)
+  :custom
+  (consult-async-input-debounce 0.1)  ; Wait n ms after typing before searching.
+  (consult-async-input-throttle 0.15) ; Start at most one search every n ms.
+  (consult-async-refresh-delay 0.1)   ; Refresh candidates at most every n ms.
   ;; Replace bindings. Lazily loaded by `use-package'.
   :bind (;; C-c bindings in `mode-specific-map'
          ("C-c M-x" . consult-mode-command)
@@ -1515,7 +1519,7 @@ This includes buffers visible in windows or tab-bar tabs."
   ;; hidden files.  Use "Search (all)" (S) to include hidden/gitignored files.
   (setq consult-ripgrep-args
         "rg --null --line-buffered --color=never --max-columns=1000 --path-separator /\
-         --smart-case --no-heading --with-filename --line-number --search-zip")
+         --smart-case --no-heading --with-filename --line-number")
 
   ;; Optionally configure the narrowing key.
   ;; Both < and C-+ work reasonably well.
