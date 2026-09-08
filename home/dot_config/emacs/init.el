@@ -2320,7 +2320,8 @@ are defining or executing a macro."
     (add-to-list 'embark-repeat-actions #'jinx-next)
     (add-to-list 'embark-repeat-actions #'jinx-previous)
     (add-to-list 'embark-target-injection-hooks
-                 (list #'jinx-correct #'embark--ignore-target))))
+                 (list #'jinx-correct #'embark--ignore-target))
+    (add-to-list 'embark-default-action-overrides '(jinx . jinx-correct))))
 
 ;; Documentation
 
