@@ -5,6 +5,6 @@
 {{- if eq .chezmoi.hostname "Dais" -}}
 {{ fromJson .chezmoi.stdin | setValueAtPath "env.LOGFIRE_MCP_URL" "https://logfire-eu.pydantic.dev/mcp" | toPrettyJson }}
 {{- else -}}
-{{ .chezmoi.stdin }}
+{{ .chezmoi.stdin | trim }}
 {{- end -}}
 {{- end }}
