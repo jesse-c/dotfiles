@@ -2305,6 +2305,18 @@ are defining or executing a macro."
 ;;         ("C-M-$" . jinx-languages))
 (use-package jinx
   :defer 1
+  :init
+  (defun my/jinx-with-system-library-path (fn &rest args)
+    "Keep Emacs's bundled GCC library paths out of Jinx compilation."
+    (if (eq system-type 'darwin)
+        (let ((process-environment (copy-sequence process-environment)))
+          ;; Emacs's `LIBRARY_PATH` can select a CLT SDK incompatible with
+          ;; the active Xcode linker. Let the compiler choose its own
+          ;; SDK, by sitting it to `nil.`
+          (setenv "LIBRARY_PATH" nil)
+          (apply fn args))
+      (apply fn args)))
+  (advice-add 'jinx--load-module :around #'my/jinx-with-system-library-path)
   :hook
   ;; Text modes + agent-shell input area only, as the output is
   ;; read-only, so jinx skips it.
