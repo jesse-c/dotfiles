@@ -881,7 +881,10 @@ This includes buffers visible in windows or tab-bar tabs."
     (magit-run-git "checkout" "--detach")
     (magit-refresh))
   (transient-append-suffix 'magit-branch "l"
-    '("D" "detach" my/magit-checkout-detach)))
+    '("D" "detach" my/magit-checkout-detach))
+  (magit-add-section-hook 'magit-status-sections-hook
+                          #'magit-insert-worktrees
+                          nil t))
 
 (use-package magit-prime
   :after magit
