@@ -1539,6 +1539,12 @@ This includes buffers visible in windows or tab-bar tabs."
 
 (use-package consult-org-roam
   :after (consult org-roam)
+  :init
+  ;; `consult-org-roam-buffer--with-title' can run before its items
+  ;; function has populated this cache. The package uses the variable
+  ;; without declaring it, which otherwise causes node visits to fail
+  ;; when switching buffers.
+  (defvar org-roam-buffer-open-buffer-list nil)
   :config
   (consult-org-roam-mode 1)
   :custom
@@ -3460,6 +3466,127 @@ The cookie shows the count/percentage of DONE tasks among children."
   (setq org-roam-node-display-template (concat "${title:*} " (propertize "${tags:10}" 'face 'org-tag)))
   ;; RETURN will follow links in org-mode files
   (setq org-return-follows-link  t)
+  (defun my/org-roam-find-by-tag ()
+    "Find a tagged Org-roam node using space-separated Orderless terms.
+Match only tags, in any order, while displaying node titles as context."
+    (interactive)
+    (require 'orderless)
+    ;; Work with the nodes returned by Org-roam so the selected candidate can
+    ;; be passed directly to `org-roam-node-visit'.  Untagged nodes cannot
+    ;; match this picker, so leave them out from the start.
+    (let* ((nodes (seq-filter #'org-roam-node-tags (org-roam-node-list)))
+           (candidates
+            (mapcar (lambda (node)
+                      (let* ((id (org-roam-node-id node))
+                             (candidate
+                              (concat
+                               (format "%s  %s"
+                                       (propertize
+                                        (string-join (org-roam-node-tags node) " ")
+                                        'face 'org-tag)
+                                       (org-roam-node-title node))
+                               ;; Keep candidates unique without displaying IDs.
+                               (propertize (format " [%s]" id) 'invisible t))))
+                        (add-text-properties
+                         0 (length candidate)
+                         `(org-roam-node-id ,id
+                           org-roam-node-tags ,(org-roam-node-tags node)
+                           org-roam-node-title ,(org-roam-node-title node))
+                         candidate)
+                        (cons candidate node)))
+                    nodes))
+           ;; Keep a tags-only version of each display candidate.  Orderless
+           ;; filters these strings instead of accidentally matching titles.
+           (tag-strings
+            (mapcar (lambda (entry)
+                      (cons (car entry)
+                            (string-join (org-roam-node-tags (cdr entry)) " ")))
+                    candidates))
+           ;; Advertise the Org-roam category so Embark dispatches to the
+           ;; node exporter below.  Preserve database order in the UI.
+           (table
+            (lambda (string pred action)
+              (if (eq action 'metadata)
+                  '(metadata
+                    (category . org-roam-node)
+                    (display-sort-function . identity)
+                    (cycle-sort-function . identity))
+                (complete-with-action action candidates string pred))))
+           (matches
+            (lambda (string table pred _point)
+              (let ((tags (orderless-filter string (mapcar #'cdr tag-strings))))
+                (seq-filter
+                 (lambda (candidate)
+                   (member (cdr (assoc candidate tag-strings)) tags))
+                 (all-completions "" table pred)))))
+           ;; Keep tag-only matching local to this picker.
+           (completion-styles-alist
+            (cons (list 'my/org-roam-tags
+                        (lambda (string table pred point)
+                          (let ((found (funcall matches string table pred point)))
+                            (cond ((null found) nil)
+                                  ((member string found) t)
+                                  ((null (cdr found))
+                                   (cons (car found) (length (car found))))
+                                  (t (cons string point)))))
+                        matches
+                        "Match Org-roam tags with Orderless.")
+                  completion-styles-alist))
+           (completion-styles '(my/org-roam-tags))
+           (completion-category-defaults nil)
+           (completion-category-overrides nil))
+      (unless candidates
+        (user-error "No tagged Org-roam nodes found"))
+      (org-roam-node-visit
+       (cdr (assoc (completing-read "Find by tag: " table nil t)
+                   candidates)))))
+
+  (define-derived-mode my/org-roam-node-export-mode tabulated-list-mode
+    "Org-roam Nodes"
+    "Mode for Org-roam nodes exported from tag completion."
+    ;; A tabulated list gives exported results sortable columns and a stable
+    ;; row ID without exposing the Org-roam UUID.
+    (setq tabulated-list-format [("Tags" 30 t)
+                                 ("Title" 60 t)]
+          tabulated-list-padding 2)
+    (tabulated-list-init-header))
+
+  (defun my/org-roam-node-export-visit ()
+    "Visit the Org-roam node on the current exported row."
+    (interactive)
+    (if-let* ((id (tabulated-list-get-id))
+              (node (org-roam-node-from-id id)))
+        (org-roam-node-visit node)
+      (user-error "No Org-roam node on this row")))
+
+  (keymap-set my/org-roam-node-export-mode-map "RET"
+              #'my/org-roam-node-export-visit)
+  ;; Evil's normal-state RET takes precedence over the major-mode map.
+  (evil-define-key 'normal my/org-roam-node-export-mode-map (kbd "RET")
+    #'my/org-roam-node-export-visit)
+
+  (defun my/org-roam-node-export (candidates)
+    "Export Org-roam CANDIDATES to a useful tabulated node buffer."
+    (set-buffer (get-buffer-create "*Org-roam tag results*"))
+    (my/org-roam-node-export-mode)
+    ;; Recover the node data attached to each completion candidate and use
+    ;; the UUID only as `tabulated-list-mode's invisible row identifier.
+    (setq tabulated-list-entries
+          (mapcar
+           (lambda (candidate)
+             (let ((id (get-text-property 0 'org-roam-node-id candidate)))
+               (list id
+                     (vector
+                      (string-join
+                       (get-text-property 0 'org-roam-node-tags candidate) " ")
+                      (get-text-property 0 'org-roam-node-title candidate)))))
+           candidates))
+    (tabulated-list-print t))
+
+  ;; `embark-export' dispatches exporters by completion category.
+  (with-eval-after-load 'embark
+    (setf (alist-get 'org-roam-node embark-exporters-alist)
+          #'my/org-roam-node-export))
   (transient-define-prefix org-structure-transient-menu ()
     ["Structure"
      [("i" "Insert" org-meta-return)
@@ -3473,7 +3600,8 @@ The cookie shows the count/percentage of DONE tasks among children."
      [("k" "Task" (lambda () (interactive) (org-capture nil "t")))]]
     ["Navigation"
      [("s" "Search" consult-org-roam-search)
-      ("f" "Find" org-roam-node-find)]
+      ("f" "Find" org-roam-node-find)
+      ("F" "Find by tag" my/org-roam-find-by-tag)]
      [("i" "Insert" org-roam-node-insert)
       ("g" "Graph" org-roam-graph)]]
     ["Dailies"
