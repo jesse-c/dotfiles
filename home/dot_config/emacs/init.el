@@ -1903,9 +1903,19 @@ are defining or executing a macro."
         (setq insert-directory-program "gls"
               dired-use-ls-dired t)
       (setq dired-use-ls-dired nil)))
-  (evil-define-key 'normal dired-mode-map
-    "y" #'dired-copy-filename-as-kill
-    "Y" (lambda () (interactive) (dired-copy-filename-as-kill 0))))
+  (defun my/dired-evil-copy-filename-bindings ()
+    "Bind Dired filename-copy commands after Evil integrations are loaded."
+    (evil-define-key 'normal dired-mode-map
+      "y" #'dired-copy-filename-as-kill
+      "Y" (lambda () (interactive) (dired-copy-filename-as-kill 0))))
+  (my/dired-evil-copy-filename-bindings)
+  ;; evil-collection's Dired integration also binds `Y`, and it may load
+  ;; after this deferred Dired configuration.
+  ;;
+  ;; Reapply our absolute-path binding once that integration has
+  ;; installed its bindings.
+  (with-eval-after-load 'evil-collection-dired
+    (my/dired-evil-copy-filename-bindings)))
 
 ;; Themes
 (defun my/theme-by-current-theme ()
