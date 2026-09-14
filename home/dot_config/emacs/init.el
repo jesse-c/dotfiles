@@ -2838,14 +2838,25 @@ If BUFFER is provided, close that buffer directly."
     (kbd "zr") #'kirigami-open-folds
     (kbd "zm") #'kirigami-close-folds)
 
-  ;; Prompt queue isn't in the package's transient-define-prefix, so add it.
-  ;; Guard against double-addition if init.el is reloaded mid-session.
-  (unless (ignore-errors (transient-get-suffix 'agent-shell-help-menu "q"))
-    (transient-append-suffix 'agent-shell-help-menu '(1)
-      [["Prompt queue"
-        ("q" "Queue" agent-shell-prompt-queue)
-        ("Q" "Remove" agent-shell-prompt-queue-remove)
-        ("R" "Resume" agent-shell-prompt-queue-resume)]]))
+  ;; Prompt queue isn't in the package's `transient-define-prefix`, so
+  ;; add it.
+  ;;
+  ;; Checked on every invocation rather than once here: something in
+  ;; startup races this `:config` block against
+  ;; `agent-shell-help-menu' existing, and on the losing runs the
+  ;; group silently never gets added.
+  ;;
+  ;; Re-checking (and no-op-ing via) `transient-get-suffix' if it's
+  ;; already there) on every call is cheap and removes the race.
+  (defun my/agent-shell-ensure-prompt-queue-menu (&rest _)
+    "Ensure the prompt queue group is present in `agent-shell-help-menu'."
+    (unless (ignore-errors (transient-get-suffix 'agent-shell-help-menu "q"))
+      (transient-append-suffix 'agent-shell-help-menu '(1)
+        [["Prompt queue"
+          ("q" "Queue" agent-shell-prompt-queue)
+          ("Q" "Remove" agent-shell-prompt-queue-remove)
+          ("R" "Resume" agent-shell-prompt-queue-resume)]])))
+  (advice-add 'agent-shell-help-menu :before #'my/agent-shell-ensure-prompt-queue-menu)
 
   ;; Show completed edit diffs expanded inline in the chat by default
   ;; (PR #92).
