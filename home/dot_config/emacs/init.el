@@ -385,6 +385,24 @@ noisy internals (objects/, rr-cache/, logs/, modules/, lfs/) are skipped."
     (let ((root (project-root (project-current t))))
       (kill-new root)
       (message "Yanked: %s" root)))
+  (defun my/goto-project-tab ()
+    "Prompt for an existing project tab, including its number, and select it."
+    (interactive)
+    (let* ((tabs (seq-filter (lambda (tab) (memq (car tab) '(tab current-tab)))
+                             (tab-bar-tabs)))
+           (candidates
+            (seq-map-indexed
+             (lambda (tab index)
+               (let ((number (1+ index)))
+                 (cons (format "%d: %s" number (alist-get 'name (cdr tab)))
+                       number)))
+             tabs))
+           ;; Vertico normally reorders candidates by recency.
+           ;; Preserve tab-bar order so the numbers and the displayed
+           ;; tab strip line up.
+           (choice (let ((vertico-sort-function nil))
+                     (completing-read "Goto project: " candidates nil t))))
+      (tab-bar-select-tab (cdr (assoc-string choice candidates)))))
   (transient-define-prefix project-transient-menu ()
     "Project command menu."
     [["Navigation"
@@ -412,6 +430,7 @@ noisy internals (objects/, rr-cache/, logs/, modules/, lfs/) are skipped."
       ("N" "Rename tab (suffix)" my/rename-tab-to-project-name-with-suffix)
       ("p" "Switch (Known)" project-switch-project)
       ("P" "Switch (All)" consult-ghq-switch-project)
+      ("g" "Goto project" my/goto-project-tab)
       ("k" "Kill buffers" project-kill-buffers)
       ("y" "Yank root" my/copy-project-root-current)]])
   (defun project-run (command)
