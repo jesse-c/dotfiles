@@ -403,6 +403,73 @@ noisy internals (objects/, rr-cache/, logs/, modules/, lfs/) are skipped."
            (choice (let ((vertico-sort-function nil))
                      (completing-read "Goto project: " candidates nil t))))
       (tab-bar-select-tab (cdr (assoc-string choice candidates)))))
+  (defun my/project-git-head (directory)
+    "Return DIRECTORY's Git branch, or its short revision when detached.
+Read Git metadata directly so annotating the project picker does not spawn a
+synchronous Git process for every candidate."
+    ;; Completion annotation runs synchronously across every
+    ;; candidate. Avoid turning a local convenience into TRAMP
+    ;; traffic, and ignore both stale project entries and project.el's
+    ;; synthetic "choose a dir" candidate.
+    (condition-case nil
+        (unless (or (file-remote-p directory)
+                    (not (file-directory-p directory)))
+          (when-let* ((root (locate-dominating-file directory ".git"))
+                      (dot-git (expand-file-name ".git" root))
+                      (git-dir
+                       (cond
+                        ((file-directory-p dot-git) dot-git)
+                        ;; Worktrees and submodules use a small .git
+                        ;; file that points elsewhere. Following it
+                        ;; keeps this on the fast file-reading path
+                        ;; instead of falling back to a Git process
+                        ;; for precisely the projects used most.
+                        ((file-regular-p dot-git)
+                         (with-temp-buffer
+                           (insert-file-contents-literally dot-git)
+                           (when (re-search-forward
+                                  "\\`gitdir: \\(.+\\)\\s-*\\'" nil t)
+                             (expand-file-name (match-string 1) root))))))
+                      (head-file (expand-file-name "HEAD" git-dir))
+                      (_ (file-readable-p head-file))
+                      (head
+                       (with-temp-buffer
+                         (insert-file-contents-literally head-file)
+                         (string-trim (buffer-string)))))
+            (if (string-match "\\`ref: refs/heads/\\(.+\\)\\'" head)
+                (match-string 1 head)
+              ;; A detached checkout has no useful branch name, but
+              ;; its short commit still distinguishes worktrees in the
+              ;; project list.
+              (when (string-match-p "\\`[[:xdigit:]]\\{8,\\}\\'" head)
+                (format "detached@%s" (substring head 0 8))))))
+      ;; A broken repository should lose only its annotation, never
+      ;; the whole project picker.
+      (error nil)))
+  (defun my/project-switch-project ()
+    "Switch projects, annotating Git projects with their current HEAD."
+    (interactive)
+    (let* ((heads (make-hash-table :test #'equal))
+           (missing (make-symbol "missing"))
+           (annotate
+            (lambda (candidate)
+              (let ((head (gethash candidate heads missing)))
+                (when (eq head missing)
+                  (setq head (my/project-git-head candidate))
+                  (puthash candidate head heads))
+                (when head
+                  (marginalia--fields
+                   (head :truncate 1.0 :face 'marginalia-documentation))))))
+           (completion-extra-properties
+            `(:annotation-function ,annotate))
+           ;; Marginalia normally replaces the completion table's
+           ;; annotation with file metadata. Give it our annotator for
+           ;; this invocation.
+           (marginalia-annotators
+            (when (boundp 'marginalia-annotators)
+              (cons (list 'project-file annotate)
+                    (symbol-value 'marginalia-annotators)))))
+      (call-interactively #'project-switch-project)))
   (transient-define-prefix project-transient-menu ()
     "Project command menu."
     [["Navigation"
@@ -428,7 +495,7 @@ noisy internals (objects/, rr-cache/, logs/, modules/, lfs/) are skipped."
       ("C" "Close tab" tab-close)
       ("n" "Rename tab" my/rename-tab-to-project-name)
       ("N" "Rename tab (suffix)" my/rename-tab-to-project-name-with-suffix)
-      ("p" "Switch (Known)" project-switch-project)
+      ("p" "Switch (Known)" my/project-switch-project)
       ("P" "Switch (All)" consult-ghq-switch-project)
       ("g" "Goto project" my/goto-project-tab)
       ("k" "Kill buffers" project-kill-buffers)
