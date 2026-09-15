@@ -43,6 +43,24 @@
        ,@body
        (setq ,var (nreverse ,var)))))
 
+(defmacro my-agent-shell-patches-tests--with-timer (var &rest body)
+  "Run BODY with `run-at-time' stubbed, binding VAR to (DELAY REPEAT FN).
+Lets tests fire the scheduled check on demand instead of waiting on it."
+  (declare (indent 1))
+  `(let ((,var nil))
+     (cl-letf (((symbol-function 'run-at-time)
+                (lambda (secs repeat fn) (setq ,var (list secs repeat fn)))))
+       ,@body)))
+
+(defun my-agent-shell-patches-tests--make-client (pending &optional context-buffer)
+  "Build a fake acp client alist with :request-id 1 and PENDING requests.
+CONTEXT-BUFFER becomes the client's :context-buffer when given."
+  (list (cons :request-id 1)
+        (cons :command "test-cmd")
+        (cons :instance-count 1)
+        (cons :context-buffer context-buffer)
+        (cons :pending-requests pending)))
+
 ;;; The benign-stderr filter.
 
 (ert-deftest my-agent-shell-patches/drops-benign-stderr ()
@@ -89,6 +107,100 @@
     (should (equal (nth 0 (car warnings)) 'agent-shell))
     (should (string-match-p "handler failed" (nth 1 (car warnings))))
     (should (equal (nth 2 (car warnings)) :error))))
+
+;;; Silent session/prompt detection.
+
+(ert-deftest my-agent-shell-patches/silent-prompt-ignores-other-methods ()
+  (my-agent-shell-patches-tests--with-timer timer
+    (let ((client (my-agent-shell-patches-tests--make-client '((1 . t)))))
+      (should (eq (my/acp-warn-on-silent-prompt (lambda (&rest _) 'sent)
+                                                :client client
+                                                :request '((:method . "initialize")))
+                 'sent))
+      (should-not timer))))
+
+(ert-deftest my-agent-shell-patches/silent-prompt-warns-when-still-pending ()
+  (cl-letf (((symbol-function 'acp--traffic-buffer-name)
+             (lambda (_client) "*acp-(test-cmd)-1 traffic*")))
+    (my-agent-shell-patches-tests--with-timer timer
+      (my-agent-shell-patches-tests--with-warnings warnings
+        (let ((my/acp-silent-prompt-alert-enabled t)
+              (client (my-agent-shell-patches-tests--make-client '((1 . t)))))
+          (my/acp-warn-on-silent-prompt (lambda (&rest _) 'sent)
+                                        :client client
+                                        :request '((:method . "session/prompt")))
+          (should timer)
+          (funcall (nth 2 timer))
+          (should (equal (length warnings) 1))
+          (should (equal (nth 0 (car warnings)) 'agent-shell))
+          (should (string-match-p "id 1" (nth 1 (car warnings))))
+          (should (string-match-p "acp-(test-cmd)-1 traffic" (nth 1 (car warnings))))
+          (should (equal (nth 2 (car warnings)) :warning)))))))
+
+;; A response (success or failure) removes the entry from :pending-requests
+;; before the timer fires, exactly as `acp--route-incoming-message' does; a
+;; merely-slow turn must not warn.
+(ert-deftest my-agent-shell-patches/silent-prompt-silent-once-resolved ()
+  (cl-letf (((symbol-function 'acp--traffic-buffer-name) (lambda (_c) "traffic-buf")))
+    (my-agent-shell-patches-tests--with-timer timer
+      (my-agent-shell-patches-tests--with-warnings warnings
+        (let ((my/acp-silent-prompt-alert-enabled t)
+              (client (my-agent-shell-patches-tests--make-client (list (cons 1 t)))))
+          (my/acp-warn-on-silent-prompt (lambda (&rest _) 'sent)
+                                        :client client
+                                        :request '((:method . "session/prompt")))
+          (setf (alist-get :pending-requests client) nil)
+          (funcall (nth 2 timer))
+          (should-not warnings))))))
+
+(ert-deftest my-agent-shell-patches/silent-prompt-names-the-buffer ()
+  (cl-letf (((symbol-function 'acp--traffic-buffer-name) (lambda (_c) "traffic-buf")))
+    (my-agent-shell-patches-tests--with-timer timer
+      (my-agent-shell-patches-tests--with-warnings warnings
+        (let* ((my/acp-silent-prompt-alert-enabled t)
+               (buffer (generate-new-buffer " *my-agent-shell-patches-test*"))
+               (client (my-agent-shell-patches-tests--make-client '((1 . t)) buffer)))
+          (unwind-protect
+              (progn
+                (my/acp-warn-on-silent-prompt (lambda (&rest _) 'sent)
+                                              :client client
+                                              :request '((:method . "session/prompt")))
+                (funcall (nth 2 timer))
+                (should (string-match-p (regexp-quote (buffer-name buffer))
+                                        (nth 1 (car warnings)))))
+            (kill-buffer buffer)))))))
+
+;; The buffer can die between the request going out and the timeout check;
+;; that's not a reason to skip the warning, just to soften the wording.
+(ert-deftest my-agent-shell-patches/silent-prompt-survives-a-killed-buffer ()
+  (cl-letf (((symbol-function 'acp--traffic-buffer-name) (lambda (_c) "traffic-buf")))
+    (my-agent-shell-patches-tests--with-timer timer
+      (my-agent-shell-patches-tests--with-warnings warnings
+        (let* ((my/acp-silent-prompt-alert-enabled t)
+               (buffer (generate-new-buffer " *my-agent-shell-patches-test*"))
+               (client (my-agent-shell-patches-tests--make-client '((1 . t)) buffer)))
+          (my/acp-warn-on-silent-prompt (lambda (&rest _) 'sent)
+                                        :client client
+                                        :request '((:method . "session/prompt")))
+          (kill-buffer buffer)
+          (funcall (nth 2 timer))
+          (should (equal (length warnings) 1))
+          (should (string-match-p "now-killed buffer" (nth 1 (car warnings)))))))))
+
+;; The mute switch is read when the timeout fires, not when the prompt is
+;; sent, so it also covers a prompt that was already in flight when the user
+;; flipped it off.
+(ert-deftest my-agent-shell-patches/silent-prompt-respects-the-mute-switch ()
+  (cl-letf (((symbol-function 'acp--traffic-buffer-name) (lambda (_c) "traffic-buf")))
+    (my-agent-shell-patches-tests--with-timer timer
+      (my-agent-shell-patches-tests--with-warnings warnings
+        (let ((my/acp-silent-prompt-alert-enabled nil)
+              (client (my-agent-shell-patches-tests--make-client '((1 . t)))))
+          (my/acp-warn-on-silent-prompt (lambda (&rest _) 'sent)
+                                        :client client
+                                        :request '((:method . "session/prompt")))
+          (funcall (nth 2 timer))
+          (should-not warnings))))))
 
 ;;; Reporting.
 

@@ -3045,6 +3045,13 @@ If BUFFER is provided, close that buffer directly."
 ;; The file is optional, holds throwaway fixes that come and go, so
 ;; tolerate it being absent.
 (when (require 'my-agent-shell-patches nil t)
+  ;; Keep the diagnostic machinery installed, but do not warn about
+  ;; silent prompts unless explicitly enabled for an investigation.
+  ;;
+  ;; Set this here rather than relying only on its `defvar' default: a
+  ;; stale compiled copy may already have initialised it to the old
+  ;; non-nil default.
+  (setq my/acp-silent-prompt-alert-enabled nil)
   (with-eval-after-load 'acp
     (my/agent-shell-patches-install my/acp-patches))
   (with-eval-after-load 'agent-shell
