@@ -693,6 +693,11 @@ This includes buffers visible in windows or tab-bar tabs."
 
 (global-set-key (kbd "s-q") 'my/quit-or-close-frame)
 
+;; Prevent Cmd+T from falling through to the macOS font panel.
+;; Major-mode bindings, such as `python-pytest-dispatch', take
+;; precedence over this.
+(global-set-key (kbd "s-t") #'ignore)
+
 (use-package evil-org
   :after (org evil)
   :hook (org-mode . evil-org-mode)
