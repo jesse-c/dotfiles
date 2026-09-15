@@ -22,6 +22,10 @@
         "emacs-mcp-server"
       ]
     },
+    "safari": {
+      "command": "/usr/bin/safaridriver",
+      "args": ["--mcp"]
+    },
     "railway": {
       "command": "npx",
       "args": ["-y", "@railway/mcp-server"]

@@ -1,13 +1,20 @@
 {{- /* chezmoi:modify-template */ -}}
 {{- if .chezmoi.stdin -}}
-{{- $managedBlock := `(?ms)\n?# BEGIN chezmoi: Emacs MCP\n.*?# END chezmoi: Emacs MCP\n?` -}}
-{{- $config := regexReplaceAll $managedBlock .chezmoi.stdin "" | trimSuffix "\n" -}}
+{{- $managedBlock := `(?ms)\n?# BEGIN chezmoi: MCP servers\n.*?# END chezmoi: MCP servers\n?` -}}
+{{- $legacyBlock := `(?ms)\n?# BEGIN chezmoi: Emacs MCP\n.*?# END chezmoi: Emacs MCP\n?` -}}
+{{- $config := regexReplaceAll $managedBlock .chezmoi.stdin "" -}}
+{{- $config = regexReplaceAll $legacyBlock $config "" | trimSuffix "\n" -}}
 {{ $config }}
 
-# BEGIN chezmoi: Emacs MCP
+# BEGIN chezmoi: MCP servers
 [mcp_servers.emacs]
 command = "uv"
 args = ["--directory", "{{ .chezmoi.homeDir }}/src/github.com/jesse-c/emacs-mcp-server", "run", "emacs-mcp-server"]
 startup_timeout_sec = 30
-# END chezmoi: Emacs MCP
+
+[mcp_servers.safari]
+command = "/usr/bin/safaridriver"
+args = ["--mcp"]
+startup_timeout_sec = 30
+# END chezmoi: MCP servers
 {{- end }}

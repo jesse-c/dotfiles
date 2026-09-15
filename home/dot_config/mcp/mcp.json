@@ -1,0 +1,64 @@
+{
+  "mcpServers": {
+    "dash-api": {
+      "command": "uvx",
+      "args": [
+        "--from",
+        "git+https://github.com/Kapeli/dash-mcp-server.git",
+        "dash-mcp-server"
+      ]
+    },
+    "emacs": {
+      "command": "uv",
+      "args": [
+        "run",
+        "--directory",
+        "${HOME}/src/github.com/jesse-c/emacs-mcp-server",
+        "emacs-mcp-server"
+      ]
+    },
+    "exa": {
+      "url": "https://mcp.exa.ai/mcp"
+    },
+    "linear": {
+      "url": "https://mcp.linear.app/mcp",
+      "auth": "oauth"
+    },
+    "slack": {
+      "url": "https://mcp.slack.com/mcp",
+      "auth": "oauth",
+      "oauth": {
+        "clientId": "1601185624273.8899143856786",
+        "redirectUri": "http://localhost:3118/callback"
+      }
+    },
+    "notion": {
+      "url": "https://mcp.notion.com/mcp",
+      "auth": "oauth"
+    },
+    "playwright": {
+      "command": "npx",
+      "args": [
+        "@playwright/mcp@latest"
+      ]
+    },
+    "safari": {
+      "command": "/usr/bin/safaridriver",
+      "args": [
+        "--mcp"
+      ]
+    },
+    "logfire": {
+      "url": "https://logfire-eu.pydantic.dev/mcp",
+      "auth": "oauth"
+    },
+    "firebase": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "firebase-tools@latest",
+        "mcp"
+      ]
+    }
+  }
+}
