@@ -2182,6 +2182,8 @@ are defining or executing a macro."
   :defer 0.5
   :custom
   (corfu-auto t)
+  ;; We need to at least allow `qt`
+  (corfu-auto-prefix 2)
   (corfu-auto-delay 0.3)
   (corfu-popupinfo-delay 0.1)
   (corfu-cycle t)                ;; Enable cycling for `corfu-next/previous'
