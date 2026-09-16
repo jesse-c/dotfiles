@@ -569,8 +569,8 @@ synchronous Git process for every candidate."
   (easysession-mode-line-misc-info t)  ; Display the session in the modeline
   (easysession-save-interval (* 10 60))  ; Save every 10 minutes
   (easysession-mode-line-misc-info-format
-   '(" Session:"
-     (:eval (easysession-get-session-name)) " "))
+   '(" Session: "
+     (:eval (or (easysession-get-session-name) "-")) " "))
 
   :init
   (add-hook 'emacs-startup-hook #'easysession-save-mode 103)
