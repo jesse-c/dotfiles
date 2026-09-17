@@ -2191,7 +2191,10 @@ are defining or executing a macro."
   (corfu-quit-no-match t)        ;; Quit when there is no match
   (corfu-preview-current t)
   (corfu-preselect 'prompt)      ;; Pres-elect the prompt
-  (corfu-on-exact-match nil)     ;; Configure handling of exact matches
+  ;; `show', not nil since tempel snippet names (`qt', `src', ...) are the
+  ;; candidate label itself, so a bare `nil' treats them as an exact
+  ;; match with nothing left to complete and never pops the UI.
+  (corfu-on-exact-match 'show)
   (corfu-separator ?\s)          ;; Orderless field separator
   (global-corfu-minibuffer t)    ;; Enable Corfu in the minibuffer
   :init
@@ -3527,6 +3530,7 @@ The cookie shows the count/percentage of DONE tasks among children."
 
   (defun my/wrap-long-lines-org (limit)
     "Wrap lines longer than LIMIT characters in org-mode buffers."
+    (interactive "nLimit: ")
     (save-excursion
       (goto-char (point-min))
       (while (not (eobp))
