@@ -3,7 +3,7 @@
 # Deletes from fish, atuin, and ShellHistory
 # ✓ = deleted, ○ = not found, ✕ = error
 function forget -d "Remove a command from shell history"
-    set -l cmd (commandline | string collect)
+    set -l cmd (commandline | string collect | string trim)
     if test -z "$cmd"
         commandline -f repaint
         return
