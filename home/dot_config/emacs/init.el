@@ -3607,7 +3607,10 @@ Match only tags, in any order, while displaying node titles as context."
                               (concat
                                (format "%s  %s"
                                        (propertize
-                                        (string-join (org-roam-node-tags node) " ")
+                                        (string-join
+                                         (mapcar (lambda (tag) (concat "#" tag))
+                                                 (org-roam-node-tags node))
+                                         " ")
                                         'face 'org-tag)
                                        (org-roam-node-title node))
                                ;; Keep candidates unique without displaying IDs.
