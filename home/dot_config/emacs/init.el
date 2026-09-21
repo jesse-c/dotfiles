@@ -565,15 +565,17 @@ synchronous Git process for every candidate."
   :hook (after-init . winner-mode))
 
 (use-package easysession
+  ;; `:demand' so that `easysession-setup' in `:config' runs during
+  ;; init, before the hooks it installs fire.
+  :demand t
+
   :custom
   (easysession-mode-line-misc-info t)  ; Display the session in the modeline
   (easysession-save-interval (* 10 60))  ; Save every 10 minutes
+  (easysession-setup-load-session-including-geometry nil)  ; Leave frame size alone
   (easysession-mode-line-misc-info-format
    '(" Session: "
      (:eval (or (easysession-get-session-name) "-")) " "))
-
-  :init
-  (add-hook 'emacs-startup-hook #'easysession-save-mode 103)
 
   :bind
   (("C-c l" . easysession-switch-to)
@@ -625,7 +627,15 @@ This includes buffers visible in windows or tab-bar tabs."
                    (agent-shell--start :config config
                                        :session-id (alist-get 'session-id data)
                                        :new-session t
-                                       :no-focus t))))))
+                                       :no-focus t)))))
+
+  ;; Emacs runs as a daemon here, so `easysession-save-mode' saves and then
+  ;; unloads the session when the last client frame closes. `easysession-setup'
+  ;; adds the other half, reloading it on `server-after-make-frame-hook', and
+  ;; enables `easysession-save-mode' itself. Without it the session name stays
+  ;; nil after a frame cycle, the modeline shows "-", and the autosave timer
+  ;; no-ops.
+  (easysession-setup))
 
 ;;; Modal
 
