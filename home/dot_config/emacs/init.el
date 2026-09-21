@@ -5372,6 +5372,13 @@ Returns the event title string, or nil if none available."
   (chezmoi-mode-hook . (lambda () (when (require 'ligature)
                                     (ligature-mode (if chezmoi-mode 0 1))))))
 
+;; Machine-local config outside Chezmoi's control, e.g. work-specific
+;; Org-roam capture types. See `home/dot_config/fish/local.fish' for the
+;; equivalent Fish convention.
+(let ((local-file (locate-user-emacs-file "local.el")))
+  (when (file-exists-p local-file)
+    (load local-file)))
+
 (provide 'init)
 
 ;;; init.el ends here
