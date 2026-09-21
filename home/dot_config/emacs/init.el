@@ -3628,6 +3628,16 @@ with. `:MODIFIED:' is rewritten on every save."
         (org-entry-put (point) "MODIFIED" (format-time-string "[%Y-%m-%d %a %H:%M]" (current-time))))))
 
   (add-hook 'before-save-hook #'my/org-roam-update-timestamps)
+
+  (defvar my/org-roam-capture-types nil
+    "Alist of (DESCRIPTION . COMMAND) offered by `my/org-roam-capture-dispatch'.")
+
+  (defun my/org-roam-capture-dispatch ()
+    "Pick an Org-roam capture type and run it."
+    (interactive)
+    (funcall (cdr (assoc (completing-read "Roam capture: " my/org-roam-capture-types nil t)
+                         my/org-roam-capture-types))))
+
   (defun my/org-roam-find-by-tag ()
     "Find a tagged Org-roam node using space-separated Orderless terms.
 Match only tags, in any order, while displaying node titles as context."
@@ -3762,7 +3772,8 @@ Match only tags, in any order, while displaying node titles as context."
     ["Capture"
      [("c" "All" org-capture)
       ("C" "All (Roam)" org-roam-capture)]
-     [("k" "Task" (lambda () (interactive) (org-capture nil "t")))]]
+     [("k" "Task" (lambda () (interactive) (org-capture nil "t")))
+      ("r" "Roam" my/org-roam-capture-dispatch)]]
     ["Navigation"
      [("s" "Search" consult-org-roam-search)
       ("f" "Find" org-roam-node-find)
