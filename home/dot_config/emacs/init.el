@@ -3033,6 +3033,134 @@ If BUFFER is provided, close that buffer directly."
         #'my/agent-shell-permission-responder)
   (add-to-list 'project-switch-commands '(my/project-agent-shell "Agent shell" ?a)))
 
+;;;; Agent-shell attention markers in the tab bar
+;;
+;; agent-shell ships no tab-bar integration, but it exposes an event
+;; bus (`agent-shell-subscribe-to', which `agent-shell-mode-hook'
+;; documents as the place to call it from). Flag a shell when it wants
+;; something, clear the flag once I look at it, and colour the owning
+;; tab's label.
+
+(defface my/tab-bar-tab-awaiting-input
+  '((t :inherit warning))
+  "Face for a tab bar tab whose agent shell is waiting on input.
+Inherits `warning' so it tracks the theme, which is also where
+`doom-modeline-buffer-modified' gets its yellow."
+  :group 'tab-bar)
+
+(defconst my/agent-shell-awaiting-events '(permission-request turn-complete)
+  "Events after which a shell is waiting on me.")
+
+(defconst my/agent-shell-resolved-events '(input-submitted permission-response)
+  "Events after which a shell is no longer waiting on me.")
+
+(defvar my/agent-shell-awaiting-buffers nil
+  "Shell buffers waiting on me.
+Stored rather than derived from `buffer-list': the tab bar asks once
+per tab on every redisplay, and scanning there cost ~1ms a pass with
+141 buffers open.")
+
+(defvar-local my/agent-shell--subscriptions nil
+  "This shell's event tokens, so setup can revoke them before re-adding.")
+
+(defun my/tab-bar-tab-buffers (tab)
+  "Return the buffers displayed in TAB.
+The current tab has live windows; the rest carry a frozen window
+state, which holds buffers or buffer names depending on whether it
+was written readably."
+  (if (eq (car tab) 'current-tab)
+      (mapcar #'window-buffer (window-list nil 'nomini))
+    (when-let* ((state (alist-get 'ws tab)))
+      (window-state-buffers state))))
+
+(defun my/tab-bar-tab-awaiting-input-p (tab)
+  "Non-nil when TAB holds an agent shell waiting on input.
+Bails on the first test when nothing is flagged, which is the usual
+case, so redisplay pays almost nothing for this."
+  (when-let* ((awaiting my/agent-shell-awaiting-buffers)
+              (buffers (my/tab-bar-tab-buffers tab)))
+    (seq-some (lambda (buffer)
+                (or (memq buffer buffers)
+                    (member (buffer-name buffer) buffers)))
+              awaiting)))
+
+(defun my/tab-bar-tab-name-format-agent-shell (name tab _i)
+  "Highlight NAME when TAB has an agent shell waiting on input."
+  (when (my/tab-bar-tab-awaiting-input-p tab)
+    ;; APPEND nil, so this takes precedence over the tab face that
+    ;; `tab-bar-tab-name-format-face' merges in. Position within
+    ;; `tab-bar-tab-name-format-functions' therefore doesn't matter.
+    (add-face-text-property 0 (length name)
+                            'my/tab-bar-tab-awaiting-input nil name))
+  name)
+
+(defun my/agent-shell-set-awaiting (awaiting)
+  "Add or remove the current shell from `my/agent-shell-awaiting-buffers'."
+  (let ((buffer (current-buffer)))
+    (unless (eq awaiting (and (memq buffer my/agent-shell-awaiting-buffers) t))
+      (setq my/agent-shell-awaiting-buffers
+            (if awaiting
+                (cons buffer my/agent-shell-awaiting-buffers)
+              (delq buffer my/agent-shell-awaiting-buffers)))
+      ;; ALL non-nil, which is what tab-bar.el itself uses to redraw the
+      ;; tab bar after a tab changes. There is no tab-bar-specific call.
+      (force-mode-line-update t))))
+
+(defun my/agent-shell-forget-awaiting ()
+  "Drop this shell from the awaiting set as it dies.
+Without this the list pins killed buffers, keeping their processes
+and markers alive for as long as Emacs runs."
+  (setq my/agent-shell-awaiting-buffers
+        (delq (current-buffer) my/agent-shell-awaiting-buffers)))
+
+(defun my/agent-shell-update-awaiting (event)
+  "Set or clear this shell's awaiting flag from EVENT."
+  (my/agent-shell-set-awaiting
+   (and (memq (alist-get :event event) my/agent-shell-awaiting-events)
+        ;; Nothing to flag if I'm already looking at it. Test the selected
+        ;; window's buffer rather than asking for this buffer's window,
+        ;; which returns the first of several and so misreads splits.
+        (not (eq (current-buffer) (window-buffer (selected-window))))
+        t)))
+
+(defun my/agent-shell-clear-awaiting-on-view (window)
+  "Clear the awaiting flag once I select WINDOW showing this shell."
+  (when (eq window (selected-window))
+    (my/agent-shell-set-awaiting nil)))
+
+(defun my/agent-shell-watch-for-attention ()
+  "Track whether this shell is waiting on input, for the tab bar marker.
+Revokes previous subscriptions first: `agent-shell-subscribe-to' conses
+unconditionally, so re-running this (a restart, or wiring up shells that
+already existed) would otherwise stack duplicate handlers."
+  (mapc (lambda (token) (agent-shell-unsubscribe :subscription token))
+        my/agent-shell--subscriptions)
+  (setq my/agent-shell--subscriptions
+        ;; Narrow subscriptions rather than one catch-all: an unfiltered
+        ;; handler also runs for `agent-message-chunk', which fires once
+        ;; per streamed chunk, many times a turn.
+        (mapcar (lambda (event)
+                  (agent-shell-subscribe-to
+                   :shell-buffer (current-buffer)
+                   :event event
+                   :on-event #'my/agent-shell-update-awaiting))
+                (append my/agent-shell-awaiting-events
+                        my/agent-shell-resolved-events)))
+  ;; Buffer-locally, so it is handed the window with this buffer current.
+  ;; The default value would be handed the frame instead.
+  (add-hook 'window-selection-change-functions
+            #'my/agent-shell-clear-awaiting-on-view nil t)
+  (add-hook 'kill-buffer-hook #'my/agent-shell-forget-awaiting nil t))
+
+(add-hook 'agent-shell-mode-hook #'my/agent-shell-watch-for-attention)
+
+;; Guarded, because the defcustom only exists once tab-bar.el is loaded.
+;; `add-to-list' rather than setting the whole list, so a future Emacs
+;; changing its default modifiers still gets them.
+(with-eval-after-load 'tab-bar
+  (add-to-list 'tab-bar-tab-name-format-functions
+               #'my/tab-bar-tab-name-format-agent-shell))
+
 (use-package agent-shell-ediff
   :ensure t
   (:host github :repo "cassandracomar/agent-shell-ediff")
@@ -3041,16 +3169,6 @@ If BUFFER is provided, close that buffer directly."
   (agent-shell-ediff-quick-quit t)
   :config
   (agent-shell-ediff-mode -1))
-
-(use-package knockknock
-  :ensure t
-  (:host github :repo "xenodium/knockknock"))
-
-(use-package agent-shell-knockknock
-  :ensure t
-  (:host github :repo "xenodium/agent-shell-knockknock")
-  :after (agent-shell knockknock)
-  :hook (agent-shell-mode . agent-shell-knockknock-mode))
 
 ;; Temp fixes for two upstream bugs, both in
 ;; user/my-agent-shell-patches.el.
