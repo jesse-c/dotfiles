@@ -4044,6 +4044,15 @@ none. Designed to run from `window-selection-change-functions'."
 
 ;; Example:
 ;;
+;; #+transclude: [[id:30AF155E-EC51-4B5D-80E0-C19ED52E14BF]]
+;;
+;; Then run `M-x org-transclusion-add`
+(use-package org-transclusion
+  :after org
+  :defer 1)
+
+;; Example:
+;;
 ;; #+begin_src git-permalink :url https://github.com/emacs-mirror/emacs/blob/a4dcc8b9a94466c792be3743760a4a45cf6e1e61/lisp/emacs-lisp/ring.el#L48-L52
 ;; #+end_src
 (use-package ob-git-permalink
