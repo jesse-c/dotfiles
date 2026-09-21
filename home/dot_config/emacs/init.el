@@ -2968,41 +2968,44 @@ If BUFFER is provided, close that buffer directly."
   ;; (PR #92).
   (setq agent-shell-tool-use-expand-by-default t)
 
-  ;; Codeium's completion start reaches into the read-only comint
-  ;; output, since ;; it includes part of the prompt, before the
-  ;; process-mark.
+  ;; Codeium proposes a completion region that reaches back into the
+  ;; read-only prompt, so corfu's replace fails with "Text is
+  ;; read-only". Clamp the region to the writable text and strip the
+  ;; corresponding prefix from the candidates.
   ;;
-  ;; So `corfu-insert` fails with "Text is read-only". Clamp the start
-  ;; to the `process-mark` and strip the corresponding prefix from
-  ;; candidates.
-  (defun my/agent-shell-codeium-capf ()
-    "Codeium completion restricted to the writable input region."
-    (when-let* ((result (codeium-completion-at-point))
+  ;; Advice rather than swapping the capf in `agent-shell-mode-hook':
+  ;; `agent-shell-completion-mode' has already made
+  ;; `completion-at-point-functions' buffer-local and ended it in `t' by
+  ;; the time that hook runs, so codeium is only reachable through the
+  ;; global value and a swap there silently no-ops.
+  (defun my/codeium--read-only-end (beg end)
+    "Position after the last `read-only' character in [BEG, END), or nil."
+    (let ((pos beg) (last nil))
+      (while (and pos (< pos end))
+        (let ((next (or (next-single-property-change pos 'read-only nil end) end)))
+          (when (get-text-property pos 'read-only)
+            (setq last next))
+          (setq pos (if (> next pos) next end))))
+      last))
+
+  (defun my/codeium-capf-respect-read-only (orig &rest args)
+    "Clamp codeium's completion region so it never spans read-only text."
+    (let ((result (apply orig args)))
+      (if-let* ((result)
                 (beg (car result))
                 (end (cadr result))
-                (table (caddr result))
-                (props (cdddr result))
-                (proc (get-buffer-process (current-buffer)))
-                (input-start (marker-position (process-mark proc))))
-      (if (< beg input-start)
-          (let* ((ro-prefix (buffer-substring-no-properties beg input-start))
-                 (ro-len (length ro-prefix))
-                 (adjusted (delq nil
-                                 (mapcar (lambda (c)
-                                           (when (string-prefix-p ro-prefix c)
-                                             (substring c ro-len)))
-                                         (all-completions ro-prefix table)))))
-            (when adjusted
-              (apply #'list input-start end adjusted props)))
+                (ro-end (my/codeium--read-only-end beg end))
+                (prefix (buffer-substring-no-properties beg ro-end))
+                (cands (delq nil
+                             (mapcar (lambda (c)
+                                       (when (string-prefix-p prefix c)
+                                         (substring c (length prefix))))
+                                     (all-completions prefix (caddr result))))))
+          (apply #'list ro-end end cands (cdddr result))
         result)))
-  (add-hook 'agent-shell-mode-hook
-            (lambda ()
-              (setq-local completion-at-point-functions
-                          (mapcar (lambda (f)
-                                    (if (eq f 'codeium-completion-at-point)
-                                        #'my/agent-shell-codeium-capf
-                                      f))
-                                  completion-at-point-functions))))
+
+  (advice-add 'codeium-completion-at-point
+              :around #'my/codeium-capf-respect-read-only)
 
   ;; Configure `*agent-shell-diff*` buffers to start in Emacs state
   (add-hook 'diff-mode-hook
