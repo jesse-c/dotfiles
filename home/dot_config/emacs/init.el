@@ -3723,6 +3723,19 @@ The cookie shows the count/percentage of DONE tasks among children."
   ;; RETURN will follow links in org-mode files
   (setq org-return-follows-link  t)
 
+  (defun my/org-roam--repair-property-drawer ()
+    "Remove blank lines from a leading `:PROPERTIES:' drawer at point.
+Org does not recognize a drawer containing a blank line, which makes
+`org-entry-put' insert a duplicate drawer instead of editing the
+existing one."
+    (when (looking-at-p "^[ \t]*:PROPERTIES:[ \t]*$")
+      (let ((end (save-excursion
+                   (when (re-search-forward "^[ \t]*:END:[ \t]*$" nil t)
+                     (point-marker)))))
+        (when end
+          (while (re-search-forward "^[ \t]*\n" end t)
+            (replace-match ""))))))
+
   (defun my/org-roam-update-timestamps ()
     "Maintain `:CREATED:' and `:MODIFIED:' file properties on Org-roam files.
 `:CREATED:' is set once, parsed from the `%<%Y%m%d%H%M%S>' prefix
@@ -3732,6 +3745,7 @@ with. `:MODIFIED:' is rewritten on every save."
       (save-excursion
         (widen)
         (goto-char (point-min))
+        (my/org-roam--repair-property-drawer)
         (unless (org-entry-get (point) "CREATED")
           (when-let* ((name (file-name-nondirectory buffer-file-name))
                       ((string-match "\\`\\([0-9]\\{14\\}\\)-" name))
