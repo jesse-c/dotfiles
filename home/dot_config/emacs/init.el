@@ -4073,6 +4073,14 @@ none. Designed to run from `window-selection-change-functions'."
   :defer t
   :commands org-babel-execute:git-permalink)
 
+;; elpaca-use-package defers :init until after autoloads are loaded, so this
+;; must be a top-level form.
+(add-to-list 'org-babel-load-languages '(mermaid . t))
+
+(use-package ob-mermaid
+  :defer t
+  :commands org-babel-execute:mermaid)
+
 ;; #+begin_src gptel
 ;; What is the capital of France?
 ;; #+end_src
