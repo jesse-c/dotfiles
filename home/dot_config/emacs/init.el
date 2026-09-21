@@ -3604,6 +3604,30 @@ The cookie shows the count/percentage of DONE tasks among children."
   (setq org-roam-node-display-template (concat "${title:*} " (propertize "${tags:10}" 'face 'org-tag)))
   ;; RETURN will follow links in org-mode files
   (setq org-return-follows-link  t)
+
+  (defun my/org-roam-update-timestamps ()
+    "Maintain `:CREATED:' and `:MODIFIED:' file properties on Org-roam files.
+`:CREATED:' is set once, parsed from the `%<%Y%m%d%H%M%S>' prefix
+Org-roam's default capture template already stamps every filename
+with. `:MODIFIED:' is rewritten on every save."
+    (when (and buffer-file-name (derived-mode-p 'org-mode) (org-roam-file-p))
+      (save-excursion
+        (widen)
+        (goto-char (point-min))
+        (unless (org-entry-get (point) "CREATED")
+          (when-let* ((name (file-name-nondirectory buffer-file-name))
+                      ((string-match "\\`\\([0-9]\\{14\\}\\)-" name))
+                      (ts (match-string 1 name))
+                      (time (encode-time (list (string-to-number (substring ts 12 14)
+                                                (string-to-number (substring ts 10 12))
+                                                (string-to-number (substring ts 8 10))
+                                                (string-to-number (substring ts 6 8))
+                                                (string-to-number (substring ts 4 6))
+                                                (string-to-number (substring ts 0 4)))))))
+            (org-entry-put (point) "CREATED" (format-time-string "[%Y-%m-%d %a %H:%M]" time))))
+        (org-entry-put (point) "MODIFIED" (format-time-string "[%Y-%m-%d %a %H:%M]" (current-time))))))
+
+  (add-hook 'before-save-hook #'my/org-roam-update-timestamps)
   (defun my/org-roam-find-by-tag ()
     "Find a tagged Org-roam node using space-separated Orderless terms.
 Match only tags, in any order, while displaying node titles as context."
@@ -3748,12 +3772,12 @@ Match only tags, in any order, while displaying node titles as context."
     ["Dailies"
      [("t" "Goto today" org-roam-dailies-goto-today)
       ("y" "Goto yesterday" org-roam-dailies-goto-yesterday)
-      ("p" "Goto previous" org-roam-dailies-goto-previous-note)
-      ("n" "Goto next" org-roam-dailies-goto-next-note)]
+      ("d" "Goto date" org-roam-dailies-goto-date)]
      [("T" "Capture today" org-roam-dailies-capture-today)
-      ("Y" "Capture yesterday" org-roam-dailies-capture-yesterday)]
-     [("p" "Find previous" org-roam-dailies-find-previous-note)
-      ("n" "Find next" org-roam-dailies-find-next-note)]]
+      ("Y" "Capture yesterday" org-roam-dailies-capture-yesterday)
+      ("D" "Capture date" org-roam-dailies-capture-date)]
+     [("p" "Goto previous" org-roam-dailies-goto-previous-note)
+      ("n" "Goto next" org-roam-dailies-goto-next-note)]]
     ["Agenda"
      [("d" "Day view" (lambda () (interactive) (my/org-agenda-with-key "d")))
       ("w" "Week view" (lambda () (interactive) (my/org-agenda-with-key "w")))]
