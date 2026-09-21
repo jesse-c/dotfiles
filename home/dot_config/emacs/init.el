@@ -3527,6 +3527,9 @@ Like normal Emacs `C-k'.  Kill to end of line and put content in kill-ring."
   (calendar-week-start-day 1)
   (visual-line-fringe-indicators '(nil right-curly-arrow))
   :config
+  ;; Refresh inline images after a babel block regenerates one (e.g.
+  ;; mermaid, plantuml, dot)
+  (add-hook 'org-babel-after-execute-hook #'org-redisplay-inline-images)
   (setq org-agenda-files (list org-tasks-path))
   (setq diary-show-holidays-flag nil)
   ;; Performance optimisations
