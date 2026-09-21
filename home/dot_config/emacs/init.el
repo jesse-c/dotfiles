@@ -4248,6 +4248,41 @@ If no, restores full opacity. Only affects the active frame."
                 md-ts-mode-hook))
   (add-hook mode (lambda () (display-line-numbers-mode 1))))
 
+(use-package
+  :ensure nil
+  :custom
+  (so-long-threshold 6000)
+  :config
+  ;; Trigger the long-line safeguards sooner and cover
+  ;; prose/configuration modes as well as the programming modes
+  ;; included by default.
+  (dolist (mode '(text-mode conf-mode))
+    (add-to-list 'so-long-target-modes mode))
+
+  ;; Disable expensive modes used by this configuration when `so-long'
+  ;; activates. Built-in defaults already cover font-lock, line
+  ;; numbers, etc.
+  (dolist (mode '(indent-bars-mode
+                  hl-todo-mode
+                  hs-minor-mode
+                  outline-minor-mode
+                  eglot--managed-mode
+                  eldoc-mode
+                  eldoc-box-hover-at-point-mode
+                  corfu-mode
+                  jinx-mode
+                  undo-fu-session-mode
+                  auto-revert-mode
+                  apheleia-mode
+                  ligature-mode))
+    (add-to-list 'so-long-minor-modes mode))
+
+  ;; Avoid wrapping and visual-line calculations for pathological
+  ;; logical lines. Navigation then operates on logical rather than
+  ;; screen lines.
+  (setf (alist-get 'truncate-lines so-long-variable-overrides nil t) t)
+  (setf (alist-get 'line-move-visual so-long-variable-overrides nil t) nil))
+
 (global-so-long-mode 1)
 
 ;; Buffers
