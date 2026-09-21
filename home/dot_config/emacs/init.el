@@ -3629,6 +3629,15 @@ with. `:MODIFIED:' is rewritten on every save."
 
   (add-hook 'before-save-hook #'my/org-roam-update-timestamps)
 
+  (defun my/org-roam-dailies-ensure-heading-ids ()
+    "Give every top-level heading in an Org-roam dailies file an `:ID:' property."
+    (require 'org-roam-dailies)
+    (when (and buffer-file-name (derived-mode-p 'org-mode)
+               (org-roam-dailies--daily-note-p))
+      (org-map-entries #'org-id-get-create "LEVEL=1" 'file)))
+
+  (add-hook 'before-save-hook #'my/org-roam-dailies-ensure-heading-ids)
+
   (defvar my/org-roam-capture-types nil
     "Alist of (DESCRIPTION . COMMAND) offered by `my/org-roam-capture-dispatch'.")
 
