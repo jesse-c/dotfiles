@@ -573,6 +573,7 @@ synchronous Git process for every candidate."
   (easysession-mode-line-misc-info t)  ; Display the session in the modeline
   (easysession-save-interval (* 10 60))  ; Save every 10 minutes
   (easysession-setup-load-session-including-geometry nil)  ; Leave frame size alone
+  (easysession-setup-load-session nil)  ; Don't auto-restore on startup/new frame
   (easysession-mode-line-misc-info-format
    '(" Session: "
      (:eval (or (easysession-get-session-name) "-")) " "))
