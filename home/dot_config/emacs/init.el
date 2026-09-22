@@ -3640,6 +3640,7 @@ The cookie shows the count/percentage of DONE tasks among children."
        (calc . t)
        (elixir . t)
        (rust . t)
+       (mermaid . t)
        (git-permalink . t)))
     (remove-hook 'org-mode-hook #'my/load-org-babel-languages))
   (add-hook 'org-mode-hook #'my/load-org-babel-languages)
@@ -4075,10 +4076,6 @@ none. Designed to run from `window-selection-change-functions'."
 (use-package ob-git-permalink
   :defer t
   :commands org-babel-execute:git-permalink)
-
-;; elpaca-use-package defers :init until after autoloads are loaded, so this
-;; must be a top-level form.
-(add-to-list 'org-babel-load-languages '(mermaid . t))
 
 (use-package ob-mermaid
   :defer t
