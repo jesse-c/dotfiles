@@ -4246,7 +4246,7 @@ If no, restores full opacity. Only affects the active frame."
                 md-ts-mode-hook))
   (add-hook mode (lambda () (display-line-numbers-mode 1))))
 
-(use-package
+(use-package so-long
   :ensure nil
   :custom
   (so-long-threshold 6000)
