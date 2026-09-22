@@ -635,6 +635,44 @@ This includes buffers visible in windows or tab-bar tabs."
                                        :new-session t
                                        :no-focus t)))))
 
+  ;; `easysession--persist-session-on-frame-delete-maybe' unloads the
+  ;; session whenever only one real frame remains at delete time. It never
+  ;; checks that the frame being deleted is actually one of the real ones.
+  ;;
+  ;; Tooltip and child frames (help echo, eldoc, Corfu) get created and
+  ;; destroyed constantly. They always pass the "one real frame" check when
+  ;; you have a single frame open, so every tooltip hide unloaded the
+  ;; session.
+  ;;
+  ;; Pinned to the exact commit this was verified against
+  ;; (github.com/jamescherti/easysession.el). That way an upstream fix or
+  ;; unrelated change can't leave this patch silently active or silently
+  ;; skipped.
+  (defconst my/easysession-patched-commit
+    "c8a4a43f3106ca667e03439301181c2b887996bc")
+
+  (defun my/easysession--persist-session-on-frame-delete-maybe (frame)
+    (when (and easysession--current-session-name
+               easysession--session-loaded
+               (daemonp)
+               (frame-live-p frame)
+               (memq frame (easysession--frame-list))
+               (= (length (easysession--frame-list)) 1))
+      (easysession-unload)))
+
+  (let ((sha (ignore-errors
+               (with-temp-buffer
+                 (call-process "git" nil t nil "-C"
+                               (file-name-directory
+                                (file-truename (find-library-name "easysession")))
+                               "rev-parse" "HEAD")
+                 (string-trim (buffer-string))))))
+    (if (equal sha my/easysession-patched-commit)
+        (advice-add 'easysession--persist-session-on-frame-delete-maybe :override
+                    #'my/easysession--persist-session-on-frame-delete-maybe)
+      (message "easysession is at %s, not the patched %s — check if the tooltip-unload bug is still present before relying on this workaround"
+                sha my/easysession-patched-commit)))
+
   ;; Emacs runs as a daemon here, so `easysession-save-mode' saves and then
   ;; unloads the session when the last client frame closes. `easysession-setup'
   ;; adds the other half, reloading it on `server-after-make-frame-hook', and
