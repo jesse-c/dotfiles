@@ -996,7 +996,75 @@ This includes buffers visible in windows or tab-bar tabs."
 (use-package magit-prime
   :after magit
   :config
-  (add-hook 'magit-pre-refresh-hook 'magit-prime-refresh-cache))
+  (add-hook 'magit-pre-refresh-hook 'magit-prime-refresh-cache)
+
+  ;; magit-prime's async refresh-cache sentinels can fire after Magit's own
+  ;; refresh has ended, once its dynamic binding of `magit--refresh-cache'
+  ;; is gone. The `push' onto `(cdr magit--refresh-cache)' then signals
+  ;; (wrong-type-argument consp nil).
+  ;;
+  ;; Pinned to the exact commit this was verified against
+  ;; (github.com/Azkae/magit-prime). That way an upstream fix or unrelated
+  ;; change can't leave this patch silently active or silently skipped.
+  (defconst my/magit-prime-patched-commit
+    "92c9990d028a7dfe90225a440c116ab7d9724f7c")
+
+  (defun my/magit-prime--refresh-cache-local (commands)
+    (let* ((repo-path (magit-toplevel))
+           (running 0)
+           (buffers
+            (mapcar
+             (lambda (command)
+               (let* ((buffer (generate-new-buffer " *magit-prime-refresh-cache*"))
+                      (cachep (and (eq (car command) t) (pop command)))
+                      (process-environment (magit-process-environment))
+                      (default-process-coding-system (magit--process-coding-system)))
+                 (make-process
+                  :name (buffer-name buffer)
+                  :buffer buffer
+                  :noquery t
+                  :connection-type 'pipe
+                  :command (cons magit-git-executable
+                                 (magit-process-git-arguments command))
+                  :sentinel
+                  (lambda (proc _event)
+                    (when (eq (process-status proc) 'exit)
+                      (when-let* ((buf (process-buffer proc))
+                                  ((buffer-live-p buf))
+                                  ((or cachep
+                                       (zerop (process-exit-status proc)))))
+                        (when (consp magit--refresh-cache)
+                          (push (cons (cons repo-path command)
+                                      (with-current-buffer buf
+                                        (and (zerop (process-exit-status proc))
+                                             (not (bobp))
+                                             (progn
+                                               (goto-char (point-min))
+                                               (buffer-substring-no-properties
+                                                (point) (line-end-position))))))
+                                (cdr magit--refresh-cache))))
+                      (cl-decf running))))
+                 (cl-incf running)
+                 buffer))
+             commands)))
+      (with-timeout (1)
+        (while (> running 0)
+          (sit-for 0.01)
+          (accept-process-output)))
+      (mapc #'kill-buffer buffers)))
+
+  (let ((sha (ignore-errors
+               (with-temp-buffer
+                 (call-process "git" nil t nil "-C"
+                               (file-name-directory
+                                (file-truename (find-library-name "magit-prime")))
+                               "rev-parse" "HEAD")
+                 (string-trim (buffer-string))))))
+    (if (equal sha my/magit-prime-patched-commit)
+        (advice-add 'magit-prime--refresh-cache-local :override
+                    #'my/magit-prime--refresh-cache-local)
+      (message "magit-prime is at %s, not the patched %s — check if the consp/nil race is still present before relying on this workaround"
+                sha my/magit-prime-patched-commit))))
 
 (use-package git-spice
   :load-path "~/src/github.com/jesse-c/git-spice.el"
