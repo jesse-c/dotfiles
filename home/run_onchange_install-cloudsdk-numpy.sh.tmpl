@@ -1,0 +1,11 @@
+{{ if eq .chezmoi.os "darwin" -}}
+#!/bin/bash
+set -euo pipefail
+
+# gcloud's IAP TCP-forwarding (used by `gcloud compute ssh --tunnel-through-iap`,
+# e.g. window-shop-ai's tunnel.sh gcloud fallback) wants NumPy on CLOUDSDK_PYTHON
+# for throughput -- see mise/config.toml.tmpl's CLOUDSDK_PYTHON(_SITEPACKAGES) pins.
+# Assumes mise itself is already installed (brew, via the packages script).
+mise install python@3.12
+mise x uv@latest -- uv pip install --python "{{ .chezmoi.homeDir }}/.local/share/mise/installs/python/3.12/bin/python3" numpy
+{{ end -}}
