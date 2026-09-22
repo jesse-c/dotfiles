@@ -2784,6 +2784,10 @@ If BUFFER is provided, close that buffer directly."
   (agent-shell-show-welcome-message nil)
   (agent-shell-prefer-viewport-interaction nil)
   (agent-shell-activity-group-expand-by-default 'latest)
+  ;; Turned on by default upstream 2026-09-21; hits a "No live prompt
+  ;; to render above" assertion in agent-shell-prompt.el. Off until
+  ;; that settles.
+  (agent-shell-persistent-prompt-enabled nil)
   :config
   (defun my/agent-shell-anthropic-auth-login ()
     (interactive)
