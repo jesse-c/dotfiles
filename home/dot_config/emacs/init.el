@@ -493,8 +493,9 @@ synchronous Git process for every candidate."
      ["Management"
       ("t" "New tab" tab-new)
       ("C" "Close tab" tab-close)
-      ("n" "Rename tab" my/rename-tab-to-project-name)
+      ("n" "Rename tab (default)" my/rename-tab-to-project-name)
       ("N" "Rename tab (suffix)" my/rename-tab-to-project-name-with-suffix)
+      ("O" "Rename tab (custom)" my/rename-tab-custom)
       ("p" "Switch (Known)" my/project-switch-project)
       ("P" "Switch (All)" consult-ghq-switch-project)
       ("g" "Goto project" my/goto-project-tab)
@@ -548,6 +549,11 @@ synchronous Git process for every candidate."
   (when-let* ((root (my/project-root))
               (project-name (file-name-nondirectory (directory-file-name root))))
     (tab-rename (format "%s • %s" project-name suffix))))
+
+(defun my/rename-tab-custom (name)
+  "Rename the current tab to NAME."
+  (interactive "sTab name: ")
+  (tab-rename name))
 
 (defun my/ghostel-project-terminal ()
   "List project terminals, or offer to create one if there are none."
