@@ -650,34 +650,14 @@ This includes buffers visible in windows or tab-bar tabs."
   ;; you have a single frame open, so every tooltip hide unloaded the
   ;; session.
   ;;
-  ;; Pinned to the exact commit this was verified against
-  ;; (github.com/jamescherti/easysession.el). That way an upstream fix or
-  ;; unrelated change can't leave this patch silently active or silently
-  ;; skipped.
-  (defconst my/easysession-patched-commit
-    "c8a4a43f3106ca667e03439301181c2b887996bc")
+  ;; Only a guard, so upstream's function still runs for real frames. If
+  ;; it's fixed upstream (github.com/jamescherti/easysession.el), this
+  ;; becomes a no-op and can be removed.
+  (defun my/easysession--real-frame-p (frame)
+    (memq frame (easysession--frame-list)))
 
-  (defun my/easysession--persist-session-on-frame-delete-maybe (frame)
-    (when (and easysession--current-session-name
-               easysession--session-loaded
-               (daemonp)
-               (frame-live-p frame)
-               (memq frame (easysession--frame-list))
-               (= (length (easysession--frame-list)) 1))
-      (easysession-unload)))
-
-  (let ((sha (ignore-errors
-               (with-temp-buffer
-                 (call-process "git" nil t nil "-C"
-                               (file-name-directory
-                                (file-truename (find-library-name "easysession")))
-                               "rev-parse" "HEAD")
-                 (string-trim (buffer-string))))))
-    (if (equal sha my/easysession-patched-commit)
-        (advice-add 'easysession--persist-session-on-frame-delete-maybe :override
-                    #'my/easysession--persist-session-on-frame-delete-maybe)
-      (message "easysession is at %s, not the patched %s — check if the tooltip-unload bug is still present before relying on this workaround"
-                sha my/easysession-patched-commit)))
+  (advice-add 'easysession--persist-session-on-frame-delete-maybe :before-while
+              #'my/easysession--real-frame-p)
 
   ;; Emacs runs as a daemon here, so `easysession-save-mode' saves and then
   ;; unloads the session when the last client frame closes. `easysession-setup'
