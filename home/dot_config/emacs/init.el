@@ -3839,6 +3839,20 @@ The cookie shows the count/percentage of DONE tasks among children."
 (use-package org-roam
   :defer t
   :after (org transient)
+  :init
+  ;; `:init' runs unconditionally at load time, unlike the deferred `:config'
+  ;; below. `local.el' populates this alist via its own `with-eval-after-load
+  ;; 'org-roam', and same-file eval-after-load handlers run in reverse of
+  ;; registration order, so this defvar must not itself be deferred behind
+  ;; org-roam loading or it can lose that race and end up unbound.
+  (defvar my/org-roam-capture-types nil
+    "Alist of (DESCRIPTION . COMMAND) offered by `my/org-roam-capture-dispatch'.")
+
+  (defun my/org-roam-capture-dispatch ()
+    "Pick an Org-roam capture type and run it."
+    (interactive)
+    (funcall (cdr (assoc (completing-read "Roam capture: " my/org-roam-capture-types nil t)
+                         my/org-roam-capture-types))))
   :custom
   (org-roam-directory (file-truename org-roam-dir))
   (org-roam-dailies-directory org-roam-dailies-dir)
@@ -3895,15 +3909,6 @@ with. `:MODIFIED:' is rewritten on every save."
       (org-map-entries #'org-id-get-create "LEVEL=1" 'file)))
 
   (add-hook 'before-save-hook #'my/org-roam-dailies-ensure-heading-ids)
-
-  (defvar my/org-roam-capture-types nil
-    "Alist of (DESCRIPTION . COMMAND) offered by `my/org-roam-capture-dispatch'.")
-
-  (defun my/org-roam-capture-dispatch ()
-    "Pick an Org-roam capture type and run it."
-    (interactive)
-    (funcall (cdr (assoc (completing-read "Roam capture: " my/org-roam-capture-types nil t)
-                         my/org-roam-capture-types))))
 
   (defun my/org-roam-find-by-tag ()
     "Find a tagged Org-roam node using space-separated Orderless terms.
