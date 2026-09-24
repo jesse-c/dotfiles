@@ -3857,6 +3857,9 @@ The cookie shows the count/percentage of DONE tasks among children."
   (org-roam-directory (file-truename org-roam-dir))
   (org-roam-dailies-directory org-roam-dailies-dir)
   (org-roam-completion-everywhere nil)
+  (org-roam-mode-sections (list #'org-roam-backlinks-section
+                                #'my/org-roam-forward-links-section
+                                #'org-roam-reflinks-section))
   :config
   ;; If you're using a vertical completion framework, you might want a more informative completion interface
   (setq org-roam-node-display-template (concat "${title:*} " (propertize "${tags:10}" 'face 'org-tag)))
@@ -4067,6 +4070,73 @@ Match only tags, in any order, while displaying node titles as context."
      [("a" "Default" (lambda () (interactive) (my/org-agenda-with-key "a")))]]
     [("S" "Structure" org-structure-transient-menu)])
 
+  (cl-defun my/org-roam-forward-links-get (node &key unique)
+    "Return the forward (outgoing) links for NODE.
+Mirrors `org-roam-backlinks-get', but matches the `links' table on
+SOURCE instead of DEST, since forward links point away from NODE
+rather than toward it."
+    (let* ((sql (if unique
+                    [:select :distinct [source dest pos properties]
+                     :from links
+                     :where (= source $s1)
+                     :and (= type "id")
+                     :group :by dest
+                     :having (funcall min pos)]
+                  [:select [source dest pos properties]
+                   :from links
+                   :where (= source $s1)
+                   :and (= type "id")]))
+           (links (org-roam-db-query sql (org-roam-node-id node))))
+      (cl-loop for link in links
+               collect (pcase-let ((`(,source-id ,dest-id ,pos ,properties) link))
+                         (org-roam-populate
+                          (org-roam-backlink-create
+                           :source-node (org-roam-node-create :id source-id)
+                           :target-node (org-roam-node-create :id dest-id)
+                           :point pos
+                           :properties properties))))))
+
+  (defun my/org-roam-forward-links-sort (a b)
+    "Sort forward links A and B by the title of the node they point to."
+    (string< (org-roam-node-title (org-roam-backlink-target-node a))
+             (org-roam-node-title (org-roam-backlink-target-node b))))
+
+  (cl-defun my/org-roam-forward-links-section (node &key (unique nil))
+    "Forward (outgoing) links section for NODE.
+Mirrors `org-roam-backlinks-section', except the heading names the
+node being linked *to*, and the preview comes from NODE's own file
+at the link's position rather than from the other node's file."
+    (when-let* ((links (seq-sort #'my/org-roam-forward-links-sort
+                                  (my/org-roam-forward-links-get node :unique unique))))
+      ;; `org-roam-backlinks-section' ends with an extra newline outside its
+      ;; node sections. Drop only that one, as the node sections' own newlines
+      ;; must stay inside them or folding them leaves a blank line behind.
+      (when (and (eq (char-before) ?\n)
+                 (eq (char-before (1- (point))) ?\n))
+        (delete-char -1))
+      (magit-insert-section (org-roam-forward-links)
+        (magit-insert-heading "Forward links:")
+        (dolist (link links)
+          (magit-insert-section section (org-roam-node-section)
+            (let ((outline (if-let* ((outline (plist-get (org-roam-backlink-properties link) :outline)))
+                                (mapconcat #'org-link-display-format outline " > ")
+                              "Top")))
+              (insert (concat (propertize (org-roam-node-title (org-roam-backlink-target-node link))
+                                          'font-lock-face 'org-roam-title)
+                              (format " (%s)"
+                                      (propertize outline 'font-lock-face 'org-roam-olp)))))
+            (magit-insert-heading)
+            (oset section node (org-roam-backlink-target-node link))
+            (magit-insert-section section (org-roam-preview-section)
+              (insert (org-roam-fontify-like-in-org-mode
+                       (org-roam-preview-get-contents (org-roam-node-file node)
+                                                      (org-roam-backlink-point link)))
+                      "\n")
+              (oset section file (org-roam-node-file node))
+              (oset section point (org-roam-backlink-point link))
+              (insert ?\n))))
+        (insert ?\n))))
+
   ;; Auto-show org-roam backlinks in a scrollable bottom window, à la
   ;; Flycheck's errors list. The window appears when the node at point has
   ;; backlinks and disappears when it does not. Its height fits the content
@@ -4123,9 +4193,10 @@ Collapse first so the window is fitted to the folded height."
     "Reentrancy guard for `my/org-roam-backlinks-auto'.")
 
   (defun my/org-roam-backlinks-auto (&rest _)
-    "Show *org-roam* in a bottom window iff the node at point has backlinks.
-Hide it again when the current buffer is not a node, or the node has
-none. Designed to run from `window-selection-change-functions'."
+    "Show *org-roam* in a bottom window iff the node at point has backlinks
+or forward links. Hide it again when the current buffer is not a
+node, or the node has neither. Designed to run from
+`window-selection-change-functions'."
     (unless (or my/org-roam-backlinks-auto--running
                 (minibufferp)
                 (string= (buffer-name) org-roam-buffer))
@@ -4133,11 +4204,12 @@ none. Designed to run from `window-selection-change-functions'."
         (let* ((node (and (buffer-file-name)
                           (org-roam-file-p)
                           (ignore-errors (org-roam-node-at-point))))
-               (backlinks (and node (org-roam-backlinks-get node)))
+               (links (and node (or (org-roam-backlinks-get node)
+                                    (my/org-roam-forward-links-get node))))
                (visible (eq (org-roam-buffer--visibility) 'visible)))
           (cond
-           ((and backlinks (not visible)) (org-roam-buffer-toggle))
-           ((and (not backlinks) visible) (org-roam-buffer-toggle)))))))
+           ((and links (not visible)) (org-roam-buffer-toggle))
+           ((and (not links) visible) (org-roam-buffer-toggle)))))))
 
   (defun my/org-roam-backlinks-auto-enable ()
     "Enable the automatic org-roam backlinks bottom window."
