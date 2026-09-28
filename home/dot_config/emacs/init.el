@@ -386,20 +386,33 @@ noisy internals (objects/, rr-cache/, logs/, modules/, lfs/) are skipped."
       (kill-new root)
       (message "Yanked: %s" root)))
   (defun my/goto-project-tab ()
-    "Prompt for an existing project tab, including its number, and select it."
+    "Prompt for an existing project tab, including its number, and select it.
+Tabs whose agent shell is awaiting input sort first and are
+highlighted, so the ones needing attention are easiest to reach."
     (interactive)
     (let* ((tabs (seq-filter (lambda (tab) (memq (car tab) '(tab current-tab)))
                              (tab-bar-tabs)))
+           (numbered (seq-map-indexed (lambda (tab index) (cons tab (1+ index)))
+                                      tabs))
+           ;; A stable sort, so awaiting tabs bubble to the top while
+           ;; everything else keeps its tab-bar order beneath them.
+           (ordered (sort numbered
+                          (lambda (a b)
+                            (and (my/tab-bar-tab-awaiting-input-p (car a))
+                                 (not (my/tab-bar-tab-awaiting-input-p (car b)))))))
            (candidates
-            (seq-map-indexed
-             (lambda (tab index)
-               (let ((number (1+ index)))
-                 (cons (format "%d: %s" number (alist-get 'name (cdr tab)))
-                       number)))
-             tabs))
-           ;; Vertico normally reorders candidates by recency.
-           ;; Preserve tab-bar order so the numbers and the displayed
-           ;; tab strip line up.
+            (mapcar
+             (lambda (pair)
+               (let* ((tab (car pair))
+                      (number (cdr pair))
+                      (name (format "%d: %s" number (alist-get 'name (cdr tab)))))
+                 (when (my/tab-bar-tab-awaiting-input-p tab)
+                   (add-face-text-property 0 (length name)
+                                            'my/tab-bar-tab-awaiting-input nil name))
+                 (cons name number)))
+             ordered))
+           ;; Vertico normally reorders candidates by recency and that
+           ;; would fight the priority order just built above.
            (choice (let ((vertico-sort-function nil))
                      (completing-read "Goto project: " candidates nil t))))
       (tab-bar-select-tab (cdr (assoc-string choice candidates)))))
