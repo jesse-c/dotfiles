@@ -2631,7 +2631,12 @@ are defining or executing a macro."
   (typescript-mode . combobulate-mode)
   (typescript-ts-mode . combobulate-mode)
   (yaml-mode . combobulate-mode)
-  (yaml-ts-mode . combobulate-mode))
+  (yaml-ts-mode . combobulate-mode)
+  :config
+  ;; skhd grabs alt-k for yabai, so M-k never reaches Emacs.
+  (transient-suffix-put 'combobulate "M-k" :key "C-M-k")
+  (keymap-unset combobulate-key-map "M-k")
+  (keymap-set combobulate-key-map "C-M-k" #'combobulate-kill-node-dwim))
 
 ;; Security
 
