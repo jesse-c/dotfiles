@@ -3882,34 +3882,30 @@ existing one."
 `:CREATED:' is set once, parsed from the `%<%Y%m%d%H%M%S>' prefix
 Org-roam's default capture template already stamps every filename
 with. `:MODIFIED:' is rewritten on every save."
-    (when (and buffer-file-name (derived-mode-p 'org-mode) (org-roam-file-p))
+    (when (and buffer-file-name (org-roam-file-p))
       (save-excursion
-        (widen)
-        (goto-char (point-min))
-        (my/org-roam--repair-property-drawer)
-        (unless (org-entry-get (point) "CREATED")
-          (when-let* ((name (file-name-nondirectory buffer-file-name))
-                      ((string-match "\\`\\([0-9]\\{14\\}\\)-" name))
-                      (ts (match-string 1 name))
-                      (time (encode-time (list (string-to-number (substring ts 12 14)
-                                                (string-to-number (substring ts 10 12))
-                                                (string-to-number (substring ts 8 10))
-                                                (string-to-number (substring ts 6 8))
-                                                (string-to-number (substring ts 4 6))
-                                                (string-to-number (substring ts 0 4)))))))
-            (org-entry-put (point) "CREATED" (format-time-string "[%Y-%m-%d %a %H:%M]" time))))
-        (org-entry-put (point) "MODIFIED" (format-time-string "[%Y-%m-%d %a %H:%M]" (current-time))))))
-
-  (add-hook 'before-save-hook #'my/org-roam-update-timestamps)
+        (save-restriction
+          (widen)
+          (goto-char (point-min))
+          (my/org-roam--repair-property-drawer)
+          (unless (org-entry-get (point) "CREATED")
+            (when-let* ((name (file-name-nondirectory buffer-file-name))
+                        ((string-match "\\`\\([0-9]\\{14\\}\\)-" name))
+                        (ts (match-string 1 name))
+                        (time (encode-time (list (string-to-number (substring ts 12 14))
+                                                 (string-to-number (substring ts 10 12))
+                                                 (string-to-number (substring ts 8 10))
+                                                 (string-to-number (substring ts 6 8))
+                                                 (string-to-number (substring ts 4 6))
+                                                 (string-to-number (substring ts 0 4))))))
+              (org-entry-put (point) "CREATED" (format-time-string "[%Y-%m-%d %a %H:%M]" time))))
+          (org-entry-put (point) "MODIFIED" (format-time-string "[%Y-%m-%d %a %H:%M]" (current-time)))))))
 
   (defun my/org-roam-dailies-ensure-heading-ids ()
     "Give every top-level heading in an Org-roam dailies file an `:ID:' property."
     (require 'org-roam-dailies)
-    (when (and buffer-file-name (derived-mode-p 'org-mode)
-               (org-roam-dailies--daily-note-p))
+    (when (and buffer-file-name (org-roam-dailies--daily-note-p))
       (org-map-entries #'org-id-get-create "LEVEL=1" 'file)))
-
-  (add-hook 'before-save-hook #'my/org-roam-dailies-ensure-heading-ids)
 
   (defun my/org-roam-find-by-tag ()
     "Find a tagged Org-roam node using space-separated Orderless terms.
@@ -4238,6 +4234,9 @@ node, or the node has neither. Designed to run from
    ("C-M-i" . completion-at-point))
   :hook
   (after-init . org-roam-db-autosync-mode)
+  (org-mode . (lambda ()
+                (add-hook 'before-save-hook #'my/org-roam-update-timestamps nil t)
+                (add-hook 'before-save-hook #'my/org-roam-dailies-ensure-heading-ids nil t)))
   (kill-emacs . (lambda ()
                   (when (fboundp 'org-roam-db-sync)
                     (message "Syncing org-roam database...")
