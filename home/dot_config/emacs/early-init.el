@@ -25,6 +25,14 @@
 ;; Suppress native compilation warnings and errors
 (setq native-comp-async-report-warnings-errors nil)
 
+;; libgccjit maps Darwin N to macOS N-9 (Darwin 27 -> 18), which Apple
+;; clang rejects since macOS jumped to 26. Pass the real version
+;; instead.
+(when (eq system-type 'darwin)
+  (setq native-comp-driver-options
+        (list (concat "-mmacosx-version-min="
+                      (car (process-lines "sw_vers" "-productVersion"))))))
+
 ;; Fix TRAMP GC crash by removing problematic hook
 ;; See: https://debbugs.gnu.org/cgi/bugreport.cgi?bug=56558
 ;; The issue is tramp-flush-file-function running during GC when killing buffers
