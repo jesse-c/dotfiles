@@ -238,6 +238,11 @@ PACKAGES should be a list of package names as symbols."
 ;; Alternative to try: https://superuser.com/questions/125569/how-to-fix-emacs-popup-dialogs-on-mac-os-x
 (setq use-dialog-box nil)
 
+(defun my/reveal-in-finder ()
+  "Show the current file in Finder."
+  (interactive)
+  (call-process "open" nil 0 nil "-R" (or buffer-file-name default-directory)))
+
 (use-package exec-path-from-shell
   :ensure t :demand t
   :init
