@@ -2641,7 +2641,18 @@ are defining or executing a macro."
   ;; skhd grabs alt-k for yabai, so M-k never reaches Emacs.
   (transient-suffix-put 'combobulate "M-k" :key "C-M-k")
   (keymap-unset combobulate-key-map "M-k")
-  (keymap-set combobulate-key-map "C-M-k" #'combobulate-kill-node-dwim))
+  (keymap-set combobulate-key-map "C-M-k" #'combobulate-kill-node-dwim)
+  ;; Emacs 32 string queries only accept `#match?', `#eq?' and
+  ;; `#pred?', but combobulate writes `#match', `#equal' and `#pred'.
+  ;;
+  ;; Its JSON highlight rules then error during fontification, e.g.
+  ;; with ```json fences in Markdown src blocks.
+  (when (string= emacs-version "32.0.50")
+    (advice-add 'combobulate-query-builder-to-string :filter-return
+                (lambda (query)
+                  (thread-last query
+                               (replace-regexp-in-string (rx "#" (group (| "match" "pred")) " ") "#\\1? ")
+                               (string-replace "#equal " "#eq? "))))))
 
 ;; Security
 
