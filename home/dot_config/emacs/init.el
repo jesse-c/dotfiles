@@ -239,9 +239,13 @@ PACKAGES should be a list of package names as symbols."
 (setq use-dialog-box nil)
 
 (defun my/reveal-in-finder ()
-  "Show the current file in Finder."
+  "Show the current file or the Dired file at point in Finder."
   (interactive)
-  (call-process "open" nil 0 nil "-R" (or buffer-file-name default-directory)))
+  (call-process "open" nil 0 nil "-R"
+                (or (and (derived-mode-p 'dired-mode)
+                         (dired-get-filename nil t))
+                    buffer-file-name
+                    default-directory)))
 
 (use-package exec-path-from-shell
   :ensure t :demand t
