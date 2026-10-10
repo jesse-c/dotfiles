@@ -2414,7 +2414,8 @@ are defining or executing a macro."
 ;; childframe is selectable and scrollable with mouse, even though the
 ;; cursor is hidden.
 (use-package eldoc-box
-  :after (eldoc eglot)
+  ;; Not only after Eglot, as Org buffers use it for Org-roam links.
+  :after eldoc
   :diminish (eldoc-box-hover-mode eldoc-box-hover-at-point-mode)
   :custom
   (eldoc-box-clear-with-C-g t)
@@ -3923,6 +3924,99 @@ with. `:MODIFIED:' is rewritten on every save."
     (when (and buffer-file-name (org-roam-dailies--daily-note-p))
       (org-map-entries #'org-id-get-create "LEVEL=1" 'file)))
 
+  (defvar my/org-roam-hover-width 80
+    "Width to cut each line of an Org-roam link's hover summary to.")
+
+  (defun my/org-roam-node-excerpt (node lines width)
+    "Return the first LINES lines of NODE's text, each cut to WIDTH.
+Skip blank lines, headings, drawers, keywords, and planning lines, as
+they're structure rather than what the note says, and show links as
+their descriptions."
+    (with-temp-buffer
+      (insert-file-contents (org-roam-node-file node))
+      (goto-char (org-roam-node-point node))
+      (let* ((heading-p (looking-at-p "\\*+ "))
+             (start (if heading-p (line-beginning-position 2) (point)))
+             ;; Stop a heading node at the next heading, so its excerpt
+             ;; doesn't run into its children or siblings.
+             (end (save-excursion
+                    (goto-char start)
+                    (if (and heading-p (re-search-forward "^\\*+ " nil t))
+                        (match-beginning 0)
+                      (point-max)))))
+        (thread-last (buffer-substring-no-properties start end)
+                     (string-lines)
+                     (mapcar #'string-trim)
+                     (seq-remove (lambda (line)
+                                   (or (string-empty-p line)
+                                       (string-match-p (rx bos (| (seq ":" (+ (any "A-Za-z_+-")) ":")
+                                                                  (seq (+ "*") " ")
+                                                                  "#+" "CLOSED:" "SCHEDULED:" "DEADLINE:"))
+                                                       line))))
+                     (take lines)
+                     (mapcar (lambda (line)
+                               (truncate-string-to-width (org-link-display-format line) width nil nil "…")))))))
+
+  (defun my/org-roam-titles (titles max)
+    "Return the first MAX unique TITLES, noting how many were left out."
+    (let ((titles (delete-dups titles)))
+      (append (take max titles)
+              (when (> (length titles) max)
+                (list (format "+%d more" (- (length titles) max)))))))
+
+  (defun my/org-roam-hover-field (symbol name value)
+    "Format VALUE as \"SYMBOL NAME: VALUE\", with a list bulleted below."
+    (let ((fit (lambda (text width)
+                 (truncate-string-to-width text width nil nil "…")))
+          (column 12))
+      (cond ((null value) nil)
+            ;; Symbols like ✎ draw wider than others, so line up single
+            ;; values at a column rather than with spaces.
+            ((stringp value) (concat (format "%s %s:" symbol name)
+                                     (propertize " " 'display `(space :align-to ,column))
+                                     (funcall fit value (- my/org-roam-hover-width column))))
+            (t (string-join (cons (format "%s %s:" symbol name)
+                                  (mapcar (lambda (item) (funcall fit (concat "• " item) my/org-roam-hover-width))
+                                          value))
+                            "\n")))))
+
+  (defun my/org-roam-node-summary (node)
+    "Return NODE's title, dates, tags, links, and the start of its body."
+    (let* ((props (org-roam-node-properties node))
+           (date (lambda (prop)
+                   (when-let* ((timestamp (cdr (assoc prop props))))
+                     (string-trim timestamp "\\[" "]"))))
+           (backlinks (mapcar (lambda (backlink)
+                                (org-roam-node-title (org-roam-backlink-source-node backlink)))
+                              (org-roam-backlinks-get node)))
+           ;; Org-roam only has an API for backlinks, so read forward links
+           ;; from its database.
+           (forward-links (delq nil (mapcar (lambda (row)
+                                              (when-let* ((dest (org-roam-node-from-id (car row))))
+                                                (org-roam-node-title dest)))
+                                            (org-roam-db-query
+                                             [:select :distinct [dest] :from links
+                                              :where (and (= source $s1) (= type "id"))]
+                                             (org-roam-node-id node)))))
+           (body (my/org-roam-node-excerpt node 3 my/org-roam-hover-width)))
+      (string-join
+       ;; A link's description can differ from the title it points to.
+       (delq nil (list (my/org-roam-hover-field "◆" "Title" (org-roam-node-title node))
+                       (my/org-roam-hover-field "◷" "Created" (funcall date "CREATED"))
+                       (my/org-roam-hover-field "✎" "Modified" (funcall date "MODIFIED"))
+                       (my/org-roam-hover-field "⌗" "Tags" (org-roam-node-tags node))
+                       (my/org-roam-hover-field "←" "Backlinks" (my/org-roam-titles backlinks 8))
+                       (my/org-roam-hover-field "→" "Links" (my/org-roam-titles forward-links 8))
+                       (when body (string-join (cons "¶ Body:" body) "\n"))))
+       "\n")))
+
+  (defun my/org-roam-eldoc-link (&rest _)
+    "Return a summary of the Org-roam node linked at point, for ElDoc."
+    (when-let* ((link (org-element-lineage (org-element-context) 'link t))
+                ((equal (org-element-property :type link) "id"))
+                (node (org-roam-node-from-id (org-element-property :path link))))
+      (my/org-roam-node-summary node)))
+
   (defun my/org-roam-find-by-tag ()
     "Find a tagged Org-roam node using space-separated Orderless terms.
 Match only tags, in any order, while displaying node titles as context."
@@ -4252,7 +4346,11 @@ node, or the node has neither. Designed to run from
   (after-init . org-roam-db-autosync-mode)
   (org-mode . (lambda ()
                 (add-hook 'before-save-hook #'my/org-roam-update-timestamps nil t)
-                (add-hook 'before-save-hook #'my/org-roam-dailies-ensure-heading-ids nil t)))
+                (add-hook 'before-save-hook #'my/org-roam-dailies-ensure-heading-ids nil t)
+                ;; Org has no hover popup, so summarise linked nodes in a
+                ;; box at point, as Eglot buffers do for symbols.
+                (add-hook 'eldoc-documentation-functions #'my/org-roam-eldoc-link nil t)
+                (eldoc-box-hover-at-point-mode)))
   (kill-emacs . (lambda ()
                   (when (fboundp 'org-roam-db-sync)
                     (message "Syncing org-roam database...")
