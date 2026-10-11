@@ -1937,7 +1937,11 @@ This includes buffers visible in windows or tab-bar tabs."
      (t
       (user-error "No test runner configured for %s" major-mode))))
 
-  (define-key embark-identifier-map (kbd "T") #'my/embark-test-def-at-point))
+  (define-key embark-identifier-map (kbd "T") #'my/embark-test-def-at-point)
+
+  ;; Follow a footnote like a link, between its reference and definition.
+  (dolist (type '(org-footnote-reference org-footnote-definition))
+    (add-to-list 'embark-default-action-overrides (cons type #'org-footnote-action))))
 
 (use-package embark-consult
   :after (embark consult)
@@ -3924,8 +3928,8 @@ with. `:MODIFIED:' is rewritten on every save."
     (when (and buffer-file-name (org-roam-dailies--daily-note-p))
       (org-map-entries #'org-id-get-create "LEVEL=1" 'file)))
 
-  (defvar my/org-roam-hover-width 80
-    "Width to cut each line of an Org-roam link's hover summary to.")
+  (defvar my/org-hover-width 80
+    "Width to cut each line of an Org hover summary to.")
 
   (defun my/org-roam-node-excerpt (node lines width)
     "Return the first LINES lines of NODE's text, each cut to WIDTH.
@@ -3964,21 +3968,33 @@ their descriptions."
               (when (> (length titles) max)
                 (list (format "+%d more" (- (length titles) max)))))))
 
-  (defun my/org-roam-hover-field (symbol name value)
-    "Format VALUE as \"SYMBOL NAME: VALUE\", with a list bulleted below."
-    (let ((fit (lambda (text width)
-                 (truncate-string-to-width text width nil nil "…")))
-          (column 12))
-      (cond ((null value) nil)
-            ;; Symbols like ✎ draw wider than others, so line up single
-            ;; values at a column rather than with spaces.
-            ((stringp value) (concat (format "%s %s:" symbol name)
-                                     (propertize " " 'display `(space :align-to ,column))
-                                     (funcall fit value (- my/org-roam-hover-width column))))
-            (t (string-join (cons (format "%s %s:" symbol name)
-                                  (mapcar (lambda (item) (funcall fit (concat "• " item) my/org-roam-hover-width))
-                                          value))
-                            "\n")))))
+  (defun my/org-hover-format (fields)
+    "Format FIELDS, each (SYMBOL NAME VALUE [PLAIN]), one per line.
+Skip fields without a VALUE. Put a string VALUE after its name, and a
+list below it, bulleted unless PLAIN."
+    (let* ((fields (seq-filter #'caddr fields))
+           (label (lambda (field) (format "%s %s:" (nth 0 field) (nth 1 field))))
+           ;; Symbols like ✎ draw wider than others, so line up single
+           ;; values at a column just past the longest label, rather than
+           ;; with spaces.
+           (column (1+ (apply #'max 0 (mapcar (lambda (field) (string-width (funcall label field)))
+                                              (seq-filter (lambda (field) (stringp (nth 2 field))) fields)))))
+           (fit (lambda (text width) (truncate-string-to-width text width nil nil "…"))))
+      (string-join
+       (mapcar (lambda (field)
+                 (seq-let (_symbol _name value plain) field
+                   (if (stringp value)
+                       (concat (funcall label field)
+                               (propertize " " 'display `(space :align-to ,column))
+                               (funcall fit value (- my/org-hover-width column)))
+                     (string-join (cons (funcall label field)
+                                        (mapcar (lambda (item)
+                                                  (funcall fit (if plain item (concat "• " item))
+                                                           my/org-hover-width))
+                                                value))
+                                  "\n"))))
+               fields)
+       "\n")))
 
   (defun my/org-roam-node-summary (node)
     "Return NODE's title, dates, tags, links, and the start of its body."
@@ -3998,17 +4014,16 @@ their descriptions."
                                              [:select :distinct [dest] :from links
                                               :where (and (= source $s1) (= type "id"))]
                                              (org-roam-node-id node)))))
-           (body (my/org-roam-node-excerpt node 3 my/org-roam-hover-width)))
-      (string-join
-       ;; A link's description can differ from the title it points to.
-       (delq nil (list (my/org-roam-hover-field "◆" "Title" (org-roam-node-title node))
-                       (my/org-roam-hover-field "◷" "Created" (funcall date "CREATED"))
-                       (my/org-roam-hover-field "✎" "Modified" (funcall date "MODIFIED"))
-                       (my/org-roam-hover-field "⌗" "Tags" (org-roam-node-tags node))
-                       (my/org-roam-hover-field "←" "Backlinks" (my/org-roam-titles backlinks 8))
-                       (my/org-roam-hover-field "→" "Links" (my/org-roam-titles forward-links 8))
-                       (when body (string-join (cons "¶ Body:" body) "\n"))))
-       "\n")))
+           (body (my/org-roam-node-excerpt node 3 my/org-hover-width)))
+      ;; A link's description can differ from the title it points to.
+      (my/org-hover-format
+       `(("◆" "Title" ,(org-roam-node-title node))
+         ("◷" "Created" ,(funcall date "CREATED"))
+         ("✎" "Modified" ,(funcall date "MODIFIED"))
+         ("⌗" "Tags" ,(org-roam-node-tags node))
+         ("←" "Backlinks" ,(my/org-roam-titles backlinks 8))
+         ("→" "Links" ,(my/org-roam-titles forward-links 8))
+         ("¶" "Body" ,body t)))))
 
   (defun my/org-roam-eldoc-link (&rest _)
     "Return a summary of the Org-roam node linked at point, for ElDoc."
@@ -4016,6 +4031,38 @@ their descriptions."
                 ((equal (org-element-property :type link) "id"))
                 (node (org-roam-node-from-id (org-element-property :path link))))
       (my/org-roam-node-summary node)))
+
+  (defun my/org-eldoc-footnote (&rest _)
+    "Return the title, link, and text of the footnote at point, for ElDoc."
+    (when-let* ((reference (org-element-lineage (org-element-context) 'footnote-reference t))
+                (label (org-element-property :label reference))
+                (definition (nth 3 (org-footnote-get-definition label))))
+      (let* ((definition (string-clean-whitespace definition))
+             ;; Footnotes are usually a source link and a note, so take the
+             ;; first link as the source.
+             (bracket-p (string-match org-link-bracket-re definition))
+             (link-p (or bracket-p (string-match org-link-plain-re definition)))
+             (link (when link-p (match-string (if bracket-p 1 0) definition)))
+             (title (when bracket-p (match-string 2 definition)))
+             ;; Drop the separator left behind by the link, like the "; " in
+             ;; "[[a][A]]; [[b][B]]".
+             (text (org-link-display-format
+                    (string-trim (if link-p (replace-match "" t t definition) definition)
+                                 (rx (* (any " ,;:."))))))
+             (lines (unless (string-empty-p text)
+                      (string-lines (string-fill text my/org-hover-width)))))
+        (my/org-hover-format
+         `(("◆" "Title" ,title)
+           ;; File links are long absolute paths, so keep more of the
+           ;; useful end in view.
+           ("↗" "Link" ,(when link
+                          (if (string-prefix-p "file:" link)
+                              (abbreviate-file-name (string-remove-prefix "file:" link))
+                            link)))
+           ("¶" "Text" ,(if (> (length lines) 3)
+                            (append (take 2 lines) (list (concat (nth 2 lines) "…")))
+                          lines)
+            t))))))
 
   (defun my/org-roam-find-by-tag ()
     "Find a tagged Org-roam node using space-separated Orderless terms.
@@ -4292,6 +4339,9 @@ Collapse first so the window is fitted to the folded height."
 
   (advice-add 'org-roam-buffer-render-contents :after
               #'my/org-roam-backlinks-after-render)
+  ;; Org-roam only re-renders when the node changes, so a window reopened
+  ;; for the same node would otherwise be left unfitted and unpreserved.
+  (advice-add 'org-roam-buffer-toggle :after #'my/org-roam-backlinks-fit-window)
 
   (defvar my/org-roam-backlinks-auto--running nil
     "Reentrancy guard for `my/org-roam-backlinks-auto'.")
@@ -4350,6 +4400,7 @@ node, or the node has neither. Designed to run from
                 ;; Org has no hover popup, so summarise linked nodes in a
                 ;; box at point, as Eglot buffers do for symbols.
                 (add-hook 'eldoc-documentation-functions #'my/org-roam-eldoc-link nil t)
+                (add-hook 'eldoc-documentation-functions #'my/org-eldoc-footnote nil t)
                 (eldoc-box-hover-at-point-mode)))
   (kill-emacs . (lambda ()
                   (when (fboundp 'org-roam-db-sync)
