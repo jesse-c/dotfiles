@@ -644,24 +644,190 @@ This includes buffers visible in windows or tab-bar tabs."
 
   (add-hook 'easysession-new-session-hook #'my-empty-easysession)
 
+  ;; BEGIN my/easysession-agent-shell integration
+  ;; Persist agent identity, not runtime state or configuration closures.
+
+  ;; Startup can reach session initialization before `agent-shell--start'
+  ;; returns, but later callbacks outlive that call's dynamic bindings.  Keep
+  ;; a dynamic handoff for startup and buffer-local state for the async phase.
+  (defvar my/easysession-agent-shell--starting-state nil
+    "Saved session dynamically bound while starting a restoration.")
+  (defvar-local my/easysession-agent-shell--saved-state nil
+    "Original session record while restoration is pending or has failed.")
+  (defvar-local my/easysession-agent-shell--last-error nil
+    "Backend error retained for diagnosing a failed restoration.")
+
+  (define-derived-mode my/easysession-agent-shell-unavailable-mode special-mode
+    "Agent unavailable"
+    "An agent session that could not be restored; C-c C-r retries it."
+    (keymap-set my/easysession-agent-shell-unavailable-mode-map
+                "C-c C-r" #'my/easysession-agent-shell-retry))
+
+  (defun my/easysession-agent-shell--save ()
+    "Return serializable metadata, retaining IDs after a failed restore."
+    ;; An autosave during startup or after failure must not replace the old
+    ;; session ID with nil; otherwise the next restart loses the conversation.
+    (if my/easysession-agent-shell--saved-state
+        (copy-tree (alist-get 'data my/easysession-agent-shell--saved-state))
+      (when (derived-mode-p 'agent-shell-mode)
+        (list (cons 'config-id
+                    (alist-get :identifier (agent-shell-get-config (current-buffer))))
+              (cons 'session-id (agent-shell-session-id))))))
+
+  (defun my/easysession-agent-shell--failed (state reason &optional buffer)
+    "Keep STATE in a named placeholder after REASON, reusing BUFFER if live."
+    (let ((buffer (if (buffer-live-p buffer) buffer
+                    (get-buffer-create (alist-get 'buffer-name state)))))
+      (with-current-buffer buffer
+        ;; Keep a named, noninteractive placeholder so frameset references
+        ;; still resolve, without leaving an unusable ACP client running.
+        ;; The mode change also runs agent-shell's local cleanup hook.
+        (my/easysession-agent-shell-unavailable-mode)
+        (setq-local my/easysession-agent-shell--saved-state (copy-tree state)
+                    my/easysession-agent-shell--last-error reason
+                    default-directory (or (alist-get 'default-directory state)
+                                          temporary-file-directory))
+        (let ((inhibit-read-only t))
+          (erase-buffer)
+          (insert (format "Agent session could not be restored.\n\n%s\n\n"
+                          (if (stringp reason) reason
+                            (or (alist-get 'message reason) (format "%S" reason)))))
+          (when-let* ((details (and (listp reason)
+                                   (alist-get 'details (alist-get 'data reason)))))
+            (insert (format "%s\n\n" details)))
+          (insert "The saved session ID is retained for future EasySession saves.\n"
+                  "C-c C-r retries this session without starting a new conversation.\n"))
+        (goto-char (point-min)))
+      (message "EasySession: agent restore failed in %s: %s"
+               (buffer-name buffer)
+               (if (stringp reason) reason (alist-get 'message reason)))
+      buffer))
+
+  (defun my/easysession-agent-shell--initiate-session (original &rest args)
+    "Do not silently create new conversations when a saved session can't resume."
+    (with-current-buffer (or (plist-get args :shell-buffer) (current-buffer))
+      (when my/easysession-agent-shell--starting-state
+        (setq-local my/easysession-agent-shell--saved-state
+                    my/easysession-agent-shell--starting-state))
+      (if (and my/easysession-agent-shell--saved-state
+               (not (or (map-elt agent-shell--state :supports-session-load)
+                        (map-elt agent-shell--state :supports-session-resume))))
+          (my/easysession-agent-shell--failed
+           my/easysession-agent-shell--saved-state
+           "This agent does not support loading or resuming saved sessions."
+           (current-buffer))
+        (apply original args))))
+
+  (defun my/easysession-agent-shell--quiet-resume-failure (args)
+    "Replace picker fallback only for EasySession's load/resume requests in ARGS."
+    (let ((buffer (or (plist-get args :buffer) (current-buffer)))
+          (method (alist-get :method (plist-get args :request))))
+      (if (and (buffer-live-p buffer)
+               (member method '("session/load" "session/resume"))
+               (buffer-local-value 'my/easysession-agent-shell--saved-state buffer))
+          ;; Capture an independent record: cleanup and mode changes discard
+          ;; buffer-local state, and this callback may run well after startup.
+          (let ((state (copy-tree
+                        (buffer-local-value 'my/easysession-agent-shell--saved-state buffer))))
+            (plist-put args :on-failure
+                       (lambda (acp-error _raw-message)
+                         (when (buffer-live-p buffer)
+                           (my/easysession-agent-shell--failed state acp-error buffer)))))
+        args)))
+
+  (defun my/easysession-agent-shell--existing (state)
+    "Find an existing live shell for STATE, even if its buffer was renamed."
+    ;; Buffer names are presentation, not identity.  Reusing the same session
+    ;; also avoids Codex's exclusive-writer conflict when switching layouts.
+    (let* ((data (alist-get 'data state))
+           (id (alist-get 'session-id data))
+           (config-id (alist-get 'config-id data))
+           (directory (alist-get 'default-directory state)))
+      (seq-find
+       (lambda (buffer)
+         (with-current-buffer buffer
+           (and (derived-mode-p 'agent-shell-mode)
+                (equal default-directory directory)
+                (equal (or (agent-shell-session-id)
+                           (alist-get 'session-id
+                                      (alist-get 'data my/easysession-agent-shell--saved-state)))
+                       id)
+                (eq (alist-get :identifier (agent-shell-get-config buffer)) config-id))))
+       (buffer-list))))
+
+  (defun my/easysession-agent-shell--restore (state)
+    "Resume STATE in the background, preserving names and handling failure quietly."
+    (let* ((data (alist-get 'data state))
+           (id (alist-get 'session-id data))
+           (config-id (alist-get 'config-id data))
+           (directory (alist-get 'default-directory state))
+           (my/easysession-agent-shell--starting-state state)
+           buffer)
+      (condition-case err
+          (progn
+            (unless (and (stringp id) (not (string-empty-p id)))
+              (error "No saved agent session ID; not starting a new conversation"))
+            ;; Unattended restoration must not initiate TRAMP authentication.
+            (unless (and (stringp directory)
+                         (not (file-remote-p directory))
+                         (file-directory-p directory))
+              (error "Saved agent directory is unavailable or remote: %s" directory))
+            (let ((config (and config-id
+                               (agent-shell--resolve-config-designator config-id))))
+              (unless config (error "Agent configuration unavailable: %S" config-id))
+              (setq buffer
+                    (or (my/easysession-agent-shell--existing state)
+                        ;; `:no-focus' alone doesn't suppress the `prompt'
+                        ;; strategy's UI.  An explicit ID still takes precedence
+                        ;; over `new', so this never requests a fresh session.
+                        (let ((default-directory directory)
+                              (enable-local-variables :safe))
+                          (agent-shell--start :config config :session-id id
+                                              :session-strategy 'new
+                                              :new-session t :no-focus t)))))
+            (shell-maker-set-buffer-name buffer (alist-get 'buffer-name state))
+            (with-current-buffer buffer
+              (when (and (derived-mode-p 'agent-shell-mode)
+                         (not (agent-shell-initialized-p)))
+                (setq-local my/easysession-agent-shell--saved-state (copy-tree state))
+                (agent-shell-subscribe-to
+                 :shell-buffer buffer :event 'init-finished
+                 :on-event (lambda (_event)
+                             (when (buffer-live-p buffer)
+                               (with-current-buffer buffer
+                                 (setq my/easysession-agent-shell--saved-state nil)))))))
+            buffer)
+        (error (my/easysession-agent-shell--failed state (error-message-string err) buffer)))))
+
+  (defun my/easysession-agent-shell-retry ()
+    "Retry the saved agent session represented by the current placeholder."
+    (interactive)
+    (unless (derived-mode-p 'my/easysession-agent-shell-unavailable-mode)
+      (user-error "Not a failed agent restoration"))
+    (let ((state (copy-tree my/easysession-agent-shell--saved-state))
+          (windows (get-buffer-window-list (current-buffer) nil t)))
+      (kill-buffer (current-buffer))
+      (let ((buffer (my/easysession-agent-shell--restore state)))
+        (dolist (window windows)
+          (when (window-live-p window) (set-window-buffer window buffer))))))
+
+  ;; Background startup can still open a picker on failure or create a new
+  ;; conversation when resuming is unsupported.  These advices prevent both
+  ;; during restoration; normal interactive shells are unaffected.
+  ;;
+  ;; Recheck these private APIs when upgrading agent-shell.
   (with-eval-after-load 'agent-shell
-    (easysession-add-managed-major-mode 'agent-shell-mode
-      :save (lambda ()
-              (list (cons 'config-id
-                          (map-elt (map-elt agent-shell--state :agent-config)
-                                   :identifier))
-                    (cons 'session-id
-                          (map-elt (map-elt agent-shell--state :session) :id))))
-      :restore (lambda (state)
-                 (let* ((data (alist-get 'data state))
-                        (config-id (alist-get 'config-id data))
-                        (config (when config-id
-                                  (agent-shell--resolve-config-designator config-id)))
-                        (default-directory (alist-get 'default-directory state)))
-                   (agent-shell--start :config config
-                                       :session-id (alist-get 'session-id data)
-                                       :new-session t
-                                       :no-focus t)))))
+    (advice-add 'agent-shell--initiate-session :around
+                #'my/easysession-agent-shell--initiate-session)
+    (advice-add 'agent-shell--send-request :filter-args
+                #'my/easysession-agent-shell--quiet-resume-failure)
+    ;; Failed placeholders must remain saveable, not disappear from the next
+    ;; session file just because their ACP client could not be restored.
+    (dolist (mode '(agent-shell-mode my/easysession-agent-shell-unavailable-mode))
+      (easysession-add-managed-major-mode mode
+        :save #'my/easysession-agent-shell--save
+        :restore #'my/easysession-agent-shell--restore)))
+  ;; END my/easysession-agent-shell integration
 
   ;; `easysession--persist-session-on-frame-delete-maybe' unloads the
   ;; session whenever only one real frame remains at delete time. It never
