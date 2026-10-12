@@ -2007,6 +2007,13 @@ This includes buffers visible in windows or tab-bar tabs."
 ;; large buffers.
 (setq redisplay-skip-fontification-on-input t)
 
+;; Avoid font-cache compaction pauses at the cost of increased memory
+;; usage.
+(setq inhibit-compacting-font-caches t)
+
+;; Show matching parentheses shortly after point becomes idle.
+(setq show-paren-delay 0.05)
+
 (global-set-key (kbd "C-=") 'text-scale-increase)
 (global-set-key (kbd "C--") 'text-scale-decrease)
 
