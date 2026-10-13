@@ -3292,9 +3292,8 @@ If BUFFER is provided, close that buffer directly."
           ("R" "Resume" agent-shell-prompt-queue-resume)]])))
   (advice-add 'agent-shell-help-menu :before #'my/agent-shell-ensure-prompt-queue-menu)
 
-  ;; Show completed edit diffs expanded inline in the chat by default
-  ;; (PR #92).
-  (setq agent-shell-tool-use-expand-by-default t)
+  ;; Keep the latest activity group visible, but expand tool bodies on demand.
+  (setq agent-shell-tool-use-expand-by-default nil)
 
   ;; Codeium proposes a completion region that reaches back into the
   ;; read-only prompt, so corfu's replace fails with "Text is
