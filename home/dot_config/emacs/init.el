@@ -3487,6 +3487,18 @@ already existed) would otherwise stack duplicate handlers."
   :config
   (agent-shell-ediff-mode -1))
 
+(use-package agent-shell-math-renderer
+  :ensure t
+  :after agent-shell
+  :hook (agent-shell-mode . agent-shell-math-renderer-mode)
+  ;; Optional: re-tint equations the instant you switch themes, and
+  ;; rescale them when the frame font changes.
+  :config
+  (add-hook 'enable-theme-functions
+            #'agent-shell-math-renderer-on-appearance-change)
+  (add-hook 'after-setting-font-hook
+            #'agent-shell-math-renderer-on-appearance-change))
+
 ;; Temp fixes for two upstream bugs, both in
 ;; user/my-agent-shell-patches.el.
 ;;
