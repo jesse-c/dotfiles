@@ -3689,6 +3689,8 @@ already existed) would otherwise stack duplicate handlers."
   :ensure t
   :after agent-shell
   :hook (agent-shell-mode . agent-shell-math-renderer-mode)
+  :custom
+  (agent-shell-math-renderer-engine 'ratex)
   ;; Optional: re-tint equations the instant you switch themes, and
   ;; rescale them when the frame font changes.
   :config
