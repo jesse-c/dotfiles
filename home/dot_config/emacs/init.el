@@ -1798,10 +1798,162 @@ This includes buffers visible in windows or tab-bar tabs."
 (define-key key-translation-map (kbd "ESC") (kbd "C-g"))
 
 ;; Tab-bar
-(setq tab-bar-tab-hints t) ;; Show tab numbers
-(setq tab-bar-mode t)
-(setq tab-bar-show t)
-(setq tab-bar-new-tab-choice "*scratch*")
+(use-package tab-bar
+  :ensure nil ;; built-in
+  :demand t
+  :custom
+  (tab-bar-tab-hints t) ;; Show tab numbers
+  (tab-bar-show t)
+  (tab-bar-new-tab-choice "*scratch*")
+  :config
+  (require 'seq)
+  ;; Show named groups without changing the other tab-bar controls.
+  (setq tab-bar-format
+        (mapcar (lambda (item)
+                  (if (eq item 'tab-bar-format-tabs)
+                      'tab-bar-format-tabs-groups
+                    item))
+                tab-bar-format))
+  (tab-bar-mode 1)
+
+  (defun my/tab-group-assign (&optional group-name tab-number)
+    "Assign GROUP-NAME to TAB-NUMBER, defaulting to the current tab.
+Interactively, use the built-in group prompt and numeric prefix argument.
+An empty GROUP-NAME removes the assignment."
+    (interactive (list nil current-prefix-arg))
+    (if group-name
+        (tab-bar-change-tab-group group-name tab-number)
+      (let ((current-prefix-arg tab-number))
+        (call-interactively #'tab-bar-change-tab-group))))
+
+  (defun my/tab-group-move (&optional tab)
+    "Move TAB beside its group using the built-in command.
+TAB defaults to the current tab."
+    (interactive)
+    (tab-bar-move-tab-to-group tab))
+
+  (defun my/tab-group-assign-and-move (&optional group-name tab-number)
+    "Assign GROUP-NAME to TAB-NUMBER, then move that tab beside its group.
+Interactively, prompt for a group and use the numeric prefix to target a tab.
+TAB-NUMBER defaults to the current tab."
+    (interactive (list nil current-prefix-arg))
+    (let* ((tabs (funcall tab-bar-tabs-function))
+           (tab (if tab-number
+                    (nth (1- (prefix-numeric-value tab-number)) tabs)
+                  (seq-find (lambda (tab) (eq (car tab) 'current-tab)) tabs))))
+      (unless tab (user-error "No tab at position %s" tab-number))
+      (my/tab-group-assign group-name tab-number)
+      (my/tab-group-move tab)))
+
+  (defun my/tab-group--ordered-tabs (tabs)
+    "Return TABS with unassigned tabs first and each group contiguous.
+Preserve group order by first appearance and tab order within each group.
+Reuse the original tab objects without modifying TABS."
+    (let ((groups (make-hash-table :test #'equal)) order unassigned)
+      (dolist (tab tabs)
+        (let ((group (alist-get 'group tab)))
+          (if (not group)
+              (push tab unassigned)
+            (unless (gethash group groups) (push group order))
+            (push tab (gethash group groups)))))
+      (append (nreverse unassigned)
+              (mapcan (lambda (group) (nreverse (gethash group groups)))
+                      (nreverse order)))))
+
+  (defun my/tab-group-move-all ()
+    "Arrange all tabs in this frame with unassigned tabs first.
+Make assigned groups contiguous, ordered by their first appearance.
+Preserve order within groups and keep the current tab selected."
+    (interactive)
+    (tab-bar-tabs-set (my/tab-group--ordered-tabs (funcall tab-bar-tabs-function)))
+    (force-mode-line-update))
+
+  (defcustom my/tab-group-icons nil
+    "Unicode icons keyed by tab group name, used only in displayed labels."
+    :type '(alist :key-type string :value-type string)
+    :group 'tab-bar)
+
+  (defconst my/tab-group-icon-choices
+    '(("None (clear icon)" . "")
+      ("◇  Diamond outline" . "◇")
+      ("◆  Diamond" . "◆")
+      ("●  Circle" . "●")
+      ("○  Circle outline" . "○")
+      ("▣  Square" . "▣")
+      ("⌂  Home" . "⌂")
+      ("⚙  Gear" . "⚙")
+      ("★  Star" . "★")
+      ("☆  Star outline" . "☆")
+      ("⚑  Flag" . "⚑")
+      ("☰  List" . "☰")
+      ("✓  Check" . "✓")
+      ("λ  Lambda" . "λ"))
+    "Compact Unicode symbols offered by `my/tab-group-set-icon'.")
+
+  (defun my/tab-group-set-icon (icon &optional group-name)
+    "Set ICON for GROUP-NAME, defaulting to the current tab's group.
+Interactively, pick a displayable Unicode symbol or clear the icon.
+An empty ICON clears the assignment. Save selections to `custom-file'.
+Group names and tab order are unchanged."
+    (interactive
+     (let* ((tab (seq-find (lambda (tab) (eq (car tab) 'current-tab))
+                           (funcall tab-bar-tabs-function)))
+            (group (funcall tab-bar-tab-group-function tab)))
+       (unless group (user-error "Assign this tab to a group first"))
+       (let* ((choices (seq-filter
+                        (lambda (choice)
+                          (or (string-empty-p (cdr choice))
+                              (and (= (char-width (string-to-char (cdr choice))) 1)
+                                   (char-displayable-p (string-to-char (cdr choice))))))
+                        my/tab-group-icon-choices))
+              (choice (completing-read (format "Icon for %s: " group)
+                                       choices nil t)))
+         (list (cdr (assoc choice choices)) group))))
+    (let* ((tab (seq-find (lambda (tab) (eq (car tab) 'current-tab))
+                          (funcall tab-bar-tabs-function)))
+           (group (or group-name (funcall tab-bar-tab-group-function tab)))
+           (icons (copy-tree my/tab-group-icons)))
+      (unless group (user-error "Assign this tab to a group first"))
+      (unless (and (stringp icon)
+                   (or (string-empty-p icon)
+                       (and (= (length icon) 1)
+                            (= (char-width (string-to-char icon)) 1)
+                            (char-displayable-p (string-to-char icon)))))
+        (user-error "Use one displayable single-column Unicode symbol"))
+      (if (string-empty-p icon)
+          (setq icons (assoc-delete-all group icons))
+        (setf (alist-get group icons nil nil #'equal) icon))
+      (customize-save-variable 'my/tab-group-icons icons)
+      (force-mode-line-update t)))
+
+  (defun my/tab-group-awaiting-input-p (group-name)
+    "Non-nil if any tab in GROUP-NAME has an agent waiting on input."
+    (when (and group-name
+               (bound-and-true-p my/agent-shell-awaiting-buffers)
+               (fboundp 'my/tab-bar-tab-awaiting-input-p))
+      (seq-some (lambda (tab)
+                  (and (equal group-name (funcall tab-bar-tab-group-function tab))
+                       (my/tab-bar-tab-awaiting-input-p tab)))
+                (funcall tab-bar-tabs-function))))
+
+  (defun my/tab-group-format (tab i &optional current-p)
+    "Format TAB's group with its icon and aggregated agent attention colour.
+Preserve the built-in group styling and numeric hint for I and CURRENT-P."
+    (let* ((group (funcall tab-bar-tab-group-function tab))
+           (icon (alist-get group my/tab-group-icons nil nil #'equal))
+           (name (tab-bar-tab-group-format-default tab i current-p))
+           (label (if icon
+                      (concat (propertize (concat icon " ") 'face
+                                          (if current-p 'tab-bar-tab-group-current
+                                            'tab-bar-tab-group-inactive))
+                              name)
+                    name)))
+      (when (my/tab-group-awaiting-input-p group)
+        (add-face-text-property 0 (length label)
+                                'my/tab-bar-tab-awaiting-input nil label))
+      label))
+
+  (setq tab-bar-tab-group-format-function #'my/tab-group-format))
 
 (global-tab-line-mode)
 
@@ -4947,7 +5099,6 @@ If no, restores full opacity. Only affects the active frame."
 (use-package hideshow
   :ensure nil   ;; built-in
   :hook (prog-mode . hs-minor-mode))
-
 
 (use-package kirigami
   :after evil

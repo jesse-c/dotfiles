@@ -9,4 +9,5 @@ test: ## Run the Emacs Lisp unit tests
 	  -L $(USER_DIR) -L $(TEST_DIR) \
 	  -l my-agent-shell-safe-tests \
 	  -l my-agent-shell-patches-tests \
+	  -l my-tab-groups-tests \
 	  -f ert-run-tests-batch-and-exit
