@@ -468,20 +468,65 @@ synchronous Git process for every candidate."
       ;; A broken repository should lose only its annotation, never
       ;; the whole project picker.
       (error nil)))
+  (defun my/project-tab-groups ()
+    "Index open tabs' groups by known project root in the current frame.
+Match visible buffers to their longest known project ancestor, so nested
+worktrees stay distinct. Use only in-memory paths; skip remote directories."
+    (let* ((roots (sort
+                   (delq nil
+                         (mapcar (lambda (root)
+                                   (unless (file-remote-p root)
+                                     (file-name-as-directory (expand-file-name root))))
+                                 (project-known-project-roots)))
+                   (lambda (a b) (> (length a) (length b)))))
+           (groups (make-hash-table :test #'equal)))
+      (dolist (tab (tab-bar-tabs))
+        (when-let* ((group (funcall tab-bar-tab-group-function tab)))
+          (dolist (buffer (my/tab-bar-tab-buffers tab))
+            (let ((buffer (if (bufferp buffer) buffer (get-buffer buffer))))
+              (when (buffer-live-p buffer)
+                (let ((directory (buffer-local-value 'default-directory buffer)))
+                  (unless (file-remote-p directory)
+                    (when-let* ((root (seq-find
+                                       (lambda (root)
+                                         (string-prefix-p root (expand-file-name directory)))
+                                       roots)))
+                      (unless (member group (gethash root groups))
+                        (puthash root (append (gethash root groups) (list group)) groups))))))))))
+      groups))
+
+  (defun my/project-tab-group-label (groups)
+    "Format GROUPS with display-only icons and agent attention colouring."
+    (mapconcat
+     (lambda (group)
+       (let* ((icon (alist-get group my/tab-group-icons nil nil #'equal))
+              (label (if icon (concat icon " " group) group)))
+         (propertize label 'face
+                     (if (my/tab-group-awaiting-input-p group)
+                         'my/tab-bar-tab-awaiting-input
+                       'marginalia-documentation))))
+     groups ", "))
+
   (defun my/project-switch-project ()
-    "Switch projects, annotating Git projects with their current HEAD."
+    "Switch projects, annotating their current HEAD and open tab groups."
     (interactive)
     (let* ((heads (make-hash-table :test #'equal))
+           (groups (my/project-tab-groups))
            (missing (make-symbol "missing"))
            (annotate
             (lambda (candidate)
-              (let ((head (gethash candidate heads missing)))
+              (let ((head (gethash candidate heads missing))
+                    (group-label
+                     (unless (file-remote-p candidate)
+                       (my/project-tab-group-label
+                        (gethash (file-name-as-directory (expand-file-name candidate)) groups)))))
                 (when (eq head missing)
                   (setq head (my/project-git-head candidate))
                   (puthash candidate head heads))
-                (when head
+                (when (or head (and group-label (not (string-empty-p group-label))))
                   (marginalia--fields
-                   (head :truncate 1.0 :face 'marginalia-documentation))))))
+                   (head :truncate 32 :face 'marginalia-documentation)
+                   (group-label :truncate 1.0))))))
            (completion-extra-properties
             `(:annotation-function ,annotate))
            ;; Marginalia normally replaces the completion table's
@@ -1807,6 +1852,7 @@ This includes buffers visible in windows or tab-bar tabs."
   (tab-bar-new-tab-choice "*scratch*")
   :config
   (require 'seq)
+  (require 'subr-x)
   ;; Show named groups without changing the other tab-bar controls.
   (setq tab-bar-format
         (mapcar (lambda (item)
