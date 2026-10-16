@@ -1872,6 +1872,14 @@ An empty GROUP-NAME removes the assignment."
       (let ((current-prefix-arg tab-number))
         (call-interactively #'tab-bar-change-tab-group))))
 
+  (defun my/tab-group-unassign (&optional tab-number)
+    "Remove TAB-NUMBER from its group without moving it.
+Default to the current tab. A numeric prefix targets another tab."
+    (interactive "P")
+    (let ((tab-bar-tab-post-change-group-functions
+           (remq #'tab-bar-move-tab-to-group tab-bar-tab-post-change-group-functions)))
+      (my/tab-group-assign "" (when tab-number (prefix-numeric-value tab-number)))))
+
   (defun my/tab-group-move (&optional tab)
     "Move TAB beside its group using the built-in command.
 TAB defaults to the current tab."
