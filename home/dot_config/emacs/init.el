@@ -202,7 +202,18 @@ PACKAGES should be a list of package names as symbols."
 ;; Tidy up .emacs.d mess
 (use-package no-littering :ensure t :demand t)
 
-(use-package transient :ensure t :demand t)
+(use-package transient
+  :ensure t
+  :demand t
+  :custom
+  ;; Use the full main area above bottom side panels, not a slot
+  ;; beside them.
+  (transient-display-buffer-action
+   '(display-buffer-in-direction
+     (direction . bottom)
+     (window . main)
+     (dedicated . t)
+     (inhibit-same-window . t))))
 
 (use-package savehist
   :ensure nil
