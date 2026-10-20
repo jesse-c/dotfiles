@@ -100,7 +100,8 @@ deno = "latest"
 "npm:@agentclientprotocol/codex-acp" = "latest"
 "npm:@agentclientprotocol/claude-agent-acp" = "latest"
 "npm:pi-acp" = "latest"
-"npm:@mermaid-js/mermaid-cli" = "latest"
+# Puppeteer's postinstall downloads the browser Mermaid needs to render diagrams.
+"npm:@mermaid-js/mermaid-cli" = { version = "latest", allow_builds = ["puppeteer"] }
 {{- if eq .chezmoi.hostname "Plinth" }}
 "github:pimalaya/himalaya" = "latest"
 {{- end }}
