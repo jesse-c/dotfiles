@@ -16,6 +16,17 @@ LDFLAGS = "-L/opt/homebrew/opt/openssl@3/lib"
 {{ end }}
 
 
+[plugins]
+# Override mise 2026.10.20's broken embedded gcloud plugin (jdx/mise#15034).
+#
+# Once Homebrew's installed mise includes the fix:
+#
+# 1. Remove this override (and [plugins] if empty), then chezmoi apply ~/.config/mise/config.toml.
+# 2. Run `mise plugins uninstall gcloud`; removing the config alone leaves the local plugin active.
+# 3. Verify `mise env --shell fish` and `mise exec gcloud -- gcloud --version` run without warnings.
+# Keep `gcloud = "latest"` under [tools].
+gcloud = "https://github.com/jdx/vfox-gcloud"
+
 [tools]
 python = ["3.12", "3.10", "3.11", "3.13", "3.14"]
 clojure = "1.12.4.1602"
