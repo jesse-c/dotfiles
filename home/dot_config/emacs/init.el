@@ -1364,12 +1364,6 @@ This includes buffers visible in windows or tab-bar tabs."
 (use-package pr-review
   :defer 1)
 
-(use-package gh-dashboard
-  :load-path "user/"
-  :after magit
-  :commands gh-dashboard
-  :bind ("C-c g d" . gh-dashboard))
-
 (use-package git-modes
   :after magit)
 
@@ -5201,32 +5195,6 @@ If no, restores full opacity. Only affects the active frame."
                                (setq agent-shell-ui--fold-toggle-state 'expanded)
                                (agent-shell-ui-toggle-all-fragments)))
                t))
-
-;;; Xwidget WebKit
-
-(use-package xwidget
-  :ensure nil
-  :config
-  (defun my/xwidget-webkit-reload-hard ()
-    "Reload the current xwidget-webkit page, bypassing WebKit's cache.
-WebKit caches file:// URLs aggressively, so a plain reload often re-serves
-a stale page. Re-navigate with a fresh `?t=<time>' query to force a fetch."
-    (interactive)
-    (let* ((session (xwidget-webkit-current-session))
-           (uri (xwidget-webkit-uri session))
-           ;; Drop any cache-buster we added on a previous hard reload.
-           (base (replace-regexp-in-string "\\([?&]\\)t=[0-9.]+\\'" "" uri))
-           (sep (if (string-match-p "\\?" base) "&" "?")))
-      (xwidget-webkit-goto-uri
-       session (format "%s%st=%d" base sep (float-time)))))
-  :bind
-  (:map xwidget-webkit-mode-map
-        ("R" . my/xwidget-webkit-reload-hard)))
-
-(with-eval-after-load 'xwidget
-  (with-eval-after-load 'evil
-    (evil-define-key 'normal xwidget-webkit-mode-map
-      (kbd "R") #'my/xwidget-webkit-reload-hard)))
 
 ;;; Language: All
 
