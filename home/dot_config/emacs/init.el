@@ -5729,8 +5729,6 @@ Interactively, POINT is point and KILL is the prefix argument."
 
 (use-package dockerfile-mode)
 
-(use-package docker-compose-mode)
-
 ;;; Language: YAML
 
 (use-package yaml-mode)
