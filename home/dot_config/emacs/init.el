@@ -3330,6 +3330,13 @@ If BUFFER is provided, close that buffer directly."
   ;; Set default auth
   (my/agent-shell-anthropic-auth-login)
 
+  ;; Let the global C-<tab> switch tabs.
+  ;; Session mode cycling stays on C-c C-m.
+  (dolist (map (list agent-shell-mode-map
+                     agent-shell-viewport-edit-mode-map
+                     agent-shell-viewport-view-mode-map))
+    (keymap-unset map "C-<tab>" t))
+
   ;; Define environment functions after agent-shell is fully loaded
   ;; to avoid void-function errors during byte-compilation
   (defun my/agent-shell-anthropic-env-z ()
