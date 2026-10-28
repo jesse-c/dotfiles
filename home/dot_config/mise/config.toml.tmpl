@@ -48,7 +48,7 @@ pipx = "latest"
 # "github:pimalaya/himalaya" = "latest" # Waiting on stability
 # "github:pimalaya/mirador" = "latest" # Waiting on refactor from author to fix issue(s) as of 2025-05-02
 # "github:pimalaya/neverest" = "latest" # Waiting on refactor from author to fix issue(s) as of 2025-05-02
-"github:abhinav/git-spice" = { version = "latest", exe = "git-spice" }
+"github:abhinav/git-spice" = "latest"
 "npm:prettier" = "latest"
 "npm:yaml-language-server" = "latest"
 "npm:vscode-langservers-extracted" = "latest"
@@ -112,7 +112,10 @@ deno = "latest"
 "npm:@agentclientprotocol/claude-agent-acp" = "latest"
 "npm:pi-acp" = "latest"
 # Puppeteer's postinstall downloads the browser Mermaid needs to render diagrams.
-"npm:@mermaid-js/mermaid-cli" = { version = "latest", allow_builds = ["puppeteer"] }
+# chromium-bidi's Chromium-published release lacks its former GitHub provenance.
+# Reviewed npm publisher/tarball and Chromium tag 157.0.8090.0; exempt only this version.
+# Remove once upstream restores trust evidence or Puppeteer moves to a trusted release.
+"npm:@mermaid-js/mermaid-cli" = { version = "latest", allow_builds = ["puppeteer"], trust_policy_excludes = ["chromium-bidi@157.0.8090-0"] }
 {{- if eq .chezmoi.hostname "Plinth" }}
 "github:pimalaya/himalaya" = "latest"
 {{- end }}
