@@ -378,20 +378,89 @@ noisy internals (objects/, rr-cache/, logs/, modules/, lfs/) are skipped."
       (consult-ripgrep root)))
   (setq src-dir (expand-file-name "~/src/"))
   (setq forges-dirs '("github.com" "gitlab.com"))
-  (defun my/auto-discover-projects ()
-    "Automatically discover and add projects from configured forge directories."
-    (interactive)
-    (let ((src-dir (expand-file-name "~/src/"))
-          (forges-dirs '("github.com" "gitlab.com")))
+  (defconst my/project-forges '("github.com" "gitlab.com")
+    "Forge subdirectories of ~/src scanned by `my/auto-discover-projects'.")
 
-      ;; Run project-remember-projects-under on each forge directory
-      (dolist (forge forges-dirs)
-        (let ((forge-path (file-name-concat src-dir forge)))
-          (message "Adding projects from %s..." forge-path)
-          (project-remember-projects-under forge-path t)
-          (message "Done adding projects from %s" forge-path))))
+  (defun my/project--subdirs (dir)
+    "Return DIR's immediate non-dotted subdirectories as absolute paths.
+Return nil when DIR is not an existing directory.  Reads the filesystem."
+    (and (file-directory-p dir)
+         (seq-filter #'file-directory-p
+                     (directory-files dir t "\\`[^.]" t))))
 
-    (message "Project discovery complete"))
+  (defun my/project--git-tree-p (dir)
+    "Return non-nil when DIR is a git working tree (has a .git entry).
+Reads the filesystem."
+    (file-exists-p (expand-file-name ".git" dir)))
+
+  (defun my/project--scan-roots ()
+    "Return project roots under ~/src/<forge>/*/* and each repo's .worktrees/*.
+Roots are abbreviated directory names with a trailing slash.  Globs the
+known layout rather than walking the tree, so it is fast.  Reads the
+filesystem; performs no other side effects."
+    (let* ((forges (mapcar (lambda (f)
+                             (file-name-as-directory (expand-file-name f "~/src/")))
+                           my/project-forges))
+           (repos (seq-filter
+                   #'my/project--git-tree-p
+                   (seq-mapcat (lambda (forge)
+                                 (seq-mapcat #'my/project--subdirs
+                                             (my/project--subdirs forge)))
+                               forges)))
+           (worktrees (seq-mapcat
+                       (lambda (repo)
+                         (my/project--subdirs (expand-file-name ".worktrees" repo)))
+                       repos)))
+      (seq-uniq
+       (mapcar (lambda (d) (file-name-as-directory (abbreviate-file-name d)))
+               (append repos worktrees)))))
+
+  (defun my/project--classify (desired known forge-prefixes)
+    "Classify project roots for the discovery command.
+Return a cons (TO-ADD . STALE).  TO-ADD is DESIRED minus KNOWN.  STALE is
+KNOWN roots that start with one of FORGE-PREFIXES yet are absent from
+DESIRED.  All arguments are plain strings, so this is pure."
+    (declare (pure t) (side-effect-free t))
+    (cons (seq-difference desired known #'string=)
+          (seq-remove (lambda (root) (member root desired))
+                      (seq-filter (lambda (root)
+                                    (seq-some (lambda (prefix)
+                                                (string-prefix-p prefix root))
+                                              forge-prefixes))
+                                  known))))
+
+  (defun my/auto-discover-projects (&optional prune)
+    "Add projects under ~/src/<forge>/*/* and each repo's .worktrees/*.
+With a prefix argument PRUNE, also ask (y/n per project) to forget known
+projects under those forges that the scan no longer finds.  Pruning never
+touches projects outside ~/src/<forge>, and a plain run only adds."
+    (interactive "P")
+    (require 'project)
+    (project--ensure-read-project-list)
+    (let* ((forge-prefixes
+            (mapcar (lambda (f)
+                      (file-name-as-directory
+                       (abbreviate-file-name (expand-file-name f "~/src/"))))
+                    my/project-forges))
+           (known (mapcar #'car project--list))
+           (classified (my/project--classify (my/project--scan-roots)
+                                             known forge-prefixes))
+           (to-add (car classified))
+           (stale (and prune (cdr classified)))
+           (to-remove (seq-filter (lambda (root)
+                                    (y-or-n-p (format "Forget stale project %s? " root)))
+                                  stale)))
+      (dolist (root to-add)
+        (push (list root) project--list))
+      (when to-remove
+        (setq project--list
+              (seq-remove (lambda (entry) (member (car entry) to-remove))
+                          project--list)))
+      (when (or to-add to-remove)
+        (project--write-project-list))
+      (message "Projects → +%d added, -%d removed, %d total%s"
+               (length to-add) (length to-remove) (length project--list)
+               (if prune "" "  (C-u to prune stale)"))))
   (defun my/copy-project-root ()
     "Select from known projects and yank the root path to the kill ring."
     (interactive)
