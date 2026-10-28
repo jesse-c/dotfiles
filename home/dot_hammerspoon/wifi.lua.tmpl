@@ -1,0 +1,162 @@
+wifiWatcher = nil
+homeSSID = "{{ onepasswordRead "op://Personal/Chezmoi/WIFI/Home" }}"
+workSSIDs = { "{{ onepasswordRead "op://Personal/Chezmoi/WIFI/Work" }}" }
+
+-- Drop any SSIDs that resolved to empty (e.g. not yet filled in 1Password)
+homeSSID = homeSSID ~= "" and homeSSID or nil
+workSSIDs = hs.fnutils.ifilter(workSSIDs, function(s) return s ~= "" end)
+
+lastSSID = hs.wifi.currentNetwork()
+wifiMenu = hs.menubar.new()
+
+-- Report whether any network interface is up, regardless of Wi-Fi SSID
+-- visibility. macOS reports a nil SSID to apps lacking Location Services
+-- access, so this distinguishes "connected but hidden" from "offline".
+-- @return boolean true if a primary network interface exists
+function isOnline()
+  return hs.network.primaryInterfaces() ~= false
+end
+
+-- Format the menu bar title for the given SSID, falling back to a
+-- Location-access hint when online but hidden, or "Not connected" offline.
+-- @param newSSID string|nil the current SSID, or nil if unavailable
+-- @return string the menu bar title text
+function ssidMenuMessage(newSSID)
+  if newSSID then
+    return "≋ " .. newSSID
+  elseif isOnline() then
+    return "≋ Wi-Fi: grant Location access"
+  else
+    return "≋ Not connected"
+  end
+end
+
+-- Detect the case where we are online but macOS is withholding the SSID
+-- because Location Services access has not been granted.
+-- @return boolean true if connected but the SSID is unreadable
+function ssidHidden()
+  return hs.wifi.currentNetwork() == nil and isOnline()
+end
+
+-- Map an RSSI reading to a human-readable signal quality label.
+-- @param rssi number received signal strength in dBm (negative)
+-- @return string one of "Excellent", "Good", "Fair", or "Weak"
+function signalQuality(rssi)
+  if rssi >= -50 then
+    return "Excellent"
+  elseif rssi >= -60 then
+    return "Good"
+  elseif rssi >= -70 then
+    return "Fair"
+  end
+  return "Weak"
+end
+
+-- Look up the hardware (MAC) address of a network interface via ifconfig.
+-- @param iface string interface name, e.g. "en0"
+-- @return string the MAC address, trailing whitespace trimmed
+function macAddress(iface)
+  return (hs.execute("ifconfig " .. iface .. " | awk '/ether/ {print $2}'"):gsub("%s+$", ""))
+end
+
+-- Resolve the default gateway (router) IP from the system routing table.
+-- @return string the gateway address, trailing whitespace trimmed
+function defaultRouter()
+  return (hs.execute("route -n get default | awk '/gateway/ {print $2}'"):gsub("%s+$", ""))
+end
+
+-- Collect the current Wi-Fi connection details as ordered label/value pairs
+-- for display in the menu bar dropdown.
+-- @return table list of { label, value } string pairs; a single
+--   { "Status", "Not connected" } row when no interface is active
+function wifiDetailRows()
+  local d = hs.wifi.interfaceDetails()
+  if not d or not d.active then
+    return { { "Status", "Not connected" } }
+  end
+  local iface = hs.network.primaryInterfaces()
+  local ip = hs.network.interfaceDetails(iface).IPv4 or {}
+  local ch = d.wlanChannel or {}
+  return {
+    { "Signal", string.format("%d dBm (%s)", d.rssi, signalQuality(d.rssi)) },
+    { "Noise", d.noise .. " dBm" },
+    { "SNR", (d.rssi - d.noise) .. " dB" },
+    { "Link speed", d.transmitRate .. " Mbps" },
+    { "Channel", string.format("%s (%s, %s)", ch.number, ch.band, ch.width) },
+    { "BSSID", d.bssid or "?" },
+    { "MAC", macAddress(iface) },
+    { "IP", (ip.Addresses or {})[1] or "?" },
+    { "Router", defaultRouter() },
+    { "Country", d.countryCode or "?" },
+  }
+end
+
+-- Build the menu bar dropdown items from wifiDetailRows(). Each row is
+-- click-to-copy; when the SSID is hidden, a prompt to grant Location access
+-- is prepended.
+-- @return table list of hs.menubar menu item definitions
+function wifiMenuItems()
+  local items = hs.fnutils.imap(wifiDetailRows(), function(row)
+    return {
+      title = row[1] .. ": " .. row[2],
+      fn = function()
+        hs.pasteboard.setContents(row[2])
+      end,
+    }
+  end)
+  if ssidHidden() then
+    table.insert(items, 1, {
+      title = "Grant Location access to show the network name…",
+      fn = function()
+        hs.urlevent.openURL("x-apple.systempreferences:com.apple.preference.security?Privacy_LocationServices")
+      end,
+    })
+    table.insert(items, 2, { title = "-" })
+  end
+  return items
+end
+
+wifiMenu:setMenu(wifiMenuItems)
+
+if ssidHidden() then
+  hs.location.start()
+  hs.timer.doAfter(2, hs.location.stop)
+end
+
+wifiMenu:setTitle(ssidMenuMessage(hs.wifi.currentNetwork()))
+
+-- hs.wifi.watcher callback fired whenever the Wi-Fi network changes.
+-- Mutes output volume when joining a non-home network and refreshes the
+-- menu bar title.
+function ssidChangedCallback()
+  local newSSID = hs.wifi.currentNetwork()
+
+  -- AutoVolume
+  -- Automatically set the volume to 0 when leaving the home wifi and when the
+  -- machine goes to sleep. Skipped until homeSSID is known.
+  if homeSSID then
+    if newSSID == homeSSID and lastSSID ~= homeSSID then
+      -- We just joined our home WiFi network
+    elseif newSSID ~= homeSSID and lastSSID == homeSSID then
+      -- We just departed our home WiFi network
+    elseif newSSID ~= homeSSID then
+      -- We just joined a new WiFi network that isn't our home one
+      hs.audiodevice.defaultOutputDevice():setVolume(0)
+    end
+  end
+
+  -- When at work
+  for _, v in ipairs(workSSIDs) do
+    if v == newSSID then
+      -- Do nothing
+    end
+  end
+
+  lastSSID = newSSID
+
+  -- Show SSID in menu bar -----------------------------------------------------
+  wifiMenu:setTitle(ssidMenuMessage(newSSID))
+end
+
+wifiWatcher = hs.wifi.watcher.new(ssidChangedCallback)
+wifiWatcher:start()
