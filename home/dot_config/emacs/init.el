@@ -1261,79 +1261,6 @@ This includes buffers visible in windows or tab-bar tabs."
                           #'magit-insert-worktrees
                           nil t))
 
-(use-package magit-prime
-  :after magit
-  :config
-  (add-hook 'magit-pre-refresh-hook 'magit-prime-refresh-cache)
-
-  ;; magit-prime's async refresh-cache sentinels can fire after Magit's own
-  ;; refresh has ended, once its dynamic binding of `magit--refresh-cache'
-  ;; is gone. The `push' onto `(cdr magit--refresh-cache)' then signals
-  ;; (wrong-type-argument consp nil).
-  ;;
-  ;; Pinned to the exact commit this was verified against
-  ;; (github.com/Azkae/magit-prime). That way an upstream fix or unrelated
-  ;; change can't leave this patch silently active or silently skipped.
-  (defconst my/magit-prime-patched-commit
-    "92c9990d028a7dfe90225a440c116ab7d9724f7c")
-
-  (defun my/magit-prime--refresh-cache-local (commands)
-    (let* ((repo-path (magit-toplevel))
-           (running 0)
-           (buffers
-            (mapcar
-             (lambda (command)
-               (let* ((buffer (generate-new-buffer " *magit-prime-refresh-cache*"))
-                      (cachep (and (eq (car command) t) (pop command)))
-                      (process-environment (magit-process-environment))
-                      (default-process-coding-system (magit--process-coding-system)))
-                 (make-process
-                  :name (buffer-name buffer)
-                  :buffer buffer
-                  :noquery t
-                  :connection-type 'pipe
-                  :command (cons magit-git-executable
-                                 (magit-process-git-arguments command))
-                  :sentinel
-                  (lambda (proc _event)
-                    (when (eq (process-status proc) 'exit)
-                      (when-let* ((buf (process-buffer proc))
-                                  ((buffer-live-p buf))
-                                  ((or cachep
-                                       (zerop (process-exit-status proc)))))
-                        (when (consp magit--refresh-cache)
-                          (push (cons (cons repo-path command)
-                                      (with-current-buffer buf
-                                        (and (zerop (process-exit-status proc))
-                                             (not (bobp))
-                                             (progn
-                                               (goto-char (point-min))
-                                               (buffer-substring-no-properties
-                                                (point) (line-end-position))))))
-                                (cdr magit--refresh-cache))))
-                      (cl-decf running))))
-                 (cl-incf running)
-                 buffer))
-             commands)))
-      (with-timeout (1)
-        (while (> running 0)
-          (sit-for 0.01)
-          (accept-process-output)))
-      (mapc #'kill-buffer buffers)))
-
-  (let ((sha (ignore-errors
-               (with-temp-buffer
-                 (call-process "git" nil t nil "-C"
-                               (file-name-directory
-                                (file-truename (find-library-name "magit-prime")))
-                               "rev-parse" "HEAD")
-                 (string-trim (buffer-string))))))
-    (if (equal sha my/magit-prime-patched-commit)
-        (advice-add 'magit-prime--refresh-cache-local :override
-                    #'my/magit-prime--refresh-cache-local)
-      (message "magit-prime is at %s, not the patched %s — check if the consp/nil race is still present before relying on this workaround"
-                sha my/magit-prime-patched-commit))))
-
 (use-package git-spice
   :load-path "~/src/github.com/jesse-c/git-spice.el"
   :after magit
@@ -1367,6 +1294,12 @@ This includes buffers visible in windows or tab-bar tabs."
 
 (use-package pr-review
   :defer 1)
+
+(use-package gh-dashboard
+  :load-path "user/"
+  :after magit
+  :commands gh-dashboard
+  :bind ("C-c g d" . gh-dashboard))
 
 (use-package git-modes
   :after magit)
@@ -5200,6 +5133,32 @@ If no, restores full opacity. Only affects the active frame."
                                (agent-shell-ui-toggle-all-fragments)))
                t))
 
+;;; Xwidget WebKit
+
+(use-package xwidget
+  :ensure nil
+  :config
+  (defun my/xwidget-webkit-reload-hard ()
+    "Reload the current xwidget-webkit page, bypassing WebKit's cache.
+WebKit caches file:// URLs aggressively, so a plain reload often re-serves
+a stale page. Re-navigate with a fresh `?t=<time>' query to force a fetch."
+    (interactive)
+    (let* ((session (xwidget-webkit-current-session))
+           (uri (xwidget-webkit-uri session))
+           ;; Drop any cache-buster we added on a previous hard reload.
+           (base (replace-regexp-in-string "\\([?&]\\)t=[0-9.]+\\'" "" uri))
+           (sep (if (string-match-p "\\?" base) "&" "?")))
+      (xwidget-webkit-goto-uri
+       session (format "%s%st=%d" base sep (float-time)))))
+  :bind
+  (:map xwidget-webkit-mode-map
+        ("R" . my/xwidget-webkit-reload-hard)))
+
+(with-eval-after-load 'xwidget
+  (with-eval-after-load 'evil
+    (evil-define-key 'normal xwidget-webkit-mode-map
+      (kbd "R") #'my/xwidget-webkit-reload-hard)))
+
 ;;; Language: All
 
 (setq compilation-max-output-line-length 800)
@@ -6112,6 +6071,22 @@ result instead of `message'."
 
 (add-to-list 'treesit-language-source-alist '(html "https://github.com/tree-sitter/tree-sitter-html"))
 
+;;; Cron
+
+(defun my/crontab-open ()
+  "Open a read-only *crontab* buffer showing the output of `crontab -l'."
+  (interactive)
+  (let ((has-mode (require 'crontab-mode nil t))
+        (buf (get-buffer-create "*crontab*")))
+    (with-current-buffer buf
+      (let ((inhibit-read-only t))
+        (erase-buffer)
+        (insert (shell-command-to-string "crontab -l"))
+        (if has-mode (crontab-mode) (fundamental-mode))
+        (goto-char (point-min)))
+      (setq buffer-read-only t))
+    (display-buffer buf)))
+
 ;;; macOS Calendar
 
 (defconst my/calendar-jxa-script "\
@@ -6324,6 +6299,98 @@ Returns the event title string, or nil if none available."
   (if-let* ((title (my/calendar-pick-event)))
       (insert title)
     (message "No event inserted")))
+
+(defconst my/calendar-jxa-today-events-script "\
+ObjC.import('EventKit');
+function run() {
+  const store = $.EKEventStore.alloc.init;
+  const EKEvent = $.EKEntityTypeEvent;
+  const status = $.EKEventStore.authorizationStatusForEntityType(EKEvent);
+  if (status !== 3) {
+    let answered = false, ok = false;
+    const cb = function(granted, err) { ok = granted; answered = true; };
+    if (store.respondsToSelector('requestFullAccessToEventsCompletion:')) {
+      store.requestFullAccessToEventsCompletion(cb);
+    } else {
+      store.requestAccessToEntityTypeCompletion(EKEvent, cb);
+    }
+    const deadline = $.NSDate.dateWithTimeIntervalSinceNow(15);
+    while (!answered && $.NSDate.date.compare(deadline) < 0) {
+      $.NSRunLoop.currentRunLoop.runModeBeforeDate(
+        $.NSDefaultRunLoopMode, $.NSDate.dateWithTimeIntervalSinceNow(0.02));
+    }
+    if (!ok) return 'NO_ACCESS';
+  }
+
+  const now = $.NSDate.date;
+  const tzOffset = $.NSTimeZone.localTimeZone.secondsFromGMTForDate(now);
+  const dayStart = Math.floor((now.timeIntervalSince1970 + tzOffset) / 86400) * 86400 - tzOffset;
+  const pred = store.predicateForEventsWithStartDateEndDateCalendars(
+    $.NSDate.dateWithTimeIntervalSince1970(dayStart),
+    $.NSDate.dateWithTimeIntervalSince1970(dayStart + 86400), $());
+  const found = store.eventsMatchingPredicate(pred);
+
+  const unwrap = function(s) { return s.isNil() ? null : ObjC.unwrap(s); };
+  // Everyone but me with a mailto: address. Google groups come through as
+  // people too, so they're kept.
+  const attendees = function(e) {
+    const ps = e.attendees;
+    const out = [];
+    if (ps.isNil()) return out;
+    for (let i = 0; i < ps.count; i++) {
+      const p = ps.objectAtIndex(i);
+      const url = p.URL.isNil() ? null : unwrap(p.URL.absoluteString);
+      if (!p.isCurrentUser && url && url.startsWith('mailto:')) {
+        const email = decodeURIComponent(url.slice('mailto:'.length));
+        out.push({ name: unwrap(p.name) || email, email: email });
+      }
+    }
+    return out;
+  };
+
+  const list = [];
+  for (let i = 0; i < found.count; i++) {
+    const e = found.objectAtIndex(i);
+    if (!e.isAllDay) list.push({
+      title: unwrap(e.title) || '(untitled)',
+      start: e.startDate.timeIntervalSince1970,
+      end: e.endDate.timeIntervalSince1970,
+      notes: unwrap(e.notes),
+      attendees: attendees(e)
+    });
+  }
+  list.sort(function(a, b) { return a.start - b.start; });
+  return JSON.stringify(list);
+}"
+  "JXA program returning today's non-all-day events as JSON, with notes and attendees.")
+
+(defun my/calendar-today-events ()
+  "Return today's events as a list of alists, or `no-access'.
+Each has `title', `start' and `end' (epoch seconds), `notes', and
+`attendees', a list of alists with `name' and `email'."
+  (let ((out (with-temp-buffer
+               (call-process-region my/calendar-jxa-today-events-script nil
+                                    "osascript" nil t nil "-l" "JavaScript")
+               (string-trim (buffer-string)))))
+    (if (equal out "NO_ACCESS")
+        'no-access
+      (json-parse-string out :object-type 'alist :array-type 'list :null-object nil))))
+
+(defun my/calendar-read-today-event ()
+  "Pick one of today's calendar events and return its alist."
+  (pcase (my/calendar-today-events)
+    ('no-access (user-error "Calendar access denied — grant Emacs access in System Settings › Privacy & Security › Calendars"))
+    ('nil (user-error "No events today"))
+    (events
+     (let ((choices (mapcar (lambda (event)
+                              (let-alist event
+                                (cons (format "%s-%s  %s"
+                                              (format-time-string "%H:%M" .start)
+                                              (format-time-string "%H:%M" .end)
+                                              .title)
+                                      event)))
+                            events)))
+       (cdr (assoc (completing-read "Event: " choices nil t) choices))))))
 
 ;;; Dotfiles
 
