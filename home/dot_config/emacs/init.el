@@ -671,10 +671,17 @@ worktrees stay distinct. Use only in-memory paths; skip remote directories."
   (add-to-list 'project-switch-commands '(my/project-magit-status "Magit" ?m))
   (add-to-list 'project-switch-commands '(my/project-find-file-all "Find file (all)" ?F))
   (defun my/project-agent-shell ()
-    "Start agent-shell in the current project root."
+    "Open an agent-shell session in the current project root.
+Reuses an existing session when there is one."
     (interactive)
     (let ((default-directory (project-root (project-current t))))
       (agent-shell)))
+
+  (defun my/project-agent-shell-new ()
+    "Start a new agent-shell session in the current project root."
+    (interactive)
+    (let ((default-directory (project-root (project-current t))))
+      (agent-shell-new-shell)))
   :bind
   ("s-p" . project-transient-menu))
 
@@ -3568,7 +3575,8 @@ If BUFFER is provided, close that buffer directly."
   (require 'my-agent-shell-safe)
   (setq agent-shell-permission-responder-function
         #'my/agent-shell-permission-responder)
-  (add-to-list 'project-switch-commands '(my/project-agent-shell "Agent shell" ?a)))
+  (add-to-list 'project-switch-commands '(my/project-agent-shell "Agent shell" ?a))
+  (add-to-list 'project-switch-commands '(my/project-agent-shell-new "Agent shell (new)" ?A)))
 
 ;;;; Agent-shell attention markers in the tab bar
 ;;
