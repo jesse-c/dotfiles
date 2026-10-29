@@ -690,19 +690,34 @@ Reuses an existing session when there is one."
   (when-let* ((project (project-current)))
     (project-root project)))
 
+(defun my/project--tab-name (root)
+  "Return a tab label for project ROOT.
+For a git worktree at <repo>/.worktrees/<name>, return \"<repo>/<name>\"
+so worktrees stay distinguishable; otherwise return ROOT's final path
+component."
+  (declare (pure t) (side-effect-free t))
+  (let* ((dir (directory-file-name root))
+         (name (file-name-nondirectory dir))
+         (parent (file-name-directory dir)))
+    (if (and parent
+             (string-equal ".worktrees"
+                           (file-name-nondirectory (directory-file-name parent))))
+        (concat (file-name-nondirectory
+                 (directory-file-name (file-name-directory (directory-file-name parent))))
+                "/" name)
+      name)))
+
 (defun my/rename-tab-to-project-name ()
   "Rename the current tab to the project name."
   (interactive)
-  (when-let* ((root (my/project-root))
-              (project-name (file-name-nondirectory (directory-file-name root))))
-    (tab-rename project-name)))
+  (when-let* ((root (my/project-root)))
+    (tab-rename (my/project--tab-name root))))
 
 (defun my/rename-tab-to-project-name-with-suffix (suffix)
   "Rename the current tab to the project name with SUFFIX."
   (interactive "sSuffix: ")
-  (when-let* ((root (my/project-root))
-              (project-name (file-name-nondirectory (directory-file-name root))))
-    (tab-rename (format "%s • %s" project-name suffix))))
+  (when-let* ((root (my/project-root)))
+    (tab-rename (format "%s • %s" (my/project--tab-name root) suffix))))
 
 (defun my/rename-tab-custom (name)
   "Rename the current tab to NAME."
