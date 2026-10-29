@@ -1,3 +1,6 @@
+-- Allow Alfred to run the Hammerspoon workflow's commands via AppleScript.
+hs.allowAppleScript(true)
+
 require("console")
 require("ipc")
 require("wifi")

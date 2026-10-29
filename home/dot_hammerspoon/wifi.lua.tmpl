@@ -23,11 +23,11 @@ end
 -- @return string the menu bar title text
 function ssidMenuMessage(newSSID)
   if newSSID then
-    return "≋ " .. newSSID
+    return "◇ " .. newSSID
   elseif isOnline() then
-    return "≋ Wi-Fi: grant Location access"
+    return "◇ Wi-Fi: grant Location access"
   else
-    return "≋ Not connected"
+    return "◇ Not connected"
   end
 end
 
