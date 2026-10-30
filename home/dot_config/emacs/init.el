@@ -912,6 +912,9 @@ This includes buffers visible in windows or tab-bar tabs."
            buffer)
       (condition-case err
           (progn
+            ;; EasySession can restore the first frame before agent-shell's
+            ;; deferred load.  Load it here, not when registering the handler.
+            (require 'agent-shell)
             (unless (and (stringp id) (not (string-empty-p id)))
               (error "No saved agent session ID; not starting a new conversation"))
             ;; Unattended restoration must not initiate TRAMP authentication.
@@ -930,7 +933,7 @@ This includes buffers visible in windows or tab-bar tabs."
                         (let ((default-directory directory)
                               (enable-local-variables :safe))
                           (agent-shell--start :config config :session-id id
-                                              :session-strategy 'new
+                                              :session-strategy 'new :cwd directory
                                               :new-session t :no-focus t)))))
             (shell-maker-set-buffer-name buffer (alist-get 'buffer-name state))
             (with-current-buffer buffer
@@ -967,13 +970,14 @@ This includes buffers visible in windows or tab-bar tabs."
     (advice-add 'agent-shell--initiate-session :around
                 #'my/easysession-agent-shell--initiate-session)
     (advice-add 'agent-shell--send-request :filter-args
-                #'my/easysession-agent-shell--quiet-resume-failure)
-    ;; Failed placeholders must remain saveable, not disappear from the next
-    ;; session file just because their ACP client could not be restored.
-    (dolist (mode '(agent-shell-mode my/easysession-agent-shell-unavailable-mode))
-      (easysession-add-managed-major-mode mode
-        :save #'my/easysession-agent-shell--save
-        :restore #'my/easysession-agent-shell--restore)))
+                #'my/easysession-agent-shell--quiet-resume-failure))
+  ;; Register before EasySession loads the first frame. Waiting for the
+  ;; deferred agent-shell load leaves only "Old buffer" frameset placeholders.
+  ;; Failed restorations also stay saveable, retaining their session IDs.
+  (dolist (mode '(agent-shell-mode my/easysession-agent-shell-unavailable-mode))
+    (easysession-add-managed-major-mode mode
+      :save #'my/easysession-agent-shell--save
+      :restore #'my/easysession-agent-shell--restore))
   ;; END my/easysession-agent-shell integration
 
   ;; `easysession--persist-session-on-frame-delete-maybe' unloads the

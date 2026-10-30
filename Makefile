@@ -12,4 +12,5 @@ test: ## Run the Emacs Lisp unit tests
 	  -l my-tab-groups-tests \
 	  -l my-eglot-startup-tests \
 	  -l my-org-startup-tests \
+	  -l my-easysession-agent-shell-tests \
 	  -f ert-run-tests-batch-and-exit
