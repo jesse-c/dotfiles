@@ -1564,9 +1564,27 @@ This includes buffers visible in windows or tab-bar tabs."
   :config
   (fset #'jsonrpc--log-event #'ignore)
   ;; Defer eglot startup to improve file opening performance
+  (defvar-local my/eglot-ensure-timer nil
+    "Pending Eglot startup for this buffer.")
+
   (defun my/eglot-ensure-deferred ()
-    "Start eglot after a short delay to improve file opening performance."
-    (run-with-idle-timer 1.5 nil #'eglot-ensure))
+    "Start Eglot after a short delay in the originating file buffer."
+    (when (timerp my/eglot-ensure-timer)
+      (cancel-timer my/eglot-ensure-timer))
+    (when buffer-file-name
+      (let ((buffer (current-buffer))
+            (mode major-mode))
+        (setq my/eglot-ensure-timer
+              (run-with-idle-timer
+               1.5 nil
+               (lambda ()
+                 ;; A bare `eglot-ensure' timer runs in whichever buffer is
+                 ;; current then, including Org or a startup placeholder.
+                 (when (buffer-live-p buffer)
+                   (with-current-buffer buffer
+                     (setq my/eglot-ensure-timer nil)
+                     (when (and buffer-file-name (eq major-mode mode))
+                       (eglot-ensure))))))))))
 
   ;; Sanitize and truncate diagnostic messages to prevent JSON serialization errors
   (defun my/eglot-sanitize-diagnostic-message (msg)
