@@ -4846,6 +4846,10 @@ node, or the node has neither. Designed to run from
   :hook
   (after-init . org-roam-db-autosync-mode)
   (org-mode . (lambda ()
+                ;; `org-roam-db-autosync-mode' loads only org-roam-db, not
+                ;; org-roam itself.  Load the deferred :config (and its
+                ;; helpers) before installing callbacks that use them.
+                (require 'org-roam)
                 (add-hook 'before-save-hook #'my/org-roam-update-timestamps nil t)
                 (add-hook 'before-save-hook #'my/org-roam-dailies-ensure-heading-ids nil t)
                 ;; Org has no hover popup, so summarise linked nodes in a
