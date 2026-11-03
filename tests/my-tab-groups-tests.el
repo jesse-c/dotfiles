@@ -21,12 +21,45 @@
           (eval definition t))))
     (goto-char (point-min))
     (dolist (name '(my/project-tab-groups my/project-tab-group-label
-                    my/tab-bar-tab-buffers my/tab-bar-tab-awaiting-input-p))
+                    my/tab-bar-tab-buffers my/tab-bar-tab-awaiting-input-p
+                    my/project--tab-name my/rename-tab-to-project-name
+                    my/rename-tab-to-project-name-with-suffix))
+      (goto-char (point-min))
       (search-forward (format "(defun %s " name))
       (goto-char (match-beginning 0))
       (eval (read (current-buffer)) t))))
 
 (defvar my/agent-shell-awaiting-buffers nil)
+
+(ert-deftest my-tab-groups/project-renaming-shares-worktree-label ()
+  (dolist (root '("/projects/repo/.worktrees/scratch/"
+                  "/projects/repo/.worktrees/scratch"))
+    (let (default-name suffixed-name)
+      (cl-letf (((symbol-function 'my/project-root) (lambda () root))
+                ((symbol-function 'tab-rename)
+                 (lambda (name) (setq default-name name))))
+        (my/rename-tab-to-project-name))
+      (cl-letf (((symbol-function 'my/project-root) (lambda () root))
+                ((symbol-function 'tab-rename)
+                 (lambda (name) (setq suffixed-name name))))
+        (my/rename-tab-to-project-name-with-suffix "review"))
+      (should (equal default-name "repo/scratch"))
+      (should (equal suffixed-name (concat default-name " • review"))))))
+
+(ert-deftest my-tab-groups/project-renaming-shares-normal-repo-label ()
+  (let (names)
+    (cl-letf (((symbol-function 'my/project-root) (lambda () "/projects/repo/"))
+              ((symbol-function 'tab-rename) (lambda (name) (push name names))))
+      (my/rename-tab-to-project-name)
+      (my/rename-tab-to-project-name-with-suffix "review"))
+    (should (equal (nreverse names) '("repo" "repo • review")))))
+
+(ert-deftest my-tab-groups/project-renaming-without-project-does-nothing ()
+  (cl-letf (((symbol-function 'my/project-root) #'ignore)
+            ((symbol-function 'tab-rename)
+             (lambda (&rest _) (ert-fail "Must not rename without a project"))))
+    (my/rename-tab-to-project-name)
+    (my/rename-tab-to-project-name-with-suffix "review")))
 
 (ert-deftest my-tab-groups/assign-delegates ()
   (let (called)
