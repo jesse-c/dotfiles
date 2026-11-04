@@ -475,7 +475,7 @@ touches projects outside ~/src/<forge>, and a plain run only adds."
       (kill-new root)
       (message "Yanked: %s" root)))
   (defun my/goto-project-tab ()
-    "Prompt for an existing project tab, including its number, and select it.
+    "Prompt for an existing project tab, with its group in an aligned column.
 Tabs whose agent shell is awaiting input sort first and are
 highlighted, so the ones needing attention are easiest to reach."
     (interactive)
@@ -500,10 +500,32 @@ highlighted, so the ones needing attention are easiest to reach."
                                             'my/tab-bar-tab-awaiting-input nil name))
                  (cons name number)))
              ordered))
-           ;; Vertico normally reorders candidates by recency and that
-           ;; would fight the priority order just built above.
-           (choice (let ((vertico-sort-function nil))
-                     (completing-read "Goto project: " candidates nil t))))
+           (column (+ 2 (apply #'max 0 (mapcar (lambda (pair) (string-width (car pair)))
+                                               candidates))))
+           (affixate
+            (lambda (names)
+              (mapcar
+               (lambda (name)
+                 (list name ""
+                       (or (when-let* ((number (cdr (assoc-string name candidates)))
+                                       (group (funcall tab-bar-tab-group-function
+                                                       (nth (1- number) tabs))))
+                             (concat (propertize " " 'display `(space :align-to (+ left ,column)))
+                                     (my/project-tab-group-label (list group))))
+                           "")))
+               names)))
+           ;; Native completion metadata keeps annotations separate from the
+           ;; selectable names and preserves attention order in any frontend.
+           ;; A distinct category avoids Marginalia's built-in tab annotator.
+           (table (lambda (string predicate action)
+                    (if (eq action 'metadata)
+                        `(metadata
+                          (category . project-tab)
+                          (display-sort-function . identity)
+                          (cycle-sort-function . identity)
+                          (affixation-function . ,affixate))
+                      (complete-with-action action candidates string predicate))))
+           (choice (completing-read "Goto project: " table nil t)))
       (tab-bar-select-tab (cdr (assoc-string choice candidates)))))
   (defun my/project-git-head (directory)
     "Return DIRECTORY's Git branch, or its short revision when detached.
