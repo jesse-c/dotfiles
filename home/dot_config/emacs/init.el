@@ -5749,6 +5749,19 @@ database, but may be available via poetry, pipenv, or a project virtualenv."
 
 (use-package json-mode)
 
+(define-derived-mode jsonl-ts-mode json-ts-mode "JSONL"
+  "Major mode for JSON Lines: one JSON value per line."
+  ;; Formatting would spread each record over many lines.
+  (setq-local apheleia-inhibit t)
+  (setq-local truncate-lines t))
+
+(add-to-list 'auto-mode-alist '("\\.jsonl\\'" . jsonl-ts-mode))
+
+;; Flycheck matches checkers on the exact mode, so the derived mode gets no
+;; JSON checker by default. jq accepts a stream of values, unlike Python's.
+(with-eval-after-load 'flycheck
+  (flycheck-add-mode 'json-jq 'jsonl-ts-mode))
+
 ;; https://eshelyaron.com/posts/2023-05-17-orientation-in-json-documents-with-emacs-and-tree-sitter.html
 (defun esy/json-path-to-position (pos)
   "Return the JSON path from the document's root to the element at POS.
