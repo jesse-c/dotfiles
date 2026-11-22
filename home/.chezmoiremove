@@ -1,0 +1,6 @@
+.config/atuin/config.toml
+.config/fish/functions/_atuin_rebind.fish
+.config/fish/completions/atuin.fish
+{{ if eq .chezmoi.os "darwin" }}
+Library/LaunchAgents/com.atuin.daemon.plist
+{{ end }}

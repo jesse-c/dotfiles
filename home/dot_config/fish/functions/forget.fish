@@ -1,6 +1,6 @@
 # Forget the current commandline value
 #
-# Deletes from fish, atuin, and ShellHistory
+# Deletes from fish and ShellHistory
 # ✓ = deleted, ○ = not found, ✕ = error
 function forget -d "Remove a command from shell history"
     set -l cmd (commandline | string collect | string trim)
@@ -20,23 +20,6 @@ function forget -d "Remove a command from shell history"
     else
         set -a status_parts "○ fish"
         test -n "$fish_err"; and set -a errors "fish: $fish_err"
-    end
-
-    # Atuin
-    set -l atuin_db "$HOME/.local/share/atuin/history.db"
-    if not test -f "$atuin_db"
-        set -a status_parts "✕ atuin"
-        set -a errors "atuin: db not found"
-    else
-        set -l atuin_err (sqlite3 "$atuin_db" "DELETE FROM history WHERE command = '$escaped'; SELECT changes()" 2>&1)
-        if test $status -ne 0
-            set -a status_parts "✕ atuin"
-            set -a errors "atuin: $atuin_err"
-        else if test "$atuin_err" -gt 0
-            set -a status_parts "✓ atuin"
-        else
-            set -a status_parts "○ atuin"
-        end
     end
 
     # macOS ShellHistory app
