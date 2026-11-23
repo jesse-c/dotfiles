@@ -34,7 +34,7 @@ erlang = "28.3.1"
 elixir = "1.19.5-otp-28"
 go = "1.25.6"
 zig = "0.15.2"
-rust = { version = "1.93.0", components = "rust-src,llvm-tools,rust-analyzer,rustfmt" }
+rust = { version = "1.100.0", components = "rust-src,llvm-tools,rust-analyzer,rustfmt" }
 racket = "9.0"
 node = "25.5.0"
 lua = "5.4.7"
@@ -121,6 +121,7 @@ deno = "latest"
 {{- end }}
 {{- if eq .chezmoi.hostname "Dais" }}
 "npm:firebase-tools" = "latest"
+"pipx:dagster-dg-cli" = "latest"
 {{- end }}
 
 [settings]
