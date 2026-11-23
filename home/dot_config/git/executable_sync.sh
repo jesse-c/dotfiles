@@ -19,6 +19,8 @@ assert_no_operation() {
 [ "$#" -eq 0 ] || die 'Usage: git sync (no arguments).'
 root=$(git rev-parse --show-toplevel) || die 'Not in a working tree.'
 cd "$root"
+# Git exports GIT_DIR to aliases, which would point git -C at this worktree.
+unset GIT_DIR GIT_WORK_TREE
 assert_no_operation "$root"
 git rev-parse --verify HEAD >/dev/null 2>&1 || die 'The current checkout has no commit yet.'
 current_branch=$(git symbolic-ref --quiet --short HEAD) || current_branch=
